@@ -143,15 +143,30 @@
 </nav>
 
 <!-- ============================================================ -->
-<h2 id="schema">1. Kopplingsschema</h2>
+<h2 id="schema">1. Kopplingsschema — 4 byggsteg</h2>
 <p>
-  Komplett kopplingsschema i <strong>5 blad</strong> — ritat i ren ingenjörsstil med nätetiketter,
-  titelruta och korrekta komponentsymboler. Inspirerat av Ben Eaters klassiska datorbyggen.
+  Schemat är uppdelat i samma 4 steg som byggplanen nedan. Börja med steg 1 och
+  bygg vidare steg för steg.
 </p>
-<a class="schema-link" href="schematics/">📐 Öppna kopplingsschema (5 blad)</a>
-<p style="font-size:0.8rem; color:var(--muted); margin-top:0.5rem;">
-  Blad 1: Översikt · Blad 2: Adressbuss A0–A15 · Blad 3: Databuss D0–D7 · Blad 4: Kontroll &amp; Ström · Blad 5: I/O-enheter
-</p>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:1rem 0;">
+  <div style="background:#e8f5e9; padding:1rem; border-radius:8px;">
+    <strong>Steg 1</strong> — Ström, klocka, reset<br>
+    <a href="schematics/step1.svg">📐 Öppna schema</a>
+  </div>
+  <div style="background:#fff3e0; padding:1rem; border-radius:8px;">
+    <strong>Steg 2</strong> — + Adressbuss A0–A15<br>
+    <a href="schematics/step2.svg">📐 Öppna schema</a>
+  </div>
+  <div style="background:#e3f2fd; padding:1rem; border-radius:8px;">
+    <strong>Steg 3</strong> — + Databuss D0–D7<br>
+    <a href="schematics/step3.svg">📐 Öppna schema</a>
+  </div>
+  <div style="background:#f3e5f5; padding:1rem; border-radius:8px;">
+    <strong>Steg 4</strong> — + Knappar, LCD, I/O<br>
+    <a href="schematics/">📐 Öppna interaktivt schema (5 blad)</a>
+  </div>
+</div>
 
 <!-- ============================================================ -->
 <h2 id="komponenter">2. Komponenter</h2>
