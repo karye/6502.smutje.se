@@ -3,151 +3,110 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Steg 3 — Databuss och minnesemulering | W65C02 8-bitarsdator</title>
-<style>
-  :root { --bg: #fafafa; --fg: #1a1a2e; --muted: #666; --accent: #00979d; --warn: #e76f51; --code-bg: #f4f4f4; --border: #ddd; }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--fg); line-height: 1.6; max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
-  h1 { font-size: 1.6rem; margin-bottom: 0.3rem; }
-  h2 { font-size: 1.2rem; margin: 1.8rem 0 0.6rem; padding-bottom: 0.2rem; border-bottom: 2px solid var(--border); }
-  h3 { font-size: 1rem; margin: 1.2rem 0 0.4rem; }
-  p, li { margin-bottom: 0.4rem; }
-  ul, ol { padding-left: 1.5rem; margin-bottom: 0.8rem; }
-  table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.85rem; }
-  th, td { padding: 0.35rem 0.5rem; border: 1px solid var(--border); text-align: left; }
-  th { background: var(--fg); color: #fff; }
-  pre { background: var(--code-bg); padding: 0.8rem; border-radius: 6px; overflow-x: auto; font-size: 0.8rem; margin: 0.8rem 0; }
-  code { background: var(--code-bg); padding: 0.15em 0.3em; border-radius: 3px; font-size: 0.9em; }
-  .step-nav { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
-  .step-nav a { padding: 0.4rem 0.8rem; border: 1px solid var(--border); border-radius: 4px; text-decoration: none; color: var(--fg); font-size: 0.85rem; }
-  .step-nav a.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: bold; }
-  .schematic { text-align: center; margin: 1rem 0; }
-  .schematic object, .schematic img { max-width: 100%; border: 1px solid var(--border); border-radius: 4px; }
-  .check { color: #2a9d8f; font-weight: bold; }
-  .warn { background: #ffcccc; border-left: 4px solid #e63946; padding: 0.6rem 1rem; margin: 1rem 0; }
-</style>
+<title>Steg 3 — Databuss | W65C02</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="bg-gray-50 text-gray-900 font-sans">
 
-<h1>Steg 3 — Databuss och minnesemulering</h1>
-
-<nav class="step-nav">
-  <a href="step1.html">Steg 1</a>
-  <a href="step2.html">Steg 2</a>
-  <a href="step3.html" class="active">Steg 3</a>
-  <a href="step4.html">Steg 4</a>
-  <a href="index.html">← Översikt</a>
+<nav class="bg-gray-900 text-white sticky top-0 z-50 shadow">
+  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
+    <a href="index.html" class="font-bold text-lg">W65C02</a>
+    <div class="flex gap-4 text-sm">
+      <a href="index.html" class="hover:text-blue-300 transition">Översikt</a>
+      <a href="step1.html" class="hover:text-blue-300 transition">Steg 1</a>
+      <a href="step2.html" class="hover:text-blue-300 transition">Steg 2</a>
+      <a href="step3.html" class="text-blue-300 font-semibold">Steg 3</a>
+      <a href="step4.html" class="hover:text-blue-300 transition">Steg 4</a>
+      <a href="schematics/" class="hover:text-blue-300 transition">Schema</a>
+    </div>
+  </div>
 </nav>
 
-<h2>Mål</h2>
-<p>Koppla in databussen och RWB-signalen. Arduinon agerar nu som fullständig minnesemulator: den läser adressbussen, levererar instruktioner från en intern array när CPU:n läser, och sparar data när CPU:n skriver. Vi laddar ett minimalt testprogram och ser CPU:n exekvera det.</p>
+<main class="max-w-5xl mx-auto px-4 py-8">
 
-<h2>Nya komponenter (utöver steg 1–2)</h2>
-<table>
-  <tr><th>Antal</th><th>Komponent</th><th>Syfte</th></tr>
-  <tr><td>8</td><td>100 Ω motstånd</td><td>Seriemotstånd på databussen — skydd mot busskollision</td></tr>
-  <tr><td>8</td><td>Lysdioder (röda)</td><td>Visuell avläsning av D0–D7</td></tr>
-  <tr><td>8</td><td>220 Ω motstånd</td><td>Strömbegränsning för databuss-LED:ar</td></tr>
-  <tr><td>–</td><td>9 kopplingstrådar</td><td>D0–D7 + RWB</td></tr>
-</table>
+  <h1 class="text-2xl font-bold mb-6">Steg 3 — Databuss och minnesemulering</h1>
 
-<h2>Kopplingsschema</h2>
-<div class="schematic">
-  <object data="schematics/step3.svg" type="image/svg+xml" style="width:100%">
-    <img src="schematics/step3.svg" alt="Steg 3 schema" style="width:100%"/>
-  </object>
-</div>
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Mål</h2>
+    <p class="text-gray-700">Koppla in databussen och RWB. Arduinon agerar minnesemulator — levererar instruktioner från en array. Vi laddar ett NOP-testprogram på <code>$8000</code>.</p>
+  </section>
 
-<h3>Nya kopplingar</h3>
-<table>
-  <tr><th>CPU-pinne</th><th>Signal</th><th>Arduino Mega</th><th>Register</th></tr>
-  <tr><td>33–26</td><td>D0–D7</td><td>D22–D29 (via 100 Ω)</td><td><code>PORTA</code></td></tr>
-  <tr><td>34</td><td>RWB</td><td>D3</td><td>Digital ingång</td></tr>
-</table>
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Nya komponenter</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">8</td><td class="p-2">100 Ω motstånd (databuss-skydd)</td></tr>
+          <tr><td class="p-2">8</td><td class="p-2">Lysdioder (databuss-visualisering)</td></tr>
+          <tr><td class="p-2">8</td><td class="p-2">220 Ω motstånd (LED-strömbegränsning)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-<div class="warn"><strong>Varning — busskollision!</strong> När CPU:n skriver (RWB = LÅG) driver CPU:n databussen. Arduinon <strong>måste</strong> sätta PORTA till INPUT (högimpedans) <em>innan</em> PHI2 går hög. 100 Ω-motstånden skyddar kretsarna om en kollision ändå skulle inträffa.</div>
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
+    <div class="schematic bg-white rounded-lg shadow p-4">
+      <object data="schematics/step3.svg" type="image/svg+xml" class="w-full"></object>
+    </div>
+    <div class="mt-4 bg-red-50 border border-red-300 rounded-lg p-4 text-sm">
+      <strong class="text-red-800">⚠ Busskollision!</strong>
+      <span class="text-red-700">När RWB = LÅG driver CPU:n bussen. Sätt PORTA till INPUT innan PHI2 går hög.</span>
+    </div>
+  </section>
 
-<h2>Arduino-kod</h2>
-<pre><code>// Steg 3 — Full minnesemulering med testprogram
-#define PHI2  2
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
+    <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm"><code>#define PHI2  2
 #define RESB  4
 #define RWB   3
-
-uint8_t memory[65536];  // 64K adressrymd
+uint8_t mem[65536];
 
 void setup() {
   Serial.begin(115200);
-  pinMode(PHI2, OUTPUT);
-  pinMode(RESB, OUTPUT);
-  pinMode(RWB,  INPUT);
+  pinMode(PHI2, OUTPUT); pinMode(RESB, OUTPUT); pinMode(RWB, INPUT);
+  DDRK = 0x00; DDRF = 0x00;
 
-  DDRK  = 0x00;  // PORTK = INPUT (adressbuss låg)
-  DDRF  = 0x00;  // PORTF = INPUT (adressbuss hög)
+  mem[0xFFFC] = 0x00; mem[0xFFFD] = 0x80;  // reset → $8000
+  mem[0x8000] = 0xEA;  // NOP
 
-  // Ladda reset-vektor: startadress $8000
-  memory[0xFFFC] = 0x00;  // låg byte
-  memory[0xFFFD] = 0x80;  // hög byte → $8000
-
-  // Ladda testprogram på $8000:
-  // NOP ($EA) i en loop — CPU:n bara snurrar
-  memory[0x8000] = 0xEA;  // NOP
-
-  // ── Reset-sekvens ──
   digitalWrite(RESB, LOW);
-  for (int i = 0; i < 5; i++) { clockPulse(); }
+  for (int i = 0; i < 5; i++) pulse();
   digitalWrite(RESB, HIGH);
-  for (int i = 0; i < 10; i++) { clockPulse(); }
-
-  Serial.println("Klar — CPU kör från $8000");
+  for (int i = 0; i < 10; i++) pulse();
 }
 
-void clockPulse() {
-  digitalWrite(PHI2, LOW);
-  delay(10);
-
-  uint16_t addr = (PINK << 0) | (PINF << 8);
-  bool rwb = digitalRead(RWB);
-
-  // Förbered data INNAN PHI2 går hög
-  if (rwb == HIGH) {
-    // CPU LÄSER — Arduino levererar instruktion/data
-    DDRA  = 0xFF;         // PORTA = OUTPUT
-    PORTA = memory[addr]; // Lägg ut data från minnesarrayen
-  } else {
-    // CPU SKRIVER — Arduino läser
-    DDRA = 0x00;          // PORTA = INPUT (högimpedans!)
-  }
-
-  digitalWrite(PHI2, HIGH);
-  delay(10);
-
-  // Om CPU skrev, spara data
-  if (rwb == LOW) {
-    memory[addr] = PINA;
-  }
-
-  // Logga till Serieövervakaren
-  Serial.print("$");
-  Serial.print(addr, HEX);
-  Serial.print(rwb ? " LÄS " : " SKRIV ");
-  Serial.println(memory[addr], HEX);
+void pulse() {
+  digitalWrite(PHI2, LOW); delay(10);
+  uint16_t a = (PINK<<0)|(PINF<<8); bool rw = digitalRead(RWB);
+  if (rw) { DDRA=0xFF; PORTA=mem[a]; }
+  else    { DDRA=0x00; }
+  digitalWrite(PHI2, HIGH); delay(10);
+  if (!rw) mem[a] = PINA;
+  Serial.print(rw?"R":"W"); Serial.print(" $"); Serial.println(a, HEX);
 }
 
-void loop() {
-  clockPulse();
-}</code></pre>
+void loop() { pulse(); }</code></pre>
+  </section>
 
-<h2>Testning</h2>
-<ol>
-  <li>Ladda upp koden och öppna <strong>Serieövervakaren</strong></li>
-  <li>Du ska se att CPU:n läser <code>$FFFC</code> och <code>$FFFD</code>, hoppar till <code>$8000</code>, och sedan läser <code>$EA</code> (NOP) om och om igen</li>
-  <li>Databuss-LED:arna visar värdet <code>11101010</code> (NOP) — lysdioderna D7,D6,D5,D3,D1 lyser</li>
-</ol>
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Testning</h2>
+    <ol class="list-decimal pl-5 space-y-1 text-gray-700">
+      <li>Serieövervakaren visar <code>$FFFC</code> → <code>$FFFD</code> → <code>$8000</code> (NOP-loop)</li>
+      <li>Databuss-LED:arna visar <code>11101010</code> (NOP = $EA)</li>
+    </ol>
+    <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
+      <span class="font-bold text-green-800">✅ Förväntat:</span>
+      <span class="text-green-700">CPU:n läser reset-vektor, hoppar till $8000, exekverar NOP i loop. Full minnesemulering!</span>
+    </div>
+  </section>
 
-<h2>Förväntat resultat</h2>
-<p><span class="check">✅ CPU:n läser reset-vektorn, hoppar till <code>$8000</code> och exekverar NOP i en loop.</span> Serieövervakaren visar att adressen stannar på <code>$8000</code> och datavärdet är <code>$EA</code> varje gång. LED-raden visar binärkoden för NOP. CPU:n är nu fullt fungerande med minnesemulering!</p>
-
-<p style="margin-top:2rem;"><a href="step2.html">← Steg 2</a> · <a href="step4.html">Steg 4: I/O →</a></p>
-
+  <div class="flex gap-4 mt-8">
+    <a href="step2.html" class="text-blue-600 hover:underline">← Steg 2</a>
+    <a href="step4.html" class="text-blue-600 hover:underline">Steg 4 →</a>
+  </div>
+</main>
 </body>
 </html>

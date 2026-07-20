@@ -1,0 +1,9 @@
+/* Custom styles beyond Tailwind */
+.schematic object, .schematic img {
+  max-width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+pre code {
+  font-size: 0.8rem;
+}
