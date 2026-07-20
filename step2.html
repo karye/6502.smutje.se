@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steg 2 — Adressbuss och reset | W65C02 8-bitarsdator</title>
+<style>
+  :root { --bg: #fafafa; --fg: #1a1a2e; --muted: #666; --accent: #00979d; --warn: #e76f51; --code-bg: #f4f4f4; --border: #ddd; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--fg); line-height: 1.6; max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+  h1 { font-size: 1.6rem; margin-bottom: 0.3rem; }
+  h2 { font-size: 1.2rem; margin: 1.8rem 0 0.6rem; padding-bottom: 0.2rem; border-bottom: 2px solid var(--border); }
+  h3 { font-size: 1rem; margin: 1.2rem 0 0.4rem; }
+  p, li { margin-bottom: 0.4rem; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 0.8rem; }
+  table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.85rem; }
+  th, td { padding: 0.35rem 0.5rem; border: 1px solid var(--border); text-align: left; }
+  th { background: var(--fg); color: #fff; }
+  pre { background: var(--code-bg); padding: 0.8rem; border-radius: 6px; overflow-x: auto; font-size: 0.8rem; margin: 0.8rem 0; }
+  code { background: var(--code-bg); padding: 0.15em 0.3em; border-radius: 3px; font-size: 0.9em; }
+  .step-nav { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .step-nav a { padding: 0.4rem 0.8rem; border: 1px solid var(--border); border-radius: 4px; text-decoration: none; color: var(--fg); font-size: 0.85rem; }
+  .step-nav a.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: bold; }
+  .schematic { text-align: center; margin: 1rem 0; }
+  .schematic object, .schematic img { max-width: 100%; border: 1px solid var(--border); border-radius: 4px; }
+  .check { color: #2a9d8f; font-weight: bold; }
+  .warn { background: #fff3cd; border-left: 4px solid #ffc107; padding: 0.6rem 1rem; margin: 1rem 0; }
+</style>
+</head>
+<body>
+
+<h1>Steg 2 — Adressbuss och reset-sekvens</h1>
+
+<nav class="step-nav">
+  <a href="step1.html">Steg 1</a>
+  <a href="step2.html" class="active">Steg 2</a>
+  <a href="step3.html">Steg 3</a>
+  <a href="step4.html">Steg 4</a>
+  <a href="index.html">← Översikt</a>
+</nav>
+
+<h2>Mål</h2>
+<p>Koppla in adressbussen och reset-linjen. Verifiera att CPU:n efter reset läser sin startvektor från <code>$FFFC</code> och <code>$FFFD</code> via serieövervakaren.</p>
+
+<h2>Nya komponenter (utöver steg 1)</h2>
+<table>
+  <tr><th>Antal</th><th>Komponent</th><th>Syfte</th></tr>
+  <tr><td>–</td><td>16 kopplingstrådar</td><td>Adressbuss A0–A15 till Arduinos analoga ingångar</td></tr>
+  <tr><td>–</td><td>1 kopplingstråd</td><td>RESB (pin 40) till Arduino D4</td></tr>
+</table>
+
+<h2>Kopplingsschema</h2>
+<div class="schematic">
+  <object data="schematics/step2.svg" type="image/svg+xml" style="width:100%">
+    <img src="schematics/step2.svg" alt="Steg 2 schema" style="width:100%"/>
+  </object>
+</div>
+
+<h3>Nya kopplingar</h3>
+<table>
+  <tr><th>CPU-pinne</th><th>Signal</th><th>Arduino Mega</th><th>Register</th></tr>
+  <tr><td>9–16</td><td>A0–A7</td><td>A8–A15 (analoga)</td><td><code>PORTK</code></td></tr>
+  <tr><td>17–20, 22–25</td><td>A8–A15</td><td>A0–A7 (analoga)</td><td><code>PORTF</code></td></tr>
+  <tr><td>40</td><td>RESB</td><td>D4</td><td>Digital utgång</td></tr>
+</table>
+
+<div class="warn"><strong>Notera den korsade mappningen:</strong> CPU A0–A7 → Arduino A8–A15 (PORTK), CPU A8–A15 → Arduino A0–A7 (PORTF). Detta gör att vi kan läsa hela 16-bitarsadressen i två 8-bitars registerläsningar.</div>
+
+<h2>Arduino-kod</h2>
+<pre><code>// Steg 2 — Reset-sekvens + adressbussavläsning
+#define PHI2  2
+#define RESB  4
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(PHI2, OUTPUT);
+  pinMode(RESB, OUTPUT);
+
+  // Ställ analoga portar som ingångar
+  DDRK  = 0x00;  // PORTK (A8-A15) = INPUT
+  DDRF  = 0x00;  // PORTF (A0-A7)  = INPUT
+
+  // ── Reset-sekvens enligt datablad ──
+  digitalWrite(RESB, LOW);
+  for (int i = 0; i < 5; i++) {
+    digitalWrite(PHI2, HIGH); delay(10);
+    digitalWrite(PHI2, LOW);  delay(10);
+  }
+  digitalWrite(RESB, HIGH);  // Släpp reset
+
+  // Ge CPU:n 7 klockcykler för reset-sekvensen
+  for (int i = 0; i < 10; i++) {
+    digitalWrite(PHI2, HIGH); delay(10);
+    digitalWrite(PHI2, LOW);  delay(10);
+  }
+
+  Serial.println("Reset klar — redo att läsa adressbuss");
+}
+
+void loop() {
+  digitalWrite(PHI2, HIGH);
+  delay(10);
+
+  // Läs 16-bitars adressbuss
+  uint16_t addr = (PINK << 0) | (PINF << 8);
+  Serial.print("Adress: $");
+  Serial.println(addr, HEX);
+
+  digitalWrite(PHI2, LOW);
+  delay(10);
+}</code></pre>
+
+<h2>Testning</h2>
+<ol>
+  <li>Ladda upp koden och öppna <strong>Serieövervakaren</strong> (115200 baud)</li>
+  <li>Du ska se en ström av adresser — CPU:n försöker hämta instruktioner</li>
+  <li>De <strong>första adresserna</strong> efter reset ska vara <code>$FFFC</code> och <code>$FFFD</code> — reset-vektorn</li>
+  <li>Därefter hoppar CPU:n till den adress som ligger på <code>$FFFC/$FFFD</code> (med flytande databuss blir värdet slumpmässigt)</li>
+</ol>
+
+<h2>Förväntat resultat</h2>
+<p><span class="check">✅ Serieövervakaren visar adresser i snabb följd.</span> De första två avläsningarna efter reset är <code>$FFFC</code> och <code>$FFFD</code>. CPU:n är vid liv och försöker exekvera kod — redo för steg 3 där vi ger den riktiga instruktioner via databussen.</p>
+
+<p style="margin-top:2rem;"><a href="step1.html">← Steg 1</a> · <a href="step3.html">Steg 3: Databuss →</a></p>
+
+</body>
+</html>

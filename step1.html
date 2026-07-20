@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steg 1 — Ström och klocka | W65C02 8-bitarsdator</title>
+<style>
+  :root { --bg: #fafafa; --fg: #1a1a2e; --muted: #666; --accent: #00979d; --warn: #e76f51; --code-bg: #f4f4f4; --border: #ddd; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--fg); line-height: 1.6; max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+  h1 { font-size: 1.6rem; margin-bottom: 0.3rem; }
+  h2 { font-size: 1.2rem; margin: 1.8rem 0 0.6rem; padding-bottom: 0.2rem; border-bottom: 2px solid var(--border); }
+  h3 { font-size: 1rem; margin: 1.2rem 0 0.4rem; }
+  p, li { margin-bottom: 0.4rem; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 0.8rem; }
+  table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.85rem; }
+  th, td { padding: 0.35rem 0.5rem; border: 1px solid var(--border); text-align: left; }
+  th { background: var(--fg); color: #fff; }
+  pre { background: var(--code-bg); padding: 0.8rem; border-radius: 6px; overflow-x: auto; font-size: 0.8rem; margin: 0.8rem 0; }
+  code { background: var(--code-bg); padding: 0.15em 0.3em; border-radius: 3px; font-size: 0.9em; }
+  .step-nav { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .step-nav a { padding: 0.4rem 0.8rem; border: 1px solid var(--border); border-radius: 4px; text-decoration: none; color: var(--fg); font-size: 0.85rem; }
+  .step-nav a.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: bold; }
+  .schematic { text-align: center; margin: 1rem 0; }
+  .schematic object, .schematic img { max-width: 100%; border: 1px solid var(--border); border-radius: 4px; }
+  .check { color: #2a9d8f; font-weight: bold; }
+  .warn { background: #fff3cd; border-left: 4px solid #ffc107; padding: 0.6rem 1rem; margin: 1rem 0; }
+</style>
+</head>
+<body>
+
+<h1>Steg 1 — Strömmatning och grundläggande klocka</h1>
+
+<nav class="step-nav">
+  <a href="step1.html" class="active">Steg 1</a>
+  <a href="step2.html">Steg 2</a>
+  <a href="step3.html">Steg 3</a>
+  <a href="step4.html">Steg 4</a>
+  <a href="index.html">← Översikt</a>
+</nav>
+
+<h2>Mål</h2>
+<p>Verifiera att W65C02S-processorn får spänning och att klockpulser genereras korrekt. Vi driver klockan från Arduino D2 och tänder en lysdiod i takt med klockpulsen.</p>
+
+<h2>Komponenter</h2>
+<table>
+  <tr><th>Antal</th><th>Komponent</th><th>Syfte</th></tr>
+  <tr><td>1</td><td>W65C02S (DIP-40)</td><td>Mikroprocessor</td></tr>
+  <tr><td>1</td><td>Arduino Mega 2560</td><td>Klockgenerator och strömmatning</td></tr>
+  <tr><td>1</td><td>Lysdiod (röd)</td><td>Visuell klockindikering</td></tr>
+  <tr><td>1</td><td>220 Ω motstånd</td><td>Strömbegränsning för lysdiod</td></tr>
+  <tr><td>5</td><td>3,3–10 kΩ motstånd</td><td>Pull-up för RDY, IRQB, NMIB, BE, SOB</td></tr>
+  <tr><td>1</td><td>100 nF keramisk kondensator</td><td>Avkoppling vid VDD/VSS</td></tr>
+  <tr><td>1</td><td>Kopplingsdäck</td><td>Monteringsyta</td></tr>
+  <tr><td>–</td><td>Kopplingstråd</td><td>Anslutningar</td></tr>
+</table>
+
+<h2>Kopplingsschema</h2>
+<div class="schematic">
+  <object data="schematics/step1.svg" type="image/svg+xml" style="width:100%">
+    <img src="schematics/step1.svg" alt="Steg 1 schema" style="width:100%"/>
+  </object>
+</div>
+
+<h3>Kopplingar</h3>
+<table>
+  <tr><th>CPU-pinne</th><th>Signal</th><th>Kopplas till</th></tr>
+  <tr><td>8</td><td>VDD</td><td>Arduino 5V</td></tr>
+  <tr><td>21</td><td>VSS</td><td>Arduino GND</td></tr>
+  <tr><td>36</td><td>PHI2</td><td>Arduino D2 + LED (via 220 Ω) → GND</td></tr>
+  <tr><td>2</td><td>RDY</td><td>5V via 3,3–10 kΩ</td></tr>
+  <tr><td>4</td><td>IRQB</td><td>5V via 3,3–10 kΩ</td></tr>
+  <tr><td>6</td><td>NMIB</td><td>5V via 3,3–10 kΩ</td></tr>
+  <tr><td>35</td><td>BE</td><td>5V via 3,3–10 kΩ</td></tr>
+  <tr><td>38</td><td>SOB</td><td>5V via 3,3–10 kΩ</td></tr>
+  <tr><td>40</td><td>RESB</td><td>Arduino D4 (öppen — ej ansluten ännu i steg 1)</td></tr>
+  <tr><td>8 ↔ 21</td><td>100 nF (C1)</td><td>Keramisk kondensator direkt över strömpinnarna</td></tr>
+</table>
+
+<div class="warn"><strong>Viktigt!</strong> Placera 100 nF-kondensatorn så nära CPU:ns pinnar 8 och 21 som möjligt. Utan den kan processorn bete sig oberäkneligt även vid låga hastigheter.</div>
+
+<h2>Arduino-kod</h2>
+<pre><code>// Steg 1 — Blinka PHI2 på D2 med 1 Hz
+#define PHI2 2
+
+void setup() {
+  pinMode(PHI2, OUTPUT);
+}
+
+void loop() {
+  digitalWrite(PHI2, HIGH);
+  delay(500);   // 500 ms hög → 1 Hz
+  digitalWrite(PHI2, LOW);
+  delay(500);   // 500 ms låg
+}</code></pre>
+
+<h2>Testning</h2>
+<ol>
+  <li>Ladda upp koden till Arduinon</li>
+  <li>Kontrollera att <strong>lysdioden blinkar med jämn takt</strong> (1 Hz = en blinkning per sekund)</li>
+  <li>Mät med multimeter: 5 V mellan VDD (pin 8) och VSS (pin 21)</li>
+  <li>Kontrollera att alla 5 pull-up-pinnar har ~5 V mot VSS</li>
+</ol>
+
+<h2>Förväntat resultat</h2>
+<p><span class="check">✅ Lysdiod blinkar stadigt 1 gång per sekund.</span> Detta bekräftar att CPU:n får ström och att klocklinjen fungerar. Processorn gör inget meningsfullt ännu (adress- och databuss är inte inkopplade), men den är spänningssatt och klockad — redo för steg 2.</p>
+
+<p style="margin-top:2rem;"><a href="step2.html">→ Gå till steg 2: Adressbuss och reset</a></p>
+
+</body>
+</html>
