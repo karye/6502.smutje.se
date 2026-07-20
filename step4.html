@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Steg 4 — I/O | W65C02</title>
+<title>Steg 4 — Knappar | W65C02</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -18,32 +18,29 @@
       <a href="step2.html" class="hover:text-blue-300 transition">Steg 2</a>
       <a href="step3.html" class="hover:text-blue-300 transition">Steg 3</a>
       <a href="step4.html" class="text-blue-300 font-semibold">Steg 4</a>
-      <a href="schematics/" class="hover:text-blue-300 transition">Schema</a>
+      <a href="step5.html" class="hover:text-blue-300 transition">Steg 5</a>
     </div>
   </div>
 </nav>
 
 <main class="max-w-5xl mx-auto px-4 py-8">
 
-  <h1 class="text-2xl font-bold mb-6">Steg 4 — Interaktiv stegning, LCD och I/O</h1>
+  <h1 class="text-2xl font-bold mb-6">Steg 4 — Manuell stegning med knappar</h1>
 
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Mål</h2>
-    <p class="text-gray-700">Lägg till manuell stegning via tryckknappar och LCD-display. Du kan stega igenom programmet en klockcykel eller en instruktion i taget — helt utan datorskärm.</p>
+    <p class="text-gray-700">Lägg till två tryckknappar för manuell stegning. Knapp 1 matar en klockcykel per tryck. Knapp 2 kör fram till nästa instruktion (SYNC).</p>
   </section>
 
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Nya komponenter</h2>
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr></thead>
-        <tbody class="divide-y">
-          <tr><td class="p-2">1</td><td class="p-2">LCD1602 med I²C-backpack</td></tr>
-          <tr><td class="p-2">2</td><td class="p-2">Tryckknappar</td></tr>
-          <tr><td class="p-2">1</td><td class="p-2">Kopplingstråd (SYNC → D7)</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+      <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr></thead>
+      <tbody class="divide-y">
+        <tr><td class="p-2">2</td><td class="p-2">Tryckknappar</td></tr>
+        <tr><td class="p-2">1</td><td class="p-2">Kopplingstråd (SYNC → D7)</td></tr>
+      </tbody>
+    </table>
   </section>
 
   <section class="mb-8">
@@ -51,75 +48,57 @@
     <div class="schematic bg-white rounded-lg shadow p-4">
       <object data="schematics/step4.svg" type="image/svg+xml" class="w-full"></object>
     </div>
-    <p class="text-sm text-gray-500 mt-2">Fullt interaktivt schema: <a href="schematics/" class="text-blue-600 hover:underline">5 blad</a></p>
   </section>
 
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
-    <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm"><code>#include &lt;Wire.h&gt;
-#include &lt;LiquidCrystal_I2C.h&gt;
-#define PHI2 2
-#define RESB 4
-#define RWB  3
-#define SYNC 7
+    <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm"><code>#define SYNC 7
 #define BTN_CLK   5
 #define BTN_INSTR 6
 
-LiquidCrystal_I2C lcd(0x27, 16, 2);
-uint8_t mem[65536];
+// ... tidigare setup från steg 3 ...
 
 void setup() {
-  Serial.begin(115200);
-  pinMode(PHI2, OUTPUT); pinMode(RESB, OUTPUT);
-  pinMode(RWB, INPUT); pinMode(SYNC, INPUT);
-  pinMode(BTN_CLK, INPUT_PULLUP); pinMode(BTN_INSTR, INPUT_PULLUP);
-  DDRK = 0x00; DDRF = 0x00;
-
-  mem[0xFFFC]=0x00; mem[0xFFFD]=0x80;
-  mem[0x8000]=0xEA; mem[0x8001]=0xEA; mem[0x8002]=0xEA;
-
-  digitalWrite(RESB, LOW);
-  for(int i=0;i<5;i++) pulse();
-  digitalWrite(RESB, HIGH);
-  for(int i=0;i<10;i++) pulse();
-
-  lcd.init(); lcd.backlight();
-  lcd.setCursor(0,0); lcd.print("W65C02S Ready");
-}
-
-void pulse() {
-  digitalWrite(PHI2, LOW); delayMicroseconds(500);
-  uint16_t a=(PINK<<0)|(PINF<<8); bool rw=digitalRead(RWB);
-  if(rw){DDRA=0xFF;PORTA=mem[a];}else{DDRA=0x00;}
-  digitalWrite(PHI2, HIGH); delayMicroseconds(500);
-  if(!rw) mem[a]=PINA;
-  lcd.setCursor(0,0); lcd.print("A:$"); lcd.print(a,HEX);
-  lcd.setCursor(0,1); lcd.print("D:$"); lcd.print(mem[a],HEX);
+  // ... befintlig kod ...
+  pinMode(SYNC, INPUT);
+  pinMode(BTN_CLK,   INPUT_PULLUP);
+  pinMode(BTN_INSTR, INPUT_PULLUP);
 }
 
 void loop() {
-  if(!digitalRead(BTN_CLK)){delay(50);while(!digitalRead(BTN_CLK));delay(50);pulse();}
-  if(!digitalRead(BTN_INSTR)){delay(50);while(!digitalRead(BTN_INSTR));delay(50);
-    do{pulse();}while(!digitalRead(SYNC));}
+  // Knapp 1: Enskild klockcykel
+  if (!digitalRead(BTN_CLK)) {
+    delay(50);
+    while (!digitalRead(BTN_CLK));
+    delay(50);
+    pulse();
+  }
+
+  // Knapp 2: Kör tills nästa instruktion (SYNC hög)
+  if (!digitalRead(BTN_INSTR)) {
+    delay(50);
+    while (!digitalRead(BTN_INSTR));
+    delay(50);
+    do { pulse(); } while (!digitalRead(SYNC));
+  }
 }</code></pre>
   </section>
 
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Testning</h2>
     <ol class="list-decimal pl-5 space-y-1 text-gray-700">
-      <li>LCD:n visar "W65C02S Ready"</li>
-      <li><strong>Knapp 1:</strong> en klockcykel — LCD uppdateras</li>
-      <li><strong>Knapp 2:</strong> kör tills nästa instruktion (SYNC)</li>
+      <li><strong>Knapp 1:</strong> En klockcykel per tryck</li>
+      <li><strong>Knapp 2:</strong> Kör tills SYNC går hög (ny instruktion)</li>
     </ol>
     <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
       <span class="font-bold text-green-800">✅ Förväntat:</span>
-      <span class="text-green-700">Fullt interaktiv testbänk — stega manuellt, läs av LCD och LED:ar.</span>
+      <span class="text-green-700">Programmet kan stegas manuellt, en klockcykel eller en instruktion i taget.</span>
     </div>
   </section>
 
   <div class="flex gap-4 mt-8">
     <a href="step3.html" class="text-blue-600 hover:underline">← Steg 3</a>
-    <a href="index.html" class="text-blue-600 hover:underline">← Översikt</a>
+    <a href="step5.html" class="text-blue-600 hover:underline">Steg 5 →</a>
   </div>
 </main>
 </body>

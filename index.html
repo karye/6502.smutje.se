@@ -19,7 +19,7 @@
       <a href="step2.html" class="hover:text-blue-300 transition">Steg 2</a>
       <a href="step3.html" class="hover:text-blue-300 transition">Steg 3</a>
       <a href="step4.html" class="hover:text-blue-300 transition">Steg 4</a>
-      <a href="schematics/" class="hover:text-blue-300 transition">Schema</a>
+      <a href="step5.html" class="hover:text-blue-300 transition">Steg 5</a>
     </div>
   </div>
 </nav>
@@ -56,7 +56,8 @@
       <p><strong class="text-gray-900">Steg 1 — Ström, klocka, reset:</strong> W65C02S får spänning och klockpulser från Arduino D2. En lysdiod blinkar i takt med klockan. Pull-up-motstånd på RDY, IRQB, NMIB, BE, SOB. 100 nF avkoppling vid VDD/VSS.</p>
       <p><strong class="text-gray-900">Steg 2 — Adressbuss A0–A15:</strong> Samtliga 16 adresslinjer kopplas till Arduinons analoga portar (PORTF + PORTK). RESB kopplas till D4 för kontrollerad reset. Serieövervakaren visar att CPU:n läser reset-vektorn $FFFC/$FFFD.</p>
       <p><strong class="text-gray-900">Steg 3 — Databuss D0–D7:</strong> 8 datalinjer + RWB kopplas in via 100 Ω skyddsmotstånd. Arduinon emulerar ett 64K-minne. Ett NOP-testprogram laddas på $8000. 8 lysdioder visar databussen binärt i realtid.</p>
-      <p><strong class="text-gray-900">Steg 4 — Interaktiv stegning, LCD, I/O:</strong> Två tryckknappar för manuell stegning (klockcykel / instruktion). LCD1602 I²C-display visar adress och data. SYNC-pinnen används för att detektera instruktionshämtning. Fullt interaktiv testbänk — helt utan datorskärm.</p>
+      <p><strong class="text-gray-900">Steg 4 — Manuell stegning:</strong> Två tryckknappar för manuell stegning (klockcykel / instruktion). SYNC-pinnen används för att detektera instruktionshämtning.</p>
+      <p><strong class="text-gray-900">Steg 5 — LCD-display:</strong> LCD1602 med I²C-backpack visar adress och data i realtid direkt på kopplingsdäcket. Fullt fristående testbänk — helt utan datorskärm.</p>
     </div>
   </section>
 
