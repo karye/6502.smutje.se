@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>W65C02 8-bitarsdator med Arduino Mega-emulering</title>
+<style>
+  :root {
+    --bg: #fafafa;
+    --fg: #1a1a2e;
+    --muted: #666;
+    --accent: #00979d;
+    --warn: #e76f51;
+    --code-bg: #f4f4f4;
+    --border: #ddd;
+    --red: #e63946;
+    --blue: #1d3557;
+    --green: #2a9d8f;
+    --orange: #f4a261;
+    --purple: #9b5de5;
+    --grey: #6d6875;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.6;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+  h1 { font-size: 1.8rem; margin-bottom: 0.3rem; }
+  h2 { font-size: 1.35rem; margin: 2rem 0 0.8rem; padding-bottom: 0.3rem; border-bottom: 2px solid var(--border); }
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 0.5rem; }
+  p, li { margin-bottom: 0.5rem; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+  .subtitle { color: var(--muted); font-size: 1rem; margin-bottom: 2rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: 0.9rem; }
+  th, td { padding: 0.45rem 0.7rem; border: 1px solid var(--border); text-align: left; }
+  th { background: var(--fg); color: #fff; font-weight: 600; }
+  tr:nth-child(even) { background: #f5f5f5; }
+  code { background: var(--code-bg); padding: 0.15em 0.35em; border-radius: 3px; font-size: 0.9em; }
+  pre { background: var(--code-bg); padding: 1rem; border-radius: 6px; overflow-x: auto; margin: 1rem 0; font-size: 0.85rem; }
+  blockquote {
+    border-left: 4px solid var(--warn);
+    margin: 1rem 0;
+    padding: 0.6rem 1rem;
+    background: #fff5f3;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.9rem;
+  }
+  blockquote p { margin: 0; }
+  .schema-container {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+  }
+  .schema-link {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
+  .schema-link:hover { opacity: 0.9; }
+  .badge {
+    display: inline-block;
+    padding: 0.15em 0.55em;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: 0.3rem;
+  }
+  .badge-red { background: #fde8e8; color: var(--red); }
+  .badge-blue { background: #e8edf5; color: var(--blue); }
+  .badge-green { background: #e6f5f3; color: var(--green); }
+  .badge-orange { background: #fef3e8; color: var(--orange); }
+  .badge-purple { background: #f0e8fa; color: var(--purple); }
+  .badge-grey { background: #eee; color: var(--grey); }
+  .toc { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.3rem; margin: 1.5rem 0; }
+  .toc ol { margin: 0; }
+  .toc a { color: var(--accent); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .step { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.3rem; margin: 1rem 0; }
+  .step h3 { margin-top: 0; }
+  .footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--muted); }
+  .intro { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1.3rem 1.5rem; margin: 1.5rem 0; font-size: 0.95rem; }
+</style>
+</head>
+<body>
+
+<h1>W65C02 8-bitarsdator med Arduino Mega-emulering</h1>
+<p class="subtitle">
+  En fristående 8-bitarsdator baserad på mikroprocessorn <strong>W65C02S</strong>.
+  Arduino Mega 2560 används för att simulera minne och klockcykler i det första utvecklingsskedet.
+</p>
+
+<div class="intro">
+  <p>
+    Detta är en <strong>hembyggd 8-bitarsdator</strong> där en klassisk <strong>W65C02S-mikroprocessor</strong>
+    får liv utan att en enda rad maskinkod behöver brännas in i ett EEPROM. Istället agerar en
+    <strong>Arduino Mega 2560</strong> som datorns minne och klocka – den läser processorns adressbuss,
+    serverar instruktioner från sitt interna RAM, och fångar upp allt som CPU:n skriver.
+  </p>
+  <p>
+    Eftersom W65C02S är en CMOS-krets med helt statisk kärna kan klockan <strong>stoppas helt</strong>
+    utan att processorn glömmer sitt tillstånd. Detta utnyttjas fullt ut: två fysiska knappar låter
+    dig stega igenom programmet – antingen en enskild klockcykel i taget eller en hel instruktion
+    åt gången. En lysdiod pulserar i takt med klockan och en LCD-display visar adressbuss och
+    instruktion i realtid – perfekt för att förstå vad som faktiskt händer inuti en 8-bitars CPU.
+  </p>
+  <p>
+    Nedan hittar du ett komplett kopplingsschema, detaljerade kopplingstabeller och en stegvis
+    byggplan som tar dig från strömmatning till en fullt interaktiv testbänk.
+  </p>
+</div>
+
+<nav class="toc">
+  <strong>Innehåll</strong>
+  <ol>
+    <li><a href="#schema">Kopplingsschema</a></li>
+    <li><a href="#komponenter">Komponenter</a></li>
+    <li><a href="#kopplingar">Kopplingstabeller</a>
+      <ol>
+        <li><a href="#strom">Ström och kontrollpinnar</a></li>
+        <li><a href="#pullup">Pull-up-anslutningar</a></li>
+        <li><a href="#adressbuss">Adressbuss</a></li>
+        <li><a href="#databuss">Databuss</a></li>
+        <li><a href="#led">Klockindikering (LED)</a></li>
+        <li><a href="#lcd">LCD-display</a></li>
+        <li><a href="#knappar">Knappar för manuell stegning</a></li>
+      </ol>
+    </li>
+    <li><a href="#byggplan">Stegvis bygg- och testplan</a></li>
+  </ol>
+</nav>
+
+<!-- ============================================================ -->
+<h2 id="schema">1. Kopplingsschema</h2>
+<p>
+  Komplett kopplingsschema i <strong>5 blad</strong> — ritat i ren ingenjörsstil med nätetiketter,
+  titelruta och korrekta komponentsymboler. Inspirerat av Ben Eaters klassiska datorbyggen.
+</p>
+<a class="schema-link" href="schematics/">📐 Öppna kopplingsschema (5 blad)</a>
+<p style="font-size:0.8rem; color:var(--muted); margin-top:0.5rem;">
+  Blad 1: Översikt · Blad 2: Adressbuss A0–A15 · Blad 3: Databuss D0–D7 · Blad 4: Kontroll &amp; Ström · Blad 5: I/O-enheter
+</p>
+
+<!-- ============================================================ -->
+<h2 id="komponenter">2. Komponenter</h2>
+<table>
+  <tr><th>Antal</th><th>Komponent</th></tr>
+  <tr><td>1</td><td><strong>W65C02S</strong> (DIP-40 mikroprocessor)</td></tr>
+  <tr><td>1</td><td><strong>Arduino Mega 2560</strong> (Plus eller standard)</td></tr>
+  <tr><td>1</td><td><strong>LCD1602</strong> med I2C/IIC-backpack</td></tr>
+  <tr><td>1</td><td><strong>Lysdiod</strong> (röd eller gul för klockindikering)</td></tr>
+  <tr><td>1</td><td><strong>220 Ω eller 330 Ω motstånd</strong> (strömbegränsning för klock-LED)</td></tr>
+  <tr><td>5</td><td><strong>3,3 kΩ eller 10 kΩ motstånd</strong> (pull-up för CPU-kontrollpinnar)</td></tr>
+  <tr><td>8</td><td><strong>100 Ω motstånd</strong> (seriemotstånd på databussen)</td></tr>
+  <tr><td>8</td><td><strong>Lysdioder</strong> (röda, för visuell avläsning av databussen D0–D7)</td></tr>
+  <tr><td>8</td><td><strong>220 Ω motstånd</strong> (strömbegränsning för databuss-LED:arna)</td></tr>
+  <tr><td>1</td><td><strong>104 (100 nF) keramisk kondensator</strong> (avkoppling för CPU)</td></tr>
+  <tr><td>1</td><td><strong>10 µF eller 47 µF elektrolytisk kondensator</strong> (strömstabilisering)</td></tr>
+  <tr><td>2</td><td><strong>Taktila tryckknappar</strong> (för stegning av klocka och instruktioner)</td></tr>
+  <tr><td>–</td><td>Kopplingsdäck (breadboards) och solid kopplingstråd</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="kopplingar">3. Kopplingstabeller</h2>
+
+<h3 id="strom">Ström och kontrollpinnar</h3>
+<table>
+  <tr><th>W65C02 (Pin)</th><th>Signal</th><th>Kopplas till</th><th>Kommentar</th></tr>
+  <tr><td><strong>Pin 8</strong></td><td>VDD</td><td>Arduino <strong>5V</strong></td><td>Strömmatning</td></tr>
+  <tr><td><strong>Pin 21</strong></td><td>GND</td><td>Arduino <strong>GND</strong></td><td>Gemensam jord</td></tr>
+  <tr><td><strong>Pin 36</strong></td><td>PHI2</td><td>Arduino <strong>D2</strong></td><td>Klockinmatning (genereras av Arduinon)</td></tr>
+  <tr><td><strong>Pin 34</strong></td><td>R/W</td><td>Arduino <strong>D3</strong></td><td>Read/Write (Hög = Läs, Låg = Skriv)</td></tr>
+  <tr><td><strong>Pin 40</strong></td><td>/RESET</td><td>Arduino <strong>D4</strong></td><td>Styrs av Arduinon för kontrollerad omstart</td></tr>
+  <tr><td><strong>Pin 7</strong></td><td>SYNC</td><td>Arduino <strong>D7</strong></td><td>Opcode fetch-indikering (hög vid instruktionshämtning)</td></tr>
+</table>
+
+<h3 id="pullup">Kritiska fasta anslutningar (Pull-up)</h3>
+<p>Följande pinnar på W65C02 <strong>måste</strong> dras till 5V via ett 3,3 kΩ eller 10 kΩ motstånd:</p>
+<ul>
+  <li><strong>Pin 2 (RDY)</strong> → 5V via motstånd</li>
+  <li><strong>Pin 4 (/IRQ)</strong> → 5V via motstånd</li>
+  <li><strong>Pin 6 (/NMI)</strong> → 5V via motstånd</li>
+  <li><strong>Pin 35 (BE)</strong> → 5V via motstånd <em>(Extremt viktigt på CMOS-versionen!)</em></li>
+  <li><strong>Pin 38 (/SO)</strong> → 5V via motstånd</li>
+</ul>
+
+<h3>Filter och avkoppling</h3>
+<ul>
+  <li>Placera den <strong>keramiska 104-kondensatorn (100 nF)</strong> direkt mellan Pin 8 (VDD) och Pin 21 (GND) på processorn, så nära chippet som möjligt.</li>
+  <li>Placera en <strong>elektrolytisk kondensator (10 µF eller 47 µF)</strong> där spänningskablarna från Arduinon går in på kopplingsdäckets strömskenor. Vänd den långa pinnen till + och den markerade minussidan till GND.</li>
+</ul>
+
+<h3 id="adressbuss">Adressbuss (A0–A15)</h3>
+<table>
+  <tr><th>W65C02 (Pin)</th><th>Adress</th><th>Arduino Mega</th><th>Hårdvaruport</th></tr>
+  <tr><td><strong>Pin 9–16</strong></td><td>A0 – A7</td><td><strong>A8 till A15</strong></td><td><code>PORTK</code> (låga adressblocket)</td></tr>
+  <tr><td><strong>Pin 17–20 &amp; 22–25</strong></td><td>A8 – A15</td><td><strong>A0 till A7</strong></td><td><code>PORTF</code> (höga adressblocket)</td></tr>
+</table>
+
+<h3 id="databuss">Databuss (D0–D7)</h3>
+<blockquote>
+  <strong>Varning – busskollision!</strong> När CPU:n skriver data (R/W låg) måste Arduinons PORTA-pinnar vara satta som <code>INPUT</code> (högimpedans) <em>innan</em> PHI2 går hög. Seriemotstånden (100 Ω) begränsar strömmen vid en oavsiktlig kollision.
+</blockquote>
+<table>
+  <tr><th>W65C02 (Pin)</th><th>Data</th><th>Arduino Mega</th><th>Hårdvaruport</th></tr>
+  <tr><td><strong>Pin 33</strong></td><td>D0</td><td><strong>Digital 22</strong> + 100 Ω</td><td><code>PORTA</code> Bit 0</td></tr>
+  <tr><td><strong>Pin 32</strong></td><td>D1</td><td><strong>Digital 23</strong> + 100 Ω</td><td><code>PORTA</code> Bit 1</td></tr>
+  <tr><td><strong>Pin 31</strong></td><td>D2</td><td><strong>Digital 24</strong> + 100 Ω</td><td><code>PORTA</code> Bit 2</td></tr>
+  <tr><td><strong>Pin 30</strong></td><td>D3</td><td><strong>Digital 25</strong> + 100 Ω</td><td><code>PORTA</code> Bit 3</td></tr>
+  <tr><td><strong>Pin 29</strong></td><td>D4</td><td><strong>Digital 26</strong> + 100 Ω</td><td><code>PORTA</code> Bit 4</td></tr>
+  <tr><td><strong>Pin 28</strong></td><td>D5</td><td><strong>Digital 27</strong> + 100 Ω</td><td><code>PORTA</code> Bit 5</td></tr>
+  <tr><td><strong>Pin 27</strong></td><td>D6</td><td><strong>Digital 28</strong> + 100 Ω</td><td><code>PORTA</code> Bit 6</td></tr>
+  <tr><td><strong>Pin 26</strong></td><td>D7</td><td><strong>Digital 29</strong> + 100 Ω</td><td><code>PORTA</code> Bit 7</td></tr>
+</table>
+
+<h3 id="databuss-led">Databuss-LED:ar — visuell avläsning av D0–D7</h3>
+<p>
+  Åtta lysdioder (med 220 Ω motstånd) kopplas mellan varje datalinje och GND,
+  på <strong>CPU-sidan</strong> av 100 Ω-seriemotstånden. När en bit är hög (logisk 1) tänds
+  motsvarande LED. Du kan läsa av hela databussens 8-bitarsvärde binärt i realtid.
+</p>
+<table>
+  <tr><th>Datalinje</th><th>LED + motstånd</th><th>Anslutning</th></tr>
+  <tr><td>D0</td><td>LED0 + 220 Ω</td><td>Mellan D0 (CPU pin 33) och GND</td></tr>
+  <tr><td>D1</td><td>LED1 + 220 Ω</td><td>Mellan D1 (CPU pin 32) och GND</td></tr>
+  <tr><td>D2</td><td>LED2 + 220 Ω</td><td>Mellan D2 (CPU pin 31) och GND</td></tr>
+  <tr><td>D3</td><td>LED3 + 220 Ω</td><td>Mellan D3 (CPU pin 30) och GND</td></tr>
+  <tr><td>D4</td><td>LED4 + 220 Ω</td><td>Mellan D4 (CPU pin 29) och GND</td></tr>
+  <tr><td>D5</td><td>LED5 + 220 Ω</td><td>Mellan D5 (CPU pin 28) och GND</td></tr>
+  <tr><td>D6</td><td>LED6 + 220 Ω</td><td>Mellan D6 (CPU pin 27) och GND</td></tr>
+  <tr><td>D7</td><td>LED7 + 220 Ω</td><td>Mellan D7 (CPU pin 26) och GND</td></tr>
+</table>
+
+<h3 id="led">Klockindikering (LED)</h3>
+<pre><code>Klocklinje (Arduino D2 / CPU Pin 36)
+  │
+  └───[ 220 Ω eller 330 Ω motstånd ]───►│ (Lysdiod) ───┐
+                                                       │
+                                                  Arduino GND</code></pre>
+
+<h3 id="lcd">Tvåraders display (LCD1602 I2C)</h3>
+<p>De flesta LCD1602 I2C-backpackar använder adress <strong><code>0x27</code></strong> eller <strong><code>0x3F</code></strong>. Kör en I2C-skanner på Arduinon för att verifiera adressen.</p>
+<table>
+  <tr><th>LCD1602 I2C Pin</th><th>Kopplas till</th><th>Kommentar</th></tr>
+  <tr><td><strong>GND</strong></td><td>Arduino <strong>GND</strong></td><td>Jord</td></tr>
+  <tr><td><strong>VCC</strong></td><td>Arduino <strong>5V</strong></td><td>Strömmatning (+5V)</td></tr>
+  <tr><td><strong>SDA</strong></td><td>Arduino <strong>Pin 20 (SDA)</strong></td><td>Dataöverföring</td></tr>
+  <tr><td><strong>SCL</strong></td><td>Arduino <strong>Pin 21 (SCL)</strong></td><td>Klocksynkronisering för I2C</td></tr>
+</table>
+
+<h3 id="knappar">Knappar för manuell stegning</h3>
+<p>Knapparna använder Arduinons interna pull-up-motstånd och kopplas direkt mellan pinne och jord.</p>
+<pre><code>Arduino D5 (Klocksteg) -------[ Knapp ]------- Arduino GND
+Arduino D6 (Instruktionssteg) -[ Knapp ]------- Arduino GND</code></pre>
+<blockquote>
+  <strong>Avstudsning (debounce):</strong> Mekaniska knappar studsar vid tryck. Avstudsning måste hanteras i mjukvaran (t.ex. 50 ms spärrtid).
+</blockquote>
+<ul>
+  <li><strong>Knapp 1 (Pin D5 – Clock Step):</strong> Varje tryckning matar exakt en klockcykel (PHI2 Hög → Låg).</li>
+  <li><strong>Knapp 2 (Pin D6 – Instruction Step):</strong> Håller klockan rullande tills SYNC-pinnen slår om, vilket indikerar att en helt ny instruktion har laddats.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="byggplan">4. Stegvis bygg- och testplan</h2>
+
+<div class="step">
+<h3>Steg 1: Strömmatning och grundläggande klocka</h3>
+<ol>
+  <li>Placera W65C02 på kopplingsdäcket.</li>
+  <li>Koppla 5V och GND från Arduinon till strömskenorna. Montera den elektrolytiska kondensatorn över skenorna.</li>
+  <li>Koppla Pin 8 (VDD) och Pin 21 (GND). Sätt den keramiska 104-kondensatorn direkt över chippets strömpinnar.</li>
+  <li>Koppla alla 5 pull-up-motstånd (pinnar 2, 4, 6, 35, 38) till 5V.</li>
+  <li>Koppla klockan från Arduino D2 till CPU Pin 36 samt LED med motstånd.</li>
+  <li><strong>Test:</strong> Ladda upp ett blink-skript som slår på/av Pin D2 med 1 Hz. Kontrollera att lysdioden blinkar.</li>
+</ol>
+</div>
+
+<div class="step">
+<h3>Steg 2: Adressbuss och reset-sekvens</h3>
+<ol>
+  <li>Koppla ur strömmen. Koppla in alla 16 adresslinjer (A0–A15) enligt tabellen.</li>
+  <li>Koppla Arduino Pin D4 till CPU Pin 40 (/RESET).</li>
+  <li>Skriv ett Arduino-skript som drar /RESET låg i 5 klockcykler vid uppstart, sedan hög.</li>
+  <li><strong>Test:</strong> Verifiera i serieövervakaren att processorn läser från <code>$FFFC</code> och <code>$FFFD</code> (reset-vektorn).</li>
+</ol>
+</div>
+
+<div class="step">
+<h3>Steg 3: Databuss och minnesemulering</h3>
+<ol>
+  <li>Koppla in de 8 datalinjerna (D0–D7) mellan CPU:n och Arduino Pin D22–D29 via 100 Ω seriemotstånd.</li>
+  <li>Koppla R/W (CPU Pin 34) till Arduino Pin D3.</li>
+  <li>Uppdatera Arduino-koden: Skapa en minnes-array. Lägg startadressen (t.ex. <code>$8000</code>) på <code>$FFFC/$FFFD</code>. Lägg en <code>NOP</code>-instruktion (<code>$EA</code>) eller en loop på <code>$8000</code>.</li>
+  <li>Konfigurera <code>PORTA</code> som utgångar vid läsning (R/W hög) och som ingångar vid skrivning (R/W låg).</li>
+  <li><strong>Test:</strong> Verifiera att processorn läser startvektorn, hoppar till <code>$8000</code> och exekverar.</li>
+</ol>
+</div>
+
+<div class="step">
+<h3>Steg 4: Interaktiv stegning och LCD-display</h3>
+<ol>
+  <li>Koppla in knapparna till Arduino Pin D5 och D6 samt SYNC-pinnen till Arduino D7.</li>
+  <li>Koppla in LCD1602 via I2C till Arduino Pin 20 och 21.</li>
+  <li>Uppdatera koden så att klockan väntar på knapptryckningar.</li>
+  <li>Lägg till kod för att formatera adress- och databussvärden till hexadecimal text på LCD-displayen.</li>
+  <li><strong>Test:</strong> Du kan nu trycka på klockknappen för att stega processorn manuellt. Skärmen visar adress och instruktion i realtid.</li>
+</ol>
+</div>
+
+<div class="footer">
+  <p>Projektfiler: <a href="README.md">README.md</a> · <a href="schematics/">Kopplingsschema (5 blad)</a></p>
+  <p>Senast uppdaterad: juli 2026</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schematics — W65C02 8-bitarsdator</title>
+<style>
+  :root { --bg: #fafafa; --fg: #111; --muted: #666; --border: #ccc; --accent: #00979d; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--fg);
+    max-width: 1320px; margin: 0 auto; padding: 1.5rem;
+  }
+  h1 { font-size: 1.5rem; margin-bottom: 0.3rem; }
+  h2 { font-size: 1.1rem; margin: 1rem 0 0.5rem; cursor: pointer; }
+  .subtitle { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .sheet-nav {
+    display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;
+    position: sticky; top: 0; background: var(--bg); padding: 0.8rem 0; z-index: 10;
+    border-bottom: 1px solid var(--border);
+  }
+  .sheet-nav a {
+    padding: 0.4rem 1rem; border: 1px solid var(--border); border-radius: 4px;
+    text-decoration: none; color: var(--fg); font-size: 0.85rem; background: #fff;
+    transition: background 0.15s;
+  }
+  .sheet-nav a:hover, .sheet-nav a.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .sheet-view { text-align: center; margin-bottom: 1rem; }
+  .sheet-view img, .sheet-view object { max-width: 100%; border: 1px solid var(--border); border-radius: 4px; background: #fff; }
+  .sheet-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+  .sheet-label { font-size: 0.85rem; color: var(--muted); }
+  .nav-buttons { display: flex; gap: 0.5rem; }
+  .nav-buttons button {
+    padding: 0.3rem 0.8rem; border: 1px solid var(--border); border-radius: 4px;
+    background: #fff; cursor: pointer; font-size: 0.85rem;
+  }
+  .nav-buttons button:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .nav-buttons button:disabled { opacity: 0.4; cursor: default; }
+  .footer { margin-top: 2rem; padding-top: 0.8rem; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--muted); }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #1a1a2e; --fg: #ddd; --muted: #999; --border: #333; }
+    .sheet-nav a, .nav-buttons button { background: #222; color: #ddd; }
+    .sheet-view img, .sheet-view object { background: #fff; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Kopplingsschema — W65C02 8-bitarsdator</h1>
+<p class="subtitle">5 blad i Ben Eater-stil · Klicka på ett blad för att visa · Använd piltangenter för att bläddra</p>
+
+<nav class="sheet-nav" id="nav">
+  <a href="#sheet1" class="active">Blad 1: Översikt</a>
+  <a href="#sheet2">Blad 2: Adressbuss</a>
+  <a href="#sheet3">Blad 3: Databuss</a>
+  <a href="#sheet4">Blad 4: Kontroll &amp; Ström</a>
+  <a href="#sheet5">Blad 5: I/O-enheter</a>
+</nav>
+
+<div class="sheet-info">
+  <span class="sheet-label" id="sheetLabel">Blad 1 av 5 — Översikt</span>
+  <div class="nav-buttons">
+    <button id="prevBtn" disabled>← Föregående</button>
+    <button id="nextBtn">Nästa →</button>
+  </div>
+</div>
+
+<div class="sheet-view" id="sheetView">
+  <object data="sheet1-overview.svg" type="image/svg+xml" style="width:100%" id="sheetObject">
+    <img src="sheet1-overview.svg" alt="Sheet 1" style="width:100%"/>
+  </object>
+</div>
+
+<div class="footer">
+  <p><a href="../">← Tillbaka till projektsidan</a></p>
+</div>
+
+<script>
+const sheets = [
+  { file: 'sheet1-overview.svg',  label: 'Blad 1 av 5 — Översikt' },
+  { file: 'sheet2-address-bus.svg', label: 'Blad 2 av 5 — Adressbuss A0–A15' },
+  { file: 'sheet3-data-bus.svg',    label: 'Blad 3 av 5 — Databuss D0–D7' },
+  { file: 'sheet4-control.svg',     label: 'Blad 4 av 5 — Kontrollsignaler &amp; Ström' },
+  { file: 'sheet5-io.svg',          label: 'Blad 5 av 5 — I/O: LCD, Knappar, LED' }
+];
+
+let current = 0;
+
+function showSheet(index) {
+  current = index;
+  const s = sheets[index];
+  document.getElementById('sheetObject').data = s.file;
+  document.getElementById('sheetLabel').textContent = s.label;
+  document.querySelectorAll('#nav a').forEach((a,i) => a.classList.toggle('active', i === index));
+  document.getElementById('prevBtn').disabled = index === 0;
+  document.getElementById('nextBtn').disabled = index === sheets.length - 1;
+  window.location.hash = 'sheet' + (index + 1);
+}
+
+document.getElementById('prevBtn').onclick = () => { if (current > 0) showSheet(current - 1); };
+document.getElementById('nextBtn').onclick = () => { if (current < sheets.length - 1) showSheet(current + 1); };
+
+document.querySelectorAll('#nav a').forEach((a, i) => {
+  a.onclick = e => { e.preventDefault(); showSheet(i); };
+});
+
+document.onkeydown = e => {
+  if (e.key === 'ArrowLeft' && current > 0) { e.preventDefault(); showSheet(current - 1); }
+  if (e.key === 'ArrowRight' && current < sheets.length - 1) { e.preventDefault(); showSheet(current + 1); }
+};
+
+// Load from hash
+const hash = window.location.hash;
+if (hash) {
+  const m = hash.match(/sheet(\d)/);
+  if (m) { const idx = parseInt(m[1]) - 1; if (idx >= 0 && idx < sheets.length) showSheet(idx); }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 960" font-family="'Consolas', 'Courier New', monospace" font-size="11">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#555"/>
+    </marker>
+    <style>
+      text { dominant-baseline: middle; }
+      .title { font-size: 16px; font-weight: bold; fill: #111; }
+      .pin-num { font-size: 9px; fill: #666; }
+      .pin-label { font-size: 10px; fill: #222; }
+      .pin-label-right { font-size: 10px; fill: #222; text-anchor: end; }
+      .addr { stroke: #e63946; stroke-width: 1.5; fill: none; }
+      .data { stroke: #1d3557; stroke-width: 2; fill: none; }
+      .ctrl { stroke: #2a9d8f; stroke-width: 1.5; fill: none; }
+      .power { stroke: #f4a261; stroke-width: 1.2; fill: none; }
+      .i2c { stroke: #9b5de5; stroke-width: 1.3; fill: none; }
+      .btn { stroke: #6d6875; stroke-width: 1.2; fill: none; }
+    </style>
+  </defs>
+
+  <!-- Bakgrund -->
+  <rect width="1400" height="960" fill="#fafafa" rx="8"/>
+
+  <!-- Titel -->
+  <text x="700" y="28" text-anchor="middle" class="title">W65C02S 8-bitarsdator — Komplett kopplingsschema</text>
+  <text x="700" y="48" text-anchor="middle" font-size="10" fill="#888">Arduino Mega 2560 som minnesemulator  •  Manuell stegning via knappar  •  LCD1602 I²C-display</text>
+
+  <!-- ============================================================ -->
+  <!-- W65C02S CPU CHIP -->
+  <!-- ============================================================ -->
+  <rect x="280" y="100" width="100" height="560" rx="4" fill="#1a1a2e" stroke="#16213e" stroke-width="2"/>
+  <text x="330" y="88" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">W65C02S</text>
+
+  <!-- CPU vänster pins (1-20), nedifrån och upp -->
+  <!-- Pin 20: A11 -->
+  <text x="274" y="635" text-anchor="end" class="pin-label">A11</text><text x="272" y="635" text-anchor="start" class="pin-num">20</text>
+  <line x1="280" y1="635" x2="250" y2="635" class="addr"/>
+
+  <!-- Pin 19: A10 -->
+  <text x="274" y="608" text-anchor="end" class="pin-label">A10</text><text x="272" y="608" text-anchor="start" class="pin-num">19</text>
+  <line x1="280" y1="608" x2="250" y2="608" class="addr"/>
+
+  <!-- Pin 18: A9 -->
+  <text x="274" y="581" text-anchor="end" class="pin-label">A9</text><text x="272" y="581" text-anchor="start" class="pin-num">18</text>
+  <line x1="280" y1="581" x2="250" y2="581" class="addr"/>
+
+  <!-- Pin 17: A8 -->
+  <text x="274" y="554" text-anchor="end" class="pin-label">A8</text><text x="272" y="554" text-anchor="start" class="pin-num">17</text>
+  <line x1="280" y1="554" x2="250" y2="554" class="addr"/>
+
+  <!-- Pin 16: A7 -->
+  <text x="274" y="527" text-anchor="end" class="pin-label">A7</text><text x="272" y="527" text-anchor="start" class="pin-num">16</text>
+  <line x1="280" y1="527" x2="250" y2="527" class="addr"/>
+
+  <!-- Pin 15: A6 -->
+  <text x="274" y="500" text-anchor="end" class="pin-label">A6</text><text x="272" y="500" text-anchor="start" class="pin-num">15</text>
+  <line x1="280" y1="500" x2="250" y2="500" class="addr"/>
+
+  <!-- Pin 14: A5 -->
+  <text x="274" y="473" text-anchor="end" class="pin-label">A5</text><text x="272" y="473" text-anchor="start" class="pin-num">14</text>
+  <line x1="280" y1="473" x2="250" y2="473" class="addr"/>
+
+  <!-- Pin 13: A4 -->
+  <text x="274" y="446" text-anchor="end" class="pin-label">A4</text><text x="272" y="446" text-anchor="start" class="pin-num">13</text>
+  <line x1="280" y1="446" x2="250" y2="446" class="addr"/>
+
+  <!-- Pin 12: A3 -->
+  <text x="274" y="419" text-anchor="end" class="pin-label">A3</text><text x="272" y="419" text-anchor="start" class="pin-num">12</text>
+  <line x1="280" y1="419" x2="250" y2="419" class="addr"/>
+
+  <!-- Pin 11: A2 -->
+  <text x="274" y="392" text-anchor="end" class="pin-label">A2</text><text x="272" y="392" text-anchor="start" class="pin-num">11</text>
+  <line x1="280" y1="392" x2="250" y2="392" class="addr"/>
+
+  <!-- Pin 10: A1 -->
+  <text x="274" y="365" text-anchor="end" class="pin-label">A1</text><text x="272" y="365" text-anchor="start" class="pin-num">10</text>
+  <line x1="280" y1="365" x2="250" y2="365" class="addr"/>
+
+  <!-- Pin 9: A0 -->
+  <text x="274" y="338" text-anchor="end" class="pin-label">A0</text><text x="272" y="338" text-anchor="start" class="pin-num">9</text>
+  <line x1="280" y1="338" x2="250" y2="338" class="addr"/>
+
+  <!-- Pin 8: VDD -->
+  <text x="274" y="311" text-anchor="end" class="pin-label">VDD</text><text x="272" y="311" text-anchor="start" class="pin-num">8</text>
+  <line x1="280" y1="311" x2="240" y2="311" class="power"/>
+
+  <!-- Pin 7: SYNC -->
+  <text x="274" y="284" text-anchor="end" class="pin-label">SYNC</text><text x="272" y="284" text-anchor="start" class="pin-num">7</text>
+  <line x1="280" y1="284" x2="200" y2="284" class="ctrl"/>
+
+  <!-- Pin 6: /NMI -->
+  <text x="274" y="257" text-anchor="end" class="pin-label">/NMI</text><text x="272" y="257" text-anchor="start" class="pin-num">6</text>
+  <!-- pull-up -->
+  <line x1="280" y1="257" x2="240" y2="257" class="ctrl"/>
+
+  <!-- Pin 5: MLB (NC) -->
+  <text x="274" y="230" text-anchor="end" class="pin-label" fill="#aaa">MLB</text><text x="272" y="230" text-anchor="start" class="pin-num">5</text>
+
+  <!-- Pin 4: /IRQ -->
+  <text x="274" y="203" text-anchor="end" class="pin-label">/IRQ</text><text x="272" y="203" text-anchor="start" class="pin-num">4</text>
+  <line x1="280" y1="203" x2="240" y2="203" class="ctrl"/>
+
+  <!-- Pin 3: PHI1O (NC) -->
+  <text x="274" y="176" text-anchor="end" class="pin-label" fill="#aaa">PHI1O</text><text x="272" y="176" text-anchor="start" class="pin-num">3</text>
+
+  <!-- Pin 2: RDY -->
+  <text x="274" y="149" text-anchor="end" class="pin-label">RDY</text><text x="272" y="149" text-anchor="start" class="pin-num">2</text>
+  <line x1="280" y1="149" x2="240" y2="149" class="ctrl"/>
+
+  <!-- Pin 1: VP (NC) -->
+  <text x="274" y="122" text-anchor="end" class="pin-label" fill="#aaa">VP</text><text x="272" y="122" text-anchor="start" class="pin-num">1</text>
+
+  <!-- CPU höger pins (21-40), uppifrån och ned -->
+  <!-- Pin 21: GND -->
+  <text x="386" y="122" text-anchor="start" class="pin-label">GND</text><text x="392" y="122" text-anchor="start" class="pin-num">21</text>
+  <line x1="380" y1="122" x2="420" y2="122" class="power"/>
+
+  <!-- Pin 22: A12 -->
+  <text x="386" y="149" text-anchor="start" class="pin-label">A12</text><text x="392" y="149" text-anchor="start" class="pin-num">22</text>
+  <line x1="380" y1="149" x2="410" y2="149" class="addr"/>
+
+  <!-- Pin 23: A13 -->
+  <text x="386" y="176" text-anchor="start" class="pin-label">A13</text><text x="392" y="176" text-anchor="start" class="pin-num">23</text>
+  <line x1="380" y1="176" x2="410" y2="176" class="addr"/>
+
+  <!-- Pin 24: A14 -->
+  <text x="386" y="203" text-anchor="start" class="pin-label">A14</text><text x="392" y="203" text-anchor="start" class="pin-num">24</text>
+  <line x1="380" y1="203" x2="410" y2="203" class="addr"/>
+
+  <!-- Pin 25: A15 -->
+  <text x="386" y="230" text-anchor="start" class="pin-label">A15</text><text x="392" y="230" text-anchor="start" class="pin-num">25</text>
+  <line x1="380" y1="230" x2="410" y2="230" class="addr"/>
+
+  <!-- Pin 26: D7 -->
+  <text x="386" y="284" text-anchor="start" class="pin-label">D7</text><text x="392" y="284" text-anchor="start" class="pin-num">26</text>
+  <line x1="380" y1="284" x2="500" y2="284" class="data"/>
+
+  <!-- Pin 27: D6 -->
+  <text x="386" y="311" text-anchor="start" class="pin-label">D6</text><text x="392" y="311" text-anchor="start" class="pin-num">27</text>
+  <line x1="380" y1="311" x2="500" y2="311" class="data"/>
+
+  <!-- Pin 28: D5 -->
+  <text x="386" y="338" text-anchor="start" class="pin-label">D5</text><text x="392" y="338" text-anchor="start" class="pin-num">28</text>
+  <line x1="380" y1="338" x2="500" y2="338" class="data"/>
+
+  <!-- Pin 29: D4 -->
+  <text x="386" y="365" text-anchor="start" class="pin-label">D4</text><text x="392" y="365" text-anchor="start" class="pin-num">29</text>
+  <line x1="380" y1="365" x2="500" y2="365" class="data"/>
+
+  <!-- Pin 30: D3 -->
+  <text x="386" y="392" text-anchor="start" class="pin-label">D3</text><text x="392" y="392" text-anchor="start" class="pin-num">30</text>
+  <line x1="380" y1="392" x2="500" y2="392" class="data"/>
+
+  <!-- Pin 31: D2 -->
+  <text x="386" y="419" text-anchor="start" class="pin-label">D2</text><text x="392" y="419" text-anchor="start" class="pin-num">31</text>
+  <line x1="380" y1="419" x2="500" y2="419" class="data"/>
+
+  <!-- Pin 32: D1 -->
+  <text x="386" y="446" text-anchor="start" class="pin-label">D1</text><text x="392" y="446" text-anchor="start" class="pin-num">32</text>
+  <line x1="380" y1="446" x2="500" y2="446" class="data"/>
+
+  <!-- Pin 33: D0 -->
+  <text x="386" y="473" text-anchor="start" class="pin-label">D0</text><text x="392" y="473" text-anchor="start" class="pin-num">33</text>
+  <line x1="380" y1="473" x2="500" y2="473" class="data"/>
+
+  <!-- Pin 34: R/W -->
+  <text x="386" y="500" text-anchor="start" class="pin-label">R/W</text><text x="392" y="500" text-anchor="start" class="pin-num">34</text>
+  <line x1="380" y1="500" x2="550" y2="500" class="ctrl"/>
+
+  <!-- Pin 35: BE -->
+  <text x="386" y="527" text-anchor="start" class="pin-label">BE</text><text x="392" y="527" text-anchor="start" class="pin-num">35</text>
+  <line x1="380" y1="527" x2="420" y2="527" class="ctrl"/>
+
+  <!-- Pin 36: PHI2 -->
+  <text x="386" y="554" text-anchor="start" class="pin-label">PHI2</text><text x="392" y="554" text-anchor="start" class="pin-num">36</text>
+  <line x1="380" y1="554" x2="550" y2="554" class="ctrl"/>
+
+  <!-- Pin 37: PHI2O (NC) -->
+  <text x="386" y="581" text-anchor="start" class="pin-label" fill="#aaa">PHI2O</text><text x="392" y="581" text-anchor="start" class="pin-num">37</text>
+
+  <!-- Pin 38: /SO -->
+  <text x="386" y="608" text-anchor="start" class="pin-label">/SO</text><text x="392" y="608" text-anchor="start" class="pin-num">38</text>
+  <line x1="380" y1="608" x2="420" y2="608" class="ctrl"/>
+
+  <!-- Pin 39: PHI1 (NC) -->
+  <text x="386" y="635" text-anchor="start" class="pin-label" fill="#aaa">PHI1</text><text x="392" y="635" text-anchor="start" class="pin-num">39</text>
+
+  <!-- Pin 40: /RESET -->
+  <text x="386" y="662" text-anchor="start" class="pin-label">/RESET</text><text x="392" y="662" text-anchor="start" class="pin-num">40</text>
+  <line x1="380" y1="662" x2="550" y2="662" class="ctrl"/>
+
+  <!-- ============================================================ -->
+  <!-- ARDUINO MEGA 2560 -->
+  <!-- ============================================================ -->
+  <rect x="740" y="70" width="160" height="600" rx="4" fill="#00979d" stroke="#00676b" stroke-width="2"/>
+  <text x="820" y="58" text-anchor="middle" font-size="13" font-weight="bold" fill="#00676b">Arduino Mega 2560</text>
+
+  <!-- Digital pins (vänster sida) -->
+  <!-- D22-D29 (PORTA) -->
+  <text x="824" y="278" text-anchor="end" class="pin-label" fill="white">D22</text><text x="826" y="278" text-anchor="start" class="pin-num" fill="#aadddd">PORTA0</text>
+  <line x1="740" y1="278" x2="700" y2="278" class="data"/>
+
+  <text x="824" y="305" text-anchor="end" class="pin-label" fill="white">D23</text><text x="826" y="305" text-anchor="start" class="pin-num" fill="#aadddd">PORTA1</text>
+  <line x1="740" y1="305" x2="700" y2="305" class="data"/>
+
+  <text x="824" y="332" text-anchor="end" class="pin-label" fill="white">D24</text><text x="826" y="332" text-anchor="start" class="pin-num" fill="#aadddd">PORTA2</text>
+  <line x1="740" y1="332" x2="700" y2="332" class="data"/>
+
+  <text x="824" y="359" text-anchor="end" class="pin-label" fill="white">D25</text><text x="826" y="359" text-anchor="start" class="pin-num" fill="#aadddd">PORTA3</text>
+  <line x1="740" y1="359" x2="700" y2="359" class="data"/>
+
+  <text x="824" y="386" text-anchor="end" class="pin-label" fill="white">D26</text><text x="826" y="386" text-anchor="start" class="pin-num" fill="#aadddd">PORTA4</text>
+  <line x1="740" y1="386" x2="700" y2="386" class="data"/>
+
+  <text x="824" y="413" text-anchor="end" class="pin-label" fill="white">D27</text><text x="826" y="413" text-anchor="start" class="pin-num" fill="#aadddd">PORTA5</text>
+  <line x1="740" y1="413" x2="700" y2="413" class="data"/>
+
+  <text x="824" y="440" text-anchor="end" class="pin-label" fill="white">D28</text><text x="826" y="440" text-anchor="start" class="pin-num" fill="#aadddd">PORTA6</text>
+  <line x1="740" y1="440" x2="700" y2="440" class="data"/>
+
+  <text x="824" y="467" text-anchor="end" class="pin-label" fill="white">D29</text><text x="826" y="467" text-anchor="start" class="pin-num" fill="#aadddd">PORTA7</text>
+  <line x1="740" y1="467" x2="700" y2="467" class="data"/>
+
+  <!-- Control pins D2-D7 -->
+  <text x="824" y="548" text-anchor="end" class="pin-label" fill="white">D2</text><text x="826" y="548" text-anchor="start" class="pin-num" fill="#aadddd">PHI2</text>
+  <line x1="740" y1="548" x2="700" y2="548" class="ctrl"/>
+
+  <text x="824" y="575" text-anchor="end" class="pin-label" fill="white">D3</text><text x="826" y="575" text-anchor="start" class="pin-num" fill="#aadddd">R/W</text>
+  <line x1="740" y1="575" x2="700" y2="575" class="ctrl"/>
+
+  <text x="824" y="602" text-anchor="end" class="pin-label" fill="white">D4</text><text x="826" y="602" text-anchor="start" class="pin-num" fill="#aadddd">RESET</text>
+  <line x1="740" y1="602" x2="700" y2="602" class="ctrl"/>
+
+  <text x="824" y="629" text-anchor="end" class="pin-label" fill="white">D7</text><text x="826" y="629" text-anchor="start" class="pin-num" fill="#aadddd">SYNC</text>
+  <line x1="740" y1="629" x2="700" y2="629" class="ctrl"/>
+
+  <!-- Analog pins (höger sida) A0-A7 (PORTF) -->
+  <text x="796" y="149" text-anchor="start" class="pin-label" fill="white">A0</text><text x="796" y="149" text-anchor="end" class="pin-num" fill="#aadddd">PORTF0</text>
+  <line x1="900" y1="149" x2="960" y2="149" class="addr"/>
+
+  <text x="796" y="176" text-anchor="start" class="pin-label" fill="white">A1</text><text x="796" y="176" text-anchor="end" class="pin-num" fill="#aadddd">PORTF1</text>
+  <line x1="900" y1="176" x2="960" y2="176" class="addr"/>
+
+  <text x="796" y="203" text-anchor="start" class="pin-label" fill="white">A2</text><text x="796" y="203" text-anchor="end" class="pin-num" fill="#aadddd">PORTF2</text>
+  <line x1="900" y1="203" x2="960" y2="203" class="addr"/>
+
+  <text x="796" y="230" text-anchor="start" class="pin-label" fill="white">A3</text><text x="796" y="230" text-anchor="end" class="pin-num" fill="#aadddd">PORTF3</text>
+  <line x1="900" y1="230" x2="960" y2="230" class="addr"/>
+
+  <text x="796" y="257" text-anchor="start" class="pin-label" fill="white">A4</text><text x="796" y="257" text-anchor="end" class="pin-num" fill="#aadddd">PORTF4</text>
+  <line x1="900" y1="257" x2="960" y2="257" class="addr"/>
+
+  <text x="796" y="284" text-anchor="start" class="pin-label" fill="white">A5</text><text x="796" y="284" text-anchor="end" class="pin-num" fill="#aadddd">PORTF5</text>
+  <line x1="900" y1="284" x2="960" y2="284" class="addr"/>
+
+  <text x="796" y="311" text-anchor="start" class="pin-label" fill="white">A6</text><text x="796" y="311" text-anchor="end" class="pin-num" fill="#aadddd">PORTF6</text>
+  <line x1="900" y1="311" x2="960" y2="311" class="addr"/>
+
+  <text x="796" y="338" text-anchor="start" class="pin-label" fill="white">A7</text><text x="796" y="338" text-anchor="end" class="pin-num" fill="#aadddd">PORTF7</text>
+  <line x1="900" y1="338" x2="960" y2="338" class="addr"/>
+
+  <!-- A8-A15 (PORTK) -->
+  <text x="796" y="392" text-anchor="start" class="pin-label" fill="white">A8</text><text x="796" y="392" text-anchor="end" class="pin-num" fill="#aadddd">PORTK0</text>
+  <line x1="900" y1="392" x2="960" y2="392" class="addr"/>
+
+  <text x="796" y="419" text-anchor="start" class="pin-label" fill="white">A9</text><text x="796" y="419" text-anchor="end" class="pin-num" fill="#aadddd">PORTK1</text>
+  <line x1="900" y1="419" x2="960" y2="419" class="addr"/>
+
+  <text x="796" y="446" text-anchor="start" class="pin-label" fill="white">A10</text><text x="796" y="446" text-anchor="end" class="pin-num" fill="#aadddd">PORTK2</text>
+  <line x1="900" y1="446" x2="960" y2="446" class="addr"/>
+
+  <text x="796" y="473" text-anchor="start" class="pin-label" fill="white">A11</text><text x="796" y="473" text-anchor="end" class="pin-num" fill="#aadddd">PORTK3</text>
+  <line x1="900" y1="473" x2="960" y2="473" class="addr"/>
+
+  <text x="796" y="500" text-anchor="start" class="pin-label" fill="white">A12</text><text x="796" y="500" text-anchor="end" class="pin-num" fill="#aadddd">PORTK4</text>
+  <line x1="900" y1="500" x2="960" y2="500" class="addr"/>
+
+  <text x="796" y="527" text-anchor="start" class="pin-label" fill="white">A13</text><text x="796" y="527" text-anchor="end" class="pin-num" fill="#aadddd">PORTK5</text>
+  <line x1="900" y1="527" x2="960" y2="527" class="addr"/>
+
+  <text x="796" y="554" text-anchor="start" class="pin-label" fill="white">A14</text><text x="796" y="554" text-anchor="end" class="pin-num" fill="#aadddd">PORTK6</text>
+  <line x1="900" y1="554" x2="960" y2="554" class="addr"/>
+
+  <text x="796" y="581" text-anchor="start" class="pin-label" fill="white">A15</text><text x="796" y="581" text-anchor="end" class="pin-num" fill="#aadddd">PORTK7</text>
+  <line x1="900" y1="581" x2="960" y2="581" class="addr"/>
+
+  <!-- I2C pins -->
+  <text x="796" y="644" text-anchor="start" class="pin-label" fill="white">20</text><text x="796" y="644" text-anchor="end" class="pin-num" fill="#aadddd">SDA</text>
+  <line x1="900" y1="644" x2="960" y2="644" class="i2c"/>
+
+  <text x="796" y="670" text-anchor="start" class="pin-label" fill="white">21</text><text x="796" y="670" text-anchor="end" class="pin-num" fill="#aadddd">SCL</text>
+  <line x1="900" y1="670" x2="960" y2="670" class="i2c"/>
+
+  <!-- Arduino power/knappar internally noted -->
+  <text x="796" y="700" text-anchor="start" class="pin-label" fill="white">D5</text><text x="796" y="700" text-anchor="end" class="pin-num" fill="#aadddd">SINGLE STEP</text>
+  <line x1="900" y1="700" x2="960" y2="700" class="btn"/>
+
+  <text x="796" y="727" text-anchor="start" class="pin-label" fill="white">D6</text><text x="796" y="727" text-anchor="end" class="pin-num" fill="#aadddd">INSTR STEP</text>
+  <line x1="900" y1="727" x2="960" y2="727" class="btn"/>
+
+  <text x="796" y="760" text-anchor="start" class="pin-label" fill="#f4a261">5V</text>
+  <line x1="900" y1="760" x2="960" y2="760" class="power"/>
+
+  <text x="796" y="787" text-anchor="start" class="pin-label" fill="#f4a261">GND</text>
+  <line x1="900" y1="787" x2="960" y2="787" class="power"/>
+
+  <!-- ============================================================ -->
+  <!-- 100Ω SERIES RESISTORS on data bus -->
+  <!-- ============================================================ -->
+  <rect x="498" y="268" width="50" height="20" rx="6" fill="#e8dff5" stroke="#9b5de5" stroke-width="1"/>
+  <text x="523" y="278" text-anchor="middle" font-size="8" fill="#6b3fa0">100Ω</text>
+
+  <rect x="498" y="295" width="50" height="20" rx="6" fill="#e8dff5" stroke="#9b5de5" stroke-width="1"/>
+  <text x="523" y="305" text-anchor="middle" font-size="8" fill="#6b3fa0">100Ω</text>
+
+  <rect x="498" y="322" width="50" height="20" rx="6" fill="#e8dff5" stroke="#9b5de5" stroke-width="1"/>
+  <text x="523" y="332" text-anchor="middle" font-size="8" fill="#6b3fa0">100Ω</text>
+
+  <rect x="498" y="349" width="50" height="20" rx="6" fill="#e8dff5" stroke="#9b5de5" stroke-width="1"/>
+  <text x="523" y="359" text-anchor="middle" font-size="8" fill="#6b3fa0">100Ω</text>
+
+  <rect x="498" y="376" width="50" height="20" rx="6" fill="#e8dff5" stroke="#9b5de5" stroke-width="1"/>
+  <text x="523" y="386" text-anchor="middle" font-size="8" fill="#6b3fa0">100Ω</text>
+
+  <rect x="498" y="403" width="50" height="20" rx="6" fill="#e8dff5" stroke="#9b5de5" stroke-width="1"/>
+  <text x="523" y="413" text-anchor="middle" font-size="8" fill="#6b3fa0">100Ω</text>
+
+  <rect x="498" y="430" width="50" height="20" rx="6" fill="#e8dff5" stroke="#9b5de5" stroke-width="1"/>
+  <text x="523" y="440" text-anchor="middle" font-size="8" fill="#6b3fa0">100Ω</text>
+
+  <rect x="498" y="457" width="50" height="20" rx="6" fill="#e8dff5" stroke="#9b5de5" stroke-width="1"/>
+  <text x="523" y="467" text-anchor="middle" font-size="8" fill="#6b3fa0">100Ω</text>
+
+  <!-- ============================================================ -->
+  <!-- PULL-UP MOTSTÅND -->
+  <!-- ============================================================ -->
+  <rect x="170" y="143" width="55" height="18" rx="6" fill="#fef3cd" stroke="#f4a261" stroke-width="1"/>
+  <text x="198" y="153" text-anchor="middle" font-size="7" fill="#b07828">3k3/10k</text>
+  <text x="148" y="153" text-anchor="end" font-size="9" fill="#f4a261">Pin 2 RDY</text>
+
+  <rect x="170" y="197" width="55" height="18" rx="6" fill="#fef3cd" stroke="#f4a261" stroke-width="1"/>
+  <text x="198" y="207" text-anchor="middle" font-size="7" fill="#b07828">3k3/10k</text>
+  <text x="148" y="207" text-anchor="end" font-size="9" fill="#f4a261">Pin 4 /IRQ</text>
+
+  <rect x="170" y="251" width="55" height="18" rx="6" fill="#fef3cd" stroke="#f4a261" stroke-width="1"/>
+  <text x="198" y="261" text-anchor="middle" font-size="7" fill="#b07828">3k3/10k</text>
+  <text x="148" y="261" text-anchor="end" font-size="9" fill="#f4a261">Pin 6 /NMI</text>
+
+  <rect x="415" y="521" width="55" height="18" rx="6" fill="#fef3cd" stroke="#f4a261" stroke-width="1"/>
+  <text x="443" y="531" text-anchor="middle" font-size="7" fill="#b07828">3k3/10k</text>
+  <text x="486" y="531" text-anchor="start" font-size="9" fill="#f4a261">Pin 35 BE</text>
+
+  <rect x="415" y="602" width="55" height="18" rx="6" fill="#fef3cd" stroke="#f4a261" stroke-width="1"/>
+  <text x="443" y="612" text-anchor="middle" font-size="7" fill="#b07828">3k3/10k</text>
+  <text x="486" y="612" text-anchor="start" font-size="9" fill="#f4a261">Pin 38 /SO</text>
+
+  <!-- Pull-up power rails -->
+  <line x1="170" y1="152" x2="170" y2="152" class="power"/>
+  <line x1="170" y1="206" x2="170" y2="206" class="power"/>
+  <line x1="170" y1="260" x2="170" y2="260" class="power"/>
+  <line x1="480" y1="530" x2="480" y2="530" class="power"/>
+  <line x1="480" y1="611" x2="480" y2="611" class="power"/>
+
+  <!-- 5V rail for pull-ups (vertical line left side) -->
+  <line x1="170" y1="140" x2="170" y2="270" stroke="#f4a261" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="168" y="135" text-anchor="end" font-size="8" fill="#f4a261">+5V</text>
+
+  <line x1="480" y1="518" x2="480" y2="615" stroke="#f4a261" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="482" y="515" text-anchor="start" font-size="8" fill="#f4a261">+5V</text>
+
+  <!-- ============================================================ -->
+  <!-- AVKOPPLINGSKONDENSATORER vid CPU -->
+  <!-- ============================================================ -->
+  <!-- 100nF ceramics -->
+  <line x1="250" y1="311" x2="250" y2="311" class="power"/>
+  <rect x="230" y="302" width="20" height="18" rx="2" fill="#d4edda" stroke="#28a745" stroke-width="1"/>
+  <text x="240" y="316" text-anchor="middle" font-size="6" fill="#155724">100nF</text>
+  <text x="245" y="330" text-anchor="start" font-size="7" fill="#28a745">VDD↔GND</text>
+
+  <!-- ============================================================ -->
+  <!-- LED + MOTSTÅND PÅ PHI2 -->
+  <!-- ============================================================ -->
+  <!-- PHI2 line from Arduino D2: goes to CPU pin 36, and branches to LED -->
+  <!-- Draw the LED branch downward -->
+  <line x1="620" y1="552" x2="660" y2="552" stroke="#2a9d8f" stroke-width="1.2"/>
+  <line x1="660" y1="552" x2="660" y2="790" stroke="#2a9d8f" stroke-width="1.2"/>
+
+  <!-- Resistor -->
+  <rect x="645" y="790" width="30" height="16" rx="6" fill="#f8d7da" stroke="#e63946" stroke-width="1"/>
+  <text x="660" y="800" text-anchor="middle" font-size="7" fill="#a12027">220Ω</text>
+
+  <!-- LED symbol -->
+  <line x1="660" y1="806" x2="660" y2="820" stroke="#e63946" stroke-width="1.5"/>
+  <polygon points="660,820 652,828 668,828" fill="none" stroke="#e63946" stroke-width="1.5"/>
+  <line x1="652" y1="828" x2="668" y2="828" stroke="#e63946" stroke-width="1.5"/>
+  <line x1="668" y1="828" x2="668" y2="840" stroke="#e63946" stroke-width="1.5"/>
+  <line x1="660" y1="840" x2="668" y2="840" stroke="#e63946" stroke-width="1.5"/>
+
+  <!-- GND connection -->
+  <line x1="660" y1="840" x2="660" y2="855" stroke="#e63946" stroke-width="1"/>
+
+  <!-- Arrow indicators on LED -->
+  <line x1="664" y1="834" x2="656" y2="834" stroke="#e63946" stroke-width="1"/>
+  <line x1="664" y1="838" x2="656" y2="838" stroke="#e63946" stroke-width="1"/>
+
+  <text x="687" y="820" text-anchor="start" font-size="9" fill="#e63946">Klock-LED</text>
+
+  <!-- ============================================================ -->
+  <!-- KNAPPAR -->
+  <!-- ============================================================ -->
+  <!-- Button 1: D5 Single Step -->
+  <polygon points="1020,695 1040,695 1040,710 1020,710" fill="#e9ecef" stroke="#6d6875" stroke-width="1.5"/>
+  <text x="1030" y="720" font-size="9" fill="#6d6875">Knapp 1</text>
+  <text x="1030" y="732" font-size="8" fill="#6d6875">Klocksteg</text>
+  <line x1="1020" y1="703" x2="970" y2="703" stroke="#6d6875" stroke-width="1.2"/>
+  <line x1="1040" y1="703" x2="1060" y2="703" stroke="#6d6875" stroke-width="1.2"/>
+  <!-- GND label -->
+  <line x1="1060" y1="703" x2="1070" y2="703" stroke="#6d6875" stroke-width="1"/>
+  <text x="1072" y="707" font-size="8" fill="#6d6875">GND</text>
+
+  <!-- Button 2: D6 Instruction Step -->
+  <polygon points="1020,722 1040,722 1040,737 1020,737" fill="#e9ecef" stroke="#6d6875" stroke-width="1.5"/>
+  <text x="1030" y="747" font-size="9" fill="#6d6875">Knapp 2</text>
+  <text x="1030" y="759" font-size="8" fill="#6d6875">Instr.steg</text>
+  <line x1="1020" y1="730" x2="970" y2="730" stroke="#6d6875" stroke-width="1.2"/>
+  <line x1="1040" y1="730" x2="1060" y2="730" stroke="#6d6875" stroke-width="1.2"/>
+  <line x1="1060" y1="730" x2="1070" y2="730" stroke="#6d6875" stroke-width="1"/>
+  <text x="1072" y="734" font-size="8" fill="#6d6875">GND</text>
+
+  <!-- ============================================================ -->
+  <!-- LCD1602 I2C -->
+  <!-- ============================================================ -->
+  <rect x="970" y="810" width="160" height="110" rx="4" fill="#dceefb" stroke="#2b6cb0" stroke-width="1.5"/>
+  <text x="1050" y="835" text-anchor="middle" font-size="11" font-weight="bold" fill="#2b6cb0">LCD1602 I²C</text>
+
+  <text x="1050" y="855" text-anchor="middle" font-size="8" fill="#555">Adress: 0x27 / 0x3F</text>
+
+  <!-- I2C lines from Arduino to LCD -->
+  <!-- SDA path -->
+  <line x1="960" y1="644" x2="955" y2="644" stroke="#9b5de5" stroke-width="1.3"/>
+  <line x1="955" y1="644" x2="955" y2="865" stroke="#9b5de5" stroke-width="1.3"/>
+  <line x1="955" y1="865" x2="970" y2="865" stroke="#9b5de5" stroke-width="1.3"/>
+  <text x="950" y="755" text-anchor="end" font-size="8" fill="#9b5de5" transform="rotate(-90,950,755)">SDA</text>
+
+  <!-- SCL path -->
+  <line x1="960" y1="670" x2="950" y2="670" stroke="#9b5de5" stroke-width="1.3"/>
+  <line x1="950" y1="670" x2="950" y2="885" stroke="#9b5de5" stroke-width="1.3"/>
+  <line x1="950" y1="885" x2="970" y2="885" stroke="#9b5de5" stroke-width="1.3"/>
+  <text x="945" y="755" text-anchor="end" font-size="8" fill="#9b5de5" transform="rotate(-90,945,755)">SCL</text>
+
+  <!-- Power for LCD -->
+  <line x1="970" y1="840" x2="940" y2="840" stroke="#f4a261" stroke-width="1"/>
+  <line x1="940" y1="760" x2="940" y2="840" stroke="#f4a261" stroke-width="1"/>
+  <line x1="940" y1="760" x2="960" y2="760" stroke="#f4a261" stroke-width="1"/>
+  <text x="935" y="800" text-anchor="end" font-size="8" fill="#f4a261" transform="rotate(-90,935,800)">5V</text>
+
+  <line x1="970" y1="895" x2="935" y2="895" stroke="#f4a261" stroke-width="1"/>
+  <line x1="935" y1="787" x2="935" y2="895" stroke="#f4a261" stroke-width="1"/>
+  <line x1="935" y1="787" x2="960" y2="787" stroke="#f4a261" stroke-width="1"/>
+  <text x="930" y="841" text-anchor="end" font-size="8" fill="#f4a261" transform="rotate(-90,930,841)">GND</text>
+
+  <!-- ============================================================ -->
+  <!-- BUSS-GRUPPERINGAR - labels -->
+  <!-- ============================================================ -->
+
+  <!-- Adressbuss label A8-A15 (PORTF) -->
+  <text x="510" y="218" text-anchor="middle" font-size="9" font-weight="bold" fill="#e63946">A8–A15 (PORTF)</text>
+  <rect x="415" y="145" width="170" height="92" rx="4" fill="none" stroke="#e63946" stroke-width="0.8" stroke-dasharray="3,3"/>
+
+  <!-- Adressbuss label A0-A7 (PORTK) -->
+  <text x="510" y="493" text-anchor="middle" font-size="9" font-weight="bold" fill="#e63946">A0–A7 (PORTK)</text>
+  <rect x="415" y="390" width="170" height="104" rx="4" fill="none" stroke="#e63946" stroke-width="0.8" stroke-dasharray="3,3"/>
+
+  <!-- Databuss label -->
+  <text x="410" y="403" text-anchor="middle" font-size="9" font-weight="bold" fill="#1d3557">D0–D7 (PORTA)</text>
+  <rect x="385" y="272" width="195" height="208" rx="4" fill="none" stroke="#1d3557" stroke-width="0.8" stroke-dasharray="3,3"/>
+
+  <!-- Kontrollsignaler grupp -->
+  <text x="610" y="580" text-anchor="middle" font-size="9" font-weight="bold" fill="#2a9d8f">KONTROLL</text>
+  <rect x="545" y="540" width="200" height="75" rx="4" fill="none" stroke="#2a9d8f" stroke-width="0.8" stroke-dasharray="3,3"/>
+
+  <!-- ============================================================ -->
+  <!-- SYNC connection routing -->
+  <!-- ============================================================ -->
+  <text x="200" y="284" text-anchor="end" font-size="8" fill="#2a9d8f">→ D7</text>
+
+  <!-- R/W connection routing -->
+  <text x="550" y="496" text-anchor="start" font-size="8" fill="#2a9d8f">→ D3</text>
+
+  <!-- PHI2 connection routing -->
+  <text x="550" y="550" text-anchor="start" font-size="8" fill="#2a9d8f">→ D2</text>
+
+  <!-- /RESET connection routing -->
+  <text x="550" y="658" text-anchor="start" font-size="8" fill="#2a9d8f">→ D4 + 5 cykler låg</text>
+
+  <!-- ============================================================ -->
+  <!-- TECKENFÖRKLARING -->
+  <!-- ============================================================ -->
+  <rect x="30" y="780" width="260" height="170" rx="6" fill="#fff" stroke="#ccc" stroke-width="1"/>
+  <text x="160" y="800" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">Teckenförklaring</text>
+
+  <line x1="45" y1="820" x2="75" y2="820" stroke="#e63946" stroke-width="2"/>
+  <text x="82" y="824" font-size="10" fill="#333">Adressbuss (A0–A15)</text>
+
+  <line x1="45" y1="842" x2="75" y2="842" stroke="#1d3557" stroke-width="2"/>
+  <text x="82" y="846" font-size="10" fill="#333">Databuss (D0–D7), 100Ω seriemotstånd</text>
+
+  <line x1="45" y1="864" x2="75" y2="864" stroke="#2a9d8f" stroke-width="2"/>
+  <text x="82" y="868" font-size="10" fill="#333">Kontrollsignaler (PHI2, R/W, /RESET, SYNC)</text>
+
+  <line x1="45" y1="886" x2="75" y2="886" stroke="#f4a261" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="82" y="890" font-size="10" fill="#333">Strömmatning (+5V, GND), pull-up</text>
+
+  <line x1="45" y1="908" x2="75" y2="908" stroke="#9b5de5" stroke-width="1.5"/>
+  <text x="82" y="912" font-size="10" fill="#333">I²C (SDA, SCL) till LCD</text>
+
+  <line x1="45" y1="930" x2="75" y2="930" stroke="#6d6875" stroke-width="1.2"/>
+  <text x="82" y="934" font-size="10" fill="#333">Knappar (D5, D6)</text>
+
+  <!-- Kondensator-notering -->
+  <rect x="48" y="942" width="18" height="12" rx="2" fill="#d4edda" stroke="#28a745" stroke-width="1"/>
+  <text x="82" y="952" font-size="9" fill="#333">100nF + 10–47µF avkoppling</text>
+</svg>
