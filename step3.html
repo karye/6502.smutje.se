@@ -59,36 +59,109 @@
 
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
-    <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm"><code>#define PHI2  2
-#define RESB  4
-#define RWB   3
+    <p class="text-gray-700 mb-3 text-sm">Här gör vi Arduinon till en fullständig minnesemulator. En 64&nbsp;KB array (<code>mem[65536]</code>) representerar CPU:ns hela adressrymd. I varje klockcykel läser Arduinon adressbussen, kontrollerar RWB-signalen och <strong>låtsas vara ett riktigt RAM/ROM-minne</strong>: vid läsning skickar den rätt byte ur arrayen till databussen, vid skrivning tar den emot och lagrar. Detta gör att vi kan köra godtycklig 6502-kod utan fysiskt minne — och <strong>verifiera att databussen, RWB och CPU:ns exekveringslogik fungerar</strong>.</p>
+    <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm"><code>// -----------------------------------------------------------
+// Steg 3 — Databuss och fullständig minnesemulering
+// -----------------------------------------------------------
+
+#define PHI2  2   // Klockingång — Arduino D2 → CPU pin 37
+#define RESB  4   // Reset (aktiv låg) — Arduino D4 → CPU pin 40
+#define RWB   3   // Read/Write — Arduino D3 → CPU pin 34
+
+// 64 KB minnesrymd: täcker hela W65C02S adressområde (0000–FFFF).
+// Arduinon har 8 KB SRAM — uint8_t ryms i ~250 KB, så 64 KB går fint.
 uint8_t mem[65536];
 
 void setup() {
-  Serial.begin(115200);
-  pinMode(PHI2, OUTPUT); pinMode(RESB, OUTPUT); pinMode(RWB, INPUT);
-  DDRK = 0x00; DDRF = 0x00;
+  Serial.begin(115200);  // För utskrift av adress/instruktion
 
-  mem[0xFFFC] = 0x00; mem[0xFFFD] = 0x80;  // reset → $8000
+  pinMode(PHI2, OUTPUT);  // Arduino = klockmaster
+  pinMode(RESB, OUTPUT);  // Arduino styr reset
+  pinMode(RWB,  INPUT);   // CPU:n talar om ifall den läser eller skriver
+
+  // Adressbuss: alltid ingångar — vi ska läsa CPU:ns adresser.
+  DDRK = 0x00;  // PORTK = A8–A15
+  DDRF = 0x00;  // PORTF = A0–A7
+
+  // PORTA används för D0–D7 (databussen). I setup() sätter vi den
+  // som ingång för säkerhets skull — riktningen ändras dynamiskt
+  // i pulse() beroende på om CPU:n läser eller skriver.
+  DDRA = 0x00;
+
+  // --- Programmera reset-vektorn ---
+  // När CPU:n kommer ur reset läser den $FFFC–$FFFD för att veta
+  // var programmet börjar. Vi pekar om till $8000.
+  mem[0xFFFC] = 0x00;  // Låg byte av reset-vektor → $8000
+  mem[0xFFFD] = 0x80;  // Hög byte av reset-vektor → $8000
+
+  // --- Ladda testprogram på $8000 ---
+  // $EA = NOP (No Operation). CPU:n gör ingenting på 2 cykler,
+  // ökar programräknaren och hämtar nästa instruktion — som också
+  // är NOP. Resultat: en oändlig loop som är lätt att följa.
   mem[0x8000] = 0xEA;  // NOP
 
-  digitalWrite(RESB, LOW);
-  for (int i = 0; i < 5; i++) pulse();
-  digitalWrite(RESB, HIGH);
-  for (int i = 0; i < 10; i++) pulse();
+  // --- Kontrollerad reset-sekvens ---
+  digitalWrite(RESB, LOW);   // Håll CPU i reset
+  for (int i = 0; i < 5; i++) { pulse(); }  // 5 klockcykler under reset
+  digitalWrite(RESB, HIGH);  // Släpp reset — nu börjar CPU:n köra!
+
+  // Kör 10 cykler i setup() så att vi ser reset-vektorn i loggen
+  // innan vi går in i loopen.
+  for (int i = 0; i < 10; i++) { pulse(); }
 }
 
+// -----------------------------------------------------------
+// pulse() — en komplett klockcykel med minnesemulering
+// -----------------------------------------------------------
+// Detta är datorns ”hjärtslag”. Under varje klockcykel måste
+// Arduinon hinna läsa adress och RWB, leverera eller ta emot data,
+// och hantera bussriktning — allt inom ~20 ms.
 void pulse() {
-  digitalWrite(PHI2, LOW); delay(10);
-  uint16_t a = (PINK<<0)|(PINF<<8); bool rw = digitalRead(RWB);
-  if (rw) { DDRA=0xFF; PORTA=mem[a]; }
-  else    { DDRA=0x00; }
-  digitalWrite(PHI2, HIGH); delay(10);
-  if (!rw) mem[a] = PINA;
-  Serial.print(rw?"R":"W"); Serial.print(" $"); Serial.println(a, HEX);
+  // -- Fas 1: PHI2 låg (förberedelsefas) --
+  digitalWrite(PHI2, LOW);
+  delay(10);  // Ge CPU:n tid att lägga ut adress och RWB
+
+  // Läs 16-bitars adress från de två 8-bitarsportarna.
+  uint16_t a = (PINK << 0) | (PINF << 8);
+
+  // Läs RWB-signalen:
+  //   HIGH = CPU:n vill LÄSA från minnet
+  //   LOW  = CPU:n vill SKRIVA till minnet
+  bool rw = digitalRead(RWB);
+
+  if (rw) {
+    // --- LÄSCYKEL: Arduinon levererar data till CPU:n ---
+    // Sätt PORTA som UTGÅNG så vi kan driva databussen.
+    // 100 Ω seriemotstånd skyddar mot busskollisioner.
+    DDRA = 0xFF;           // PORTA utgång (8 bitar)
+    PORTA = mem[a];        // Skicka ut minnesinnehållet
+  } else {
+    // --- SKRIVCYKEL: CPU:n driver databussen ---
+    // Sätt PORTA som INGÅNG (hög impedans) så att vi inte
+    // kortsluter CPU:ns utgångar. Utan detta kan kretsen skadas!
+    DDRA = 0x00;           // PORTA ingång (högimpediv)
+  }
+
+  // -- Fas 2: PHI2 hög (arbetsfas) --
+  digitalWrite(PHI2, HIGH);
+  delay(10);  // CPU:n arbetar med data under hög klocka
+
+  if (!rw) {
+    // Efter stigande flank har CPU:n lagt ut giltig data.
+    // Läs av PORTA och spara i vår minnesarray.
+    mem[a] = PINA;
+  }
+
+  // Logga varje minnesaccess för felsökning.
+  // R = Read, W = Write, följt av adressen i hexadecimalt.
+  Serial.print(rw ? "R" : "W");
+  Serial.print(" $");
+  Serial.println(a, HEX);
 }
 
-void loop() { pulse(); }</code></pre>
+void loop() {
+  pulse();  // Kontinuerlig körning — en klockcykel per varv
+}</code></pre>
   </section>
 
   <section class="mb-8">

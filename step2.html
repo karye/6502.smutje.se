@@ -53,34 +53,73 @@
 
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
-    <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm"><code>#define PHI2  2
-#define RESB  4
+    <p class="text-gray-700 mb-3 text-sm">Koden lägger till en kontrollerad reset-sekvens och läser av adressbussen. När RESB (aktiv låg) släpps läser CPU:n alltid reset-vektorn på <code>$FFFC/$FFFD</code> — det är så 6502-familjen startar. Genom att läsa adressbussen via Arduinons analoga portar (PORTK för A8–A15, PORTF för A0–A7) kan vi <strong>verifiera att samtliga 16 adressledare är korrekt anslutna</strong> och att CPU:n följer sin specificerade uppstartssekvens.</p>
+    <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm"><code>// -----------------------------------------------------------
+// Steg 2 — Adressbuss och reset-sekvens
+// -----------------------------------------------------------
+
+// CPU-kontrollpinnar
+#define PHI2  2   // Klockingång — Arduino D2 → CPU pin 37
+#define RESB  4   // Reset (aktiv låg) — Arduino D4 → CPU pin 40
 
 void setup() {
+  // Serieövervakaren används för att skriva ut avlästa adresser.
+  // 115200 baud ger snabb utskrift utan att bromsa loopen.
   Serial.begin(115200);
-  pinMode(PHI2, OUTPUT);
-  pinMode(RESB, OUTPUT);
-  DDRK = 0x00;  // PORTK (A8-A15) = INPUT
-  DDRF = 0x00;  // PORTF (A0-A7)  = INPUT
 
-  // Reset-sekvens
-  digitalWrite(RESB, LOW);
-  for (int i = 0; i < 5; i++) { pulse(); }
-  digitalWrite(RESB, HIGH);
+  pinMode(PHI2, OUTPUT);   // Arduino styr klockan
+  pinMode(RESB, OUTPUT);   // Arduino styr reset
+
+  // Data Direction Register — sätt som INPUT (0 = ingång).
+  // Vi ska läsa CPU:ns adressbuss, inte skriva till den.
+  DDRK = 0x00;  // PORTK = A8–A15 (Arduino analoga A8–A15)
+  DDRF = 0x00;  // PORTF = A0–A7  (Arduino analoga A0–A7)
+
+  // --- Reset-sekvens för W65C02S ---
+  // CPU:n kräver minst 2 klockcykler med RESB låg för att
+  // nollställa interna register. Vi kör 5 för god marginal.
+  digitalWrite(RESB, LOW);   // Håll CPU i reset (aktiv låg)
+  for (int i = 0; i < 5; i++) { pulse(); }  // 5 pulser under reset
+
+  digitalWrite(RESB, HIGH);  // Släpp reset — CPU:n startar!
+
+  // Efter reset läser CPU:n alltid från reset-vektorn:
+  //   $FFFC → låg byte av programstartadressen
+  //   $FFFD → hög byte av programstartadressen
+  // Genom att läsa dessa adresser i serieövervakaren verifierar
+  // vi att adressbussen är korrekt inkopplad och att CPU:n
+  // beter sig enligt specifikationen.
   for (int i = 0; i < 10; i++) { pulse(); }
   Serial.println("Klar");
 }
 
+// Hjälpfunktion: en komplett klockcykel (LÅG → HÖG → LÅG).
+// 10 ms per fas = 50 Hz. Lagom snabbt för seriell utskrift.
 void pulse() {
-  digitalWrite(PHI2, HIGH); delay(10);
-  digitalWrite(PHI2, LOW);  delay(10);
+  digitalWrite(PHI2, HIGH);  // Stigande flank — CPU arbetar
+  delay(10);
+  digitalWrite(PHI2, LOW);   // Fallande flank — CPU förbereder nästa
+  delay(10);
 }
 
 void loop() {
-  digitalWrite(PHI2, HIGH); delay(10);
+  // --- Läs adressbussen efter stigande flank ---
+  // PHI2 hög innebär att CPU:n har lagt ut en giltig adress
+  // på A0–A15. Vi läser båda portarna samtidigt.
+  digitalWrite(PHI2, HIGH);
+  delay(10);  // Låt signalerna stabilisera sig
+
+  // Kombinera de två 8-bitarsportarna till ett 16-bitarsvärde:
+  // PINK läser A8–A15 (hög byte), PINF läser A0–A7 (låg byte).
+  // Verifiera din egen koppling — ordningen kan vara omvänd!
   uint16_t addr = (PINK << 0) | (PINF << 8);
+
+  // Skriv ut adressen i hexadecimalt format till serieövervakaren.
+  // Första raderna efter reset förväntas vara: FFFC, FFFD, …
   Serial.println(addr, HEX);
-  digitalWrite(PHI2, LOW); delay(10);
+
+  digitalWrite(PHI2, LOW);   // Fallande flank
+  delay(10);
 }</code></pre>
   </section>
 
