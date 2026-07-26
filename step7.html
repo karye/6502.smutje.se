@@ -128,12 +128,12 @@ void pulse() {
     if (arduino_ansvarar) {
       // Arduino levererar data från sin minnesarray
       DDRA = 0xFF;
-      PORTA = mem[a];
+      PORTA = arduino_ansvarar ? read_mem(a) : 0x00;
     } else {
       // RAM-chippet driver databussen — Arduino håller sig undan
       DDRA = 0x00;
     }
-    data = arduino_ansvarar ? mem[a] : PINA;
+    data = arduino_ansvarar ? read_mem(a) : PINA;
   } else {
     // --- SKRIVCYKEL ---
     // CPU:n driver databussen, Arduino läser passivt
@@ -148,7 +148,7 @@ void pulse() {
     uint8_t skriven_data = PINA;
     if (arduino_ansvarar) {
       // Spara även lokalt om adressen är i Arduino-området
-      mem[a] = skriven_data;
+      write_mem(a, skriven_data);
     }
     // RAM-chippet skriver automatiskt — /WE är kopplat till R/W
     data = skriven_data;
@@ -182,11 +182,11 @@ void pulse() {
       </table>
     </div>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border mt-3"><code class="language-c">// I setup() — ersätt tidigare testprogram:
-mem[0x8000] = 0xA2; mem[0x8001] = 0x00;  // LDX #$00
-mem[0x8002] = 0xE8;                       // INX
-mem[0x8003] = 0x8E; mem[0x8004] = 0x00; mem[0x8005] = 0x02;  // STX $0200
-mem[0x8006] = 0xAD; mem[0x8007] = 0x00; mem[0x8008] = 0x02;  // LDA $0200
-mem[0x8009] = 0x4C; mem[0x800A] = 0x02; mem[0x800B] = 0x80;  // JMP $8002</code></pre>
+write_mem(0x8000, 0xA2); write_mem(0x8001, 0x00);  // LDX #$00
+write_mem(0x8002, 0xE8);                            // INX
+write_mem(0x8003, 0x8E); write_mem(0x8004, 0x00); write_mem(0x8005, 0x02);  // STX $0200
+write_mem(0x8006, 0xAD); write_mem(0x8007, 0x00); write_mem(0x8008, 0x02);  // LDA $0200
+write_mem(0x8009, 0x4C); write_mem(0x800A, 0x02); write_mem(0x800B, 0x80);  // JMP $8002</code></pre>
   </section>
 
   <!-- Testning -->
@@ -197,7 +197,7 @@ mem[0x8009] = 0x4C; mem[0x800A] = 0x02; mem[0x800B] = 0x80;  // JMP $8002</code>
       <li>Ladda upp den modifierade koden</li>
       <li>Stega med <strong>Knapp 2</strong> (instruktionssteg) — följ programflödet i LCD:n</li>
       <li>Vid <code>STX $0200</code>: CPU:n skriver till RAM. Adress <code>$0200</code> syns med <code>W</code>-prefix i serieövervakaren</li>
-      <li>Vid <code>LDA $0200</code>: CPU:n läser tillbaka från RAM. Databuss-LED:arna visar värdet som lästes</li>
+      <li>Vid <code>LDA $0200</code>: CPU:n läser tillbaka från RAM. LCD:n visar adress och det lästa värdet</li>
       <li>Verifiera att skrivet och läst värde är samma — RAM fungerar!</li>
     </ol>
     <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">

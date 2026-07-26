@@ -33,7 +33,7 @@
   <!-- Mål -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Mål</h2>
-    <p class="text-gray-700">Ersätt NOP-slingan från steg 3 med ett riktigt 6502-program. Vi skriver en räknare som ökar X-registret från 0 till 255 och lagrar värdet på adress <code>$0200</code>. Databuss-LED:arna visar räknarvärdet binärt i realtid — och på LCD:n syns aktuell adress och instruktion.</p>
+    <p class="text-gray-700">Ersätt NOP-slingan från steg 3 med ett riktigt 6502-program. Vi skriver en räknare som ökar X-registret från 0 till 255 och lagrar värdet på adress <code>$0200</code>. På LCD:n syns aktuell adress och instruktion medan serieövervakaren loggar varje minnesaccess.</p>
   </section>
 
   <!-- Programmet -->
@@ -59,7 +59,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
-    <p class="text-gray-700 mb-3 text-sm">Ingen ny hårdvara — samma koppling som steg 5. LCD:n visar adress och instruktion, databuss-LED:arna visar räknarvärdet.</p>
+    <p class="text-gray-700 mb-3 text-sm">Ingen ny hårdvara — samma koppling som steg 5. LCD:n visar adress och instruktion.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <object data="schematics/step5.svg" type="image/svg+xml" class="w-full"></object>
     </div>
@@ -78,27 +78,27 @@ void setup() {
   // ... befintlig kod från steg 1–5 (pinMode, DDRx, LCD, knappar) ...
 
   // Reset-vektor: programmet börjar på $8000
-  mem[0xFFFC] = 0x00;  // Låg byte
-  mem[0xFFFD] = 0x80;  // Hög byte → CPU startar på $8000
+  write_mem(0xFFFC, 0x00);  // Låg byte
+  write_mem(0xFFFD, 0x80);  // Hög byte → CPU startar på $8000
 
   // === Räknarprogrammet ===
 
   // $8000: LDX #$00   — ladda X-registret med 0
-  mem[0x8000] = 0xA2;
-  mem[0x8001] = 0x00;
+  write_mem(0x8000, 0xA2);
+  write_mem(0x8001, 0x00);
 
   // $8002: INX        — öka X med 1 (loop-start)
-  mem[0x8002] = 0xE8;
+  write_mem(0x8002, 0xE8);
 
   // $8003: STX $0200  — spara X till adress $0200
-  mem[0x8003] = 0x8E;
-  mem[0x8004] = 0x00;  // Låg byte av $0200
-  mem[0x8005] = 0x02;  // Hög byte av $0200
+  write_mem(0x8003, 0x8E);
+  write_mem(0x8004, 0x00);  // Låg byte av $0200
+  write_mem(0x8005, 0x02);  // Hög byte av $0200
 
   // $8006: JMP $8002  — hoppa tillbaka till INX
-  mem[0x8006] = 0x4C;
-  mem[0x8007] = 0x02;  // Låg byte av $8002
-  mem[0x8008] = 0x80;  // Hög byte av $8002
+  write_mem(0x8006, 0x4C);
+  write_mem(0x8007, 0x02);  // Låg byte av $8002
+  write_mem(0x8008, 0x80);  // Hög byte av $8002
 
   // Reset-sekvens
   digitalWrite(RESB, LOW);
@@ -118,12 +118,11 @@ void setup() {
       <li>Ladda upp den modifierade koden till Arduinon</li>
       <li>Tryck på <strong>Knapp 1</strong> (klocksteg) — se CPU:n stega genom instruktionerna en klockcykel i taget</li>
       <li>Tryck på <strong>Knapp 2</strong> (instruktionssteg) — hoppa till nästa instruktion</li>
-      <li>Databuss-LED:arna blinkar binärt 0→255→0→255…</li>
       <li>LCD:n visar aktuell adress (t.ex. <code>A:8003</code>) och instruktion (t.ex. <code>D:8E</code>)</li>
     </ol>
     <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
       <span class="font-bold text-green-800">✅ Förväntat:</span>
-      <span class="text-green-700">CPU:n kör räknarprogrammet i loop. Databuss-LED:arna räknar binärt. LCD:n visar exekveringen i realtid. Första egna 6502-programmet!</span>
+      <span class="text-green-700">CPU:n kör räknarprogrammet i loop. LCD:n visar exekveringen i realtid. Första egna 6502-programmet!</span>
     </div>
   </section>
 

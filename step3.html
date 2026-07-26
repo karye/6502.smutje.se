@@ -42,8 +42,6 @@
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr></thead>
         <tbody class="divide-y">
           <tr><td class="p-2">8</td><td class="p-2">100 Ω motstånd (databuss-skydd)</td></tr>
-          <tr><td class="p-2">8</td><td class="p-2">Lysdioder (databuss-visualisering)</td></tr>
-          <tr><td class="p-2">8</td><td class="p-2">220 Ω motstånd (LED-strömbegränsning)</td></tr>
         </tbody>
       </table>
     </div>
@@ -62,7 +60,7 @@
 
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
-    <p class="text-gray-700 mb-3 text-sm">Här gör vi Arduinon till en fullständig minnesemulator. En 64&nbsp;KB array (<code>mem[65536]</code>) representerar CPU:ns hela adressrymd. I varje klockcykel läser Arduinon adressbussen, kontrollerar RWB-signalen och <strong>låtsas vara ett riktigt RAM/ROM-minne</strong>: vid läsning skickar den rätt byte ur arrayen till databussen, vid skrivning tar den emot och lagrar. Detta gör att vi kan köra godtycklig 6502-kod utan fysiskt minne — och <strong>verifiera att databussen, RWB och CPU:ns exekveringslogik fungerar</strong>.</p>
+    <p class="text-gray-700 mb-3 text-sm">Här gör vi Arduinon till en fullständig minnesemulator. Eftersom Mega-brickans SRAM bara är 8&nbsp;KB använder vi en mindre array (<code>ram[512]</code>) och hjälpfunktioner för att hantera adresser utanför detta område. Varje klockcykel läser Arduinon adressbussen, kontrollerar RWB-signalen och <strong>låtsas vara ett riktigt RAM/ROM-minne</strong>: vid läsning skickar den rätt byte ur arrayen till databussen, vid skrivning tar den emot och lagrar. Detta gör att vi kan köra godtycklig 6502-kod utan fysiskt minne — och <strong>verifiera att databussen, RWB och CPU:ns exekveringslogik fungerar</strong>.</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// -----------------------------------------------------------
 // Steg 3 — Databuss och fullständig minnesemulering
 // -----------------------------------------------------------
@@ -71,9 +69,18 @@
 #define RESB  4   // Reset (aktiv låg) — Arduino D4 → CPU pin 40
 #define RWB   3   // Read/Write — Arduino D3 → CPU pin 34
 
-// 64 KB minnesrymd: täcker hela W65C02S adressområde (0000–FFFF).
-// Arduinon har 8 KB SRAM — uint8_t ryms i ~250 KB, så 64 KB går fint.
-uint8_t mem[65536];
+// Mega har 8 KB SRAM — vi använder 512 bytes (gott för testprogram)
+// och hjälpfunktioner för att hantera alla adresser korrekt
+uint8_t ram[512];
+
+uint8_t read_mem(uint16_t addr) {
+  if (addr < 512) return ram[addr];
+  return 0xEA;  // NOP — ofarlig fallback för oanvända adresser
+}
+
+void write_mem(uint16_t addr, uint8_t val) {
+  if (addr < 512) ram[addr] = val;
+}
 
 void setup() {
   Serial.begin(115200);  // För utskrift av adress/instruktion
@@ -94,14 +101,16 @@ void setup() {
   // --- Programmera reset-vektorn ---
   // När CPU:n kommer ur reset läser den $FFFC–$FFFD för att veta
   // var programmet börjar. Vi pekar om till $8000.
-  mem[0xFFFC] = 0x00;  // Låg byte av reset-vektor → $8000
-  mem[0xFFFD] = 0x80;  // Hög byte av reset-vektor → $8000
+  write_mem(0xFFFC, 0x00);  // Låg byte av reset-vektor → $8000
+  write_mem(0xFFFD, 0x80);  // Hög byte av reset-vektor → $8000
 
   // --- Ladda testprogram på $8000 ---
   // $EA = NOP (No Operation). CPU:n gör ingenting på 2 cykler,
   // ökar programräknaren och hämtar nästa instruktion — som också
   // är NOP. Resultat: en oändlig loop som är lätt att följa.
-  mem[0x8000] = 0xEA;  // NOP
+  // $EA = NOP läses automatiskt via read_mem() för adresser utanför ram[]
+  // men vi laddar det explicit för tydlighet
+  write_mem(0x8000, 0xEA);  // NOP
 
   // --- Kontrollerad reset-sekvens ---
   digitalWrite(RESB, LOW);   // Håll CPU i reset
@@ -137,7 +146,7 @@ void pulse() {
     // Sätt PORTA som UTGÅNG så vi kan driva databussen.
     // 100 Ω seriemotstånd skyddar mot busskollisioner.
     DDRA = 0xFF;           // PORTA utgång (8 bitar)
-    PORTA = mem[a];        // Skicka ut minnesinnehållet
+    PORTA = read_mem(a);   // Skicka ut minnesinnehållet
   } else {
     // --- SKRIVCYKEL: CPU:n driver databussen ---
     // Sätt PORTA som INGÅNG (hög impedans) så att vi inte
@@ -152,7 +161,7 @@ void pulse() {
   if (!rw) {
     // Efter stigande flank har CPU:n lagt ut giltig data.
     // Läs av PORTA och spara i vår minnesarray.
-    mem[a] = PINA;
+    write_mem(a, PINA);
   }
 
   // Logga varje minnesaccess för felsökning.
@@ -171,7 +180,7 @@ void loop() {
     <h2 class="text-lg font-bold mb-2">Testning</h2>
     <ol class="list-decimal pl-5 space-y-1 text-gray-700">
       <li>Serieövervakaren visar <code>$FFFC</code> → <code>$FFFD</code> → <code>$8000</code> (NOP-loop)</li>
-      <li>Databuss-LED:arna visar <code>11101010</code> (NOP = $EA)</li>
+      <li>LCD:n (om inkopplad) visar adress och instruktion i realtid</li>
     </ol>
     <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
       <span class="font-bold text-green-800">✅ Förväntat:</span>

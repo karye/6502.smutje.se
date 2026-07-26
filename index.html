@@ -57,10 +57,10 @@
     <div class="bg-white rounded-lg shadow p-6 border text-sm space-y-3 text-gray-700">
       <p><strong class="text-gray-900">Steg 1 — Ström, klocka, reset:</strong> W65C02S får spänning och klockpulser från Arduino D2. En lysdiod blinkar i takt med klockan. Pull-up-motstånd på RDY, IRQB, NMIB, BE, SOB. 100 nF avkoppling vid VDD/VSS.</p>
       <p><strong class="text-gray-900">Steg 2 — Adressbuss A0–A15:</strong> Samtliga 16 adresslinjer kopplas till Arduinons analoga portar (PORTF + PORTK). RESB kopplas till D4 för kontrollerad reset. Serieövervakaren visar att CPU:n läser reset-vektorn $FFFC/$FFFD.</p>
-      <p><strong class="text-gray-900">Steg 3 — Databuss D0–D7:</strong> 8 datalinjer + RWB kopplas in via 100 Ω skyddsmotstånd. Arduinon emulerar ett 64K-minne. Ett NOP-testprogram laddas på $8000. 8 lysdioder visar databussen binärt i realtid.</p>
+      <p><strong class="text-gray-900">Steg 3 — Databuss D0–D7:</strong> 8 datalinjer + RWB kopplas in via 100 Ω skyddsmotstånd. Arduinon emulerar minnet. Ett NOP-testprogram laddas på $8000.</p>
       <p><strong class="text-gray-900">Steg 4 — Manuell stegning:</strong> Två tryckknappar för manuell stegning (klockcykel / instruktion). SYNC-pinnen används för att detektera instruktionshämtning.</p>
       <p><strong class="text-gray-900">Steg 5 — LCD-display:</strong> LCD1602 med I²C-backpack visar adress och data i realtid direkt på kopplingsdäcket. Fullt fristående testbänk — helt utan datorskärm.</p>
-      <p><strong class="text-gray-900">Steg 6 — Eget program:</strong> Ett litet 6502-program i maskinkod — en räknare som ökar 0→255 i loop. Databuss-LED:arna visar räknarvärdet binärt.</p>
+      <p><strong class="text-gray-900">Steg 6 — Eget program:</strong> Ett litet 6502-program i maskinkod — en räknare som ökar 0→255 i loop. LCD:n visar adress och instruktion i realtid.</p>
       <p><strong class="text-gray-900">Steg 7 — RAM-chip:</strong> 62256 32&nbsp;KB SRAM kopplas in på $0000–$7FFF. A15 används som chip select. 74HC04 inverterar R/W för /OE. CPU:n läser och skriver till riktigt minne.</p>
     </div>
   </section>
@@ -77,8 +77,8 @@
           <tr class="hover:bg-gray-50"><td class="p-2">1</td><td class="p-2"><strong>W65C02S</strong> (DIP-40)</td></tr>
           <tr class="hover:bg-gray-50"><td class="p-2">1</td><td class="p-2"><strong>Arduino Mega 2560</strong></td></tr>
           <tr class="hover:bg-gray-50"><td class="p-2">1</td><td class="p-2"><strong>LCD1602</strong> med I²C-backpack</td></tr>
-          <tr class="hover:bg-gray-50"><td class="p-2">9</td><td class="p-2"><strong>Lysdioder</strong> (1× klocka + 8× databuss)</td></tr>
-          <tr class="hover:bg-gray-50"><td class="p-2">9</td><td class="p-2"><strong>220 Ω motstånd</strong> (1× klock-LED + 8× databuss-LED)</td></tr>
+          <tr class="hover:bg-gray-50"><td class="p-2">1</td><td class="p-2"><strong>Lysdiod</strong> (klockindikering)</td></tr>
+          <tr class="hover:bg-gray-50"><td class="p-2">1</td><td class="p-2"><strong>220 Ω motstånd</strong> (klock-LED)</td></tr>
           <tr class="hover:bg-gray-50"><td class="p-2">5</td><td class="p-2"><strong>3,3–10 kΩ motstånd</strong> (pull-up)</td></tr>
           <tr class="hover:bg-gray-50"><td class="p-2">8</td><td class="p-2"><strong>100 Ω motstånd</strong> (databuss-skydd)</td></tr>
           <tr class="hover:bg-gray-50"><td class="p-2">1</td><td class="p-2"><strong>100 nF keramisk kondensator</strong></td></tr>
