@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Steg 5 — LCD-display | W65C02</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
@@ -19,6 +20,8 @@
       <a href="step3.html" class="hover:text-blue-300 transition">Steg 3</a>
       <a href="step4.html" class="hover:text-blue-300 transition">Steg 4</a>
       <a href="step5.html" class="text-blue-300 font-semibold">Steg 5</a>
+      <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
+      <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
     </div>
   </div>
 </nav>
@@ -66,7 +69,7 @@
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
     <p class="text-gray-700 mb-3 text-sm">Med LCD-displayen blir bygget helt fristående — adress och data visas direkt på kopplingsdäcket utan serieövervakare. LCD1602 med I²C-backpack använder bara två signaltrådar (SDA + SCL) plus ström, vilket sparar pinnar. Displayen uppdateras efter varje klockcykel så att du i realtid kan <strong>följa CPU:ns arbete och verifiera att rätt instruktioner hämtas på rätt adresser</strong>.</p>
-    <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm"><code>// -----------------------------------------------------------
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// -----------------------------------------------------------
 // Steg 5 — LCD1602 med I²C-backpack (lägg till i befintlig kod)
 // -----------------------------------------------------------
 
@@ -162,5 +165,7 @@ void pulse() {
     <a href="index.html" class="text-blue-600 hover:underline">← Översikt</a>
   </div>
 </main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
 </body>
 </html>

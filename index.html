@@ -20,6 +20,8 @@
       <a href="step3.html" class="hover:text-blue-300 transition">Steg 3</a>
       <a href="step4.html" class="hover:text-blue-300 transition">Steg 4</a>
       <a href="step5.html" class="hover:text-blue-300 transition">Steg 5</a>
+      <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
+      <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
     </div>
   </div>
 </nav>
@@ -58,6 +60,8 @@
       <p><strong class="text-gray-900">Steg 3 — Databuss D0–D7:</strong> 8 datalinjer + RWB kopplas in via 100 Ω skyddsmotstånd. Arduinon emulerar ett 64K-minne. Ett NOP-testprogram laddas på $8000. 8 lysdioder visar databussen binärt i realtid.</p>
       <p><strong class="text-gray-900">Steg 4 — Manuell stegning:</strong> Två tryckknappar för manuell stegning (klockcykel / instruktion). SYNC-pinnen används för att detektera instruktionshämtning.</p>
       <p><strong class="text-gray-900">Steg 5 — LCD-display:</strong> LCD1602 med I²C-backpack visar adress och data i realtid direkt på kopplingsdäcket. Fullt fristående testbänk — helt utan datorskärm.</p>
+      <p><strong class="text-gray-900">Steg 6 — Eget program:</strong> Ett litet 6502-program i maskinkod — en räknare som ökar 0→255 i loop. Databuss-LED:arna visar räknarvärdet binärt.</p>
+      <p><strong class="text-gray-900">Steg 7 — RAM-chip:</strong> 62256 32&nbsp;KB SRAM kopplas in på $0000–$7FFF. A15 används som chip select. 74HC04 inverterar R/W för /OE. CPU:n läser och skriver till riktigt minne.</p>
     </div>
   </section>
 

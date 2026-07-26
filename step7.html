@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steg 7 — RAM-chip | W65C02</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+<nav class="bg-gray-900 text-white sticky top-0 z-50 shadow">
+  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
+    <a href="index.html" class="font-bold text-lg">W65C02</a>
+    <div class="flex gap-4 text-sm">
+      <a href="index.html" class="hover:text-blue-300 transition">Översikt</a>
+      <a href="step1.html" class="hover:text-blue-300 transition">Steg 1</a>
+      <a href="step2.html" class="hover:text-blue-300 transition">Steg 2</a>
+      <a href="step3.html" class="hover:text-blue-300 transition">Steg 3</a>
+      <a href="step4.html" class="hover:text-blue-300 transition">Steg 4</a>
+      <a href="step5.html" class="hover:text-blue-300 transition">Steg 5</a>
+      <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
+      <a href="step7.html" class="text-blue-300 font-semibold">Steg 7</a>
+    </div>
+  </div>
+</nav>
+
+<main class="max-w-5xl mx-auto px-4 py-8">
+
+  <h1 class="text-2xl font-bold mb-6">Steg 7 — Riktigt RAM-chip</h1>
+
+  <!-- Mål -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Mål</h2>
+    <p class="text-gray-700">Koppla in ett fysiskt RAM-chip (62256 32&nbsp;KB SRAM) och låt 6502:an läsa och skriva till det. Arduinon fortsätter emulera ROM i övre halvan av adressrymden (<code>$8000–$FFFF</code>) medan RAM-chippet hanterar den undre halvan (<code>$0000–$7FFF</code>). Vi verifierar att läsning och skrivning fungerar genom att modifiera räknarprogrammet från steg 6.</p>
+  </section>
+
+  <!-- Nya komponenter -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Nya komponenter</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th><th class="p-2 text-left">Not</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">1</td><td class="p-2">62256 SRAM (32&nbsp;KB, 28-pin DIP)</td><td class="p-2">15 adresslinjer, 8 datalinjer, 3 kontrollpinnar</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2">74HC04 hex inverter</td><td class="p-2">Inverterar R/W-signalen för RAM:ens /OE</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2">100 nF keramisk kondensator</td><td class="p-2">Avkoppling vid RAM:ets VCC/GND</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Kopplingstabell -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Kopplingar — 62256 SRAM</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">62256 pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Förklaring</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">1–10, 21, 23–26</td><td class="p-2">A0–A14</td><td class="p-2">CPU A0–A14</td><td class="p-2">Adressbuss — 15 linjer ger 32&nbsp;KB</td></tr>
+          <tr><td class="p-2">11–13, 15–19</td><td class="p-2">D0–D7</td><td class="p-2">CPU D0–D7</td><td class="p-2">Databuss — gemensam med Arduino och CPU</td></tr>
+          <tr><td class="p-2">20</td><td class="p-2">/CE</td><td class="p-2">CPU A15</td><td class="p-2">Chip enable — RAM aktivt när A15 = 0 ($0000–$7FFF)</td></tr>
+          <tr><td class="p-2">22</td><td class="p-2">/OE</td><td class="p-2">74HC04 utgång (inverterad R/W)</td><td class="p-2">Output enable — LÅG vid läsning, HÖG vid skrivning</td></tr>
+          <tr><td class="p-2">27</td><td class="p-2">/WE</td><td class="p-2">CPU R/W (pin 34)</td><td class="p-2">Write enable — LÅG vid skrivning</td></tr>
+          <tr><td class="p-2">28</td><td class="p-2">VCC</td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
+          <tr><td class="p-2">14</td><td class="p-2">GND</td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-3 overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">74HC04 pin</th><th class="p-2 text-left">Kopplas till</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">1 (ingång)</td><td class="p-2">CPU R/W (pin 34)</td></tr>
+          <tr><td class="p-2">2 (utgång)</td><td class="p-2">62256 /OE (pin 22)</td></tr>
+          <tr><td class="p-2">7</td><td class="p-2">GND</td></tr>
+          <tr><td class="p-2">14</td><td class="p-2">+5V</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Adressrymdslayout -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Adressrymdslayout</h2>
+    <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700">
+      <pre class="mb-2"><code>$FFFF ┌──────────────┐
+      │  Arduino ROM  │  A15 = 1 → RAM /CE = HÖG (inaktivt)
+$8000 ├──────────────┤
+      │  62256 RAM   │  A15 = 0 → RAM /CE = LÅG (aktivt)
+$0000 └──────────────┘</code></pre>
+      <p>CPU:ns adresslinje A15 fungerar som chip select. När A15 = 0 ($0000–$7FFF) är RAM:et aktiverat och svarar. När A15 = 1 ($8000–$FFFF) är RAM:et avstängt och Arduinon tar över. Detta ger oss 32&nbsp;KB RAM + 32&nbsp;KB ROM-emulering — utan extra adressavkodningslogik.</p>
+    </div>
+  </section>
+
+  <!-- Kopplingsschema -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
+    <div class="schematic bg-white rounded-lg shadow p-4">
+      <object data="schematics/step7.svg" type="image/svg+xml" class="w-full"></object>
+    </div>
+    <div class="mt-4 bg-red-50 border border-red-300 rounded-lg p-4 text-sm">
+      <strong class="text-red-800">⚠ Busskollisionsrisk!</strong>
+      <span class="text-red-700">RAM:et och Arduinon delar databuss med CPU:n. <strong>/OE måste vara HÖG under skrivning</strong> (hanteras av 74HC04-invertern). <strong>Arduinon måste sättas till INPUT</strong> när RAM:et driver bussen. Utan dessa skydd kortsluts utgångar och kretsar kan förstöras.</span>
+    </div>
+  </section>
+
+  <!-- Kod -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Arduino-kod — uppdaterad pulse()</h2>
+    <p class="text-gray-700 mb-3 text-sm">Huvudändringen: Arduinon ska <strong>bara svara på adresser där A15 = 1</strong> ($8000–$FFFF). Vid adresser med A15 = 0 lämnar vi databussen till RAM-chippet. <code>pulse()</code>-funktionen måste kontrollera adressens högsta bit innan den driver PORTA.</p>
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// -----------------------------------------------------------
+// Steg 7 — RAM-chip vid $0000–$7FFF, Arduino ROM vid $8000–$FFFF
+// -----------------------------------------------------------
+
+void pulse() {
+  // -- Fas 1: PHI2 låg — läs adress och RWB --
+  digitalWrite(PHI2, LOW);
+  delay(10);
+
+  uint16_t a = (PINK << 0) | (PINF << 8);
+  bool rw = digitalRead(RWB);
+  bool arduino_ansvarar = (a & 0x8000);  // true om A15 = 1 ($8000–$FFFF)
+
+  if (rw) {
+    // --- LÄSCYKEL ---
+    if (arduino_ansvarar) {
+      // Arduino levererar data från sin minnesarray
+      DDRA = 0xFF;
+      PORTA = mem[a];
+    } else {
+      // RAM-chippet driver databussen — Arduino håller sig undan
+      DDRA = 0x00;
+    }
+    data = arduino_ansvarar ? mem[a] : PINA;
+  } else {
+    // --- SKRIVCYKEL ---
+    // CPU:n driver databussen, Arduino läser passivt
+    DDRA = 0x00;
+  }
+
+  // -- Fas 2: PHI2 hög --
+  digitalWrite(PHI2, HIGH);
+  delay(10);
+
+  if (!rw) {
+    uint8_t skriven_data = PINA;
+    if (arduino_ansvarar) {
+      // Spara även lokalt om adressen är i Arduino-området
+      mem[a] = skriven_data;
+    }
+    // RAM-chippet skriver automatiskt — /WE är kopplat till R/W
+    data = skriven_data;
+  }
+
+  // LCD-utskrift som tidigare...
+  lcd.setCursor(0, 0);
+  lcd.print("A:"); lcd.print(a, HEX); lcd.print("    ");
+  lcd.setCursor(0, 1);
+  lcd.print("D:"); lcd.print(data, HEX); lcd.print("    ");
+
+  Serial.print(rw ? "R" : "W");
+  Serial.print(" $"); Serial.println(a, HEX);
+}</code></pre>
+  </section>
+
+  <!-- Testprogram -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Testprogram — skriv och läs till RAM</h2>
+    <p class="text-gray-700 mb-3 text-sm">Ett enkelt program som skriver ett ökande värde till RAM-adress <code>$0200</code> och hoppar tillbaka. RAM-chippet bevarar värdet mellan skrivningarna.</p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Adress</th><th class="p-2 text-left">Maskinkod</th><th class="p-2 text-left">Assembler</th><th class="p-2 text-left">Förklaring</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2 font-mono">$8000</td><td class="p-2 font-mono">A2 00</td><td class="p-2 font-mono">LDX #$00</td><td class="p-2">X = 0</td></tr>
+          <tr><td class="p-2 font-mono">$8002</td><td class="p-2 font-mono">E8</td><td class="p-2 font-mono">INX</td><td class="p-2">X = X + 1</td></tr>
+          <tr><td class="p-2 font-mono">$8003</td><td class="p-2 font-mono">8E 00 02</td><td class="p-2 font-mono">STX $0200</td><td class="p-2">Spara X till RAM ($0200)</td></tr>
+          <tr><td class="p-2 font-mono">$8006</td><td class="p-2 font-mono">AD 00 02</td><td class="p-2 font-mono">LDA $0200</td><td class="p-2">Läs tillbaka från RAM</td></tr>
+          <tr><td class="p-2 font-mono">$8009</td><td class="p-2 font-mono">4C 02 80</td><td class="p-2 font-mono">JMP $8002</td><td class="p-2">Loopa</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border mt-3"><code class="language-c">// I setup() — ersätt tidigare testprogram:
+mem[0x8000] = 0xA2; mem[0x8001] = 0x00;  // LDX #$00
+mem[0x8002] = 0xE8;                       // INX
+mem[0x8003] = 0x8E; mem[0x8004] = 0x00; mem[0x8005] = 0x02;  // STX $0200
+mem[0x8006] = 0xAD; mem[0x8007] = 0x00; mem[0x8008] = 0x02;  // LDA $0200
+mem[0x8009] = 0x4C; mem[0x800A] = 0x02; mem[0x800B] = 0x80;  // JMP $8002</code></pre>
+  </section>
+
+  <!-- Testning -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Testning</h2>
+    <ol class="list-decimal pl-5 space-y-1 text-gray-700">
+      <li>Koppla in 62256, 74HC04 och avkopplingskondensatorn</li>
+      <li>Ladda upp den modifierade koden</li>
+      <li>Stega med <strong>Knapp 2</strong> (instruktionssteg) — följ programflödet i LCD:n</li>
+      <li>Vid <code>STX $0200</code>: CPU:n skriver till RAM. Adress <code>$0200</code> syns med <code>W</code>-prefix i serieövervakaren</li>
+      <li>Vid <code>LDA $0200</code>: CPU:n läser tillbaka från RAM. Databuss-LED:arna visar värdet som lästes</li>
+      <li>Verifiera att skrivet och läst värde är samma — RAM fungerar!</li>
+    </ol>
+    <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
+      <span class="font-bold text-green-800">✅ Förväntat:</span>
+      <span class="text-green-700">CPU:n skriver till RAM och läser tillbaka korrekt värde. 62256:an svarar på $0000–$7FFF. Arduinon hanterar $8000–$FFFF. Första steget mot en dator med riktigt minne!</span>
+    </div>
+  </section>
+
+  <!-- Hur fungerar det -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Hur fungerar det?</h2>
+    <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
+      <p><strong>A15 som chip select:</strong> 6502:ans adressbuss har 16 linjer (64&nbsp;KB adressrymd). Genom att koppla A15 direkt till RAM:ets /CE-pinne delar vi in minnet i två 32&nbsp;KB-halvor — undre för RAM, övre för Arduino ROM. Inga extra avkodningskretsar behövs.</p>
+      <p><strong>/OE via inverterare:</strong> RAM:ets /OE (output enable) måste vara LÅG vid läsning och HÖG vid skrivning. 6502:ans R/W-signal är HÖG vid läsning — alltså tvärtom. 74HC04 inverterar signalen så att /OE = LÅG när R/W = HÖG.</p>
+      <p><strong>/WE direkt från R/W:</strong> /WE (write enable) är LÅG vid skrivning, och R/W är LÅG vid skrivning — de matchar! Därför kan /WE kopplas direkt till CPU:ns R/W utan inverering.</p>
+      <p><strong>Busstristate:</strong> Under skrivcykler är både Arduinons PORTA och RAM:ets /OE i högimpedanstillstånd, så endast CPU:n driver databussen. Under läsning driver antingen RAM eller Arduino bussen — aldrig båda samtidigt.</p>
+    </div>
+  </section>
+
+  <div class="flex gap-4 mt-8">
+    <a href="step6.html" class="text-blue-600 hover:underline">← Steg 6</a>
+    <a href="index.html" class="text-blue-600 hover:underline">Översikt</a>
+  </div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</body>
+</html>

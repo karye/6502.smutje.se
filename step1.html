@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Steg 1 — Ström och klocka | W65C02</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
@@ -19,6 +20,8 @@
       <a href="step3.html" class="hover:text-blue-300 transition">Steg 3</a>
       <a href="step4.html" class="hover:text-blue-300 transition">Steg 4</a>
       <a href="step5.html" class="hover:text-blue-300 transition">Steg 5</a>
+      <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
+      <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
     </div>
   </div>
 </nav>
@@ -63,7 +66,7 @@
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
     <p class="text-gray-700 mb-3 text-sm">Koden genererar en fyrkantsvåg på pinne D2 som driver CPU:ns klockingång PHI2 (pin 37). W65C02S är en statisk CMOS-krets — till skillnad från äldre NMOS-6502 kan klockan vara hur långsam som helst, eller till och med stoppas helt, utan att processorn tappar sitt interna tillstånd. Syftet med detta första steg är att <strong>verifiera att CPU:n får spänning och att klockpulserna når fram</strong> — en grundläggande hårdvarukontroll innan vi kopplar in fler signaler.</p>
-    <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm"><code>// -----------------------------------------------------------
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// -----------------------------------------------------------
 // Steg 1 — Generera klockpulser (PHI2) för W65C02S
 // -----------------------------------------------------------
 
@@ -116,5 +119,7 @@ void loop() {
     <a href="step2.html" class="text-blue-600 hover:underline">Steg 2 →</a>
   </div>
 </main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
 </body>
 </html>
