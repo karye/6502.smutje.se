@@ -48,7 +48,7 @@ Följande pinnar på W65C02 **måste** dras till 5V via ett 3,3 kΩ eller 10 kΩ
 *   **Pin 2 (RDY)** -> 5V via motstånd
 *   **Pin 4 (/IRQ)** -> 5V via motstånd
 *   **Pin 6 (/NMI)** -> 5V via motstånd
-*   **Pin 35 (BE)** -> 5V via motstånd *(Extremt viktigt på CMOS-versionen!)*
+*   **Pin 36 (BE)** -> **GND** *(BE är aktiv låg — HIGH stänger av bussarna!)*
 *   **Pin 38 (/SO)** -> 5V via motstånd
 
 ### Filter och avkoppling
@@ -58,10 +58,13 @@ Följande pinnar på W65C02 **måste** dras till 5V via ett 3,3 kΩ eller 10 kΩ
 ### Adressbuss (A0–A15)
 Kopplas till de analoga ingångarna på Arduinon för att kunna läsas av direkt via register `PINK` och `PINF`.
 
+**OBS: Kopplingen nedan är 1:1 (rak).** Original-schemat använder korsad koppling
+(A8–A15→A0–A7 och A0–A7→A8–A15), men den verkliga inkopplingen är 1:1.
+
 | W65C02 (Pin) | Adress | Arduino Mega | Hårdvaruport |
 | :--- | :--- | :--- | :--- |
-| **Pin 9 till 16** | A0 – A7 | **A8 till A15** | `PORTK` (Låga adressblocket) |
-| **Pin 17-20 & 22-25** | A8 – A15 | **A0 till A7** | `PORTF` (Höga adressblocket) |
+| **Pin 9 till 16** | A0 – A7 | **A0 till A7** | `PORTF` |
+| **Pin 17-20 & 22-25** | A8 – A15 | **A8 till A15** | `PORTK` |
 
 ### Databuss (D0–D7)
 Kopplas till digitala pinnar 22–29 via **100 Ω seriemotstånd** på varje ledare.
