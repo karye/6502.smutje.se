@@ -38,7 +38,7 @@ För att Arduinon ska hinna med att läsa och skriva på bussarna är kablarna g
 | :--- | :--- | :--- | :--- |
 | **Pin 8** | VDD | Arduino **5V** | Strömmatning |
 | **Pin 21** | VSS | Arduino **GND** | Systemlogisk jord (VSS) |
-| **Pin 36** | PHI2 | Arduino **D2** | Klockinmatning (Genereras av Arduinon) |
+| **Pin 37** | PHI2 | Arduino **D2** | Klockinmatning (Genereras av Arduinon) |
 | **Pin 34** | R/W | Arduino **D3** | Read/Write (Hög = Läs, Låg = Skriv) |
 | **Pin 40** | /RESET | Arduino **D4** | Styrs av Arduinon för kontrollerad omstart |
 | **Pin 7** | SYNC | Arduino **D7** | Opcode fetch-indikering (hög vid instruktionshämtning) |
@@ -112,20 +112,34 @@ Klocklinje (Arduino D2 / CPU Pin 36)
 
 ```
 
-### Tvåraders display (LCD1602 I2C)
+### Tvåraders display (LCD1602 — Parallell 4-bit)
 
-Displayen har en I2C-backpack på baksidan och behöver bara fyra kablar. Den kopplas direkt till Arduinons dedikerade hårdvaru-I2C-pinnar (20 och 21). Detta gör att Arduinon kan skriva ut information om vad 6502-processorn gör på skärmen (t.ex. "A: $8000 D:$EA").
+**OBS: Verklig QC1602A är parallell, inte I2C som original-schemat visar.**
 
-| LCD1602 I2C Pin | Kopplas till | Kommentar |
+Displayen kopplas i 4-bitarsläge med 6 styrpinnar.
+
+| LCD Pin | Arduino | Kommentar |
 | --- | --- | --- |
-| **GND** | Arduino **GND** | Jord |
-| **VCC** | Arduino **5V** | Strömmatning (+5V) |
-| **SDA** | Arduino **Pin 20 (SDA)** | Dataöverföring |
-| **SCL** | Arduino **Pin 21 (SCL)** | Klocksynkronisering för I2C |
+| **VSS** | Arduino **GND** | Jord |
+| **VDD** | Arduino **5V** | Strömmatning (+5V) |
+| **V0** | **Potentiometer** (mittenben) | Kontrastjustering |
+| **RS** | Arduino **D5** | Register Select |
+| **RW** | Arduino **GND** | Alltid skrivläge |
+| **E** | Arduino **D6** | Enable |
+| **D4** | Arduino **D10** | ⚠ Omvänd ordning! |
+| **D5** | Arduino **D9** | |
+| **D6** | Arduino **D8** | |
+| **D7** | Arduino **D7** | |
+| **A** | Arduino **5V** via 220Ω | Bakgrundsbelysning (+) |
+| **K** | Arduino **GND** | Bakgrundsbelysning (−) |
 
-De flesta LCD1602 I2C-backpackar använder adress **`0x27`** eller **`0x3F`**. Kör en I2C-skanner på Arduinon för att verifiera adressen före programmering.
+**Viktigt:** Datapinnarna D4–D7 är i **omvänd ordning** jämfört med standard.
+Kod: `LiquidCrystal lcd(5, 6, 10, 9, 8, 7);`
 
 ### Knappar för manuell stegning
+
+**OBS: Knapparna krockar med LCD:ns pinnar (D5/D6).** För steg 4 måste
+LCD:n flyttas till andra pinnar, eller knapparna använda D8/D9 istället.
 
 För att du ska kunna kontrollera exekveringen kopplas två knappar direkt till Arduinon. Vi använder Arduinons interna pull-up-motstånd, vilket innebär att knapparna kopplas direkt mellan pinne och jord.
 
@@ -151,13 +165,14 @@ För att undvika fel är det bäst att bygga datorn i faser. Testa varje fas inn
 1. Placera W65C02 på kopplingsdäcket.
 2. Koppla 5V och GND från Arduinon till kopplingsdäckets strömskenor. Montera den elektrolytiska kondensatorn över skenorna.
 3. Koppla Pin 8 (VDD) och Pin 21 (VSS) till strömskenorna. Sätt den keramiska 104-kondensatorn direkt över chippets strömpinnar.
-4. Koppla alla 5 pull-up-motstånd (pinnar 2, 4, 6, 35, 38) till 5V.
-5. Koppla klockan från Arduino D2 till CPU Pin 36 samt din LED med tillhörande motstånd.
+4. Koppla pull-up-motstånd: RDY (pin 2), IRQB (pin 4), NMIB (pin 6), SOB (pin 38) till 5V.
+   **BE (pin 36) kopplas till GND** — BE är aktiv låg.
+5. Koppla klockan från Arduino D2 till CPU Pin 37 samt din LED med tillhörande motstånd.
 6. **Test:** Ladda upp ett enkelt blink-skript till Arduinon som slår på/av Pin D2 med 1 Hz frekvens. Kontrollera att din LED blinkar stadigt.
 
 ### Steg 2: Adressbuss och reset-sekvens
 
-1. Koppla bort strömmen. Koppla in alla 16 adresslinjer från CPU:n till Arduinons analoga pinnar (A0–A15) enligt tabellen.
+1. Koppla bort strömmen. Koppla in alla 16 adresslinjer från CPU:n till Arduinons analoga pinnar (A0–A15) — **1:1-koppling** (A0→A0, A1→A1, osv).
 2. Koppla Arduino Pin D4 till CPU Pin 40 (/RESET).
 3. Skriv ett Arduino-skript som drar /RESET låg i 5 klockcykler vid uppstart och därefter håller den hög. Låt skriptet skriva ut värdet av adressbussen till den seriella monitorn vid varje klockcykel.
 4. **Test:** Starta systemet. Kontrollera i serieövervakaren att processorn, efter att reset släpps, utför sin startsekvens och försöker läsa från adresserna `$FFFC` och `$FFFD` (Reset-vektorn).
@@ -173,7 +188,9 @@ För att undvika fel är det bäst att bygga datorn i faser. Testa varje fas inn
 ### Steg 4: Interaktiv stegning och LCD-display
 
 1. Koppla in de två knapparna till Arduino Pin D5 och D6 samt CPU:ns SYNC-pinne till Arduino D7.
-2. Koppla in LCD1602 via I2C till Arduino Pin 20 och 21.
+   **⚠ OBS:** D5 och D6 används redan av LCD:n (RS och E). LCD:n måste flyttas
+   till andra pinnar för steg 4 — t.ex. RS→D11, E→D12.
+2. LCD:n är redan inkopplad (parallell 4-bit, se ovan).
 3. Uppdatera koden så att klockan inte längre körs automatiskt, utan väntar på knapptryckningar (avläsning av D5 eller D6).
 4. Lägg till kod i Arduinon för att formatera adress- och databussens värden till hexadecimal text och skicka till LCD-displayen.
 5. **Test:** Du kan nu trycka på klockknappen för att se processorn stega manuellt. Skärmen ska visa exakt vilken adress och instruktion som körs i realtid på ditt skrivbord.
