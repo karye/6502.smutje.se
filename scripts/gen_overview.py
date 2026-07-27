@@ -56,6 +56,7 @@ class W65C02S(elm.Ic):
 class ArduinoMega2560(elm.Ic):
     def __init__(self, *args, **kwargs):
         pins = [
+            # Vänster sida
             elm.IcPin(name='D4_RESET',pin='4',   side='l', slot='40/40'),
             elm.IcPin(name='D2_PHI2', pin='2',   side='l', slot='37/40'),
             elm.IcPin(name='D3_RW',   pin='3',   side='l', slot='34/40'),
@@ -67,14 +68,16 @@ class ArduinoMega2560(elm.Ic):
             elm.IcPin(name='D27_D5',  pin='27',  side='l', slot='27/40'),
             elm.IcPin(name='D28_D6',  pin='28',  side='l', slot='26/40'),
             elm.IcPin(name='D29_D7',  pin='29',  side='l', slot='25/40'),
-            *[elm.IcPin(name=f'A{8+i}_A{i}', pin=f'A{8+i}', side='l', slot=f'{23-i}/40') for i in range(8)],
-            *[elm.IcPin(name=f'A{i}_A{8+i}', pin=f'A{i}',   side='l', slot=f'{15-i}/40') for i in range(8)],
-            elm.IcPin(name='D5_BTN1', pin='5',   side='r', slot='36/40'),
-            elm.IcPin(name='D6_BTN2', pin='6',   side='r', slot='32/40'),
+            *[elm.IcPin(name=f'A{8+i}_A{8+i}', pin=f'A{8+i}', side='l', slot=f'{23-i}/40') for i in range(8)],
+            *[elm.IcPin(name=f'A{i}_A{i}', pin=f'A{i}', side='l', slot=f'{15-i}/40') for i in range(8)],
+            elm.IcPin(name='D13_SYNC',pin='13',  side='l', slot='6/40'),
+            # Höger sida
+            elm.IcPin(name='D11_BTN1',pin='11',  side='r', slot='36/40'),
+            elm.IcPin(name='D12_BTN2',pin='12',  side='r', slot='32/40'),
             elm.IcPin(name='SDA',     pin='SDA', side='r', slot='24/40'),
             elm.IcPin(name='SCL',     pin='SCL', side='r', slot='20/40'),
             elm.IcPin(name='V5',      pin='5V',  side='r', slot='8/40'),
-            elm.IcPin(name='GND_pin',     pin='GND', side='r', slot='4/40'),
+            elm.IcPin(name='GND_pin', pin='GND', side='r', slot='4/40'),
         ]
         super().__init__(pins=pins, w=6, plblofst=.05, botlabel='Arduino Mega 2560', **kwargs)
 
@@ -126,32 +129,35 @@ def draw(**opts):
 
     # ── CPU Ström ──
     d.add(elm.Line('l', at=CPU.VDD, l=d.unit)); d.add(elm.Vdd(label='+5V')); d.add(elm.Dot())
-    d.push(); d.add(elm.Capacitor('d', label='100n (C1)', l=1.5)); d.add(elm.Ground()); d.pop()
-    d.add(elm.Line('l', l=1.0)); d.add(elm.Capacitor('d', label='10uF (C2)')); d.add(elm.Ground())
+    d.push(); d.add(elm.Capacitor('d', label='C1', l=1.5)); d.add(elm.Ground()); d.pop()
+    d.add(elm.Line('l', l=1.0)); d.add(elm.Capacitor('d', label='C2')); d.add(elm.Ground())
     d.add(elm.Line('r', at=CPU.VSS, l=d.unit)); d.add(elm.Ground())
 
-    # ── Pull-ups ──
-    offsets = {'RDY': 0.5, 'IRQB': 1.0, 'NMIB': 1.5, 'BE': 0.8, 'SOB': 1.8}
-    for i, pn in enumerate(['RDY','IRQB','NMIB','BE','SOB'], 1):
+    # ── Pull-ups (BE kopplas separat till GND — aktiv låg!) ──
+    offsets = {'RDY': 0.5, 'IRQB': 1.0, 'NMIB': 1.5, 'SOB': 0.5}
+    for i, pn in enumerate(['RDY','IRQB','NMIB','SOB'], 1):
         pin = CPU.anchors[pn]; side = 'r' if pin[0] > 0 else 'l'
         d.add(elm.Line(side, at=pin, l=offsets[pn])); d.add(elm.Dot())
-        d.push(); d.add(elm.Line('u', l=1.5)); d.add(elm.Resistor('u', label=f'3.3K (R{i})'))
+        d.push(); d.add(elm.Line('u', l=1.5)); d.add(elm.Resistor('u', label=f'R{i}'))
         d.add(elm.Vdd(label='+5V')); d.pop()
 
     # ── Oanvända CPU-pinnar ──
     for pn, side in [('VPB','l'),('MLB','l'),('PHI1O','l'),('NC','r'),('PHI2O','r')]:
         d.add(elm.Line(side, at=CPU.anchors[pn], l=0.4))
 
+    # ── BE till GND (aktiv låg — måste vara LÅG för att bussarna ska drivas) ──
+    d.add(elm.Line('r', at=CPU.BE, l=0.5)); d.add(elm.Ground())
+
     if not use_arduino:
         # ── Arduino (ej ansluten i detta steg) ──
         d.add(ArduinoMega2560(at=[CPU.D0[0]+10, CPU.D0[1]]))
-        # ── Klock-LED för steg 1 (direkt från PHI2) ──
-        clk_x = CPU.PHI2[0] + 1.5
-        d.add(elm.Line('r', at=CPU.PHI2, l=clk_x - CPU.PHI2[0], color='blue'))
-        d.add(elm.Dot(at=(clk_x, CPU.PHI2[1]), color='blue'))
-        d.add(elm.Line('u', at=(clk_x, CPU.PHI2[1]), l=1.8, color='blue'))
-        d.add(elm.Resistor('r', label='220 (R6)'))
-        d.add(elm.LED('r', label='LED1'))
+        # ── Klock-LED för steg 1 (till höger om SOB, vertikalt nedåt) ──
+        led_x = CPU.SOB[0] + 1.0  # Till höger om SOB pull-up
+        d.add(elm.Line('r', at=CPU.PHI2, l=led_x - CPU.PHI2[0], color='blue'))
+        d.add(elm.Dot(at=(led_x, CPU.PHI2[1]), color='blue'))
+        d.add(elm.Resistor('u', label='R6'))
+        d.add(elm.LED('u', label='LED1'))
+        d.add(elm.Line('r', l=0.3))
         d.add(elm.Ground())
         return d
         return d
@@ -171,14 +177,15 @@ def draw(**opts):
                            l=abs(mp_pin[1] - cp_pin[1]), color='blue'))
         d.add(elm.Line('r', at=(ctrl_base, mp_pin[1]), l=mp_pin[0] - ctrl_base, color='blue'))
 
-    # ── Klock-LED (från reset-linjen på kontrollbussen) ──
-    rst_y = Mega.D4_RESET[1]
-    d.add(elm.Dot(at=(ctrl_base, rst_y), color='blue'))
+    # ── Klock-LED (till höger om SOB, vertikalt nedåt) ──
+    led_x = CPU.SOB[0] + 1.0
+    d.add(elm.Dot(at=(ctrl_base, CPU.PHI2[1]), color='blue'))
     d.push()
-    d.add(elm.Line('l', l=3.5, color='blue'))
-    d.add(elm.Resistor('l', label='220 (R6)'))
-    d.add(elm.LED('l', label='LED1'))
-    d.add(elm.Line('d', l=1.5))
+    d.add(elm.Line('l', l=ctrl_base - led_x, color='blue'))
+    d.add(elm.Dot(at=(led_x, CPU.PHI2[1]), color='blue'))
+    d.add(elm.Resistor('u', label='R6'))
+    d.add(elm.LED('u', label='LED1'))
+    d.add(elm.Line('r', l=0.3))
     d.add(elm.Ground())
     d.pop()
 
@@ -189,7 +196,7 @@ def draw(**opts):
 
     # ── Adressbuss ──
     for i in range(12, 16):
-        cp = getattr(CPU, f'A{i}'); mp = getattr(Mega, f'A{i-8}_A{i}')
+        cp = getattr(CPU, f'A{i}'); mp = getattr(Mega, f'A{i-8}_A{i-8}')
         x_tunnel = addr_base + (i-12) * 0.15
         d.add(elm.Line('r', at=cp, l=x_tunnel - cp[0], color='orange'))
         if mp[1] != cp[1]:
@@ -198,7 +205,7 @@ def draw(**opts):
 
     for i in range(12):
         cp = getattr(CPU, f'A{i}')
-        mp = getattr(Mega, f'A{8+i}_A{i}') if i < 8 else getattr(Mega, f'A{i-8}_A{i}')
+        mp = getattr(Mega, f'A{8+i}_A{8+i}') if i < 8 else getattr(Mega, f'A{i-8}_A{i-8}')
         dist_left = 0.5 + i * 0.15
         loop_y = CPU.A11[1] - 1.5 - i * 0.15
         x_tunnel = addr_base + (i + 4) * 0.15
@@ -221,8 +228,8 @@ def draw(**opts):
 
     # ── Knappar ──
     if use_buttons:
-        d.add(elm.Line('r', at=Mega.D5_BTN1, l=1)); d.add(elm.Button('r', label='BTN1')); d.add(elm.Ground())
-        d.add(elm.Line('r', at=Mega.D6_BTN2, l=1)); d.add(elm.Button('r', label='BTN2')); d.add(elm.Ground())
+        d.add(elm.Line('r', at=Mega.D11_BTN1, l=1)); d.add(elm.Button('r', label='BTN1')); d.add(elm.Ground())
+        d.add(elm.Line('r', at=Mega.D12_BTN2, l=1)); d.add(elm.Button('r', label='BTN2')); d.add(elm.Ground())
 
     d.add(elm.Line('r', at=Mega.V5, l=1)); d.add(elm.Vdd(label='+5V'))
     d.add(elm.Line('r', at=Mega.GND_pin, l=1)); d.add(elm.Ground())
@@ -244,7 +251,7 @@ def draw(**opts):
         d.add(elm.Line('r', at=RAM.VCC, l=1.0)); d.add(elm.Vdd(label='+5V'))
         d.add(elm.Line('l', at=RAM.GND, l=1.0)); d.add(elm.Ground())
         d.add(elm.Line('r', at=RAM.VCC, l=0.5))
-        d.add(elm.Capacitor('d', label='100n', toy=RAM.GND[1]))
+        d.add(elm.Capacitor('d', label='C4', toy=RAM.GND[1]))
         d.add(elm.Ground())
         d.add(elm.Line('r', at=RAM.CEB, l=2, rgtlabel='← A15'))
         d.add(elm.Line('r', at=RAM.WEB, l=1.5, rgtlabel='← R/W'))

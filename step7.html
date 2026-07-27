@@ -44,7 +44,7 @@
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th><th class="p-2 text-left">Not</th></tr></thead>
         <tbody class="divide-y">
           <tr><td class="p-2">1</td><td class="p-2">62256 SRAM (32&nbsp;KB, 28-pin DIP)</td><td class="p-2">15 adresslinjer, 8 datalinjer, 3 kontrollpinnar</td></tr>
-          <tr><td class="p-2">1</td><td class="p-2">74HC00 (NAND-grind som inverterare)</td><td class="p-2">Koppla båda ingångarna till R/W → fungerar som NOT</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2">74HC04 (hex inverter)</td><td class="p-2">Inverterar R/W-signalen för RAM:ens /OE</td></tr>
           <tr><td class="p-2">1</td><td class="p-2">100 nF keramisk kondensator</td><td class="p-2">Avkoppling vid RAM:ets VCC/GND</td></tr>
         </tbody>
       </table>
@@ -70,7 +70,7 @@
     </div>
     <div class="mt-3 overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">74HC00 pin</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Not</th></tr></thead>
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">74HC04 pin</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Not</th></tr></thead>
         <tbody class="divide-y">
           <tr><td class="p-2">1, 2 (ingångar)</td><td class="p-2">CPU R/W (pin 34)</td><td class="p-2">Båda ingångarna till R/W = fungerar som NOT</td></tr>
           <tr><td class="p-2">3 (utgång)</td><td class="p-2">62256 /OE (pin 22)</td><td class="p-2">NAND med sammankopplade ingångar = inverterare</td></tr>
@@ -211,7 +211,7 @@ write_mem(0x8009, 0x4C); write_mem(0x800A, 0x02); write_mem(0x800B, 0x80);  // J
     <h2 class="text-lg font-bold mb-2">Hur fungerar det?</h2>
     <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
       <p><strong>A15 som chip select:</strong> 6502:ans adressbuss har 16 linjer (64&nbsp;KB adressrymd). Genom att koppla A15 direkt till RAM:ets /CE-pinne delar vi in minnet i två 32&nbsp;KB-halvor — undre för RAM, övre för Arduino ROM. Inga extra avkodningskretsar behövs.</p>
-      <p><strong>/OE via NAND-grind som inverterare:</strong> RAM:ets /OE (output enable) måste vara LÅG vid läsning och HÖG vid skrivning. 6502:ans R/W-signal är HÖG vid läsning — alltså tvärtom. En 74HC00 NAND-grind med båda ingångarna kopplade till R/W fungerar som inverterare (NOT), så att /OE = LÅG när R/W = HÖG.</p>
+      <p><strong>/OE via hex inverter:</strong> RAM:ets /OE (output enable) måste vara LÅG vid läsning och HÖG vid skrivning. 6502:ans R/W-signal är HÖG vid läsning — alltså tvärtom. En 74HC04 hex inverter — ingången kopplas till R/W, utgången till /OE, så att /OE = LÅG när R/W = HÖG.</p>
       <p><strong>/WE direkt från R/W:</strong> /WE (write enable) är LÅG vid skrivning, och R/W är LÅG vid skrivning — de matchar! Därför kan /WE kopplas direkt till CPU:ns R/W utan inverering.</p>
       <p><strong>Busstristate:</strong> Under skrivcykler är både Arduinons PORTA och RAM:ets /OE i högimpedanstillstånd, så endast CPU:n driver databussen. Under läsning driver antingen RAM eller Arduino bussen — aldrig båda samtidigt.</p>
     </div>
