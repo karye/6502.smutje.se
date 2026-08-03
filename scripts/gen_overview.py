@@ -2,6 +2,7 @@
 """Generate step 1–5, 7 schematics — parameterstyrd."""
 import schemdraw
 import schemdraw.elements as elm
+import schemdraw.logic as logic
 import matplotlib
 matplotlib.use('Agg')
 
@@ -114,6 +115,52 @@ class SRAM62256(elm.Ic):
             elm.IcPin(name='D3',   side='r', pin='15', slot='1/14'),
         ]
         super().__init__(pins=pins, w=5, plblofst=.05, botlabel='62256 SRAM (32KB)', **kwargs)
+
+class W65C22(elm.Ic):
+    def __init__(self, *args, **kwargs):
+        pins = [
+            elm.IcPin(name='VSS',  side='l', pin='1',  slot='20/20'),
+            elm.IcPin(name='PA0',  side='l', pin='2',  slot='19/20'),
+            elm.IcPin(name='PA1',  side='l', pin='3',  slot='18/20'),
+            elm.IcPin(name='PA2',  side='l', pin='4',  slot='17/20'),
+            elm.IcPin(name='PA3',  side='l', pin='5',  slot='16/20'),
+            elm.IcPin(name='PA4',  side='l', pin='6',  slot='15/20'),
+            elm.IcPin(name='PA5',  side='l', pin='7',  slot='14/20'),
+            elm.IcPin(name='PA6',  side='l', pin='8',  slot='13/20'),
+            elm.IcPin(name='PA7',  side='l', pin='9',  slot='12/20'),
+            elm.IcPin(name='PB0',  side='l', pin='10', slot='11/20'),
+            elm.IcPin(name='PB1',  side='l', pin='11', slot='10/20'),
+            elm.IcPin(name='PB2',  side='l', pin='12', slot='9/20'),
+            elm.IcPin(name='PB3',  side='l', pin='13', slot='8/20'),
+            elm.IcPin(name='PB4',  side='l', pin='14', slot='7/20'),
+            elm.IcPin(name='PB5',  side='l', pin='15', slot='6/20'),
+            elm.IcPin(name='PB6',  side='l', pin='16', slot='5/20'),
+            elm.IcPin(name='PB7',  side='l', pin='17', slot='4/20'),
+            elm.IcPin(name='CB1',  side='l', pin='18', slot='3/20'),
+            elm.IcPin(name='CB2',  side='l', pin='19', slot='2/20'),
+            elm.IcPin(name='VDD',  side='l', pin='20', slot='1/20'),
+            elm.IcPin(name='CA1',  side='r', pin='40', slot='20/20'),
+            elm.IcPin(name='CA2',  side='r', pin='39', slot='19/20'),
+            elm.IcPin(name='RS0',  side='r', pin='38', slot='18/20'),
+            elm.IcPin(name='RS1',  side='r', pin='37', slot='17/20'),
+            elm.IcPin(name='RS2',  side='r', pin='36', slot='16/20'),
+            elm.IcPin(name='RS3',  side='r', pin='35', slot='15/20'),
+            elm.IcPin(name='RESB', side='r', pin='34', slot='14/20'),
+            elm.IcPin(name='D0',   side='r', pin='33', slot='13/20'),
+            elm.IcPin(name='D1',   side='r', pin='32', slot='12/20'),
+            elm.IcPin(name='D2',   side='r', pin='31', slot='11/20'),
+            elm.IcPin(name='D3',   side='r', pin='30', slot='10/20'),
+            elm.IcPin(name='D4',   side='r', pin='29', slot='9/20'),
+            elm.IcPin(name='D5',   side='r', pin='28', slot='8/20'),
+            elm.IcPin(name='D6',   side='r', pin='27', slot='7/20'),
+            elm.IcPin(name='D7',   side='r', pin='26', slot='6/20'),
+            elm.IcPin(name='PHI2', side='r', pin='25', slot='5/20'),
+            elm.IcPin(name='CS1',  side='r', pin='24', slot='4/20'),
+            elm.IcPin(name='CS2B', side='r', pin='23', slot='3/20'),
+            elm.IcPin(name='RWB',  side='r', pin='22', slot='2/20'),
+            elm.IcPin(name='IRQB', side='r', pin='21', slot='1/20'),
+        ]
+        super().__init__(pins=pins, w=5, plblofst=.05, botlabel='W65C22 VIA', **kwargs)
 
 
 def draw(**opts):
@@ -246,23 +293,83 @@ def draw(**opts):
 
     # ── RAM ──
     if use_ram:
+        # ── 62256 SRAM (kommenterad tills vidare) ──
+        # ram_y = CPU.A11[1] - 12
+        # RAM = d.add(SRAM62256(at=[0, ram_y]))
+        # d.add(elm.Line('r', at=RAM.VCC, l=1.0)); d.add(elm.Vdd(label='+5V'))
+        # d.add(elm.Line('l', at=RAM.GND, l=1.0)); d.add(elm.Ground())
+        # d.add(elm.Line('r', at=RAM.VCC, l=0.5))
+        # d.add(elm.Capacitor('d', label='C4', toy=RAM.GND[1]))
+        # d.add(elm.Ground())
+
+        # 74HC00 + 74HC04 behöver en y-referens — använd samma som innan
         ram_y = CPU.A11[1] - 12
-        RAM = d.add(SRAM62256(at=[0, ram_y]))
-        d.add(elm.Line('r', at=RAM.VCC, l=1.0)); d.add(elm.Vdd(label='+5V'))
-        d.add(elm.Line('l', at=RAM.GND, l=1.0)); d.add(elm.Ground())
-        d.add(elm.Line('r', at=RAM.VCC, l=0.5))
-        d.add(elm.Capacitor('d', label='C4', toy=RAM.GND[1]))
-        d.add(elm.Ground())
-        d.add(elm.Line('r', at=RAM.CEB, l=2, rgtlabel='← A15'))
-        d.add(elm.Line('r', at=RAM.WEB, l=1.5, rgtlabel='← R/W'))
-        d.add(elm.Line('l', at=RAM.OEB, l=3, lftlabel='← 74HC04'))
-        d.add(elm.Line('l', at=RAM.OEB, l=5.0))
-        d.add(elm.Line('u', l=0.5))
-        d.add(elm.Ic(
-            pins=[elm.IcPin(name='A', side='l', slot='1/1'), elm.IcPin(name='Y', side='r', slot='1/1')],
-            w=2, plblofst=.05, botlabel='74HC04'))
-        d.add(elm.Line('l', l=1.5, lftlabel='← R/W'))
-        d.add(elm.Line('r', l=1.5, rgtlabel='→ /OE'))
+
+        # ── 74HC00 adressavkodning (A14, A15 → RAM /CE) ──
+        dec_x = 4.0
+        dec_y = ram_y + 4.0
+        n1 = d.add(logic.Nand(at=(dec_x, dec_y + 1.5), scale=0.8, label='1/4'))
+        n2 = d.add(logic.Nand(at=(dec_x, dec_y - 1.5), scale=0.8, label='1/4'))
+        n3 = d.add(logic.Nand(at=(dec_x + 4, dec_y), scale=0.8, label='1/4'))
+        # NAND1: NOT A14 (both inputs = A14)
+        d.add(elm.Line('l', at=n1.in1, l=2.0, lftlabel='A14'))
+        d.add(elm.Line('l', at=n1.in2, l=2.0))
+        # NAND2: NOT A15
+        d.add(elm.Line('l', at=n2.in1, l=2.0, lftlabel='A15'))
+        d.add(elm.Line('l', at=n2.in2, l=2.0))
+        # NAND3: A14 AND A15 → RAM /CE
+        d.add(elm.Line('r', at=n1.out, to=n3.in1))
+        d.add(elm.Line('r', at=n2.out, to=n3.in2))
+        d.add(elm.Line('r', at=n3.out, l=1.0, rgtlabel='→ RAM /CE'))
+
+        # RAM kontroll (kommenterad)
+        # d.add(elm.Line('r', at=RAM.WEB, l=1.5, rgtlabel='← R/W'))
+        # d.add(elm.Line('l', at=RAM.OEB, l=3, lftlabel='← 74HC04'))
+        # d.add(elm.Line('l', at=RAM.OEB, l=5.0))
+        # 74HC04 (kommenterad)
+        # d.add(elm.Line('u', l=0.5))
+        # d.add(elm.Ic(
+        #     pins=[elm.IcPin(name='A', side='l', slot='1/1'), elm.IcPin(name='Y', side='r', slot='1/1')],
+        #     w=2, plblofst=.05, botlabel='74HC04'))
+        # d.add(elm.Line('l', l=1.5, lftlabel='← R/W'))
+        # d.add(elm.Line('r', l=1.5, rgtlabel='→ /OE'))
+
+        # ── W65C22 VIA (under Arduino Mega) ──
+        via_x = Mega.D4_RESET[0]
+        via_y = ram_y + 2.5
+        VIA = d.add(W65C22(at=[via_x, via_y]))
+
+        # Bussanslutningar — förläng stammar ned till VIA
+        # Databuss D0-D7: VIA-pinnar på höger sida, anslut till stammar
+        for i in range(8):
+            x_tr = data_base + i * 0.2
+            dp = VIA.anchors[f'D{i}']
+            # Dra stam ned till VIA-nivå om den inte redan går så långt
+            d.add(elm.Line('l', at=dp, tox=x_tr, color='green'))
+            d.add(elm.Dot(at=(x_tr, dp[1]), color='green'))
+
+        # Adressbuss A0-A3 (RS0-RS3 på VIA:s högra sida)
+        for i in range(4):
+            x_tr = addr_base + i * 0.22
+            rp = VIA.anchors[f'RS{i}']
+            d.add(elm.Line('l', at=rp, tox=x_tr, color='orange'))
+            d.add(elm.Dot(at=(x_tr, rp[1]), color='orange'))
+
+        # Kontrollsignaler (PHI2, RWB, RESB — alla på VIA:s högra sida)
+        d.add(elm.Line('l', at=VIA.PHI2, tox=ctrl_base, color='blue'))
+        d.add(elm.Dot(at=(ctrl_base, VIA.PHI2[1]), color='blue'))
+        d.add(elm.Line('l', at=VIA.RWB,  tox=ctrl_base, color='blue'))
+        d.add(elm.Dot(at=(ctrl_base, VIA.RWB[1]), color='blue'))
+        d.add(elm.Line('l', at=VIA.RESB, tox=ctrl_base, color='blue'))
+        d.add(elm.Dot(at=(ctrl_base, VIA.RESB[1]), color='blue'))
+
+        # Ström (VDD/VSS på vänster sida)
+        d.add(elm.Line('l', at=VIA.VDD, l=1.0)); d.add(elm.Vdd(label='+5V'))
+        d.add(elm.Line('l', at=VIA.VSS, l=1.0)); d.add(elm.Ground())
+
+        # Chip select (CS1, CS2B — höger sida)
+        d.add(elm.Line('l', at=VIA.CS1,  l=1.5, lftlabel='A14 →'))
+        d.add(elm.Line('l', at=VIA.CS2B, l=1.5, lftlabel='A15 →'))
 
     return d
 
