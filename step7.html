@@ -82,7 +82,7 @@
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">LCD-pin</th><th class="p-2 text-left">VIA-pin</th><th class="p-2 text-left">Funktion</th></tr></thead>
         <tbody class="divide-y">
           <tr><td class="p-2">RS (pin 4)</td><td class="p-2">PA0 (pin 2)</td><td class="p-2">Register Select — 0 = kommando, 1 = data</td></tr>
-          <tr><td class="p-2">R/W (pin 5)</td><td class="p-2">PA1 (pin 3)</td><td class="p-2">Read/Write — vi kör write-only (GND)</td></tr>
+          <tr><td class="p-2">R/W (pin 5)</td><td class="p-2">GND</td><td class="p-2">Write-only — alltid låg</td></tr>
           <tr><td class="p-2">E (pin 6)</td><td class="p-2">PA2 (pin 4)</td><td class="p-2">Enable — pulsar för att skicka data</td></tr>
           <tr><td class="p-2">DB0–DB7 (pins 7–14)</td><td class="p-2">PB0–PB7 (pins 10–17)</td><td class="p-2">Databuss — 8-bit parallell</td></tr>
           <tr><td class="p-2">VSS (pin 1)</td><td class="p-2">GND</td><td class="p-2">Jord</td></tr>
@@ -96,24 +96,68 @@
 
   <!-- Programmering -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">6502-program — LCD-drivrutin</h2>
-    <p class="text-gray-700 mb-3 text-sm">VIAns register finns på adress <code>$C000–$C00F</code>. Port A är register 1, Port B är register 0, DDR-register är 3 (A) och 2 (B).</p>
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// VIA-adresser (för Arduino-minnesemulatorn)
-#define VIA_PORTB  0xC000   // Output Register B (LCD data)
-#define VIA_PORTA  0xC001   // Output Register A (LCD control)
-#define VIA_DDRB   0xC002   // Data Direction Register B
-#define VIA_DDRA   0xC003   // Data Direction Register A
+    <h2 class="text-lg font-bold mb-2">Arduino-kod — VIA-emulering</h2>
+    <p class="text-gray-700 mb-3 text-sm">Arduinon måste emulera VIA:ns register på <code>$C000–$C00F</code>. När CPU:n läser/skriver till dessa adresser ska Arduinon svara med VIA-registervärden — inte vanligt RAM. VIAns port B (PB0–PB7) är ansluten till LCD:ns databuss, port A (PA0, PA2) till LCD:ns kontrollsignaler.</p>
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// VIA-emulering — lägg till i read_mem() och write_mem()
 
-// Sätt båda portarna som utgångar
-write_mem(VIA_DDRB, 0xFF);    // PB0-PB7 = output
-write_mem(VIA_DDRA, 0xFF);    // PA0-PA7 = output
+#define VIA_BASE 0xC000
 
-// LCD-init (exempel: 8-bitarsläge, 2 rader, 5x8 font)
-write_mem(VIA_PORTA, 0x00);   // RS=0, E=0
-write_mem(VIA_PORTB, 0x38);   // Function set: 8-bit, 2 lines
-write_mem(VIA_PORTA, 0x04);   // E=1
-delayMicroseconds(50);
-write_mem(VIA_PORTA, 0x00);   // E=0</code></pre>
+uint8_t via_portb = 0x00;  // Output Register B (LCD data)
+uint8_t via_porta = 0x00;  // Output Register A (LCD control: PA0=RS, PA2=E)
+uint8_t via_ddrb  = 0xFF;  // Data Direction B (alla utgångar)
+uint8_t via_ddra  = 0xFF;  // Data Direction A
+
+uint8_t read_mem(uint16_t addr) {
+  // VIA register ($C000–$C00F)
+  if (addr >= VIA_BASE && addr < VIA_BASE + 16) {
+    switch (addr & 0x000F) {
+      case 0x0: return via_portb;  // ORB
+      case 0x1: return via_porta;  // ORA
+      case 0x2: return via_ddrb;   // DDRB
+      case 0x3: return via_ddra;   // DDRA
+      default:  return 0x00;
+    }
+  }
+  // Vanligt RAM/ROM som tidigare...
+  if (addr < 1024) return ram[addr];
+  if (addr >= 0xFFFA) return vectors[addr - 0xFFFA];
+  return 0xEA;
+}
+
+void write_mem(uint16_t addr, uint8_t val) {
+  // VIA register
+  if (addr >= VIA_BASE && addr < VIA_BASE + 16) {
+    switch (addr & 0x000F) {
+      case 0x0: via_portb = val; break;  // ORB → LCD data
+      case 0x1: via_porta = val; break;  // ORA → LCD control
+      case 0x2: via_ddrb  = val; break;
+      case 0x3: via_ddra  = val; break;
+    }
+    return;
+  }
+  // Vanligt RAM
+  if (addr < 1024) { ram[addr] = val; return; }
+  if (addr >= 0xFFFA) { vectors[addr - 0xFFFA] = val; return; }
+}</code></pre>
+  </section>
+
+  <!-- Testprogram -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">6502-testprogram — skriv till LCD via VIA</h2>
+    <p class="text-gray-700 mb-3 text-sm">Ett enkelt 6502-program som initierar LCD:n och skriver "Hello" via VIA:ns register.</p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Adress</th><th class="p-2 text-left">Maskinkod</th><th class="p-2 text-left">Assembler</th><th class="p-2 text-left">Förklaring</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2 font-mono">$8000</td><td class="p-2 font-mono">A9 38</td><td class="p-2 font-mono">LDA #$38</td><td class="p-2">Function set: 8-bit, 2 rader</td></tr>
+          <tr><td class="p-2 font-mono">$8002</td><td class="p-2 font-mono">8D 00 C0</td><td class="p-2 font-mono">STA $C000</td><td class="p-2">Skicka till LCD via VIA port B</td></tr>
+          <tr><td class="p-2 font-mono">$8005</td><td class="p-2 font-mono">A9 04</td><td class="p-2 font-mono">LDA #$04</td><td class="p-2">PA2=E hög</td></tr>
+          <tr><td class="p-2 font-mono">$8007</td><td class="p-2 font-mono">8D 01 C0</td><td class="p-2 font-mono">STA $C001</td><td class="p-2">Pulsa E via VIA port A</td></tr>
+          <tr><td class="p-2 font-mono">$800A</td><td class="p-2 font-mono">A9 00</td><td class="p-2 font-mono">LDA #$00</td><td class="p-2">PA2=E låg</td></tr>
+          <tr><td class="p-2 font-mono">$800C</td><td class="p-2 font-mono">8D 01 C0</td><td class="p-2 font-mono">STA $C001</td><td class="p-2">Klar — data överförd</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <!-- Testning -->
