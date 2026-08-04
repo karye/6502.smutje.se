@@ -22,6 +22,100 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 
 ---
 
+## W65C02S — pinout
+
+| Pin | Namn | I/O | Beskrivning |
+|-----|------|-----|-------------|
+| 1 | VPB | Ut | Vector Pull — utgång, ansluts ej |
+| 2 | RDY | In | Ready — HÖG = CPU kör, LÅG = paus |
+| 3 | PHI1O | Ut | Phase 1 Out — klocka ut, ansluts ej |
+| 4 | IRQB | In | Interrupt Request (aktiv LÅG) |
+| 5 | MLB | Ut | Memory Lock — utgång, ansluts ej |
+| 6 | NMIB | In | Non-Maskable Interrupt (aktiv LÅG) |
+| 7 | SYNC | Ut | Opcode fetch — HÖG vid instruktionshämtning |
+| 8 | VDD | — | Strömmatning +5V |
+| 9 | A0 | Ut | Adressbuss bit 0 |
+| 10 | A1 | Ut | Adressbuss bit 1 |
+| 11 | A2 | Ut | Adressbuss bit 2 |
+| 12 | A3 | Ut | Adressbuss bit 3 |
+| 13 | A4 | Ut | Adressbuss bit 4 |
+| 14 | A5 | Ut | Adressbuss bit 5 |
+| 15 | A6 | Ut | Adressbuss bit 6 |
+| 16 | A7 | Ut | Adressbuss bit 7 |
+| 17 | A8 | Ut | Adressbuss bit 8 |
+| 18 | A9 | Ut | Adressbuss bit 9 |
+| 19 | A10 | Ut | Adressbuss bit 10 |
+| 20 | A11 | Ut | Adressbuss bit 11 |
+| 21 | VSS | — | Systemjord GND |
+| 22 | A12 | Ut | Adressbuss bit 12 |
+| 23 | A13 | Ut | Adressbuss bit 13 |
+| 24 | A14 | Ut | Adressbuss bit 14 |
+| 25 | A15 | Ut | Adressbuss bit 15 |
+| 26 | D7 | I/O | Databuss bit 7 (MSB) |
+| 27 | D6 | I/O | Databuss bit 6 |
+| 28 | D5 | I/O | Databuss bit 5 |
+| 29 | D4 | I/O | Databuss bit 4 |
+| 30 | D3 | I/O | Databuss bit 3 |
+| 31 | D2 | I/O | Databuss bit 2 |
+| 32 | D1 | I/O | Databuss bit 1 |
+| 33 | D0 | I/O | Databuss bit 0 (LSB) |
+| 34 | RWB | Ut | Read/Write — HÖG = läs, LÅG = skriv |
+| 35 | NC | — | Ej ansluten |
+| 36 | BE | In | Bus Enable — HÖG = bussar aktiva |
+| 37 | PHI2 | In | Phase 2 In — klockingång |
+| 38 | SOB | In | Set Overflow (aktiv LÅG) |
+| 39 | PHI2O | Ut | Phase 2 Out — klocka ut, ansluts ej |
+| 40 | RESB | In | Reset (aktiv LÅG) |
+
+---
+
+## W65C22 VIA — pinout
+
+| Pin | Namn | I/O | Beskrivning |
+|-----|------|-----|-------------|
+| 1 | VSS | — | Systemjord GND |
+| 2 | PA0 | I/O | Port A bit 0 |
+| 3 | PA1 | I/O | Port A bit 1 |
+| 4 | PA2 | I/O | Port A bit 2 |
+| 5 | PA3 | I/O | Port A bit 3 |
+| 6 | PA4 | I/O | Port A bit 4 |
+| 7 | PA5 | I/O | Port A bit 5 |
+| 8 | PA6 | I/O | Port A bit 6 |
+| 9 | PA7 | I/O | Port A bit 7 |
+| 10 | PB0 | I/O | Port B bit 0 |
+| 11 | PB1 | I/O | Port B bit 1 |
+| 12 | PB2 | I/O | Port B bit 2 |
+| 13 | PB3 | I/O | Port B bit 3 |
+| 14 | PB4 | I/O | Port B bit 4 |
+| 15 | PB5 | I/O | Port B bit 5 |
+| 16 | PB6 | I/O | Port B bit 6 |
+| 17 | PB7 | I/O | Port B bit 7 |
+| 18 | CB1 | In | Port B kontroll 1 |
+| 19 | CB2 | I/O | Port B kontroll 2 |
+| 20 | VDD | — | Strömmatning +5V |
+| 21 | IRQB | Ut | Interrupt Request (aktiv LÅG, open drain) |
+| 22 | RWB | In | Read/Write — HÖG = läs, LÅG = skriv |
+| 23 | CS2B | In | Chip Select 2 (aktiv LÅG) |
+| 24 | CS1 | In | Chip Select 1 (aktiv HÖG) |
+| 25 | PHI2 | In | Klockingång |
+| 26 | D7 | I/O | Databuss bit 7 (MSB) |
+| 27 | D6 | I/O | Databuss bit 6 |
+| 28 | D5 | I/O | Databuss bit 5 |
+| 29 | D4 | I/O | Databuss bit 4 |
+| 30 | D3 | I/O | Databuss bit 3 |
+| 31 | D2 | I/O | Databuss bit 2 |
+| 32 | D1 | I/O | Databuss bit 1 |
+| 33 | D0 | I/O | Databuss bit 0 (LSB) |
+| 34 | RESB | In | Reset (aktiv LÅG) |
+| 35 | RS3 | In | Register Select bit 3 |
+| 36 | RS2 | In | Register Select bit 2 |
+| 37 | RS1 | In | Register Select bit 1 |
+| 38 | RS0 | In | Register Select bit 0 |
+| 39 | CA2 | I/O | Port A kontroll 2 |
+| 40 | CA1 | In | Port A kontroll 1 |
+
+---
+
 ## CPU-kopplingar (gäller alla steg)
 
 | CPU-pin | Signal | Arduino | Not |
