@@ -10,9 +10,11 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 | 1 | Arduino Mega 2560 |
 | 1 | W65C22 VIA (DIP-40) — steg 7 |
 | 1 | 74HC00 (quad NAND) — steg 7 |
-| 1 | LCD 16×2 (parallell, t.ex. QC1602A) — steg 6 |
+| 1 | LCD 16×2 (parallell, t.ex. QC1602A) — steg 5 |
 | 1 | Lysdiod (klockindikering) |
 | 1 | 220 Ω motstånd (LED-strömbegränsning) |
+| 1 | 220 Ω motstånd (LCD-bakgrundsbelysning) |
+| 1 | 10 kΩ potentiometer (LCD-kontrast) |
 | 4 | 10 kΩ motstånd (pull-up: RDY, IRQB, NMIB, SOB) |
 | 8 | 100 Ω motstånd (databuss-skydd) |
 | 1 | 100 nF keramisk kondensator (avkoppling CPU) |
@@ -155,11 +157,11 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 
 ```
 $FFFF ┌──────────────┐
-      │  Arduino ROM  │  A15=1 ($8000–$BFFF)
+      │  Arduino ROM  │  $8000–$FFFF (6502-program + vektorer)
+$8000 ├──────────────┤
+      │              │
 $4000 ├──────────────┤
       │  W65C22 VIA   │  $4000–$400F (steg 7)
-$8000 ├──────────────┤
-      │  Arduino ROM  │  $8000–$BFFF (6502-program)
 $0000 └──────────────┘
 ```
 
@@ -173,8 +175,8 @@ $0000 └──────────────┘
 | 2 | Adressbuss + reset | 16 kopplingstrådar |
 | 3 | Databuss + minnesemulering | 8×100Ω |
 | 4 | Knappar + stegning | 2 knappar |
-| 5 | LCD via Arduino (parallell 4-bit) | LCD, 10kΩ pot |
-| 6 | LCD direkt från Arduino, 6502-program | — (samma hårdvara) |
+| 5 | LCD via Arduino (parallell 4-bit) | LCD, 10kΩ pot, 220Ω |
+| 6 | Eget 6502-program (räknare) | — (samma hårdvara) |
 | 7 | W65C22 VIA + 74HC00, LCD via VIA | VIA, 74HC00 |
 
 ---
@@ -209,7 +211,7 @@ Kod: `LiquidCrystal lcd(5, 6, 10, 9, 8, 7)` — notera omvänd dataordning.
 | 22 | R/W | CPU R/W (pin 34) |
 | 34 | /RESET | CPU /RESET (pin 40) |
 | 24 | CS1 | +5V (alltid aktiv) |
-| 23 | /CS2 | 74HC00 utgång (pin 8) |
+| 23 | /CS2 | 74HC00 utgång (pin 6) |
 | 38–35 | RS0–RS3 | CPU A0–A3 |
 | 33–26 | D0–D7 | CPU D0–D7 (databuss) |
 | 20 | VDD | +5V |
