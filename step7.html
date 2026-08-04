@@ -299,6 +299,48 @@ W65C22 VIA ─── PA0–PA2 ──→ LCD (RS, R/W, E)
     <a href="index.html" class="text-blue-600 hover:underline">Översikt</a>
   </div>
 </main>
+
+<!-- Diagnostik -->
+<section class="mb-8 max-w-5xl mx-auto px-4">
+  <h2 class="text-lg font-bold mb-2">Diagnostik med Arduino</h2>
+  <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-3">
+    <p>När steg 7 inte fungerar — använd Arduinons serieövervakare och lediga pinnar för att hitta felet.</p>
+
+    <h3 class="font-bold">1. Verifiera att CPU:n startar</h3>
+    <p>Serieövervakaren ska visa reset-sekvensen: <code>R $FFFC</code>, <code>R $FFFD</code>, <code>R $8000</code>… Om du ser <code>W $0</code> eller <code>W $1</code> har du samma grundproblem som tidigare — kontrollera BE (HÖG), PHI2 (pulser), RESB (HÖG efter reset).</p>
+
+    <h3 class="font-bold">2. Kontrollera om CPU:n når VIA-adresserna</h3>
+    <p>Ser du <code>R $C000</code>, <code>W $C002</code> etc? Då försöker CPU:n prata med VIAn. Om du <strong>inte</strong> ser några <code>$Cxxx</code>-adresser — dubbelkolla 74HC00-kopplingen och att VIA:ns bussanslutningar sitter rätt.</p>
+
+    <h3 class="font-bold">3. Mät med multimeter/scope</h3>
+    <ul class="list-disc pl-5 space-y-1">
+      <li><strong>PHI2 (CPU pin 37):</strong> Ska pulsera ~20 Hz (går att se med LED)</li>
+      <li><strong>BE (CPU pin 36):</strong> Måste vara HÖG (~5V). LÅG = bussarna avstängda</li>
+      <li><strong>RESB (CPU pin 40):</strong> HÖG efter reset (~5V)</li>
+      <li><strong>VIA CS2B (pin 23):</strong> Ska gå LÅG när CPU adresserar $C000–$CFFF</li>
+      <li><strong>VIA PHI2 (pin 25):</strong> Ska pulsera i takt med CPU-klockan</li>
+    </ul>
+
+    <h3 class="font-bold">4. Anslut lediga Arduino-pinnar som logikanalysator</h3>
+    <p>Koppla en sladd från en ledig Arduino-ingång (t.ex. D8) till en mätpunkt och läs av i <code>pulse()</code>:</p>
+    <pre class="bg-gray-900 text-gray-100 p-3 rounded-lg text-xs"><code>// I setup():
+pinMode(8, INPUT);  // D8 → valfri mätpunkt
+
+// I pulse(), efter adressläsning:
+Serial.print(" D8="); Serial.print(digitalRead(8));</code></pre>
+    <p>Användbara mätpunkter: VIA /CS2 (pin 23), 74HC00 pin 8 (utgång), LCD E (pin 6).</p>
+
+    <h3 class="font-bold">5. Vanliga fel</h3>
+    <ul class="list-disc pl-5 space-y-1">
+      <li><strong>Glömt 5V till VIA:</strong> VIA pin 20 (VDD) måste ha +5V, pin 1 (VSS) måste ha GND</li>
+      <li><strong>Glömt 5V till 74HC00:</strong> pin 14 → +5V, pin 7 → GND</li>
+      <li><strong>CS1 (VIA pin 24) ej kopplad:</strong> Måste vara HÖG (+5V) — inte flytande</li>
+      <li><strong>Databuss-kollision:</strong> Arduino driver PORTA samtidigt som VIA. Koden måste sätta <code>DDRA = 0x00</code> vid VIA-adresser</li>
+      <li><strong>För många komponenter på kopplingsdäcket:</strong> Ger spänningsfall. Mät VDD vid CPU, VIA och 74HC00 — alla ska vara >4.8V</li>
+    </ul>
+  </div>
+</section>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
 <script>hljs.highlightAll();</script>
 </body>
