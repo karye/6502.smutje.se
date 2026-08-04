@@ -1,7 +1,8 @@
 # TODO — Kommande korrigeringar
 
 ## KiCad — steg 7
-- [ ] LCD R/W (pin 5) kopplas till GND (inte VIA PA1). Se netlist: `Net-(U2-R/~{W})` → U2(pin 5) + U3(pin 3)
+- [ ] LCD R/W (pin 5) kopplas till GND (inte VIA PA1)
+- [ ] Via CS1 (pin 4) kopplas till GND
 - [ ] Exportera ny netlist
 - [ ] Generera ny `steg-7.png`
 

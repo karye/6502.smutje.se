@@ -10,7 +10,7 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 | 1 | Arduino Mega 2560 |
 | 1 | W65C22 VIA (DIP-40) — steg 7 |
 | 1 | 74HC00 (quad NAND) — steg 7 |
-| 1 | LCD 16×2 (parallell, t.ex. QC1602A) — steg 5 |
+| 1 | LCD 16×2 eller 20×4 (parallell, t.ex. QC1602A) — steg 5 |
 | 1 | Lysdiod (klockindikering) |
 | 1 | 220 Ω motstånd (LED-strömbegränsning) |
 | 1 | 220 Ω motstånd (LCD-bakgrundsbelysning) |
@@ -63,7 +63,7 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 | 33 | D0 | I/O | Databuss bit 0 (LSB) |
 | 34 | RWB | Ut | Read/Write — HÖG = läs, LÅG = skriv |
 | 35 | NC | — | Ej ansluten |
-| 36 | BE | In | Bus Enable — HÖG = bussar aktiva |
+| 36 | BE | In | Bus Enable — LÅG = bussar aktiva, HÖG = tri-state |
 | 37 | PHI2 | In | Phase 2 In — klockingång |
 | 38 | SOB | In | Set Overflow (aktiv LÅG) |
 | 39 | PHI2O | Ut | Phase 2 Out — klocka ut, ansluts ej |
@@ -130,7 +130,7 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 | 2 | RDY | 5V via 10kΩ | Pull-up |
 | 4 | /IRQ | 5V via 10kΩ | Pull-up |
 | 6 | /NMI | 5V via 10kΩ | Pull-up |
-| 36 | BE | 5V via 10kΩ | Aktiv hög |
+| 36 | BE | GND | Bus Enable — LÅG = bussar aktiva |
 | 38 | /SO | 5V via 10kΩ | Pull-up |
 
 ### Adressbuss (1:1)
@@ -181,7 +181,7 @@ $0000 └──────────────┘
 
 ---
 
-## Steg 5–6: LCD-koppling (parallell 4-bit)
+## Steg 5–6: LCD-koppling (parallell 4-bit, Arduino direkt)
 
 | LCD-pin | Arduino | Funktion |
 |---------|---------|----------|
@@ -197,6 +197,47 @@ $0000 └──────────────┘
 | DB7 (14) | D7 | |
 | A (15) | 5V via 220Ω | Bakgrundsbelysning |
 | K (16) | GND | |
+
+## Steg 7: LCD via VIA (8-bit parallell)
+
+CPU:n ($8000-programmet) styr LCD:n genom att skriva till VIA:ns register ($4000–$4003).
+Arduinon är endast minnesemulator + klocka — all LCD-logik körs på 6502.
+
+### VIA → LCD
+
+| VIA-pin | Signal | LCD-pin | Funktion |
+|---------|--------|---------|----------|
+| 2 | PA0 | 4 (RS) | Register Select |
+| 4 | PA2 | 6 (E) | Enable |
+| 10–17 | PB0–PB7 | 7–14 (DB0–DB7) | 8-bitars data |
+
+### 74HC00 adressavkodning → VIA $4000–$400F
+
+| 74HC00 | Ansluts till | Funktion |
+|--------|-------------|----------|
+| 1, 2 (U4A in) | CPU A15 | Inverterare (NOT A15) |
+| 3 (U4A ut) | U4B pin 4 | NOT A15 → NAND-ingång |
+| 5 (U4B in) | CPU A14 | (NOT A15) NAND A14 |
+| 6 (U4B ut) | VIA pin 23 (CS2B) | LÅG vid $4000–$7FFF → VIA aktiv |
+| 14 (VCC) | +5V | Strömmatning |
+| 7 (GND) | GND | Systemjord |
+
+### 6502-programflöde (steg 7)
+
+1. **Sätt VIA-portar:** `LDA #$FF` → `STA $4002` (DDRB) → `STA $4003` (DDRA)
+2. **LCD-init (8-bit):** $30 × 3 → $38 (function set) → $0C (display ON) → $01 (clear) → $06 (entry mode)
+3. **Skriv text:** Flytta cursor via kommando ($80, $C0, $94, $D4 för rad 1–4), skriv tecken via PORTB + pulsa E på PORTA
+4. **Clear + loop:** $01 (clear display) → JMP tillbaka till start
+
+### Felsökning steg 7
+
+| Symptom | Trolig orsak |
+|---------|-------------|
+| CPU startar ej (RWB=L, adress=0) | BE ej kopplad till GND, eller RESB når ej CPU |
+| CPU läser $FFFC/$FFFD men hoppar till $0000 | Databuss-timing: `DDRA=0x00` måste ske EFTER `PHI2=LOW` |
+| VIA-skrivningar i logg men LCD visar inget | Kontrollera VIA→LCD-kablar, särskilt DB0–DB7 (8 st) |
+| E/RS växlar men LCD blank | Vrid kontrast-potentiometer, kolla bakgrundsbelysning (A/K) |
+| Text skrivs om på flera rader | JMP pekar tillbaka till hello-start istället för halt-loop |
 
 Kod: `LiquidCrystal lcd(5, 6, 10, 9, 8, 7)` — notera omvänd dataordning.
 
