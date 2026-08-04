@@ -70,6 +70,93 @@
     </div>
   </section>
 
+  <!-- Kretstabeller -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Kopplingar — krets för krets</h2>
+
+    <!-- W65C02S -->
+    <h3 class="font-bold mt-4 mb-2">W65C02S CPU</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">8</td><td class="p-2">VDD</td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
+          <tr><td class="p-2">21</td><td class="p-2">VSS</td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
+          <tr><td class="p-2">37</td><td class="p-2">PHI2</td><td class="p-2">Arduino D2</td><td class="p-2">Klocka — Arduino genererar 20 Hz fyrkantsvåg</td></tr>
+          <tr><td class="p-2">34</td><td class="p-2">R/W</td><td class="p-2">Arduino D3 + VIA pin 22</td><td class="p-2">Talar om för alla kretsar om CPU:n läser eller skriver</td></tr>
+          <tr><td class="p-2">40</td><td class="p-2">/RESET</td><td class="p-2">Arduino D4 + VIA pin 34</td><td class="p-2">Kontrollerad reset — båda kretsarna startar samtidigt</td></tr>
+          <tr><td class="p-2">9–16, 17–20, 22–25</td><td class="p-2">A0–A15</td><td class="p-2">Arduino A0–A15 + VIA + 74HC00</td><td class="p-2">Adressbuss — alla kretsar delar samma 16 linjer</td></tr>
+          <tr><td class="p-2">26–33</td><td class="p-2">D0–D7</td><td class="p-2">Arduino D22–D29 + VIA D0–D7</td><td class="p-2">Databuss — 100Ω seriemotstånd på varje ledning</td></tr>
+          <tr><td class="p-2">2</td><td class="p-2">RDY</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Ready — HÖG = CPU kör, LÅG = paus</td></tr>
+          <tr><td class="p-2">4</td><td class="p-2">/IRQ</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Interrupt — avaktiverad (HÖG = inget avbrott)</td></tr>
+          <tr><td class="p-2">6</td><td class="p-2">/NMI</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Non-maskable interrupt — avaktiverad</td></tr>
+          <tr><td class="p-2">36</td><td class="p-2">BE</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad!</td></tr>
+          <tr><td class="p-2">38</td><td class="p-2">/SO</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Set Overflow — avaktiverad</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- W65C22 -->
+    <h3 class="font-bold mt-6 mb-2">W65C22 VIA</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">20</td><td class="p-2">VDD</td><td class="p-2">+5V</td><td class="p-2">Strömmatning — glöm inte avkoppling 100nF till GND</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2">VSS</td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
+          <tr><td class="p-2">25</td><td class="p-2">PHI2</td><td class="p-2">CPU PHI2 (pin 37)</td><td class="p-2">Samma klocka som CPU — VIAn synkroniseras med bussen</td></tr>
+          <tr><td class="p-2">22</td><td class="p-2">R/W</td><td class="p-2">CPU R/W (pin 34)</td><td class="p-2">VIAn behöver veta om CPU:n läser eller skriver</td></tr>
+          <tr><td class="p-2">34</td><td class="p-2">/RESET</td><td class="p-2">CPU /RESET (pin 40)</td><td class="p-2">VIAns interna register nollställs vid reset</td></tr>
+          <tr><td class="p-2">26–33</td><td class="p-2">D0–D7</td><td class="p-2">CPU D0–D7</td><td class="p-2">Databuss — VIAn läser/skriver data här</td></tr>
+          <tr><td class="p-2">38–35</td><td class="p-2">RS0–RS3</td><td class="p-2">CPU A0–A3</td><td class="p-2">Registerväljare — vilket av VIAns 16 register som adresseras</td></tr>
+          <tr><td class="p-2">24</td><td class="p-2">CS1</td><td class="p-2">+5V</td><td class="p-2">Chip Select 1 — aktiv HÖG. Permanent aktiverad</td></tr>
+          <tr><td class="p-2">23</td><td class="p-2">/CS2</td><td class="p-2">74HC00 pin 8 (utgång)</td><td class="p-2">Chip Select 2 — aktiv LÅG. 74HC00 drar denna LÅG när A14=A15=1</td></tr>
+          <tr><td class="p-2">2</td><td class="p-2">PA0</td><td class="p-2">LCD RS (pin 4)</td><td class="p-2">Register Select: LÅG = kommando, HÖG = data</td></tr>
+          <tr><td class="p-2">4</td><td class="p-2">PA2</td><td class="p-2">LCD E (pin 6)</td><td class="p-2">Enable — fallande flank får LCD:n att läsa databussen</td></tr>
+          <tr><td class="p-2">10–17</td><td class="p-2">PB0–PB7</td><td class="p-2">LCD DB0–DB7</td><td class="p-2">8-bitars parallell data till LCD:n</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 74HC00 -->
+    <h3 class="font-bold mt-6 mb-2">74HC00 (adressavkodning)</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">1, 2</td><td class="p-2">Grind A in</td><td class="p-2">CPU A14</td><td class="p-2">Båda ingångarna till A14 → utgången = NOT A14</td></tr>
+          <tr><td class="p-2">3</td><td class="p-2">Grind A ut</td><td class="p-2">74HC00 pin 9</td><td class="p-2">NOT A14 → grind C ingång 1</td></tr>
+          <tr><td class="p-2">4, 5</td><td class="p-2">Grind B in</td><td class="p-2">CPU A15</td><td class="p-2">Båda ingångarna till A15 → utgången = NOT A15</td></tr>
+          <tr><td class="p-2">6</td><td class="p-2">Grind B ut</td><td class="p-2">74HC00 pin 10</td><td class="p-2">NOT A15 → grind C ingång 2</td></tr>
+          <tr><td class="p-2">9, 10</td><td class="p-2">Grind C in</td><td class="p-2">Pin 3 och pin 6</td><td class="p-2">NOT A14 NAND NOT A15 = A14 OR A15</td></tr>
+          <tr><td class="p-2">8</td><td class="p-2">Grind C ut</td><td class="p-2">VIA /CS2 (pin 23)</td><td class="p-2">LÅG när A14=A15=1 → $C000–$FFFF → VIA aktiverad</td></tr>
+          <tr><td class="p-2">14</td><td class="p-2">VCC</td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
+          <tr><td class="p-2">7</td><td class="p-2">GND</td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-gray-700 mt-2 text-sm"><strong>Logik:</strong> VIAn aktiveras när A14=1 OCH A15=1, vilket motsvarar adresser <code>$C000–$FFFF</code>. CPU:ns A0–A3 går till VIAns RS0–RS3 vilket ger 16 register på <code>$C000–$C00F</code>. Arduino svarar på <code>$8000–$BFFF</code>, och VIA:n tar <code>$C000–$C00F</code> — ingen överlappning.</p>
+
+    <!-- LCD -->
+    <h3 class="font-bold mt-6 mb-2">LCD 16×2 (parallell)</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">1</td><td class="p-2">VSS</td><td class="p-2">GND</td><td class="p-2">Jord</td></tr>
+          <tr><td class="p-2">2</td><td class="p-2">VDD</td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
+          <tr><td class="p-2">3</td><td class="p-2">VO</td><td class="p-2">Potentiometer (10kΩ)</td><td class="p-2">Kontrast — mittbenet till VO, sidoben till +5V och GND</td></tr>
+          <tr><td class="p-2">4</td><td class="p-2">RS</td><td class="p-2">VIA PA0 (pin 2)</td><td class="p-2">Register Select — 0 = instruktion, 1 = teckendata</td></tr>
+          <tr><td class="p-2">5</td><td class="p-2">R/W</td><td class="p-2">GND</td><td class="p-2">Alltid skrivläge — vi läser aldrig från LCD:n</td></tr>
+          <tr><td class="p-2">6</td><td class="p-2">E</td><td class="p-2">VIA PA2 (pin 4)</td><td class="p-2">Enable — VIAn pulserar denna för att skicka data</td></tr>
+          <tr><td class="p-2">7–14</td><td class="p-2">DB0–DB7</td><td class="p-2">VIA PB0–PB7</td><td class="p-2">8-bitars data — teckenkod eller kommando</td></tr>
+          <tr><td class="p-2">15</td><td class="p-2">A</td><td class="p-2">+5V via 220Ω</td><td class="p-2">Bakgrundsbelysning anod (+)</td></tr>
+          <tr><td class="p-2">16</td><td class="p-2">K</td><td class="p-2">GND</td><td class="p-2">Bakgrundsbelysning katod (−)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
   <!-- Adressavkodning -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Adressavkodning med 74HC00</h2>
