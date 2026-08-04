@@ -65,7 +65,7 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 | 33 | D0 | I/O | Databuss bit 0 (LSB) |
 | 34 | RWB | Ut | Read/Write — HÖG = läs, LÅG = skriv |
 | 35 | NC | — | Ej ansluten |
-| 36 | BE | In | Bus Enable — LÅG = bussar aktiva, HÖG = tri-state |
+| 36 | BE | In | Bus Enable — HÖG = bussar aktiva, LÅG = tri-state |
 | 37 | PHI2 | In | Phase 2 In — klockingång |
 | 38 | SOB | In | Set Overflow (aktiv LÅG) |
 | 39 | PHI2O | Ut | Phase 2 Out — klocka ut, ansluts ej |
@@ -95,7 +95,7 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 | 2 | RDY | 5V via 10kΩ | Pull-up |
 | 4 | /IRQ | 5V via 10kΩ | Pull-up |
 | 6 | /NMI | 5V via 10kΩ | Pull-up |
-| 36 | BE | GND | Bus Enable — LÅG = bussar aktiva |
+| 36 | BE | 5V via 10kΩ | Bus Enable — HÖG = bussar aktiva |
 | 38 | /SO | 5V via 10kΩ | Pull-up |
 
 ### Adressbuss (1:1)
@@ -198,7 +198,7 @@ Arduinon är endast minnesemulator + klocka — all LCD-logik körs på 6502.
 
 | Symptom | Trolig orsak |
 |---------|-------------|
-| CPU startar ej (RWB=L, adress=0) | BE ej kopplad till GND, eller RESB når ej CPU |
+| CPU startar ej (RWB=L, adress=0) | BE ej kopplad till +5V, eller RESB når ej CPU |
 | CPU läser $FFFC/$FFFD men hoppar till $0000 | Databuss-timing: `DDRA=0x00` måste ske EFTER `PHI2=LOW` |
 | VIA-skrivningar i logg men LCD visar inget | Kontrollera VIA→LCD-kablar, särskilt DB0–DB7 (8 st) |
 | E/RS växlar men LCD blank | Vrid kontrast-potentiometer, kolla bakgrundsbelysning (A/K) |
@@ -209,6 +209,6 @@ Arduinon är endast minnesemulator + klocka — all LCD-logik körs på 6502.
 ## Varningar
 
 - **100Ω seriemotstånd på databussen är obligatoriska** — utan dem kan en busskollision förstöra CPU och Arduino.
-- **BE (pin 36) måste vara LÅG (GND)** — HÖG tri-statar bussarna.
+- **BE (pin 36) måste vara HÖG (+5V)** — LÅG tri-statar bussarna.
 - **Använd 12–18V DC-adapter** till Arduino för stabil 5V-matning.
 - **Kopplingsbrädor kan ha dolda kortslutningar** — flytta kretsen vid misstänkt fel.
