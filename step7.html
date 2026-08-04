@@ -96,65 +96,166 @@
 
   <!-- Programmering -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Arduino-kod — VIA-emulering</h2>
-    <p class="text-gray-700 mb-3 text-sm">Arduinon måste emulera VIA:ns register på <code>$C000–$C00F</code>. När CPU:n läser/skriver till dessa adresser ska Arduinon svara med VIA-registervärden — inte vanligt RAM. VIAns port B (PB0–PB7) är ansluten till LCD:ns databuss, port A (PA0, PA2) till LCD:ns kontrollsignaler.</p>
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// VIA-emulering — lägg till i read_mem() och write_mem()
+    <h2 class="text-lg font-bold mb-2">Arduino-kod — komplett main.cpp</h2>
+    <p class="text-gray-700 mb-3 text-sm">När VIA:n är inkopplad ska Arduinon <strong>inte svara</strong> på adresser i VIA:ns område (<code>$C000–$C00F</code>) — den fysiska VIA-kretsen hanterar dessa. Vid läsning från VIA-adresser sätts PORTA till INPUT så att VIA:n kan driva databussen. LCD-biblioteket är borttaget — LCD:n styrs nu helt av 6502 via VIA.</p>
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">#include &lt;Arduino.h&gt;
 
+// -----------------------------------------------------------
+// Steg 7 — VIA + LCD (LCD styrs av 6502 via W65C22 VIA)
+// -----------------------------------------------------------
+
+#define PHI2     2   // CPU pin 37
+#define RESB     4   // CPU pin 40
+#define RWB      3   // CPU pin 34
+#define SYNC     13  // CPU pin 7 → Arduino D13
+#define BTN_CLK  11  // Knapp: en klockcykel per tryck
+#define BTN_INSTR 12 // Knapp: kör till nästa instruktion
+
+uint8_t ram[1024];     // $0000–$03FF (stack + data + program)
+uint8_t vectors[6];     // $FFFA–$FFFF
+
+// VIA-adresser — VIA:n är en fysisk krets, Arduinon ska INTE svara här
 #define VIA_BASE 0xC000
 
-uint8_t via_portb = 0x00;  // Output Register B (LCD data)
-uint8_t via_porta = 0x00;  // Output Register A (LCD control: PA0=RS, PA2=E)
-uint8_t via_ddrb  = 0xFF;  // Data Direction B (alla utgångar)
-uint8_t via_ddra  = 0xFF;  // Data Direction A
+bool is_via(uint16_t addr) {
+  return (addr >= VIA_BASE && addr < VIA_BASE + 16);
+}
 
 uint8_t read_mem(uint16_t addr) {
-  // VIA register ($C000–$C00F)
-  if (addr >= VIA_BASE && addr < VIA_BASE + 16) {
-    switch (addr & 0x000F) {
-      case 0x0: return via_portb;  // ORB
-      case 0x1: return via_porta;  // ORA
-      case 0x2: return via_ddrb;   // DDRB
-      case 0x3: return via_ddra;   // DDRA
-      default:  return 0x00;
-    }
-  }
-  // Vanligt RAM/ROM som tidigare...
+  if (is_via(addr)) return 0;  // VIA hanterar detta själv
+  if (addr >= 0xFFFA && addr <= 0xFFFF)
+    return vectors[addr - 0xFFFA];
   if (addr < 1024) return ram[addr];
-  if (addr >= 0xFFFA) return vectors[addr - 0xFFFA];
   return 0xEA;
 }
 
 void write_mem(uint16_t addr, uint8_t val) {
-  // VIA register
-  if (addr >= VIA_BASE && addr < VIA_BASE + 16) {
-    switch (addr & 0x000F) {
-      case 0x0: via_portb = val; break;  // ORB → LCD data
-      case 0x1: via_porta = val; break;  // ORA → LCD control
-      case 0x2: via_ddrb  = val; break;
-      case 0x3: via_ddra  = val; break;
-    }
-    return;
+  if (is_via(addr)) return;    // VIA hanterar detta själv
+  if (addr >= 0xFFFA && addr <= 0xFFFF) {
+    vectors[addr - 0xFFFA] = val; return;
   }
-  // Vanligt RAM
-  if (addr < 1024) { ram[addr] = val; return; }
-  if (addr >= 0xFFFA) { vectors[addr - 0xFFFA] = val; return; }
+  if (addr < 1024) ram[addr] = val;
+}
+
+void pulse();  // Forward
+
+void setup() {
+  // --- Knappar och SYNC ---
+  pinMode(SYNC, INPUT);
+  pinMode(BTN_CLK,   INPUT_PULLUP);
+  pinMode(BTN_INSTR, INPUT_PULLUP);
+
+  // --- Håll CPU i reset från start ---
+  pinMode(RESB, OUTPUT); digitalWrite(RESB, LOW);
+  pinMode(PHI2, OUTPUT); digitalWrite(PHI2, LOW);
+  Serial.begin(115200);
+  pinMode(RWB, INPUT);
+
+  DDRK = 0x00;  // A8–A15
+  DDRF = 0x00;  // A0–A7
+  DDRA = 0x00;
+
+  // --- Reset-vektor → $8000 ---
+  write_mem(0xFFFC, 0x00);
+  write_mem(0xFFFD, 0x80);
+
+  // LCD-init via VIA (6502-program på $8000):
+  write_mem(0x8000, 0xA9); write_mem(0x8001, 0xFF);  // LDA #$FF
+  write_mem(0x8002, 0x8D); write_mem(0x8003, 0x02); write_mem(0x8004, 0xC0);  // STA $C002 (DDRB)
+  write_mem(0x8005, 0x8D); write_mem(0x8006, 0x03); write_mem(0x8007, 0xC0);  // STA $C003 (DDRA)
+  write_mem(0x8008, 0xA9); write_mem(0x8009, 0x38);  // LDA #$38 (8-bit, 2 rader)
+  write_mem(0x800A, 0x8D); write_mem(0x800B, 0x00); write_mem(0x800C, 0xC0);  // STA $C000 (PORTB)
+  write_mem(0x800D, 0xA9); write_mem(0x800E, 0x04);  // LDA #$04 (E=1)
+  write_mem(0x800F, 0x8D); write_mem(0x8010, 0x01); write_mem(0x8011, 0xC0);  // STA $C001 (PORTA)
+  write_mem(0x8012, 0xA9); write_mem(0x8013, 0x00);  // LDA #$00 (E=0)
+  write_mem(0x8014, 0x8D); write_mem(0x8015, 0x01); write_mem(0x8016, 0xC0);  // STA $C001
+  write_mem(0x8017, 0xA9); write_mem(0x8018, 0x0C);  // LDA #$0C (Display ON)
+  write_mem(0x8019, 0x8D); write_mem(0x801A, 0x00); write_mem(0x801B, 0xC0);  // STA $C000
+  write_mem(0x801C, 0xA9); write_mem(0x801D, 0x04);  // LDA #$04 (E=1)
+  write_mem(0x801E, 0x8D); write_mem(0x801F, 0x01); write_mem(0x8020, 0xC0);  // STA $C001
+  write_mem(0x8021, 0xA9); write_mem(0x8022, 0x00);  // LDA #$00 (E=0)
+  write_mem(0x8023, 0x8D); write_mem(0x8024, 0x01); write_mem(0x8025, 0xC0);  // STA $C001
+  write_mem(0x8026, 0x4C); write_mem(0x8027, 0x26); write_mem(0x8028, 0x80);  // JMP $8026 (loop)
+
+  // --- Reset-sekvens ---
+  for (int i = 0; i < 5; i++) pulse();
+  digitalWrite(RESB, HIGH);
+  for (int i = 0; i < 40; i++) pulse();  // Fler cykler för LCD-init
+}
+
+void pulse() {
+  digitalWrite(PHI2, LOW);
+  delay(25);
+
+  uint16_t a = (PINF << 0) | (PINK << 8);
+  bool rw = digitalRead(RWB);
+
+  if (rw) {
+    if (is_via(a)) {
+      DDRA = 0x00;  // VIA driver databussen — Arduino håller sig undan
+    } else {
+      DDRA = 0xFF;
+      PORTA = read_mem(a);
+    }
+  } else {
+    DDRA = 0x00;    // CPU driver databussen vid skrivning
+  }
+
+  digitalWrite(PHI2, HIGH);
+  delay(25);
+
+  if (!rw && !is_via(a)) write_mem(a, PINA);
+
+  Serial.print(rw ? "R" : "W");
+  Serial.print(" $");
+  Serial.println(a, HEX);
+}
+
+void loop() {
+  // --- Knapp 1: En klockcykel ---
+  if (!digitalRead(BTN_CLK)) {
+    delay(50);
+    while (!digitalRead(BTN_CLK));
+    delay(50);
+    pulse();
+  }
+
+  // --- Knapp 2: Kör till nästa instruktion ---
+  if (!digitalRead(BTN_INSTR)) {
+    delay(50);
+    while (!digitalRead(BTN_INSTR));
+    delay(50);
+    do {
+      pulse();
+    } while (!digitalRead(SYNC));
+  }
 }</code></pre>
   </section>
 
   <!-- Testprogram -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">6502-testprogram — skriv till LCD via VIA</h2>
-    <p class="text-gray-700 mb-3 text-sm">Ett enkelt 6502-program som initierar LCD:n och skriver "Hello" via VIA:ns register.</p>
+    <h2 class="text-lg font-bold mb-2">6502-programmet — LCD-initiering</h2>
+    <p class="text-gray-700 mb-3 text-sm">Ovanstående Arduino-kod laddar automatiskt detta 6502-program vid <code>$8000</code>. Programmet sätter VIA:ns portar som utgångar, initierar LCD:n i 8-bitarsläge och slår på displayen.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Adress</th><th class="p-2 text-left">Maskinkod</th><th class="p-2 text-left">Assembler</th><th class="p-2 text-left">Förklaring</th></tr></thead>
         <tbody class="divide-y">
-          <tr><td class="p-2 font-mono">$8000</td><td class="p-2 font-mono">A9 38</td><td class="p-2 font-mono">LDA #$38</td><td class="p-2">Function set: 8-bit, 2 rader</td></tr>
-          <tr><td class="p-2 font-mono">$8002</td><td class="p-2 font-mono">8D 00 C0</td><td class="p-2 font-mono">STA $C000</td><td class="p-2">Skicka till LCD via VIA port B</td></tr>
-          <tr><td class="p-2 font-mono">$8005</td><td class="p-2 font-mono">A9 04</td><td class="p-2 font-mono">LDA #$04</td><td class="p-2">PA2=E hög</td></tr>
-          <tr><td class="p-2 font-mono">$8007</td><td class="p-2 font-mono">8D 01 C0</td><td class="p-2 font-mono">STA $C001</td><td class="p-2">Pulsa E via VIA port A</td></tr>
-          <tr><td class="p-2 font-mono">$800A</td><td class="p-2 font-mono">A9 00</td><td class="p-2 font-mono">LDA #$00</td><td class="p-2">PA2=E låg</td></tr>
-          <tr><td class="p-2 font-mono">$800C</td><td class="p-2 font-mono">8D 01 C0</td><td class="p-2 font-mono">STA $C001</td><td class="p-2">Klar — data överförd</td></tr>
+          <tr><td class="p-2 font-mono">$8000</td><td class="p-2 font-mono">A9 FF</td><td class="p-2 font-mono">LDA #$FF</td><td class="p-2">Alla pinnar som utgångar</td></tr>
+          <tr><td class="p-2 font-mono">$8002</td><td class="p-2 font-mono">8D 02 C0</td><td class="p-2 font-mono">STA $C002</td><td class="p-2">Sätt DDRB = $FF (PB0–PB7 utgång)</td></tr>
+          <tr><td class="p-2 font-mono">$8005</td><td class="p-2 font-mono">8D 03 C0</td><td class="p-2 font-mono">STA $C003</td><td class="p-2">Sätt DDRA = $FF (PA0–PA7 utgång)</td></tr>
+          <tr><td class="p-2 font-mono">$8008</td><td class="p-2 font-mono">A9 38</td><td class="p-2 font-mono">LDA #$38</td><td class="p-2">Function set: 8-bit, 2 rader, 5×8</td></tr>
+          <tr><td class="p-2 font-mono">$800A</td><td class="p-2 font-mono">8D 00 C0</td><td class="p-2 font-mono">STA $C000</td><td class="p-2">Data till PORTB (LCD DB0–DB7)</td></tr>
+          <tr><td class="p-2 font-mono">$800D</td><td class="p-2 font-mono">A9 04</td><td class="p-2 font-mono">LDA #$04</td><td class="p-2">PA2 = 1 (E hög)</td></tr>
+          <tr><td class="p-2 font-mono">$800F</td><td class="p-2 font-mono">8D 01 C0</td><td class="p-2 font-mono">STA $C001</td><td class="p-2">Puls — data överförs till LCD</td></tr>
+          <tr><td class="p-2 font-mono">$8012</td><td class="p-2 font-mono">A9 00</td><td class="p-2 font-mono">LDA #$00</td><td class="p-2">PA2 = 0 (E låg)</td></tr>
+          <tr><td class="p-2 font-mono">$8014</td><td class="p-2 font-mono">8D 01 C0</td><td class="p-2 font-mono">STA $C001</td><td class="p-2">Klar — nästa kommando</td></tr>
+          <tr><td class="p-2 font-mono">$8017</td><td class="p-2 font-mono">A9 0C</td><td class="p-2 font-mono">LDA #$0C</td><td class="p-2">Display ON, cursor OFF</td></tr>
+          <tr><td class="p-2 font-mono">$8019</td><td class="p-2 font-mono">8D 00 C0</td><td class="p-2 font-mono">STA $C000</td><td class="p-2">Data till PORTB → LCD</td></tr>
+          <tr><td class="p-2 font-mono">$801C</td><td class="p-2 font-mono">A9 04</td><td class="p-2 font-mono">LDA #$04</td><td class="p-2">Pulsa E</td></tr>
+          <tr><td class="p-2 font-mono">$801E</td><td class="p-2 font-mono">8D 01 C0</td><td class="p-2 font-mono">STA $C001</td><td class="p-2"></td></tr>
+          <tr><td class="p-2 font-mono">$8021</td><td class="p-2 font-mono">A9 00</td><td class="p-2 font-mono">LDA #$00</td><td class="p-2"></td></tr>
+          <tr><td class="p-2 font-mono">$8023</td><td class="p-2 font-mono">8D 01 C0</td><td class="p-2 font-mono">STA $C001</td><td class="p-2">LCD init klar — loopa</td></tr>
+          <tr><td class="p-2 font-mono">$8026</td><td class="p-2 font-mono">4C 26 80</td><td class="p-2 font-mono">JMP $8026</td><td class="p-2">Oändlig loop</td></tr>
         </tbody>
       </table>
     </div>
