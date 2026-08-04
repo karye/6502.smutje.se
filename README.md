@@ -156,8 +156,8 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 ```
 $FFFF ┌──────────────┐
       │  Arduino ROM  │  A15=1 ($8000–$BFFF)
-$C000 ├──────────────┤
-      │  W65C22 VIA   │  $C000–$C00F (steg 7)
+$4000 ├──────────────┤
+      │  W65C22 VIA   │  $4000–$400F (steg 7)
 $8000 ├──────────────┤
       │  Arduino ROM  │  $8000–$BFFF (6502-program)
 $0000 └──────────────┘
@@ -218,13 +218,12 @@ Kod: `LiquidCrystal lcd(5, 6, 10, 9, 8, 7)` — notera omvänd dataordning.
 ### 74HC00 — adressavkodning
 | Grind | Pins | Funktion |
 |-------|------|----------|
-| A | 1,2 → 3 | A14 → båda ingångar = NOT A14 |
-| B | 4,5 → 6 | A15 → båda ingångar = NOT A15 |
-| C | 9,10 → 8 | Utgång → VIA /CS2 |
+| A | 1,2 → 3 | A15 → båda ingångar = NOT A15 |
+| B | 4,5 → 6 | (NOT A15) NAND A14 → VIA /CS2 |
 | 14 | VCC | +5V |
 | 7 | GND | GND |
 
-VIAn aktiveras när A14=A15=1 ($C000–$FFFF).
+VIAn aktiveras när A14=1, A15=0 ($4000–$7FFF).
 
 ### VIA → LCD
 | VIA-pin | LCD-pin | Funktion |
