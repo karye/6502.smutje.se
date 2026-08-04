@@ -64,11 +64,9 @@
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Adressavkodning med 74HC00</h2>
     <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
-      <p>74HC00:an har fyra NAND-grindar. Vi använder tre av dem för att avkoda adresslinjerna:</p>
+      <p>74HC00:an har fyra NAND-grindar. Vi använder en av dem för att avkoda adresslinjerna:</p>
       <ul class="list-disc pl-5 space-y-1">
-        <li><strong>Grind 1 (pins 1,2,3):</strong> A14 NAND A14 = NOT A14 (båda ingångarna till A14)</li>
-        <li><strong>Grind 2 (pins 4,5,6):</strong> A15 NAND A15 = NOT A15</li>
-        <li><strong>Grind 3 (pins 9,10,8):</strong> NOT A14 NAND NOT A15 = A14 OR A15 → VIA /CS2</li>
+        <li><strong>Grind B (pins 4,5,6):</strong> A14 (pin 4) NAND A15 (pin 5) → /CS_VIA (pin 6)</li>
       </ul>
       <p>Resultat: VIA:n aktiveras (CS1=HÖG, /CS2=LÅG) när <strong>både A14 och A15 är höga</strong>, dvs. vid adress <code>$C000–$FFFF</code>. Registerväljarna RS0–RS3 kopplas till A0–A3, vilket ger 16 register på <code>$C000–$C00F</code>.</p>
     </div>
@@ -82,7 +80,7 @@
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">LCD-pin</th><th class="p-2 text-left">VIA-pin</th><th class="p-2 text-left">Funktion</th></tr></thead>
         <tbody class="divide-y">
           <tr><td class="p-2">RS (pin 4)</td><td class="p-2">PA0 (pin 2)</td><td class="p-2">Register Select — 0 = kommando, 1 = data</td></tr>
-          <tr><td class="p-2">R/W (pin 5)</td><td class="p-2">GND</td><td class="p-2">Write-only — alltid låg</td></tr>
+          <tr><td class="p-2">R/W (pin 5)</td><td class="p-2">PA1 (pin 3)</td><td class="p-2">Read/Write — sätts till 0 vid skrivning</td></tr>
           <tr><td class="p-2">E (pin 6)</td><td class="p-2">PA2 (pin 4)</td><td class="p-2">Enable — pulsar för att skicka data</td></tr>
           <tr><td class="p-2">DB0–DB7 (pins 7–14)</td><td class="p-2">PB0–PB7 (pins 10–17)</td><td class="p-2">Databuss — 8-bit parallell</td></tr>
           <tr><td class="p-2">VSS (pin 1)</td><td class="p-2">GND</td><td class="p-2">Jord</td></tr>
@@ -91,7 +89,7 @@
         </tbody>
       </table>
     </div>
-    <p class="text-gray-700 mt-3 text-sm">VIAns port A används för LCD:ns kontrollsignaler (RS, E). Port B hanterar 8-bitars databussen. LCD:ns R/W kopplas till GND eftersom vi bara skriver till displayen.</p>
+    <p class="text-gray-700 mt-3 text-sm">VIAns port A används för LCD:ns kontrollsignaler (RS, R/W, E). Port B hanterar 8-bitars databussen. CPU:n sätter PA1=0 (write) vid alla LCD-accesser — R/W-linjen är alltså alltid låg i praktiken.</p>
   </section>
 
   <!-- Programmering -->
@@ -287,7 +285,7 @@ void loop() {
             ├── PHI2 ──────────────────┤
             └── RESB ──────────────────┘
 
-W65C22 VIA ─── PA0–PA2 ──→ LCD (RS, E)
+W65C22 VIA ─── PA0–PA2 ──→ LCD (RS, R/W, E)
             ─── PB0–PB7 ──→ LCD (DB0–DB7)
             ─── /CS2 ← 74HC00 (A14 OR A15)
             ─── CS1 ← +5V
