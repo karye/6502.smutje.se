@@ -157,38 +157,6 @@
     </div>
   </section>
 
-  <!-- Adressavkodning -->
-  <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Adressavkodning med 74HC00</h2>
-    <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
-      <p>74HC00:an har fyra NAND-grindar. Vi använder en av dem för att avkoda adresslinjerna:</p>
-      <ul class="list-disc pl-5 space-y-1">
-        <li><strong>Grind B (pins 4,5,6):</strong> A14 (pin 4) NAND A15 (pin 5) → /CS_VIA (pin 6)</li>
-      </ul>
-      <p>Resultat: VIA:n aktiveras (CS1=HÖG, /CS2=LÅG) när <strong>både A14 och A15 är höga</strong>, dvs. vid adress <code>$C000–$FFFF</code>. Registerväljarna RS0–RS3 kopplas till A0–A3, vilket ger 16 register på <code>$C000–$C00F</code>.</p>
-    </div>
-  </section>
-
-  <!-- LCD-koppling -->
-  <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">LCD-koppling via VIA</h2>
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">LCD-pin</th><th class="p-2 text-left">VIA-pin</th><th class="p-2 text-left">Funktion</th></tr></thead>
-        <tbody class="divide-y">
-          <tr><td class="p-2">RS (pin 4)</td><td class="p-2">PA0 (pin 2)</td><td class="p-2">Register Select — 0 = kommando, 1 = data</td></tr>
-          <tr><td class="p-2">R/W (pin 5)</td><td class="p-2">PA1 (pin 3)</td><td class="p-2">Read/Write — sätts till 0 vid skrivning</td></tr>
-          <tr><td class="p-2">E (pin 6)</td><td class="p-2">PA2 (pin 4)</td><td class="p-2">Enable — pulsar för att skicka data</td></tr>
-          <tr><td class="p-2">DB0–DB7 (pins 7–14)</td><td class="p-2">PB0–PB7 (pins 10–17)</td><td class="p-2">Databuss — 8-bit parallell</td></tr>
-          <tr><td class="p-2">VSS (pin 1)</td><td class="p-2">GND</td><td class="p-2">Jord</td></tr>
-          <tr><td class="p-2">VDD (pin 2)</td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
-          <tr><td class="p-2">VO (pin 3)</td><td class="p-2">Potentiometer</td><td class="p-2">Kontrast</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="text-gray-700 mt-3 text-sm">VIAns port A används för LCD:ns kontrollsignaler (RS, R/W, E). Port B hanterar 8-bitars databussen. CPU:n sätter PA1=0 (write) vid alla LCD-accesser — R/W-linjen är alltså alltid låg i praktiken.</p>
-  </section>
-
   <!-- Programmering -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">6502-program — "Hello 6502!"</h2>
@@ -245,38 +213,42 @@
     <p class="text-gray-700 mt-3 text-sm">Komplett kod finns i <a href="https://github.com/karye/6502.smutje.se/blob/main/Mega_2560_6502/src/main.cpp" class="text-blue-600 hover:underline">main.cpp på GitHub</a>.</p>
   </section>
 
-  <!-- Testning -->
+  <!-- Testning och diagnostik -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Testning</h2>
+    <h2 class="text-lg font-bold mb-2">Testning och felsökning</h2>
     <ol class="list-decimal pl-5 space-y-1 text-gray-700">
-      <li>Koppla in W65C22, 74HC00 och LCD enligt schemat</li>
-      <li>Verifiera att VIA:n svarar på adress <code>$C000–$C00F</code> via serieövervakaren</li>
-      <li>Skicka ett init-kommando till LCD:n via VIA — displayen ska visa svarta rutor på första raden (tecken på att den är i 8-bitarsläge)</li>
-      <li>Skriv "Hello 6502!" till LCD:n via VIA:ns port B</li>
+      <li>Ladda upp koden och öppna serieövervakaren (115200 baud)</li>
+      <li>Verifiera att CPU:n startar: du ska se <code>R $FFFC</code>, <code>R $FFFD</code>, <code>R $8000</code>…</li>
+      <li>Leta efter VIA-adresser: <code>W $C002</code>, <code>W $C003</code> betyder att CPU:n konfigurerar VIA:ns portar</li>
+      <li>LCD:n ska visa "Hello 6502!" efter ~300 klockcykler (tar några sekunder vid 20 Hz)</li>
     </ol>
+
     <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
       <span class="font-bold text-green-800">✅ Förväntat:</span>
-      <span class="text-green-700">LCD:n initieras och visar text — helt styrd av 6502 via VIA:n. Arduinon är nu bara minnesemulator och klocka.</span>
+      <span class="text-green-700">"Hello 6502!" på LCD:n — helt styrd av 6502 via VIA:n. Arduinon är nu bara minnesemulator och klocka.</span>
     </div>
-  </section>
 
-  <!-- Arkitektur -->
-  <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Systemarkitektur efter steg 7</h2>
-    <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
-      <pre class="mb-2"><code>6502 CPU ─── Adressbuss (A0–A15) ───┬── Arduino (ROM $8000–$BFFF)
-            │                          ├── 74HC00 → VIA /CS2
-            ├── Databuss (D0–D7) ──────┤
-            ├── R/W ───────────────────┤
-            ├── PHI2 ──────────────────┤
-            └── RESB ──────────────────┘
-
-W65C22 VIA ─── PA0–PA2 ──→ LCD (RS, R/W, E)
-            ─── PB0–PB7 ──→ LCD (DB0–DB7)
-            ─── /CS2 ← 74HC00 (A14 OR A15)
-            ─── CS1 ← +5V
-            ─── RS0–RS3 ← A0–A3</code></pre>
-      <p><strong>VIAns register</strong> är minnesmappade på <code>$C000–$C00F</code>. CPU:n läser/skriver till VIA:n precis som till vanligt RAM — men istället för att lagra data styr den I/O-pinnar.</p>
+    <h3 class="font-bold mt-6 mb-2">Om det inte fungerar</h3>
+    <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-3">
+      <p><strong>1. CPU:n startar inte?</strong> Ser du <code>W $0</code> eller <code>W $1</code>? Kontrollera BE (HÖG), PHI2 (pulser), RESB (HÖG efter reset).</p>
+      <p><strong>2. Ser inga $Cxxx-adresser?</strong> Dubbelkolla 74HC00-kopplingen och att VIA:ns bussanslutningar sitter rätt.</p>
+      <p><strong>3. Mät med multimeter:</strong></p>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>PHI2 (CPU pin 37): ~2.5V medel (20 Hz fyrkant)</li>
+        <li>BE (CPU pin 36): >4.8V</li>
+        <li>VIA /CS2 (pin 23): ska gå LÅG vid $C000–$FFFF</li>
+        <li>VIA VDD (pin 20): >4.8V</li>
+        <li>74HC00 VCC (pin 14): >4.8V</li>
+      </ul>
+      <p><strong>4. Arduino som logikanalysator:</strong> koppla D8 till en mätpunkt och lägg till i <code>pulse()</code>:</p>
+      <pre class="bg-gray-900 text-gray-100 p-3 rounded-lg text-xs"><code>Serial.print(" D8="); Serial.print(digitalRead(8));</code></pre>
+      <p><strong>5. Vanliga missar:</strong></p>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>CS1 (VIA pin 24) flytande — måste ha +5V</li>
+        <li>74HC00 VCC/GND glömt</li>
+        <li>Arduino driver databussen vid VIA-adresser — koden måste sätta DDRA=0x00</li>
+        <li>Spänningsfall — mät VDD vid CPU, VIA och 74HC00 (alla >4.8V)</li>
+      </ul>
     </div>
   </section>
 
@@ -285,47 +257,6 @@ W65C22 VIA ─── PA0–PA2 ──→ LCD (RS, R/W, E)
     <a href="index.html" class="text-blue-600 hover:underline">Översikt</a>
   </div>
 </main>
-
-<!-- Diagnostik -->
-<section class="mb-8 max-w-5xl mx-auto px-4">
-  <h2 class="text-lg font-bold mb-2">Diagnostik med Arduino</h2>
-  <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-3">
-    <p>När steg 7 inte fungerar — använd Arduinons serieövervakare och lediga pinnar för att hitta felet.</p>
-
-    <h3 class="font-bold">1. Verifiera att CPU:n startar</h3>
-    <p>Serieövervakaren ska visa reset-sekvensen: <code>R $FFFC</code>, <code>R $FFFD</code>, <code>R $8000</code>… Om du ser <code>W $0</code> eller <code>W $1</code> har du samma grundproblem som tidigare — kontrollera BE (HÖG), PHI2 (pulser), RESB (HÖG efter reset).</p>
-
-    <h3 class="font-bold">2. Kontrollera om CPU:n når VIA-adresserna</h3>
-    <p>Ser du <code>R $C000</code>, <code>W $C002</code> etc? Då försöker CPU:n prata med VIAn. Om du <strong>inte</strong> ser några <code>$Cxxx</code>-adresser — dubbelkolla 74HC00-kopplingen och att VIA:ns bussanslutningar sitter rätt.</p>
-
-    <h3 class="font-bold">3. Mät med multimeter/scope</h3>
-    <ul class="list-disc pl-5 space-y-1">
-      <li><strong>PHI2 (CPU pin 37):</strong> Ska pulsera ~20 Hz (går att se med LED)</li>
-      <li><strong>BE (CPU pin 36):</strong> Måste vara HÖG (~5V). LÅG = bussarna avstängda</li>
-      <li><strong>RESB (CPU pin 40):</strong> HÖG efter reset (~5V)</li>
-      <li><strong>VIA CS2B (pin 23):</strong> Ska gå LÅG när CPU adresserar $C000–$CFFF</li>
-      <li><strong>VIA PHI2 (pin 25):</strong> Ska pulsera i takt med CPU-klockan</li>
-    </ul>
-
-    <h3 class="font-bold">4. Anslut lediga Arduino-pinnar som logikanalysator</h3>
-    <p>Koppla en sladd från en ledig Arduino-ingång (t.ex. D8) till en mätpunkt och läs av i <code>pulse()</code>:</p>
-    <pre class="bg-gray-900 text-gray-100 p-3 rounded-lg text-xs"><code>// I setup():
-pinMode(8, INPUT);  // D8 → valfri mätpunkt
-
-// I pulse(), efter adressläsning:
-Serial.print(" D8="); Serial.print(digitalRead(8));</code></pre>
-    <p>Användbara mätpunkter: VIA /CS2 (pin 23), 74HC00 pin 8 (utgång), LCD E (pin 6).</p>
-
-    <h3 class="font-bold">5. Vanliga fel</h3>
-    <ul class="list-disc pl-5 space-y-1">
-      <li><strong>Glömt 5V till VIA:</strong> VIA pin 20 (VDD) måste ha +5V, pin 1 (VSS) måste ha GND</li>
-      <li><strong>Glömt 5V till 74HC00:</strong> pin 14 → +5V, pin 7 → GND</li>
-      <li><strong>CS1 (VIA pin 24) ej kopplad:</strong> Måste vara HÖG (+5V) — inte flytande</li>
-      <li><strong>Databuss-kollision:</strong> Arduino driver PORTA samtidigt som VIA. Koden måste sätta <code>DDRA = 0x00</code> vid VIA-adresser</li>
-      <li><strong>För många komponenter på kopplingsdäcket:</strong> Ger spänningsfall. Mät VDD vid CPU, VIA och 74HC00 — alla ska vara >4.8V</li>
-    </ul>
-  </div>
-</section>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
 <script>hljs.highlightAll();</script>
