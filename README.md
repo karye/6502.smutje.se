@@ -24,7 +24,9 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 
 ---
 
-## W65C02S — pinout
+## W65C02S — pinout  
+
+![W65C02S pinout](docs/w65c02s-pinout.png)
 
 | Pin | Namn | I/O | Beskrivning |
 |-----|------|-----|-------------|
@@ -73,48 +75,11 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 
 ## W65C22 VIA — pinout
 
-| Pin | Namn | I/O | Beskrivning |
-|-----|------|-----|-------------|
-| 1 | VSS | — | Systemjord GND |
-| 2 | PA0 | I/O | Port A bit 0 |
-| 3 | PA1 | I/O | Port A bit 1 |
-| 4 | PA2 | I/O | Port A bit 2 |
-| 5 | PA3 | I/O | Port A bit 3 |
-| 6 | PA4 | I/O | Port A bit 4 |
-| 7 | PA5 | I/O | Port A bit 5 |
-| 8 | PA6 | I/O | Port A bit 6 |
-| 9 | PA7 | I/O | Port A bit 7 |
-| 10 | PB0 | I/O | Port B bit 0 |
-| 11 | PB1 | I/O | Port B bit 1 |
-| 12 | PB2 | I/O | Port B bit 2 |
-| 13 | PB3 | I/O | Port B bit 3 |
-| 14 | PB4 | I/O | Port B bit 4 |
-| 15 | PB5 | I/O | Port B bit 5 |
-| 16 | PB6 | I/O | Port B bit 6 |
-| 17 | PB7 | I/O | Port B bit 7 |
-| 18 | CB1 | In | Port B kontroll 1 |
-| 19 | CB2 | I/O | Port B kontroll 2 |
-| 20 | VDD | — | Strömmatning +5V |
-| 21 | IRQB | Ut | Interrupt Request (aktiv LÅG, open drain) |
-| 22 | RWB | In | Read/Write — HÖG = läs, LÅG = skriv |
-| 23 | CS2B | In | Chip Select 2 (aktiv LÅG) |
-| 24 | CS1 | In | Chip Select 1 (aktiv HÖG) |
-| 25 | PHI2 | In | Klockingång |
-| 26 | D7 | I/O | Databuss bit 7 (MSB) |
-| 27 | D6 | I/O | Databuss bit 6 |
-| 28 | D5 | I/O | Databuss bit 5 |
-| 29 | D4 | I/O | Databuss bit 4 |
-| 30 | D3 | I/O | Databuss bit 3 |
-| 31 | D2 | I/O | Databuss bit 2 |
-| 32 | D1 | I/O | Databuss bit 1 |
-| 33 | D0 | I/O | Databuss bit 0 (LSB) |
-| 34 | RESB | In | Reset (aktiv LÅG) |
-| 35 | RS3 | In | Register Select bit 3 |
-| 36 | RS2 | In | Register Select bit 2 |
-| 37 | RS1 | In | Register Select bit 1 |
-| 38 | RS0 | In | Register Select bit 0 |
-| 39 | CA2 | I/O | Port A kontroll 2 |
-| 40 | CA1 | In | Port A kontroll 1 |
+![W65C22 VIA pinout](docs/w65c22s-pinout.png)
+
+## 74HC00 — pinout
+
+![74HC00 pinout](docs/74hc00-pinout.png)
 
 ---
 
@@ -239,47 +204,11 @@ Arduinon är endast minnesemulator + klocka — all LCD-logik körs på 6502.
 | E/RS växlar men LCD blank | Vrid kontrast-potentiometer, kolla bakgrundsbelysning (A/K) |
 | Text skrivs om på flera rader | JMP pekar tillbaka till hello-start istället för halt-loop |
 
-Kod: `LiquidCrystal lcd(5, 6, 10, 9, 8, 7)` — notera omvänd dataordning.
-
----
-
-## Steg 7: VIA + 74HC00
-
-### W65C22 VIA — bussanslutning
-| VIA-pin | Signal | Ansluts till |
-|---------|--------|-------------|
-| 25 | PHI2 | CPU PHI2 (pin 37) |
-| 22 | R/W | CPU R/W (pin 34) |
-| 34 | /RESET | CPU /RESET (pin 40) |
-| 24 | CS1 | +5V (alltid aktiv) |
-| 23 | /CS2 | 74HC00 utgång (pin 6) |
-| 38–35 | RS0–RS3 | CPU A0–A3 |
-| 33–26 | D0–D7 | CPU D0–D7 (databuss) |
-| 20 | VDD | +5V |
-| 1 | VSS | GND |
-
-### 74HC00 — adressavkodning
-| Grind | Pins | Funktion |
-|-------|------|----------|
-| A | 1,2 → 3 | A15 → båda ingångar = NOT A15 |
-| B | 4,5 → 6 | (NOT A15) NAND A14 → VIA /CS2 |
-| 14 | VCC | +5V |
-| 7 | GND | GND |
-
-VIAn aktiveras när A14=1, A15=0 ($4000–$7FFF).
-
-### VIA → LCD
-| VIA-pin | LCD-pin | Funktion |
-|---------|---------|----------|
-| PA0 (2) | RS (4) | Register Select |
-| PA2 (4) | E (6) | Enable |
-| PB0–PB7 (10–17) | DB0–DB7 (7–14) | 8-bit data |
-
 ---
 
 ## Varningar
 
 - **100Ω seriemotstånd på databussen är obligatoriska** — utan dem kan en busskollision förstöra CPU och Arduino.
-- **BE (pin 36) måste vara HÖG (+5V)** — LÅG tri-statar bussarna.
+- **BE (pin 36) måste vara LÅG (GND)** — HÖG tri-statar bussarna.
 - **Använd 12–18V DC-adapter** till Arduino för stabil 5V-matning.
 - **Kopplingsbrädor kan ha dolda kortslutningar** — flytta kretsen vid misstänkt fel.

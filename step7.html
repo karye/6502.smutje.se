@@ -55,7 +55,7 @@
         <tbody class="divide-y">
           <tr><td class="p-2">1</td><td class="p-2">W65C22 VIA (DIP-40)</td><td class="p-2">2×8-bit I/O-portar (PA0–PA7, PB0–PB7), 4 registerväljare</td></tr>
           <tr><td class="p-2">1</td><td class="p-2">74HC00 (quad 2-input NAND)</td><td class="p-2">Adressavkodning — genererar chip select-signaler</td></tr>
-          <tr><td class="p-2">1</td><td class="p-2">LCD 16×2 (parallell, t.ex. QC1602A)</td><td class="p-2">Ansluts till VIA:ns PB0–PB7 + kontrollpinnar</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2">LCD 16×2 eller 20×4 (parallell, t.ex. QC1602A)</td><td class="p-2">Ansluts till VIA:ns PB0–PB7 + kontrollpinnar</td></tr>
           <tr><td class="p-2">1</td><td class="p-2">100 nF keramisk kondensator</td><td class="p-2">Avkoppling vid VIA:ns VCC/GND</td></tr>
         </tbody>
       </table>
@@ -90,7 +90,7 @@
           <tr><td class="p-2">2</td><td class="p-2">RDY</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Ready — HÖG = CPU kör, LÅG = paus</td></tr>
           <tr><td class="p-2">4</td><td class="p-2">/IRQ</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Interrupt — avaktiverad (HÖG = inget avbrott)</td></tr>
           <tr><td class="p-2">6</td><td class="p-2">/NMI</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Non-maskable interrupt — avaktiverad</td></tr>
-          <tr><td class="p-2">36</td><td class="p-2">BE</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad!</td></tr>
+          <tr><td class="p-2">36</td><td class="p-2">BE</td><td class="p-2">GND</td><td class="p-2">Bus Enable — LÅG = bussarna aktiva. Utan denna är CPU:n bortkopplad!</td></tr>
           <tr><td class="p-2">38</td><td class="p-2">/SO</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Set Overflow — avaktiverad</td></tr>
         </tbody>
       </table>
@@ -137,7 +137,7 @@
     <p class="text-gray-700 mt-2 text-sm"><strong>Logik:</strong> A15 inverteras av U4A. U4B gör (NOT A15) NAND A14 → LÅG när A15=0 och A14=1. VIAn aktiveras alltså vid adress <code>$4000–$7FFF</code>. CPU:ns A0–A3 går till VIAns RS0–RS3 vilket ger 16 register på <code>$4000–$400F</code>.</p>
 
     <!-- LCD -->
-    <h3 class="font-bold mt-6 mb-2">LCD 16×2 (parallell)</h3>
+    <h3 class="font-bold mt-6 mb-2">LCD 16×2 / 20×4 (parallell)</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
