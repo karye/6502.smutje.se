@@ -122,20 +122,18 @@
     <h3 class="font-bold mt-6 mb-2">74HC00 (adressavkodning)</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Grind</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
-          <tr><td class="p-2">1, 2</td><td class="p-2">Grind A in</td><td class="p-2">CPU A14</td><td class="p-2">Båda ingångarna till A14 → utgången = NOT A14</td></tr>
-          <tr><td class="p-2">3</td><td class="p-2">Grind A ut</td><td class="p-2">74HC00 pin 9</td><td class="p-2">NOT A14 → grind C ingång 1</td></tr>
-          <tr><td class="p-2">4, 5</td><td class="p-2">Grind B in</td><td class="p-2">CPU A15</td><td class="p-2">Båda ingångarna till A15 → utgången = NOT A15</td></tr>
-          <tr><td class="p-2">6</td><td class="p-2">Grind B ut</td><td class="p-2">74HC00 pin 10</td><td class="p-2">NOT A15 → grind C ingång 2</td></tr>
-          <tr><td class="p-2">9, 10</td><td class="p-2">Grind C in</td><td class="p-2">Pin 3 och pin 6</td><td class="p-2">NOT A14 NAND NOT A15 = A14 OR A15</td></tr>
-          <tr><td class="p-2">8</td><td class="p-2">Grind C ut</td><td class="p-2">VIA /CS2 (pin 23)</td><td class="p-2">LÅG när A14=A15=1 → $C000–$FFFF → VIA aktiverad</td></tr>
+          <tr><td class="p-2">1, 2</td><td class="p-2">U4A in</td><td class="p-2">CPU A14, CPU A15</td><td class="p-2">A14 NAND A15 → LÅG när båda är HÖGA</td></tr>
+          <tr><td class="p-2">3</td><td class="p-2">U4A ut</td><td class="p-2">U4B pin 4 + 5</td><td class="p-2">Inverteras av grind B för att få rätt polaritet</td></tr>
+          <tr><td class="p-2">4, 5</td><td class="p-2">U4B in</td><td class="p-2">U4A pin 3</td><td class="p-2">Båda ingångarna från U4A — fungerar som NOT</td></tr>
+          <tr><td class="p-2">6</td><td class="p-2">U4B ut</td><td class="p-2">VIA /CS2 (pin 23)</td><td class="p-2">HÖG när A14=A15=1 → VIA /CS2 aktiveras</td></tr>
           <tr><td class="p-2">14</td><td class="p-2">VCC</td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
           <tr><td class="p-2">7</td><td class="p-2">GND</td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="text-gray-700 mt-2 text-sm"><strong>Logik:</strong> VIAn aktiveras när A14=1 OCH A15=1, vilket motsvarar adresser <code>$C000–$FFFF</code>. CPU:ns A0–A3 går till VIAns RS0–RS3 vilket ger 16 register på <code>$C000–$C00F</code>. Arduino svarar på <code>$8000–$BFFF</code>, och VIA:n tar <code>$C000–$C00F</code> — ingen överlappning.</p>
+    <p class="text-gray-700 mt-2 text-sm"><strong>Logik:</strong> VIAn aktiveras när A14=1 OCH A15=1 (NAND ger LÅG ut → /CS2 LÅG → VIA på). Detta motsvarar adress <code>$C000–$FFFF</code>. CPU:ns A0–A3 går till VIAns RS0–RS3 vilket ger 16 register på <code>$C000–$C00F</code>. Arduino svarar på <code>$8000–$BFFF</code>, VIA:n tar <code>$C000–$C00F</code> — ingen överlappning.</p>
 
     <!-- LCD -->
     <h3 class="font-bold mt-6 mb-2">LCD 16×2 (parallell)</h3>
