@@ -192,8 +192,8 @@ def draw(**opts):
     for pn, side in [('VPB','l'),('MLB','l'),('PHI1O','l'),('NC','r'),('PHI2O','r')]:
         d.add(elm.Line(side, at=CPU.anchors[pn], l=0.4))
 
-    # ── BE till GND (aktiv låg — måste vara LÅG för att bussarna ska drivas) ──
-    d.add(elm.Line('r', at=CPU.BE, l=0.5)); d.add(elm.Ground())
+    # ── BE till +5V (aktiv hög — LÅG stänger av bussarna!) ──
+    d.add(elm.Line('r', at=CPU.BE, l=0.5)); d.add(elm.Vdd(label='+5V'))
 
     if not use_arduino:
         # ── Arduino (ej ansluten i detta steg) ──

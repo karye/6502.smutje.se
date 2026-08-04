@@ -48,7 +48,7 @@ Följande pinnar på W65C02 **måste** dras till 5V via ett 3,3 kΩ eller 10 kΩ
 *   **Pin 2 (RDY)** -> 5V via motstånd
 *   **Pin 4 (/IRQ)** -> 5V via motstånd
 *   **Pin 6 (/NMI)** -> 5V via motstånd
-*   **Pin 36 (BE)** -> **GND** *(BE är aktiv låg — HIGH stänger av bussarna!)*
+*   **Pin 36 (BE)** -> **+5V** *(Bus Enable — aktiv HÖG. LÅG stänger av bussarna!)*
 *   **Pin 38 (/SO)** -> 5V via motstånd
 
 ### Filter och avkoppling
@@ -166,7 +166,7 @@ För att undvika fel är det bäst att bygga datorn i faser. Testa varje fas inn
 2. Koppla 5V och GND från Arduinon till kopplingsdäckets strömskenor. Montera den elektrolytiska kondensatorn över skenorna.
 3. Koppla Pin 8 (VDD) och Pin 21 (VSS) till strömskenorna. Sätt den keramiska 104-kondensatorn direkt över chippets strömpinnar.
 4. Koppla pull-up-motstånd: RDY (pin 2), IRQB (pin 4), NMIB (pin 6), SOB (pin 38) till 5V.
-   **BE (pin 36) kopplas till GND** — BE är aktiv låg.
+   **BE (pin 36) kopplas till +5V** — BE är aktiv hög.
 5. Koppla klockan från Arduino D2 till CPU Pin 37 samt din LED med tillhörande motstånd.
 6. **Test:** Ladda upp ett enkelt blink-skript till Arduinon som slår på/av Pin D2 med 1 Hz frekvens. Kontrollera att din LED blinkar stadigt.
 
