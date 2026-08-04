@@ -28,13 +28,20 @@
 
 <main class="max-w-5xl mx-auto px-4 py-8">
 
-  <h1 class="text-2xl font-bold mb-6">Steg 2 — Adressbuss och reset-sekvens</h1>
+  <h1 class="text-2xl font-bold mb-6">Steg 2 — Adressbuss och reset</h1>
 
+  <!-- Mål -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Mål</h2>
-    <p class="text-gray-700">Koppla in adressbussen (A0–A15) och RESB. Verifiera att CPU:n efter reset läser startvektorn <code>$FFFC/$FFFD</code> via serieövervakaren.</p>
+    <div class="text-gray-700 space-y-3">
+      <p>I steg 1 gav vi processorn ström och klocka. Nu ska vi ge den kontroll över <strong>adressbussen</strong> — 16 ledningar som talar om <em>var</em> i minnet CPU:n vill läsa eller skriva.</p>
+      <p>Alla 6502-processorer startar på samma sätt: efter reset läser de adress <code>$FFFC</code> och <code>$FFFD</code> för att få reda på var programmet börjar. Det är inbyggt i kisel — ingen mjukvara, ingen konfiguration. Genom att koppla in adressbussen och en reset-signal kan vi se detta hända i serieövervakaren.</p>
+      <p>Vi kopplar också in <strong>/RESET</strong> (pin 40) till Arduino D4. När vi håller RESB låg i minst 2 klockcykler nollställs CPU:ns interna register. När vi sedan släpper den (HÖG) börjar CPU:n köra från reset-vektorn.</p>
+      <p>Adressbussen läser vi via Arduinons analoga portar — <strong>PORTF</strong> (A0–A7) och <strong>PORTK</strong> (A8–A15). Det ger oss 16 bitar i två registerläsningar.</p>
+    </div>
   </section>
 
+  <!-- Nya komponenter -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Nya komponenter</h2>
     <div class="overflow-x-auto">
@@ -47,94 +54,77 @@
     </div>
   </section>
 
+  <!-- Kretstabell -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
-    <div class="schematic bg-white rounded-lg shadow p-4">
-      <object data="schematics/step2.svg" type="image/svg+xml" class="w-full"></object>
+    <h2 class="text-lg font-bold mb-2">Nya kopplingar</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">CPU-pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">40</td><td class="p-2">/RESET</td><td class="p-2">Arduino D4</td><td class="p-2">Kontrollerad reset — Arduino håller CPU:n i reset tills vi är redo</td></tr>
+          <tr><td class="p-2">9–16</td><td class="p-2">A0–A7</td><td class="p-2">Arduino A0–A7</td><td class="p-2">Låga adressbyte — läses via PORTF</td></tr>
+          <tr><td class="p-2">17–20, 22–25</td><td class="p-2">A8–A15</td><td class="p-2">Arduino A8–A15</td><td class="p-2">Höga adressbyte — läses via PORTK</td></tr>
+        </tbody>
+      </table>
     </div>
+    <p class="text-gray-700 mt-2 text-sm"><strong>Varför 1:1-koppling?</strong> Varje adresspinne på CPU:n kopplas till motsvarande pinne på Arduino. Det gör koden enkel: <code>uint16_t a = (PINF << 0) | (PINK << 8)</code> — PINF är låg byte, PINK är hög byte.</p>
   </section>
 
+  <!-- Kod -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
-    <p class="text-gray-700 mb-3 text-sm">Koden lägger till en kontrollerad reset-sekvens och läser av adressbussen. När RESB (aktiv låg) släpps läser CPU:n alltid reset-vektorn på <code>$FFFC/$FFFD</code> — det är så 6502-familjen startar. Genom att läsa adressbussen via Arduinons analoga portar (PORTK för A8–A15, PORTF för A0–A7) kan vi <strong>verifiera att samtliga 16 adressledare är korrekt anslutna</strong> och att CPU:n följer sin specificerade uppstartssekvens.</p>
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// -----------------------------------------------------------
-// Steg 2 — Adressbuss och reset-sekvens
-// -----------------------------------------------------------
-
-// CPU-kontrollpinnar
-#define PHI2  2   // Klockingång — Arduino D2 → CPU pin 37
-#define RESB  4   // Reset (aktiv låg) — Arduino D4 → CPU pin 40
+    <p class="text-gray-700 mb-3 text-sm">Koden gör tre saker: (1) håller CPU:n i reset i 5 klockcykler, (2) släpper reset så CPU:n startar, (3) läser och skriver ut adressbussen i varje cykel. Första utskrifterna ska vara <code>$FFFC</code> och <code>$FFFD</code> — reset-vektorn.</p>
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// Steg 2 — Adressbuss och reset-sekvens
+#define PHI2  2
+#define RESB  4
 
 void setup() {
-  // Serieövervakaren används för att skriva ut avlästa adresser.
-  // 115200 baud ger snabb utskrift utan att bromsa loopen.
   Serial.begin(115200);
+  pinMode(PHI2, OUTPUT);
+  pinMode(RESB, OUTPUT);
+  DDRK = 0x00;  // PORTK (A8–A15) = INPUT
+  DDRF = 0x00;  // PORTF (A0–A7)  = INPUT
 
-  pinMode(PHI2, OUTPUT);   // Arduino styr klockan
-  pinMode(RESB, OUTPUT);   // Arduino styr reset
-
-  // Data Direction Register — sätt som INPUT (0 = ingång).
-  // Vi ska läsa CPU:ns adressbuss, inte skriva till den.
-  DDRK = 0x00;  // PORTK = A8–A15 (Arduino analoga A8–A15)
-  DDRF = 0x00;  // PORTF = A0–A7  (Arduino analoga A0–A7)
-
-  // --- Reset-sekvens för W65C02S ---
-  // CPU:n kräver minst 2 klockcykler med RESB låg för att
-  // nollställa interna register. Vi kör 5 för god marginal.
-  digitalWrite(RESB, LOW);   // Håll CPU i reset (aktiv låg)
-  for (int i = 0; i < 5; i++) { pulse(); }  // 5 pulser under reset
-
-  digitalWrite(RESB, HIGH);  // Släpp reset — CPU:n startar!
-
-  // Efter reset läser CPU:n alltid från reset-vektorn:
-  //   $FFFC → låg byte av programstartadressen
-  //   $FFFD → hög byte av programstartadressen
-  // Genom att läsa dessa adresser i serieövervakaren verifierar
-  // vi att adressbussen är korrekt inkopplad och att CPU:n
-  // beter sig enligt specifikationen.
-  for (int i = 0; i < 10; i++) { pulse(); }
+  digitalWrite(RESB, LOW);      // Håll CPU i reset
+  for (int i = 0; i < 5; i++) pulse();
+  digitalWrite(RESB, HIGH);     // Släpp reset — CPU startar
+  for (int i = 0; i < 10; i++) pulse();
   Serial.println("Klar");
 }
 
-// Hjälpfunktion: en komplett klockcykel (LÅG → HÖG → LÅG).
-// 10 ms per fas = 50 Hz. Lagom snabbt för seriell utskrift.
 void pulse() {
-  digitalWrite(PHI2, HIGH);  // Stigande flank — CPU arbetar
-  delay(10);
-  digitalWrite(PHI2, LOW);   // Fallande flank — CPU förbereder nästa
-  delay(10);
+  digitalWrite(PHI2, HIGH); delay(10);
+  digitalWrite(PHI2, LOW);  delay(10);
 }
 
 void loop() {
-  // --- Läs adressbussen efter stigande flank ---
-  // PHI2 hög innebär att CPU:n har lagt ut en giltig adress
-  // på A0–A15. Vi läser båda portarna samtidigt.
   digitalWrite(PHI2, HIGH);
-  delay(10);  // Låt signalerna stabilisera sig
-
-  // Kombinera de två 8-bitarsportarna till ett 16-bitarsvärde:
-  // PINK läser A8–A15 (hög byte), PINF läser A0–A7 (låg byte).
-  // Verifiera din egen koppling — ordningen kan vara omvänd!
-  uint16_t addr = (PINK << 0) | (PINF << 8);
-
-  // Skriv ut adressen i hexadecimalt format till serieövervakaren.
-  // Första raderna efter reset förväntas vara: FFFC, FFFD, …
+  delay(10);
+  uint16_t addr = (PINF << 0) | (PINK << 8);
   Serial.println(addr, HEX);
-
-  digitalWrite(PHI2, LOW);   // Fallande flank
+  digitalWrite(PHI2, LOW);
   delay(10);
 }</code></pre>
   </section>
 
+  <!-- Testning -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Testning</h2>
+    <h2 class="text-lg font-bold mb-2">Testning och felsökning</h2>
     <ol class="list-decimal pl-5 space-y-1 text-gray-700">
-      <li>Öppna Serieövervakaren (115200 baud)</li>
-      <li>Första adresserna efter reset ska vara <code>$FFFC</code> och <code>$FFFD</code></li>
+      <li>Öppna serieövervakaren (115200 baud)</li>
+      <li>Första raderna ska vara <code>FFFC</code>, <code>FFFD</code>, följt av en adress</li>
     </ol>
     <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
       <span class="font-bold text-green-800">✅ Förväntat:</span>
-      <span class="text-green-700">CPU:n läser reset-vektorn. Adresserna syns i serieövervakaren.</span>
+      <span class="text-green-700">CPU:n läser reset-vektorn. Adresserna $FFFC, $FFFD syns först.</span>
+    </div>
+    <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
+      <h3 class="font-bold">Om det inte fungerar</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li><strong>Ser du bara <code>0</code> eller <code>1</code>?</strong> CPU:n är fortfarande i reset eller BE är LÅG. Kontrollera att RESB går HÖG efter reset-sekvensen, och att BE har +5V.</li>
+        <li><strong>Ser du <code>FFFC</code> men inte <code>FFFD</code>?</strong> Någon adresslinje är felkopplad. Dubbelkolla A0–A15 en och en.</li>
+        <li><strong>Skräptecken i serieövervakaren?</strong> Baud rate måste vara 115200. Kontrollera <code>platformio.ini</code> om du använder PlatformIO.</li>
+      </ul>
     </div>
   </section>
 

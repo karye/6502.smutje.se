@@ -28,13 +28,20 @@
 
 <main class="max-w-5xl mx-auto px-4 py-8">
 
-  <h1 class="text-2xl font-bold mb-6">Steg 3 — Databuss och minnesemulering</h1>
+  <h1 class="text-2xl font-bold mb-6">Steg 3 — Databuss och minne</h1>
 
+  <!-- Mål -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Mål</h2>
-    <p class="text-gray-700">Koppla in databussen och RWB. Arduinon agerar minnesemulator — levererar instruktioner från en array. Vi laddar ett NOP-testprogram på <code>$8000</code>.</p>
+    <div class="text-gray-700 space-y-3">
+      <p>Hittills har CPU:n kunnat tala om <em>var</em> den vill läsa (adressbussen). Nu kopplar vi in <strong>databussen</strong> — 8 ledningar som bär den faktiska informationen mellan CPU:n och minnet. Utan databuss kan CPU:n inte hämta instruktioner och är helt blind.</p>
+      <p>Vi kopplar också in <strong>R/W</strong>-signalen (pin 34). Den talar om ifall CPU:n vill läsa (HÖG) eller skriva (LÅG). Arduinon använder denna för att veta om den ska skicka data till CPU:n eller ta emot.</p>
+      <p>Arduinon blir nu en <strong>minnesemulator</strong>: en array <code>ram[1024]</code> lagrar data, och i varje klockcykel kollar Arduinon adressen och R/W — om CPU:n läser, lägger den ut rätt byte på databussen via <code>PORTA</code>. Om CPU:n skriver, läser Arduinon av vad som skrevs.</p>
+      <p>Vi laddar ett minimalt 6502-program på <code>$8000</code>: en enda <strong>NOP</strong>-instruktion (<code>$EA</code>) som gör ingenting och går vidare till nästa adress — vilket också är NOP. Resultat: CPU:n loopar för evigt, och vi kan följa varje steg i serieövervakaren.</p>
+    </div>
   </section>
 
+  <!-- Nya komponenter -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Nya komponenter</h2>
     <div class="overflow-x-auto">
@@ -42,149 +49,112 @@
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr></thead>
         <tbody class="divide-y">
           <tr><td class="p-2">8</td><td class="p-2">100 Ω motstånd (databuss-skydd)</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2">Kopplingstråd (R/W)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-3 bg-red-50 border border-red-300 rounded-lg p-3 text-sm">
+      <strong class="text-red-800">⚠ Viktigt!</strong> <span class="text-red-700">100Ω-motstånden på databussen är obligatoriska. Om Arduino råkar driva PORTA som utgång samtidigt som CPU:n skriver begränsar motstånden strömmen och förhindrar att kretsarna förstörs.</span>
+    </div>
+  </section>
+
+  <!-- Kretstabell -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Nya kopplingar</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">CPU-pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">33</td><td class="p-2">D0</td><td class="p-2">Arduino D22 via 100Ω</td><td class="p-2">Databit 0 (LSB)</td></tr>
+          <tr><td class="p-2">32</td><td class="p-2">D1</td><td class="p-2">Arduino D23 via 100Ω</td><td class="p-2">Databit 1</td></tr>
+          <tr><td class="p-2">31</td><td class="p-2">D2</td><td class="p-2">Arduino D24 via 100Ω</td><td class="p-2">Databit 2</td></tr>
+          <tr><td class="p-2">30</td><td class="p-2">D3</td><td class="p-2">Arduino D25 via 100Ω</td><td class="p-2">Databit 3</td></tr>
+          <tr><td class="p-2">29</td><td class="p-2">D4</td><td class="p-2">Arduino D26 via 100Ω</td><td class="p-2">Databit 4</td></tr>
+          <tr><td class="p-2">28</td><td class="p-2">D5</td><td class="p-2">Arduino D27 via 100Ω</td><td class="p-2">Databit 5</td></tr>
+          <tr><td class="p-2">27</td><td class="p-2">D6</td><td class="p-2">Arduino D28 via 100Ω</td><td class="p-2">Databit 6</td></tr>
+          <tr><td class="p-2">26</td><td class="p-2">D7</td><td class="p-2">Arduino D29 via 100Ω</td><td class="p-2">Databit 7 (MSB)</td></tr>
+          <tr><td class="p-2">34</td><td class="p-2">R/W</td><td class="p-2">Arduino D3</td><td class="p-2">HÖG = CPU läser, LÅG = CPU skriver. Arduino måste veta detta för att inte krocka på databussen</td></tr>
         </tbody>
       </table>
     </div>
   </section>
 
-  <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
-    <div class="schematic bg-white rounded-lg shadow p-4">
-      <object data="schematics/step3.svg" type="image/svg+xml" class="w-full"></object>
-    </div>
-    <div class="mt-4 bg-red-50 border border-red-300 rounded-lg p-4 text-sm">
-      <strong class="text-red-800">⚠ Busskollision!</strong>
-      <span class="text-red-700">När RWB = LÅG driver CPU:n bussen. Sätt PORTA till INPUT innan PHI2 går hög.</span>
-    </div>
-  </section>
-
+  <!-- Kod -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
-    <p class="text-gray-700 mb-3 text-sm">Här gör vi Arduinon till en fullständig minnesemulator. Eftersom Mega-brickans SRAM bara är 8&nbsp;KB använder vi en mindre array (<code>ram[512]</code>) och hjälpfunktioner för att hantera adresser utanför detta område. Varje klockcykel läser Arduinon adressbussen, kontrollerar RWB-signalen och <strong>låtsas vara ett riktigt RAM/ROM-minne</strong>: vid läsning skickar den rätt byte ur arrayen till databussen, vid skrivning tar den emot och lagrar. Detta gör att vi kan köra godtycklig 6502-kod utan fysiskt minne — och <strong>verifiera att databussen, RWB och CPU:ns exekveringslogik fungerar</strong>.</p>
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// -----------------------------------------------------------
-// Steg 3 — Databuss och fullständig minnesemulering
-// -----------------------------------------------------------
+    <p class="text-gray-700 mb-3 text-sm">Koden bygger vidare på steg 2. Den stora nyheten är <code>pulse()</code> som nu emulerar ett minne: läser adress + R/W, och antingen skickar data (<code>DDRA=0xFF, PORTA=…</code>) eller tar emot (<code>DDRA=0x00</code>).</p>
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// Steg 3 — Databuss och minnesemulering
+#define PHI2 2
+#define RESB 4
+#define RWB  3
 
-#define PHI2  2   // Klockingång — Arduino D2 → CPU pin 37
-#define RESB  4   // Reset (aktiv låg) — Arduino D4 → CPU pin 40
-#define RWB   3   // Read/Write — Arduino D3 → CPU pin 34
-
-// Mega har 8 KB SRAM — vi använder 512 bytes (gott för testprogram)
-// och hjälpfunktioner för att hantera alla adresser korrekt
-uint8_t ram[512];
+uint8_t ram[1024];
+uint8_t vectors[6];
 
 uint8_t read_mem(uint16_t addr) {
-  if (addr < 512) return ram[addr];
-  return 0xEA;  // NOP — ofarlig fallback för oanvända adresser
+  if (addr >= 0xFFFA && addr <= 0xFFFF) return vectors[addr - 0xFFFA];
+  if (addr < 1024) return ram[addr];
+  return 0xEA;  // NOP — ofarlig fallback
 }
 
 void write_mem(uint16_t addr, uint8_t val) {
-  if (addr < 512) ram[addr] = val;
+  if (addr >= 0xFFFA && addr <= 0xFFFF) { vectors[addr - 0xFFFA] = val; return; }
+  if (addr < 1024) ram[addr] = val;
 }
 
 void setup() {
-  Serial.begin(115200);  // För utskrift av adress/instruktion
+  Serial.begin(115200);
+  pinMode(PHI2, OUTPUT); pinMode(RESB, OUTPUT); pinMode(RWB, INPUT);
+  DDRK = 0x00; DDRF = 0x00; DDRA = 0x00;
 
-  pinMode(PHI2, OUTPUT);  // Arduino = klockmaster
-  pinMode(RESB, OUTPUT);  // Arduino styr reset
-  pinMode(RWB,  INPUT);   // CPU:n talar om ifall den läser eller skriver
+  write_mem(0xFFFC, 0x00);  // Reset-vektor → $8000
+  write_mem(0xFFFD, 0x80);
+  write_mem(0x8000, 0xEA);  // NOP på $8000
 
-  // Adressbuss: alltid ingångar — vi ska läsa CPU:ns adresser.
-  DDRK = 0x00;  // PORTK = A8–A15
-  DDRF = 0x00;  // PORTF = A0–A7
-
-  // PORTA används för D0–D7 (databussen). I setup() sätter vi den
-  // som ingång för säkerhets skull — riktningen ändras dynamiskt
-  // i pulse() beroende på om CPU:n läser eller skriver.
-  DDRA = 0x00;
-
-  // --- Programmera reset-vektorn ---
-  // När CPU:n kommer ur reset läser den $FFFC–$FFFD för att veta
-  // var programmet börjar. Vi pekar om till $8000.
-  write_mem(0xFFFC, 0x00);  // Låg byte av reset-vektor → $8000
-  write_mem(0xFFFD, 0x80);  // Hög byte av reset-vektor → $8000
-
-  // --- Ladda testprogram på $8000 ---
-  // $EA = NOP (No Operation). CPU:n gör ingenting på 2 cykler,
-  // ökar programräknaren och hämtar nästa instruktion — som också
-  // är NOP. Resultat: en oändlig loop som är lätt att följa.
-  // $EA = NOP läses automatiskt via read_mem() för adresser utanför ram[]
-  // men vi laddar det explicit för tydlighet
-  write_mem(0x8000, 0xEA);  // NOP
-
-  // --- Kontrollerad reset-sekvens ---
-  digitalWrite(RESB, LOW);   // Håll CPU i reset
-  for (int i = 0; i < 5; i++) { pulse(); }  // 5 klockcykler under reset
-  digitalWrite(RESB, HIGH);  // Släpp reset — nu börjar CPU:n köra!
-
-  // Kör 10 cykler i setup() så att vi ser reset-vektorn i loggen
-  // innan vi går in i loopen.
-  for (int i = 0; i < 10; i++) { pulse(); }
+  digitalWrite(RESB, LOW);
+  for (int i = 0; i < 5; i++) pulse();
+  digitalWrite(RESB, HIGH);
+  for (int i = 0; i < 10; i++) pulse();
 }
 
-// -----------------------------------------------------------
-// pulse() — en komplett klockcykel med minnesemulering
-// -----------------------------------------------------------
-// Detta är datorns ”hjärtslag”. Under varje klockcykel måste
-// Arduinon hinna läsa adress och RWB, leverera eller ta emot data,
-// och hantera bussriktning — allt inom ~20 ms.
 void pulse() {
-  // -- Fas 1: PHI2 låg (förberedelsefas) --
-  digitalWrite(PHI2, LOW);
-  delay(10);  // Ge CPU:n tid att lägga ut adress och RWB
-
-  // Läs 16-bitars adress från de två 8-bitarsportarna.
-  uint16_t a = (PINK << 0) | (PINF << 8);
-
-  // Läs RWB-signalen:
-  //   HIGH = CPU:n vill LÄSA från minnet
-  //   LOW  = CPU:n vill SKRIVA till minnet
+  digitalWrite(PHI2, LOW); delay(10);
+  uint16_t a = (PINF << 0) | (PINK << 8);
   bool rw = digitalRead(RWB);
 
-  if (rw) {
-    // --- LÄSCYKEL: Arduinon levererar data till CPU:n ---
-    // Sätt PORTA som UTGÅNG så vi kan driva databussen.
-    // 100 Ω seriemotstånd skyddar mot busskollisioner.
-    DDRA = 0xFF;           // PORTA utgång (8 bitar)
-    PORTA = read_mem(a);   // Skicka ut minnesinnehållet
-  } else {
-    // --- SKRIVCYKEL: CPU:n driver databussen ---
-    // Sätt PORTA som INGÅNG (hög impedans) så att vi inte
-    // kortsluter CPU:ns utgångar. Utan detta kan kretsen skadas!
-    DDRA = 0x00;           // PORTA ingång (högimpediv)
-  }
+  if (rw) { DDRA = 0xFF; PORTA = read_mem(a); }   // Läs: Arduino skickar data
+  else    { DDRA = 0x00; }                          // Skriv: CPU:n driver bussen
 
-  // -- Fas 2: PHI2 hög (arbetsfas) --
-  digitalWrite(PHI2, HIGH);
-  delay(10);  // CPU:n arbetar med data under hög klocka
+  digitalWrite(PHI2, HIGH); delay(10);
+  if (!rw) write_mem(a, PINA);                      // Spara det CPU:n skrev
 
-  if (!rw) {
-    // Efter stigande flank har CPU:n lagt ut giltig data.
-    // Läs av PORTA och spara i vår minnesarray.
-    write_mem(a, PINA);
-  }
-
-  // Logga varje minnesaccess för felsökning.
-  // R = Read, W = Write, följt av adressen i hexadecimalt.
-  Serial.print(rw ? "R" : "W");
-  Serial.print(" $");
+  Serial.print(rw ? "R" : "W"); Serial.print(" $");
   Serial.println(a, HEX);
 }
 
-void loop() {
-  pulse();  // Kontinuerlig körning — en klockcykel per varv
-}</code></pre>
+void loop() { pulse(); }</code></pre>
   </section>
 
+  <!-- Testning -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Testning</h2>
+    <h2 class="text-lg font-bold mb-2">Testning och felsökning</h2>
     <ol class="list-decimal pl-5 space-y-1 text-gray-700">
-      <li>Serieövervakaren visar <code>$FFFC</code> → <code>$FFFD</code> → <code>$8000</code> (NOP-loop)</li>
-      <li>LCD:n (om inkopplad) visar adress och instruktion i realtid</li>
+      <li>Öppna serieövervakaren (115200 baud)</li>
+      <li>Du ska se: <code>R $FFFC</code>, <code>R $FFFD</code>, <code>R $8000</code>, <code>R $8001</code>…</li>
+      <li>CPU:n loopar på NOP — perfekt för att verifiera att allt fungerar</li>
     </ol>
     <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
       <span class="font-bold text-green-800">✅ Förväntat:</span>
-      <span class="text-green-700">CPU:n läser reset-vektor, hoppar till $8000, exekverar NOP i loop. Full minnesemulering!</span>
+      <span class="text-green-700">CPU:n läser reset-vektor, hoppar till $8000, exekverar NOP i loop.</span>
+    </div>
+    <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
+      <h3 class="font-bold">Om det inte fungerar</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li><strong>Ser du <code>W $0</code> eller <code>W $1</code>?</strong> CPU:n driver inte bussarna. Kontrollera BE (måste vara HÖG) och att PHI2 når CPU:n.</li>
+        <li><strong>Ser du <code>R $FFFC</code> men inget mer?</strong> Databussen är felaktig. Kontrollera D22–D29 och att 100Ω-motstånden sitter på alla 8 ledningar.</li>
+        <li><strong>CPU:n hoppar till konstig adress?</strong> Reset-vektorn är fel. Dubbelkolla <code>write_mem(0xFFFC, 0x00)</code> och <code>write_mem(0xFFFD, 0x80)</code>.</li>
+        <li><strong>Glöm inte 100Ω!</strong> Utan seriemotstånd kan en enda felaktig <code>DDRA</code>-inställning förstöra CPU:n eller Arduino.</li>
+      </ul>
     </div>
   </section>
 

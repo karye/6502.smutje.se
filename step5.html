@@ -30,139 +30,102 @@
 
   <h1 class="text-2xl font-bold mb-6">Steg 5 — LCD-display</h1>
 
+  <!-- Mål -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Mål</h2>
-    <p class="text-gray-700">Koppla in en LCD1602 med I²C-backpack som visar aktuell adress och instruktion i realtid — direkt på kopplingsdäcket, utan datorskärm.</p>
+    <div class="text-gray-700 space-y-3">
+      <p>Datorn fungerar — men all feedback går via serieövervakaren på en dator. Nu kopplar vi in en <strong>LCD-display (16×2 tecken)</strong> som visar vad CPU:n gör direkt på kopplingsdäcket. Ingen datorskärm behövs längre.</p>
+      <p>LCD:n kopplas i <strong>4-bitars parallellt läge</strong> till Arduino. Det innebär att vi skickar data 4 bitar i taget via pinnar D7–D10. Arduino-biblioteket <code>LiquidCrystal</code> sköter all kommunikation — vi behöver bara tala om vilka pinnar som används.</p>
+      <p><strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. Arduino D10 går till LCD DB4, D9 till DB5, D8 till DB6, D7 till DB7. Koden måste spegla detta: <code>LiquidCrystal lcd(5, 6, 10, 9, 8, 7)</code>.</p>
+      <p>LCD:ns R/W-pinne kopplas till GND — vi ska bara skriva till displayen, aldrig läsa.</p>
+    </div>
   </section>
 
+  <!-- Nya komponenter -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Nya komponenter</h2>
     <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
       <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr></thead>
       <tbody class="divide-y">
-        <tr><td class="p-2">1</td><td class="p-2">LCD1602 med I²C-backpack (adress 0x27 eller 0x3F)</td></tr>
-        <tr><td class="p-2">4</td><td class="p-2">Kopplingstrådar (VCC, GND, SDA, SCL)</td></tr>
+        <tr><td class="p-2">1</td><td class="p-2">LCD 16×2 (parallell, t.ex. QC1602A)</td></tr>
+        <tr><td class="p-2">1</td><td class="p-2">10 kΩ potentiometer (kontrast)</td></tr>
+        <tr><td class="p-2">1</td><td class="p-2">220 Ω motstånd (bakgrundsbelysning)</td></tr>
       </tbody>
     </table>
   </section>
 
+  <!-- Kretstabell -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Kopplingar</h2>
-    <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-      <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">LCD</th><th class="p-2 text-left">Arduino</th></tr></thead>
-      <tbody class="divide-y">
-        <tr><td class="p-2">GND</td><td class="p-2">GND</td></tr>
-        <tr><td class="p-2">VCC</td><td class="p-2">5V</td></tr>
-        <tr><td class="p-2">SDA</td><td class="p-2">Pin 20 (SDA)</td></tr>
-        <tr><td class="p-2">SCL</td><td class="p-2">Pin 21 (SCL)</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
-    <div class="schematic bg-white rounded-lg shadow p-4">
-      <object data="schematics/step5.svg" type="image/svg+xml" class="w-full"></object>
+    <h2 class="text-lg font-bold mb-2">LCD-kopplingar</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">LCD-pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">1</td><td class="p-2">VSS</td><td class="p-2">GND</td><td class="p-2">Jord</td></tr>
+          <tr><td class="p-2">2</td><td class="p-2">VDD</td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
+          <tr><td class="p-2">3</td><td class="p-2">VO</td><td class="p-2">Potentiometer mittben</td><td class="p-2">Kontrast — sidoben till +5V och GND</td></tr>
+          <tr><td class="p-2">4</td><td class="p-2">RS</td><td class="p-2">Arduino D5</td><td class="p-2">Register Select — 0 = kommando, 1 = data</td></tr>
+          <tr><td class="p-2">5</td><td class="p-2">R/W</td><td class="p-2">GND</td><td class="p-2">Alltid skrivläge — vi läser aldrig från LCD:n</td></tr>
+          <tr><td class="p-2">6</td><td class="p-2">E</td><td class="p-2">Arduino D6</td><td class="p-2">Enable — Arduino pulserar för att skicka data</td></tr>
+          <tr><td class="p-2">11</td><td class="p-2">DB4</td><td class="p-2">Arduino D10</td><td class="p-2">Data bit 4 — ⚠ omvänd ordning!</td></tr>
+          <tr><td class="p-2">12</td><td class="p-2">DB5</td><td class="p-2">Arduino D9</td><td class="p-2">Data bit 5</td></tr>
+          <tr><td class="p-2">13</td><td class="p-2">DB6</td><td class="p-2">Arduino D8</td><td class="p-2">Data bit 6</td></tr>
+          <tr><td class="p-2">14</td><td class="p-2">DB7</td><td class="p-2">Arduino D7</td><td class="p-2">Data bit 7</td></tr>
+          <tr><td class="p-2">15</td><td class="p-2">A</td><td class="p-2">+5V via 220Ω</td><td class="p-2">Bakgrundsbelysning +</td></tr>
+          <tr><td class="p-2">16</td><td class="p-2">K</td><td class="p-2">GND</td><td class="p-2">Bakgrundsbelysning −</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
+  <!-- Kod -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
-    <p class="text-gray-700 mb-3 text-sm">Med LCD-displayen blir bygget helt fristående — adress och data visas direkt på kopplingsdäcket utan serieövervakare. LCD1602 med I²C-backpack använder bara två signaltrådar (SDA + SCL) plus ström, vilket sparar pinnar. Displayen uppdateras efter varje klockcykel så att du i realtid kan <strong>följa CPU:ns arbete och verifiera att rätt instruktioner hämtas på rätt adresser</strong>.</p>
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// -----------------------------------------------------------
-// Steg 5 — LCD1602 med I²C-backpack (lägg till i befintlig kod)
-// -----------------------------------------------------------
+    <p class="text-gray-700 mb-3 text-sm">LCD-biblioteket sköter allt. Vi visar CPU:ns aktuella adress och data i realtid — uppdaterat i <code>pulse()</code>.</p>
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// Steg 5 — lägg till överst:
+#include &lt;LiquidCrystal.h&gt;
 
-// I²C-bibliotek: Wire är Arduinos inbyggda, LiquidCrystal_I2C
-// installeras via bibliotekshanteraren (sök "LiquidCrystal I2C").
-#include &lt;Wire.h&gt;
-#include &lt;LiquidCrystal_I2C.h&gt;
-
-// Skapa LCD-objektet.
-// Första argumentet är I²C-adressen — vanligast 0x27 eller 0x3F.
-// Kör en I²C-skanner om du är osäker på vilken adress din display har.
-// 16, 2 = 16 kolumner × 2 rader (standard för LCD1602).
-LiquidCrystal_I2C lcd(0x27, 16, 2);
-
-// Globala variabler för aktuell adress och data — uppdateras i pulse().
-uint16_t addr = 0;
-uint8_t  data = 0;
+// LCD: RS=E5, E=D6, D4=D10, D5=D9, D6=D8, D7=D7 (omvänd ordning!)
+LiquidCrystal lcd(5, 6, 10, 9, 8, 7);
 
 void setup() {
   // ... befintlig kod från steg 1–4 ...
-
-  // Initiera LCD:n — startar I²C-kommunikation och konfigurerar displayen.
-  lcd.init();
-  lcd.backlight();          // Tänd bakgrundsbelysningen
-
-  // Visa ett startmeddelande på rad 0 (översta raden).
-  lcd.setCursor(0, 0);      // Kolumn 0, rad 0
-  lcd.print("W65C02S Ready");  // Bekräftar att displayen fungerar
+  lcd.begin(16, 2);
+  lcd.print("W65C02S Ready");
 }
 
-// --- Uppdaterad pulse() med LCD-utskrift ---
-
-void pulse() {
-  // -- Fas 1: PHI2 låg — läs adress och RWB --
-  digitalWrite(PHI2, LOW);
-  delay(10);
-
-  addr = (PINK << 0) | (PINF << 8);  // Spara adress globalt
-  bool rw = digitalRead(RWB);
-
-  if (rw) {
-    DDRA = 0xFF;
-    PORTA = mem[addr];
-    data = mem[addr];               // Spara data globalt (för LCD)
-  } else {
-    DDRA = 0x00;
-  }
-
-  // -- Fas 2: PHI2 hög --
-  digitalWrite(PHI2, HIGH);
-  delay(10);
-
-  if (!rw) {
-    mem[addr] = PINA;
-    data = PINA;                    // Spara skriven data (för LCD)
-  }
-
-  // --- Uppdatera LCD-displayen ---
-  // Rad 0: visar aktuell adress i hex-format (t.ex. "A:8000")
-  lcd.setCursor(0, 0);
-  lcd.print("A:");
-  lcd.print(addr, HEX);
-  lcd.print("    ");  // Sudda ut rester från tidigare visning
-
-  // Rad 1: visar data/instruktion i hex-format (t.ex. "D:EA")
-  lcd.setCursor(0, 1);
-  lcd.print("D:");
-  lcd.print(data, HEX);
-  lcd.print("    ");
-
-  // Seriell utskrift behålls för felsökning.
-  Serial.print(rw ? "R" : "W");
-  Serial.print(" $");
-  Serial.println(addr, HEX);
-}</code></pre>
+// I pulse(), efter databuss-läsning:
+lcd.setCursor(0, 0);
+lcd.print("A:$"); lcd.print(addr, HEX); lcd.print("    ");
+lcd.setCursor(0, 1);
+lcd.print("D:$"); lcd.print(data, HEX); lcd.print("    ");</code></pre>
   </section>
 
+  <!-- Testning -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Testning</h2>
+    <h2 class="text-lg font-bold mb-2">Testning och felsökning</h2>
     <ol class="list-decimal pl-5 space-y-1 text-gray-700">
       <li>LCD:n ska visa "W65C02S Ready" vid uppstart</li>
-      <li>Vid varje knapptryck (steg 4) uppdateras displayen med aktuell adress och data</li>
-      <li>Kör en I²C-skanner om displayen inte svarar — testa både 0x27 och 0x3F</li>
+      <li>Tryck på Knapp 1 — LCD:n uppdateras med aktuell adress och data</li>
     </ol>
     <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
       <span class="font-bold text-green-800">✅ Förväntat:</span>
-      <span class="text-green-700">LCD:n visar adress och instruktion i realtid. Fullt fristående testbänk!</span>
+      <span class="text-green-700">LCD:n visar adress och data i realtid.</span>
+    </div>
+    <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
+      <h3 class="font-bold">Om det inte fungerar</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li><strong>Helt tom skärm?</strong> Justera kontrasten med potentiometern. Testa båda ytterlägena.</li>
+        <li><strong>Svarta rutor på första raden?</strong> LCD:n är i 8-bitarsläge men får ingen data. Kontrollera att <code>lcd.begin(16,2)</code> körs.</li>
+        <li><strong>Förvrängda tecken?</strong> Datapinnarna är i fel ordning. Prova <code>LiquidCrystal lcd(5, 6, 7, 8, 9, 10)</code> om din display har rak ordning.</li>
+        <li><strong>Ingen bakgrundsbelysning?</strong> Kontrollera 220Ω till A (pin 15) och GND till K (pin 16).</li>
+      </ul>
     </div>
   </section>
 
   <div class="flex gap-4 mt-8">
     <a href="step4.html" class="text-blue-600 hover:underline">← Steg 4</a>
-    <a href="index.html" class="text-blue-600 hover:underline">← Översikt</a>
+    <a href="step6.html" class="text-blue-600 hover:underline">Steg 6 →</a>
   </div>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>

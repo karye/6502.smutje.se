@@ -28,38 +28,39 @@
 
 <main class="max-w-5xl mx-auto px-4 py-8">
 
-  <h1 class="text-2xl font-bold mb-6">Steg 6 — Eget program i maskinkod</h1>
+  <h1 class="text-2xl font-bold mb-6">Steg 6 — Eget 6502-program</h1>
 
   <!-- Mål -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Mål</h2>
-    <p class="text-gray-700">Ersätt NOP-slingan från steg 3 med ett riktigt 6502-program. Vi skriver en räknare som ökar X-registret från 0 till 255 och lagrar värdet på adress <code>$0200</code>. På LCD:n syns aktuell adress och instruktion medan serieövervakaren loggar varje minnesaccess.</p>
+    <div class="text-gray-700 space-y-3">
+      <p>Datorn är nu komplett — CPU, minne, LCD, knappar. Men den kör bara NOP:ar. Dags att skriva vårt <strong>första egna 6502-program!</strong></p>
+      <p>Vi skriver en enkel räknare: öka X-registret från 0 till 255, spara värdet på adress <code>$0200</code>, och loopa. Programmet är bara 9 bytes stort — men det innehåller allt ett riktigt program behöver: initiering, beräkning, minnesskrivning och loop.</p>
+      <p>6502-program skrivs i <strong>maskinkod</strong> — varje instruktion är 1–3 bytes. LDX #$00 är två bytes (<code>$A2 $00</code>), INX är en byte (<code>$E8</code>), STX $0200 är tre bytes (<code>$8E $00 $02</code>). Vi skriver in dessa bytes direkt i Arduinons minnesarray, och CPU:n exekverar dem som ett riktigt program.</p>
+      <p>Ingen ny hårdvara — samma koppling som steg 5. Allt nytt finns i mjukvaran.</p>
+    </div>
   </section>
 
   <!-- Programmet -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">6502-programmet</h2>
-    <p class="text-gray-700 mb-3 text-sm">Programmet läggs på <code>$8000</code> och består av fyra instruktioner i en oändlig loop. Varje varv ökar X-registret med 1 och sparar värdet till adress <code>$0200</code>. Eftersom X är 8-bitars räknar det 0→255→0→255…</p>
+    <h2 class="text-lg font-bold mb-2">6502-programmet — räknare</h2>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white">
-          <tr><th class="p-2 text-left">Adress</th><th class="p-2 text-left">Maskinkod</th><th class="p-2 text-left">Assembler</th><th class="p-2 text-left">Förklaring</th></tr>
-        </thead>
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Adress</th><th class="p-2 text-left">Bytes</th><th class="p-2 text-left">Assembler</th><th class="p-2 text-left">Vad händer</th></tr></thead>
         <tbody class="divide-y">
-          <tr><td class="p-2 font-mono">$8000</td><td class="p-2 font-mono">A2 00</td><td class="p-2 font-mono">LDX #$00</td><td class="p-2">Ladda X-registret med 0</td></tr>
-          <tr><td class="p-2 font-mono">$8002</td><td class="p-2 font-mono">E8</td><td class="p-2 font-mono">INX</td><td class="p-2">Öka X med 1</td></tr>
-          <tr><td class="p-2 font-mono">$8003</td><td class="p-2 font-mono">8E 00 02</td><td class="p-2 font-mono">STX $0200</td><td class="p-2">Spara X till minnesadress $0200</td></tr>
-          <tr><td class="p-2 font-mono">$8006</td><td class="p-2 font-mono">4C 02 80</td><td class="p-2 font-mono">JMP $8002</td><td class="p-2">Hoppa tillbaka till INX (oändlig loop)</td></tr>
+          <tr><td class="p-2 font-mono">$8000</td><td class="p-2 font-mono">A2 00</td><td class="p-2 font-mono">LDX #$00</td><td class="p-2">X = 0 — nollställ räknaren (körs bara en gång)</td></tr>
+          <tr><td class="p-2 font-mono">$8002</td><td class="p-2 font-mono">E8</td><td class="p-2 font-mono">INX</td><td class="p-2">X = X + 1 — öka räknaren</td></tr>
+          <tr><td class="p-2 font-mono">$8003</td><td class="p-2 font-mono">8E 00 02</td><td class="p-2 font-mono">STX $0200</td><td class="p-2">Spara X-värdet till minnesadress $0200</td></tr>
+          <tr><td class="p-2 font-mono">$8006</td><td class="p-2 font-mono">4C 02 80</td><td class="p-2 font-mono">JMP $8002</td><td class="p-2">Hoppa tillbaka till INX — oändlig loop</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="text-gray-700 mt-3 text-sm"><strong>Notera:</strong> LDX #$00 körs bara en gång (vid start). Loopen är INX → STX → JMP, vilket är 2+4+3 = 9 klockcykler per varv.</p>
   </section>
 
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
-    <p class="text-gray-700 mb-3 text-sm">LCD:n kopplas direkt till Arduino — RS→D5, E→D6, DB4–DB7→D10,D9,D8,D7. CPU och Arduino delar adress- och databuss som tidigare.</p>
+    <p class="text-gray-700 mb-3 text-sm">Samma hårdvara som steg 5. LCD:n kopplas direkt till Arduino — RS→D5, E→D6, DB4–DB7→D10,D9,D8,D7 (omvänd ordning).</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/step6.png" alt="Steg 6 — LCD kopplad till Arduino" class="w-full">
     </div>
@@ -67,78 +68,53 @@
 
   <!-- Kod -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
-    <p class="text-gray-700 mb-3 text-sm">Endast <code>setup()</code> ändras — vi byter ut NOP mot räknarprogrammet. <code>pulse()</code> och loop-logiken från steg 3–5 behålls oförändrad. Programmet använder 8 bytes från $8000 till $8008.</p>
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// -----------------------------------------------------------
-// Steg 6 — Eget 6502-program: räknare 0–255
-// -----------------------------------------------------------
-// Ändra i setup() — ersätt mem[0x8000] = 0xEA (NOP) med:
+    <h2 class="text-lg font-bold mb-2">Arduino-kod — setup()</h2>
+    <p class="text-gray-700 mb-3 text-sm">Endast programladdningen i <code>setup()</code> ändras från steg 5. <code>pulse()</code>, <code>loop()</code> och LCD-koden är oförändrade.</p>
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// Steg 6 — ersätt NOP-laddningen i setup() med:
 
-void setup() {
-  // ... befintlig kod från steg 1–5 (pinMode, DDRx, LCD, knappar) ...
+// Reset-vektor → $8000
+write_mem(0xFFFC, 0x00);
+write_mem(0xFFFD, 0x80);
 
-  // Reset-vektor: programmet börjar på $8000
-  write_mem(0xFFFC, 0x00);  // Låg byte
-  write_mem(0xFFFD, 0x80);  // Hög byte → CPU startar på $8000
+// Räknarprogrammet
+write_mem(0x8000, 0xA2);  // LDX #$00
+write_mem(0x8001, 0x00);
+write_mem(0x8002, 0xE8);  // INX  ← loop-start
+write_mem(0x8003, 0x8E);  // STX $0200
+write_mem(0x8004, 0x00);
+write_mem(0x8005, 0x02);
+write_mem(0x8006, 0x4C);  // JMP $8002
+write_mem(0x8007, 0x02);
+write_mem(0x8008, 0x80);
 
-  // === Räknarprogrammet ===
-
-  // $8000: LDX #$00   — ladda X-registret med 0
-  write_mem(0x8000, 0xA2);
-  write_mem(0x8001, 0x00);
-
-  // $8002: INX        — öka X med 1 (loop-start)
-  write_mem(0x8002, 0xE8);
-
-  // $8003: STX $0200  — spara X till adress $0200
-  write_mem(0x8003, 0x8E);
-  write_mem(0x8004, 0x00);  // Låg byte av $0200
-  write_mem(0x8005, 0x02);  // Hög byte av $0200
-
-  // $8006: JMP $8002  — hoppa tillbaka till INX
-  write_mem(0x8006, 0x4C);
-  write_mem(0x8007, 0x02);  // Låg byte av $8002
-  write_mem(0x8008, 0x80);  // Hög byte av $8002
-
-  // Reset-sekvens
-  digitalWrite(RESB, LOW);
-  for (int i = 0; i < 5; i++) pulse();
-  digitalWrite(RESB, HIGH);
-}
-
-// pulse() och loop() — oförändrade från steg 3–5
-// Knapparna från steg 4 styr fortfarande exekveringen
-// LCD:n uppdateras efter varje klockcykel</code></pre>
+// Resten av setup() oförändrad — reset-sekvens etc.</code></pre>
   </section>
 
   <!-- Testning -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Testning</h2>
+    <h2 class="text-lg font-bold mb-2">Testning och felsökning</h2>
     <ol class="list-decimal pl-5 space-y-1 text-gray-700">
-      <li>Ladda upp den modifierade koden till Arduinon</li>
-      <li>Tryck på <strong>Knapp 1</strong> (klocksteg) — se CPU:n stega genom instruktionerna en klockcykel i taget</li>
-      <li>Tryck på <strong>Knapp 2</strong> (instruktionssteg) — hoppa till nästa instruktion</li>
-      <li>LCD:n visar aktuell adress (t.ex. <code>A:8003</code>) och instruktion (t.ex. <code>D:8E</code>)</li>
+      <li>Ladda upp koden. LCD:n visar adress och instruktion som tidigare</li>
+      <li>Tryck Knapp 2 — följ programflödet: $8000→$8002→$8003→$8006→$8002…</li>
+      <li>Varje varv genom loopen ökar räknarvärdet på $0200</li>
     </ol>
     <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
       <span class="font-bold text-green-800">✅ Förväntat:</span>
       <span class="text-green-700">CPU:n kör räknarprogrammet i loop. LCD:n visar exekveringen i realtid. Första egna 6502-programmet!</span>
     </div>
-  </section>
-
-  <!-- Hur fungerar det -->
-  <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Vad har vi lärt oss?</h2>
-    <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
-      <p><strong>6502-instruktioner</strong> är 1–3 bytes långa. CPU:n läser opcode först, sedan operandbyte(s). <code>INX</code> är 1 byte (enbart opcode). <code>STX $0200</code> är 3 bytes (opcode + 2-byte adress).</p>
-      <p><strong>Minnesmappad visning:</strong> genom att skriva till <code>$0200</code> kan vi se CPU:ns interna registervärde på databussen — en enkel form av I/O utan extra kretsar.</p>
-      <p><strong>Maskinkodsprogrammering:</strong> vi skrev ett program direkt i maskinkod (hex-bytes). I praktiken används en assembler för större program, men att förstå den manuella översättningen är ovärderligt vid felsökning.</p>
+    <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
+      <h3 class="font-bold">Om det inte fungerar</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li><strong>CPU:n kör NOP istället?</strong> Du har glömt att ladda det nya programmet. Kontrollera <code>write_mem()</code>-anropen i <code>setup()</code>.</li>
+        <li><strong>CPU:n hoppar till fel adress?</strong> JMP-adressen är fel. <code>$8002</code> är <code>$02 $80</code> (låg byte först!).</li>
+        <li><strong>Programmet stannar?</strong> Du kanske har en BRK-instruktion (0x00) någonstans. Dubbelkolla att alla bytes är korrekta.</li>
+      </ul>
     </div>
   </section>
 
   <div class="flex gap-4 mt-8">
     <a href="step5.html" class="text-blue-600 hover:underline">← Steg 5</a>
-    <a href="index.html" class="text-blue-600 hover:underline">Översikt</a>
+    <a href="step7.html" class="text-blue-600 hover:underline">Steg 7 →</a>
   </div>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
