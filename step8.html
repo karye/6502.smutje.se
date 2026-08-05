@@ -63,7 +63,7 @@
   <!-- Byggkedja -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Byggkedjan</h2>
-    <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg text-xs"><code>program.asm  ──ca65──▶  program.o  ──ld65──▶  program.bin  ──bin2h.py──▶  program.h
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code>program.asm  ──ca65──▶  program.o  ──ld65──▶  program.bin  ──bin2h.py──▶  program.h
                                                           │
                                               (2048 bytes kod + 6 bytes vektorer)
                                                           │
@@ -343,10 +343,10 @@ void setup() {
     <h2 class="text-lg font-bold mb-2">Så här använder du det</h2>
     <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-3">
       <p><strong>1. Redigera assembler-koden:</strong></p>
-      <pre class="bg-gray-900 text-gray-100 p-3 rounded-lg text-xs"><code>nano src/program.asm</code></pre>
+      <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code>nano src/program.asm</code></pre>
 
       <p><strong>2. Bygg och ladda upp (Windows-maskinen):</strong></p>
-      <pre class="bg-gray-900 text-gray-100 p-3 rounded-lg text-xs"><code>pio run -e step8 -t upload -t monitor</code></pre>
+      <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code>pio run -e step8 -t upload -t monitor</code></pre>
 
       <p>Vid varje bygge körs <code>ca65</code> → <code>ld65</code> → <code>bin2h.py</code> automatiskt. Ändrar du <code>program.asm</code> byggs allt om.</p>
     </div>
