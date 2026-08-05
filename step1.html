@@ -45,6 +45,8 @@
   <!-- Komponenter -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Komponenter för detta steg</h2>
+    <p class="text-gray-700 mb-3 text-sm">Plocka fram dessa ur komponentlådan innan du börjar koppla. Inga överraskningar — bara det som krävs.</p>
+    <p class="text-gray-700 mb-3 text-sm">Här är allt du behöver plocka fram ur komponentlådan innan du börjar koppla. Inga överraskningar — bara det som krävs för att få liv i CPU:n.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr></thead>
@@ -64,6 +66,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
+    <p class="text-gray-700 mb-3 text-sm">Här ser du hela kopplingen på en bild. Alla komponenter, alla ledningar — precis som det ska se ut på kopplingsdäcket.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-1.png" alt="Steg 1 — Ström och klocka" class="w-full">
     </div>
@@ -94,6 +97,7 @@
   <!-- Kod -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
+    <p class="text-gray-700 mb-3 text-sm">Koden som laddas upp till Arduino Mega. Varje rad är kommenterad så du förstår vad som händer — kopiera, klistra in, ladda upp.</p>
     <p class="text-gray-700 mb-3 text-sm">Koden är enkel: sätt pinne D2 som utgång och växla mellan HÖG och LÅG med 500 ms fördröjning. Resultatet blir en symmetrisk fyrkantsvåg på 1 Hz — perfekt för att se lysdioden blinka.</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// Steg 1 — Generera klockpulser (PHI2) för W65C02S
 #define PHI2 2   // Arduino D2 → CPU pin 37
