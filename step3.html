@@ -136,7 +136,7 @@
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
     <p class="text-gray-700 mb-3 text-sm">Koden bygger vidare på steg 2. Den stora nyheten är <code>pulse()</code> som nu emulerar ett minne: läser adress + R/W, och antingen skickar data (<code>DDRA=0xFF, PORTA=…</code>) eller tar emot (<code>DDRA=0x00</code>).</p>
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm"><code class="language-c">// Steg 3 — Databuss och minnesemulering
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// Steg 3 — Databuss och minnesemulering
 #define PHI2 2
 #define RESB 4
 #define RWB  3
