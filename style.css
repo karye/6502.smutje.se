@@ -7,10 +7,3 @@
 pre code {
   font-size: 0.8rem;
 }
-
-/* Minneskarta — proportionella blockhöjder (1px per 128 bytes) */
-.mem-unused-upper { height: 239px; }   /* $FFFA–$8800, ~30 KB */
-.mem-program     { height: 16px;  }    /* $8800–$8000, 2 KB */
-.mem-unused-mid  { height: 128px; }    /* $8000–$4010, ~16 KB */
-.mem-unused-lower { height: 120px; }   /* $4000–$0400, ~15 KB */
-.mem-tiny         { min-height: 8px; } /* ≤16 bytes, minsta synliga */
