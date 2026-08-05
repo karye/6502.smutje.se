@@ -74,7 +74,7 @@
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">6502-programmet i assembler</h2>
     <p class="text-gray-700 mb-3 text-sm">Samma 4-radersprogram som steg 7 — men nu som läsbar assembler med labels, subrutiner och nollterminerade strängar.</p>
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-asm">; 6502-program — VIA LCD
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-x86asm">; 6502-program — VIA LCD
 VIA_ORB  = $4000
 VIA_ORA  = $4001
 VIA_DDRB = $4002
@@ -223,6 +223,7 @@ void setup() {
   </div>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/x86asm.min.js"></script>
 <script>hljs.highlightAll();</script>
 </body>
 </html>
