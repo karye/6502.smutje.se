@@ -10465,6 +10465,7 @@
 		(uuid "2b21f2a0-db97-4e1c-8782-e520c49f4961")
 		(property "Reference" "A1"
 			(at 290.83 190.5 0)
+			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
