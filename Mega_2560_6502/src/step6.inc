@@ -1,0 +1,102 @@
+// Steg 6 — Eget 6502-program: räknare 0–255
+// CPU:n kör LDX #$00 · INX · STX $0200 · JMP (loop)
+
+#include <Arduino.h>
+#include <LiquidCrystal.h>
+
+#define PHI2     2
+#define RESB     4
+#define RWB      3
+#define SYNC     13
+#define BTN_CLK  11
+#define BTN_INSTR 12
+
+LiquidCrystal lcd(5, 6, 10, 9, 8, 7);
+
+uint8_t ram[1024];
+uint8_t vectors[6];
+
+uint8_t read_mem(uint16_t addr) {
+  if (addr >= 0xFFFA && addr <= 0xFFFF) return vectors[addr - 0xFFFA];
+  if (addr < 1024) return ram[addr];
+  return 0xEA;
+}
+
+void write_mem(uint16_t addr, uint8_t val) {
+  if (addr >= 0xFFFA && addr <= 0xFFFF) { vectors[addr - 0xFFFA] = val; return; }
+  if (addr < 1024) ram[addr] = val;
+}
+
+void pulse() {
+  digitalWrite(PHI2, LOW);
+  delay(10);
+
+  uint16_t a = (PINF << 0) | (PINK << 8);
+  bool rw = digitalRead(RWB);
+  uint8_t data = 0;
+
+  if (rw) { DDRA = 0xFF; PORTA = read_mem(a); data = PORTA; }
+  else    { DDRA = 0x00; }
+
+  digitalWrite(PHI2, HIGH);
+  delay(10);
+
+  if (!rw) { data = PINA; write_mem(a, data); }
+
+  lcd.setCursor(0, 0);
+  lcd.print("A:$"); lcd.print(a, HEX);
+  if (a < 0x1000) lcd.print(" ");
+  if (a < 0x100)  lcd.print(" ");
+  lcd.print("    ");
+
+  lcd.setCursor(0, 1);
+  lcd.print("D:$");
+  if (data < 0x10) lcd.print("0");
+  lcd.print(data, HEX);
+  lcd.print("    ");
+}
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(PHI2, OUTPUT);
+  pinMode(RESB, OUTPUT);
+  pinMode(RWB,  INPUT);
+  pinMode(SYNC, INPUT);
+  pinMode(BTN_CLK,   INPUT_PULLUP);
+  pinMode(BTN_INSTR, INPUT_PULLUP);
+  DDRK = 0x00; DDRF = 0x00; DDRA = 0x00;
+
+  lcd.begin(16, 2);
+  lcd.print("Steg 6 Raknare");
+
+  write_mem(0xFFFC, 0x00);  // Reset-vektor → $8000
+  write_mem(0xFFFD, 0x80);
+
+  // Räknarprogrammet
+  write_mem(0x8000, 0xA2);  // LDX #$00
+  write_mem(0x8001, 0x00);
+  write_mem(0x8002, 0xE8);  // INX  ← loop-start
+  write_mem(0x8003, 0x8E);  // STX $0200
+  write_mem(0x8004, 0x00);
+  write_mem(0x8005, 0x02);
+  write_mem(0x8006, 0x4C);  // JMP $8002
+  write_mem(0x8007, 0x02);
+  write_mem(0x8008, 0x80);
+
+  Serial.println("Steg 6 — Räknarprogram");
+
+  digitalWrite(RESB, LOW);
+  for (int i = 0; i < 5; i++) pulse();
+  digitalWrite(RESB, HIGH);
+}
+
+void loop() {
+  if (!digitalRead(BTN_CLK)) {
+    delay(50); while (!digitalRead(BTN_CLK)); delay(50);
+    pulse();
+  }
+  if (!digitalRead(BTN_INSTR)) {
+    delay(50); while (!digitalRead(BTN_INSTR)); delay(50);
+    do { pulse(); } while (!digitalRead(SYNC));
+  }
+}

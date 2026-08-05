@@ -163,6 +163,33 @@ $0000 └──────────────┘
 | A (15) | 5V via 220Ω | Bakgrundsbelysning |
 | K (16) | GND | |
 
+## PlatformIO — växla mellan steg
+
+Alla sju steg finns som separata `.inc`-filer i `src/`. `main.cpp` är en dispatcher som inkluderar rätt fil baserat på `-DSTEPx`.
+
+### I VS Code
+Välj aktiv miljö i PlatformIO-fliken: `env:step1` … `env:step7`, klicka sedan Upload.
+
+### Kommandorad
+```bash
+pio run -e step7 -t upload -t monitor   # steg 7 (VIA + LCD)
+pio run -e step6 -t upload -t monitor   # steg 6 (räknarprogram)
+pio run -t upload -t monitor            # default = steg 7
+```
+
+### Filstruktur
+```
+src/
+├── main.cpp        # dispatcher (#ifdef)
+├── step1.inc       # klocka + lysdiod
+├── step2.inc       # adressbuss + reset
+├── step3.inc       # databuss + NOP
+├── step4.inc       # knappar
+├── step5.inc       # LCD via Arduino
+├── step6.inc       # räknarprogram
+└── step7.inc       # VIA + LCD
+```
+
 ## Steg 7: LCD via VIA (8-bit parallell)
 
 CPU:n ($8000-programmet) styr LCD:n genom att skriva till VIA:ns register ($4000–$4003).
