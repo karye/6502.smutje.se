@@ -22,6 +22,7 @@
       <a href="step5.html" class="hover:text-blue-300 transition">Steg 5</a>
       <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
       <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
+      <a href="step8.html" class="hover:text-blue-300 transition">Steg 8</a>
     </div>
   </div>
 </nav>
@@ -61,7 +62,7 @@
       <p><strong class="text-gray-900">Steg 4 — Manuell stegning:</strong> Två tryckknappar för manuell stegning (klockcykel / instruktion). SYNC-pinnen används för att detektera instruktionshämtning.</p>
       <p><strong class="text-gray-900">Steg 5 — LCD-display:</strong> LCD1602 med I²C-backpack visar adress och data i realtid direkt på kopplingsdäcket. Fullt fristående testbänk — helt utan datorskärm.</p>
       <p><strong class="text-gray-900">Steg 6 — Eget program:</strong> Ett litet 6502-program i maskinkod — en räknare som ökar 0→255 i loop. LCD:n visar adress och instruktion i realtid.</p>
-      <p><strong class="text-gray-900">Steg 7 — VIA + LCD:</strong> W65C22 VIA ger 20 I/O-linjer. 74HC00 avkodar adressbussen. LCD 16×2 kopplas direkt till VIA:ns portar och styrs av 6502 — Arduino är nu bara minne och klocka.</p>
+      <p><strong class="text-gray-900">Steg 8 — Assembler-bygge:</strong> 6502-programmet skrivs i assembler (ca65) istället för hårdkodade hex-bytes. PlatformIO bygger automatiskt program.asm → program.h vid varje uppladdning.</p>
     </div>
   </section>
 

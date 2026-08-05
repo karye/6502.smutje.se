@@ -14,6 +14,10 @@
   #include "step5.inc"
 #elif defined(STEP6)
   #include "step6.inc"
-#else
+#elif defined(STEP7)
   #include "step7.inc"
+#elif defined(STEP8)
+  #include "step8.inc"
+#else
+  #include "step8.inc"
 #endif

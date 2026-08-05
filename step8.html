@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steg 8 — Assembler | W65C02</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+<nav class="bg-gray-900 text-white sticky top-0 z-50 shadow">
+  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
+    <a href="index.html" class="font-bold text-lg">W65C02</a>
+    <div class="flex gap-4 text-sm">
+      <a href="index.html" class="hover:text-blue-300 transition">Översikt</a>
+      <a href="step1.html" class="hover:text-blue-300 transition">Steg 1</a>
+      <a href="step2.html" class="hover:text-blue-300 transition">Steg 2</a>
+      <a href="step3.html" class="hover:text-blue-300 transition">Steg 3</a>
+      <a href="step4.html" class="hover:text-blue-300 transition">Steg 4</a>
+      <a href="step5.html" class="hover:text-blue-300 transition">Steg 5</a>
+      <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
+      <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
+      <a href="step8.html" class="text-blue-300 font-semibold">Steg 8</a>
+    </div>
+  </div>
+</nav>
+
+<main class="max-w-5xl mx-auto px-4 py-8">
+
+  <h1 class="text-2xl font-bold mb-6">Steg 8 — Assembler-bygge med ca65</h1>
+
+  <!-- Mål -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Mål</h2>
+    <div class="text-gray-700 space-y-3">
+      <p>Hittills har vi skrivit 6502-program som hårdkodade hex-bytes direkt i Arduinons <code>setup()</code>. Det fungerar — men det är inte hållbart i längden. Nu tar vi steget till <strong>riktig assembler</strong> med <strong>ca65</strong>, en professionell 6502-assembler från cc65-verktygslådan.</p>
+      <p><strong>Ingen ny hårdvara.</strong> Samma kopplingar som steg 7. Allt nytt finns i byggkedjan.</p>
+      <p>Arbetsflödet blir:</p>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li>Skriv 6502-kod i <code>src/program.asm</code> — med labels, subrutiner och kommentarer</li>
+        <li>PlatformIO kör <code>ca65</code> + <code>ld65</code> före C++-kompileringen</li>
+        <li>Resultatet (<code>program.bin</code>) konverteras till en C-header (<code>program.h</code>)</li>
+        <li><code>setup()</code> läser <code>PROGRAM[]</code> och laddar in i minnesemulatorn</li>
+      </ol>
+      <p>Du redigerar en <strong>läsbar assembler-fil</strong> — inte en lång rad <code>write_mem()</code>-anrop.</p>
+    </div>
+  </section>
+
+  <!-- Krav -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Nya verktyg</h2>
+    <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+      <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Verktyg</th><th class="p-2 text-left">Installation</th></tr></thead>
+      <tbody class="divide-y">
+        <tr><td class="p-2">ca65 / ld65</td><td class="p-2"><code>sudo apt install cc65</code> (Linux) eller ladda ner från <a href="https://cc65.github.io/" class="text-blue-600 hover:underline">cc65.github.io</a> (Windows)</td></tr>
+        <tr><td class="p-2">Python 3</td><td class="p-2">Redan installerat med PlatformIO</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Byggkedja -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Byggkedjan</h2>
+    <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg text-xs"><code>program.asm  ──ca65──▶  program.o  ──ld65──▶  program.bin  ──bin2h.py──▶  program.h
+                                                          │
+                                              (2048 bytes kod + 6 bytes vektorer)
+                                                          │
+                                              main.cpp ◀──┘  #include "program.h"</code></pre>
+  </section>
+
+  <!-- 6502-programmet -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">6502-programmet i assembler</h2>
+    <p class="text-gray-700 mb-3 text-sm">Samma 4-radersprogram som steg 7 — men nu som läsbar assembler med labels, subrutiner och nollterminerade strängar.</p>
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-asm">; 6502-program — VIA LCD
+VIA_ORB  = $4000
+VIA_ORA  = $4001
+VIA_DDRB = $4002
+VIA_DDRA = $4003
+
+.segment "CODE"
+.org $8000
+
+reset:
+    lda #$FF
+    sta VIA_DDRB
+    sta VIA_DDRA
+
+    ; LCD-init (8-bitarsläge)
+    lda #$30
+    jsr lcd_command
+    lda #$30
+    jsr lcd_command
+    lda #$30
+    jsr lcd_command
+    lda #$38          ; Function set: 8-bit, 2 rader
+    jsr lcd_command
+    lda #$0C          ; Display ON
+    jsr lcd_command
+    lda #$01          ; Clear display
+    jsr lcd_command
+    lda #$06          ; Entry mode
+    jsr lcd_command
+
+hello:
+    ; Rad 1: cursor $00
+    lda #$80
+    jsr lcd_command
+    lda #$01          ; RS=1
+    sta VIA_ORA
+    ldx #0
+@l1:
+    lda line1,x
+    beq @l1_done
+    jsr lcd_data
+    inx
+    jmp @l1
+@l1_done:
+
+    ; Rad 2–4: samma mönster med cursor $C0, $94, $D4
+    ; ...
+
+    lda #$01          ; Clear display
+    jsr lcd_command
+    jmp hello         ; Loopa
+
+; Subrutiner
+lcd_command:
+    sta VIA_ORB
+    lda #$04          ; RS=0, E=1
+    sta VIA_ORA
+    lda #$00          ; RS=0, E=0
+    sta VIA_ORA
+    rts
+
+lcd_data:
+    sta VIA_ORB
+    lda #$05          ; RS=1, E=1
+    sta VIA_ORA
+    lda #$01          ; RS=1, E=0
+    sta VIA_ORA
+    rts
+
+line1: .byte "=== 6502 VIA LCD ===", 0
+line2: .byte "Hello from W65C02!", 0
+line3: .byte "Arduino = RAM + CLK", 0
+line4: .byte "smutje.se 2026", 0
+
+.segment "VECTORS"
+.org $FFFA
+    .word $0000       ; NMI
+    .word reset       ; RESET
+    .word $0000       ; IRQ</code></pre>
+    <p class="text-gray-700 mt-3 text-sm">Komplett assembler-kod: <code>Mega_2560_6502/src/program.asm</code>.</p>
+  </section>
+
+  <!-- Arduino-kod -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Arduino-kod — setup()</h2>
+    <p class="text-gray-700 mb-3 text-sm">Enda skillnaden från steg 7: programmet laddas från <code>PROGRAM[]</code> istället för hårdkodade <code>write_mem()</code>.</p>
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">#include "program.h"  // Genereras av byggskriptet
+
+void setup() {
+  // ... samma pinMode, DDRx, etc som steg 7 ...
+
+  Serial.print("Programstorlek: ");
+  Serial.print(PROGRAM_SIZE);
+  Serial.println(" bytes");
+
+  // Ladda 6502-programmet
+  for (unsigned int i = 0; i < PROGRAM_SIZE; i++) {
+    write_mem(0x8000 + i, pgm_read_byte(&PROGRAM[i]));
+  }
+
+  // Reset-sekvens + kör programmet
+  for (int i = 0; i < 5; i++) pulse();
+  digitalWrite(RESB, HIGH);
+  for (int i = 0; i < 2000; i++) pulse();
+}</code></pre>
+  </section>
+
+  <!-- Användning -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Så här använder du det</h2>
+    <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-3">
+      <p><strong>1. Redigera assembler-koden:</strong></p>
+      <pre class="bg-gray-900 text-gray-100 p-3 rounded-lg text-xs"><code>nano src/program.asm</code></pre>
+
+      <p><strong>2. Bygg och ladda upp (Windows-maskinen):</strong></p>
+      <pre class="bg-gray-900 text-gray-100 p-3 rounded-lg text-xs"><code>pio run -e step8 -t upload -t monitor</code></pre>
+
+      <p>Vid varje bygge körs <code>ca65</code> → <code>ld65</code> → <code>bin2h.py</code> automatiskt. Ändrar du <code>program.asm</code> byggs allt om.</p>
+    </div>
+  </section>
+
+  <!-- Testning -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Testning och felsökning</h2>
+    <ol class="list-decimal pl-5 space-y-1 text-gray-700">
+      <li>Öppna terminal och kör <code>pio run -e step8 -t upload -t monitor</code></li>
+      <li>Du ska se "Programstorlek: 2054 bytes" i serieövervakaren</li>
+      <li>LCD:n visar samma fyra rader som steg 7</li>
+    </ol>
+    <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
+      <span class="font-bold text-green-800">✅ Förväntat:</span>
+      <span class="text-green-700">Samma resultat som steg 7, men programmet är nu byggt från en .asm-fil med ca65.</span>
+    </div>
+    <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
+      <h3 class="font-bold">Om det inte fungerar</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li><strong>ca65: command not found?</strong> Installera cc65: <code>sudo apt install cc65</code></li>
+        <li><strong>"No such file: program.h"?</strong> Första bygget måste generera den. Kör <code>pio run -e step8</code> två gånger om det krävs.</li>
+        <li><strong>CPU:n gör inget?</strong> Kontrollera att <code>write_mem()</code>-loopen faktiskt kopierar <code>PROGRAM[]</code> till <code>program[]</code>. Logga med <code>Serial.print()</code>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="flex gap-4 mt-8">
+    <a href="step7.html" class="text-blue-600 hover:underline">← Steg 7</a>
+    <a href="index.html" class="text-blue-600 hover:underline">Översikt</a>
+  </div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</body>
+</html>

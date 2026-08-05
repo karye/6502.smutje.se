@@ -143,6 +143,7 @@ $0000 └──────────────┘
 | 5 | LCD via Arduino (parallell 4-bit) | LCD, 10kΩ pot, 220Ω |
 | 6 | Eget 6502-program (räknare) | — (samma hårdvara) |
 | 7 | W65C22 VIA + 74HC00, LCD via VIA | VIA, 74HC00 |
+| 8 | Assembler-bygge med ca65 | — (samma hårdvara) |
 
 ---
 
@@ -168,13 +169,14 @@ $0000 └──────────────┘
 Alla sju steg finns som separata `.inc`-filer i `src/`. `main.cpp` är en dispatcher som inkluderar rätt fil baserat på `-DSTEPx`.
 
 ### I VS Code
-Välj aktiv miljö i PlatformIO-fliken: `env:step1` … `env:step7`, klicka sedan Upload.
+Välj aktiv miljö i PlatformIO-fliken: `env:step1` … `env:step8`, klicka sedan Upload.
 
 ### Kommandorad
 ```bash
+pio run -e step8 -t upload -t monitor   # steg 8 (assembler-bygge)
 pio run -e step7 -t upload -t monitor   # steg 7 (VIA + LCD)
 pio run -e step6 -t upload -t monitor   # steg 6 (räknarprogram)
-pio run -t upload -t monitor            # default = steg 7
+pio run -t upload -t monitor            # default = steg 8
 ```
 
 ### Filstruktur
@@ -187,7 +189,9 @@ src/
 ├── step4.inc       # knappar
 ├── step5.inc       # LCD via Arduino
 ├── step6.inc       # räknarprogram
-└── step7.inc       # VIA + LCD
+├── step7.inc       # VIA + LCD
+├── step8.inc       # Assembler-bygge (ca65)
+└── program.asm     # 6502 assembler-kod
 ```
 
 ## Steg 7: LCD via VIA (8-bit parallell)
