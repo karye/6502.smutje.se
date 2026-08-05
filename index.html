@@ -9,7 +9,6 @@
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
 
-<!-- Nav -->
 <nav class="bg-gray-900 text-white sticky top-0 z-50 shadow">
   <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
     <a href="index.html" class="font-bold text-lg">W65C02</a>
@@ -46,8 +45,150 @@
         Två fysiska knappar låter dig stega igenom programmet — en klockcykel eller en hel instruktion
         i taget. En lysdiod pulserar i takt med klockan och en LCD-display visar adress och instruktion i realtid.
       </p>
+    </div>
+  </section>
+
+  <!-- Hur fungerar 6502? -->
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-4">Hur fungerar en 6502-processor?</h2>
+    <div class="bg-white rounded-lg shadow p-6 border leading-relaxed space-y-4 text-gray-700">
+
       <p>
-        Nedan hittar du kompletta kopplingsscheman, detaljerade tabeller och en stegvis byggplan.
+        Tänk dig en dirigent som står framför en orkester. Dirigenten har en partitur — ett program — och
+        taktpinnen är <strong class="text-gray-900">klockan</strong>. För varje taktslag händer exakt en sak:
+        dirigenten pekar på nästa not, läser vad som står, och utför den. En 6502-processor fungerar
+        precis likadant, fast med elektriska signaler istället för noter.
+      </p>
+
+      <h3 class="font-bold text-gray-900">Två bussar — adress och data</h3>
+      <p>
+        Processorn har två uppsättningar ledningar ut till världen. Den första är
+        <strong class="text-gray-900">adressbussen</strong> — 16 ledningar som tillsammans bildar ett tal
+        mellan 0 och 65 535. Det talet är en minnesadress: <em>"jag vill läsa från adress 32 768"</em>,
+        eller i hexadecimalt: <code>$8000</code>. Processorn lägger ut adressen på stiften A0–A15
+        och alla kretsar på bussen ser den samtidigt.
+      </p>
+      <p>
+        Den andra uppsättningen är <strong class="text-gray-900">databussen</strong> — 8 ledningar.
+        Här kommer svaret tillbaka. När processorn vill läsa från en adress lägger den ut adressen,
+        sätter R/W-signalen till HÖG (Read), och väntar. Den krets som känner igen adressen — i vårt fall
+        Arduino — lägger ut rätt byte på databussen. Processorn läser av den och går vidare till nästa
+        instruktion.
+      </p>
+
+      <h3 class="font-bold text-gray-900">Instruktionscykeln — hämta, avkoda, utför</h3>
+      <p>
+        Varje gång processorn startar en ny instruktion tänder den <strong class="text-gray-900">SYNC</strong>-pinnen.
+        Det är processorns sätt att säga <em>"nu börjar jag på något nytt"</em>. Sedan följer en förutsägbar dans:
+      </p>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li><strong>Hämta opcode:</strong> processorn läser byten på den adress som programräknaren (PC) pekar på. SYNC är hög under just denna cykel.</li>
+        <li><strong>Avkoda:</strong> processorn tittar på opcode-byten och förstår vad som ska göras. Är det <code>$A9</code>? Då ska nästa byte laddas in i A-registret (LDA #). Är det <code>$8D</code>? Då ska de två nästa byten tolkas som en adress (STA absolute).</li>
+        <li><strong>Utför:</strong> processorn läser eventuella extra bytes (operander), utför operationen, och ökar programräknaren.</li>
+        <li><strong>Nästa:</strong> PC pekar nu på nästa opcode. Börja om från steg 1.</li>
+      </ol>
+
+      <h3 class="font-bold text-gray-900">Minneskartan — processorns värld</h3>
+      <p>
+        6502-processorn ser hela sitt universum som 65 536 adresser — varken mer eller mindre. Varje
+        adress måste ha <em>något</em> som svarar, annars läser processorn in slumpmässiga värden
+        och kraschar. Vår Arduino ser till att <strong>varje adress alltid returnerar något</strong>.
+      </p>
+
+      <!-- Minneskarta -->
+      <div class="bg-gray-50 rounded-lg font-mono text-xs leading-tight border">
+        <div class="flex items-center border-b border-gray-300" style="min-height:8px">
+          <div class="w-20 text-right pr-3 text-gray-500">$FFFF</div>
+          <div class="flex-1 bg-purple-100 border-l border-r border-purple-300 px-2 flex items-center" style="min-height:8px">vectors[6] — här bor startadressen för programmet</div>
+          <div class="w-14 text-right text-gray-500 pr-2">6 B</div>
+        </div>
+        <div class="flex items-stretch border-b border-gray-300" style="height:239px">
+          <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$FFFA</div>
+          <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt (Arduino svarar med NOP = gör inget, gå vidare)</div>
+          <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~30 KB</div>
+        </div>
+        <div class="flex items-center border-b border-gray-300" style="height:16px">
+          <div class="w-20 text-right pr-3 text-gray-500">$8800</div>
+          <div class="flex-1 bg-blue-100 border-l border-r border-blue-300 px-2 flex items-center">program[2048] — dina 6502-instruktioner</div>
+          <div class="w-14 text-right text-gray-500 pr-2">2 KB</div>
+        </div>
+        <div class="flex items-stretch border-b border-gray-300" style="height:128px">
+          <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$8000</div>
+          <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt</div>
+          <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~16 KB</div>
+        </div>
+        <div class="flex items-center border-b-2 border-yellow-500" style="min-height:8px">
+          <div class="w-20 text-right pr-3 text-gray-500">$4010</div>
+          <div class="flex-1 bg-yellow-100 border-l border-r border-yellow-400 px-2 flex items-center font-bold" style="min-height:8px">W65C22 VIA — fysisk I/O-krets (steg 7–8)</div>
+          <div class="w-14 text-right text-gray-500 pr-2">16 B</div>
+        </div>
+        <div class="flex items-stretch border-b border-gray-300" style="height:120px">
+          <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$4000</div>
+          <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt</div>
+          <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~15 KB</div>
+        </div>
+        <div class="flex items-center border-b border-gray-300" style="min-height:8px">
+          <div class="w-20 text-right pr-3 text-gray-500">$0400</div>
+          <div class="flex-1 bg-green-100 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">ram[1024] — ledigt att använda för data</div>
+          <div class="w-14 text-right text-gray-500 pr-2">512 B</div>
+        </div>
+        <div class="flex items-center border-b border-gray-300" style="min-height:8px">
+          <div class="w-20 text-right pr-3 text-gray-500">$0200</div>
+          <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">Stack — processorns egen kladdlapp (JSR/RTS)</div>
+          <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
+        </div>
+        <div class="flex items-center" style="min-height:8px">
+          <div class="w-20 text-right pr-3 text-gray-500">$0100</div>
+          <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">Zero page — snabbaste minnet, som extra register</div>
+          <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
+        </div>
+        <div class="text-right text-gray-500 pr-2">$0000</div>
+      </div>
+
+      <p>
+        <strong>De gröna områdena</strong> är RAM — här kan du lagra variabler och processorn använder
+        automatiskt stacken vid subrutinanrop. <strong>Det blå området</strong> är ditt program.
+        <strong>Det lila längst upp</strong> är reset-vektorn: när processorn startar går den först till
+        adress $FFFC, läser två bytes, och hoppar dit. I vårt fall står det $8000 där —
+        processorn hoppar till ditt program.
+      </p>
+      <p>
+        <strong>Det gula</strong> är W65C22 VIA — en fysisk I/O-krets som kopplas in i steg 7.
+        När processorn skriver till adresser i detta område är det VIA-kretsen som svarar,
+        inte Arduino. Arduino går ur vägen genom att tri-stata databussen.
+      </p>
+
+      <h3 class="font-bold text-gray-900">Varför Arduino istället för riktiga minneskretsar?</h3>
+      <p>
+        En 6502-dator från 1970-talet hade ROM och RAM som fysiska chips. Varje gång du ville
+        testa ett nytt program fick du bränna ett nytt EPROM under UV-ljus — en process som tog
+        20 minuter per försök. Arduino vänder på det här: <strong>du laddar upp ett nytt program
+        på två sekunder över USB</strong>. Arduino läser av processorns adressbuss, slår upp rätt
+        byte i sin interna array, och lägger ut den på databussen — allt inom samma klockcykel.
+      </p>
+      <p>
+        Detta är inte en emulator i mjukvara — processorn kör på riktigt, med riktiga elektriska
+        signaler. Arduinon är bara minnet. Det betyder att <strong>allt du lär dig om 6502:ans
+        instruktionsuppsättning, timing och bussprotokoll gäller på riktigt</strong>. Du kan ta
+        bort Arduino och ersätta den med ett EEPROM och ett SRAM-chip — och datorn fungerar
+        precis likadant.
+      </p>
+
+      <h3 class="font-bold text-gray-900">Hur läser Arduino adressbussen så snabbt?</h3>
+      <p>
+        Arduino Mega har 54 digitala I/O-pinnar — nästan tillräckligt för att täcka 16 adresslinjer
+        + 8 datalinjer + kontrollsignaler. Men den har också något bättre: <strong>portregister</strong>.
+        Istället för att läsa en pinne i taget med <code>digitalRead()</code> (långsamt!) läser vi
+        hela 8-bitarsportar på en gång:
+      </p>
+      <ul class="list-disc pl-5 space-y-1">
+        <li><strong>PORTF</strong> — 8 bitar, läser CPU:ns A0–A7 i en enda maskininstruktion</li>
+        <li><strong>PORTK</strong> — 8 bitar, läser CPU:ns A8–A15</li>
+        <li><strong>PORTA</strong> — 8 bitar, driver databussen D0–D7 (eller går tri-state)</li>
+      </ul>
+      <p>
+        Tre registerläsningar, en villkorssats, och vi vet exakt vad processorn vill göra — redo
+        att svara inom samma klockcykel.
       </p>
     </div>
   </section>
@@ -59,41 +200,47 @@
       <p><strong class="text-gray-900">Steg 1 — Ström, klocka, reset:</strong> W65C02S får spänning och klockpulser från Arduino D2. En lysdiod blinkar i takt med klockan. Pull-up-motstånd på RDY, IRQB, NMIB, BE, SOB. 100 nF avkoppling vid VDD/VSS.</p>
       <p><strong class="text-gray-900">Steg 2 — Adressbuss A0–A15:</strong> Samtliga 16 adresslinjer kopplas till Arduinons analoga portar (PORTF + PORTK). RESB kopplas till D4 för kontrollerad reset. Serieövervakaren visar att CPU:n läser reset-vektorn $FFFC/$FFFD.</p>
       <p><strong class="text-gray-900">Steg 3 — Databuss D0–D7:</strong> 8 datalinjer + RWB kopplas in via 100 Ω skyddsmotstånd. Arduinon emulerar minnet. Ett NOP-testprogram laddas på $8000.</p>
-      <p><strong class="text-gray-900">Steg 4 — Manuell stegning:</strong> Två tryckknappar för manuell stegning (klockcykel / instruktion). SYNC-pinnen används för att detektera instruktionshämtning.</p>
-      <p><strong class="text-gray-900">Steg 5 — LCD-display:</strong> LCD1602 med I²C-backpack visar adress och data i realtid direkt på kopplingsdäcket. Fullt fristående testbänk — helt utan datorskärm.</p>
-      <p><strong class="text-gray-900">Steg 6 — Eget program:</strong> Ett litet 6502-program i maskinkod — en räknare som ökar 0→255 i loop. LCD:n visar adress och instruktion i realtid.</p>
+      <p><strong class="text-gray-900">Steg 4 — Manuell stegning:</strong> Två tryckknappar (D11, D12) för manuell stegning — en klockcykel eller en hel instruktion i taget. SYNC-pinnen (D13) detekterar instruktionsstart.</p>
+      <p><strong class="text-gray-900">Steg 5 — LCD-display (parallell 4-bit):</strong> LCD 16×2 kopplas direkt till Arduino (D5–D10). Visar adress och data i realtid — ingen datorskärm behövs.</p>
+      <p><strong class="text-gray-900">Steg 6 — Eget 6502-program:</strong> En räknare i maskinkod: LDX #$00 · INX · STX $0200 · JMP. CPU:n ökar X-registret 0→255 i loop. LCD:n visar exekveringen.</p>
+      <p><strong class="text-gray-900">Steg 7 — W65C22 VIA + 74HC00:</strong> LCD:n kopplas till VIA:ns I/O-portar. 74HC00 avkodar adress $4000. CPU:n styr LCD:n själv — Arduino är nu bara minne och klocka.</p>
       <p><strong class="text-gray-900">Steg 8 — Assembler-bygge:</strong> 6502-programmet skrivs i assembler (ca65) istället för hårdkodade hex-bytes. PlatformIO bygger automatiskt program.asm → program.h vid varje uppladdning.</p>
     </div>
   </section>
 
   <!-- Komponenter -->
   <section class="mb-10">
-    <h2 class="text-xl font-bold mb-4">Komponenter</h2>
+    <h2 class="text-xl font-bold mb-4">Komponenter (alla steg)</h2>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white">
           <tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr>
         </thead>
         <tbody class="divide-y">
-          <tr class="hover:bg-gray-50"><td class="p-2">1</td><td class="p-2"><strong>W65C02S</strong> (DIP-40)</td></tr>
-          <tr class="hover:bg-gray-50"><td class="p-2">1</td><td class="p-2"><strong>Arduino Mega 2560</strong></td></tr>
-          <tr class="hover:bg-gray-50"><td class="p-2">1</td><td class="p-2"><strong>LCD1602</strong> med I²C-backpack</td></tr>
-          <tr class="hover:bg-gray-50"><td class="p-2">1</td><td class="p-2"><strong>Lysdiod</strong> (klockindikering)</td></tr>
-          <tr class="hover:bg-gray-50"><td class="p-2">1</td><td class="p-2"><strong>220 Ω motstånd</strong> (klock-LED)</td></tr>
-          <tr class="hover:bg-gray-50"><td class="p-2">5</td><td class="p-2"><strong>3,3–10 kΩ motstånd</strong> (pull-up)</td></tr>
-          <tr class="hover:bg-gray-50"><td class="p-2">8</td><td class="p-2"><strong>100 Ω motstånd</strong> (databuss-skydd)</td></tr>
-          <tr class="hover:bg-gray-50"><td class="p-2">1</td><td class="p-2"><strong>100 nF keramisk kondensator</strong></td></tr>
-          <tr class="hover:bg-gray-50"><td class="p-2">2</td><td class="p-2"><strong>Tryckknappar</strong></td></tr>
-          <tr class="hover:bg-gray-50"><td class="p-2">–</td><td class="p-2">Kopplingsdäck + kopplingstråd</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2"><strong>W65C02S</strong> (DIP-40)</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2"><strong>Arduino Mega 2560</strong></td></tr>
+          <tr><td class="p-2">1</td><td class="p-2"><strong>W65C22 VIA</strong> (DIP-40) — steg 7–8</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2"><strong>74HC00</strong> (quad NAND) — steg 7–8</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2"><strong>LCD 16×2</strong> (parallell, t.ex. QC1602A)</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2"><strong>10 kΩ potentiometer</strong> (LCD-kontrast)</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2"><strong>Lysdiod</strong> (klockindikering)</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2"><strong>220 Ω motstånd</strong> (klock-LED)</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2"><strong>220 Ω motstånd</strong> (LCD-belysning)</td></tr>
+          <tr><td class="p-2">4</td><td class="p-2"><strong>10 kΩ motstånd</strong> (pull-up: RDY, IRQB, NMIB, SOB)</td></tr>
+          <tr><td class="p-2">8</td><td class="p-2"><strong>100 Ω motstånd</strong> (databuss-skydd)</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2"><strong>100 nF keramisk kondensator</strong> (avkoppling CPU)</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2"><strong>10 µF elektrolytisk kondensator</strong> (strömstabilisering)</td></tr>
+          <tr><td class="p-2">2</td><td class="p-2"><strong>Tryckknappar</strong></td></tr>
+          <tr><td class="p-2">–</td><td class="p-2">Kopplingsdäck + kopplingstråd</td></tr>
         </tbody>
       </table>
     </div>
   </section>
 
-  <!-- Kopplingstabeller -->
+  <!-- Pinout-bilder -->
   <section class="mb-10">
-      <h2 class="text-xl font-bold mb-4">Pinout-bilder</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <h2 class="text-xl font-bold mb-4">Pinout-referens</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div class="bg-white rounded-lg shadow p-3 border">
         <p class="font-bold text-sm mb-2 text-center">W65C02S</p>
         <img src="docs/w65c02s-pinout.png" alt="W65C02S pinout" class="w-full">
@@ -106,72 +253,6 @@
         <p class="font-bold text-sm mb-2 text-center">74HC00</p>
         <img src="docs/74hc00-pinout.png" alt="74HC00 pinout" class="w-full">
       </div>
-    </div>
-
-    <h2 class="text-xl font-bold mb-4">Kopplingstabeller</h2>
-
-    <h3 class="font-bold mt-6 mb-2">Ström och kontroll</h3>
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white">
-          <tr><th class="p-2 text-left">CPU-pinne</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Arduino</th><th class="p-2 text-left">Not</th></tr>
-        </thead>
-        <tbody class="divide-y">
-          <tr><td class="p-2">8</td><td class="p-2">VDD</td><td class="p-2">5V</td><td class="p-2">Ström</td></tr>
-          <tr><td class="p-2">21</td><td class="p-2">VSS</td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
-          <tr><td class="p-2">37</td><td class="p-2">PHI2</td><td class="p-2">D2</td><td class="p-2">Klocka</td></tr>
-          <tr><td class="p-2">34</td><td class="p-2">RWB</td><td class="p-2">D3</td><td class="p-2">Read/Write</td></tr>
-          <tr><td class="p-2">40</td><td class="p-2">RESB</td><td class="p-2">D4</td><td class="p-2">Reset</td></tr>
-          <tr><td class="p-2">7</td><td class="p-2">SYNC</td><td class="p-2">D7</td><td class="p-2">Opcode fetch</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3 class="font-bold mt-6 mb-2">Adressbuss</h3>
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white">
-          <tr><th class="p-2 text-left">CPU-pinne</th><th class="p-2 text-left">Adress</th><th class="p-2 text-left">Arduino</th><th class="p-2 text-left">Register</th></tr>
-        </thead>
-        <tbody class="divide-y">
-          <tr><td class="p-2">9–16</td><td class="p-2">A0–A7</td><td class="p-2">A8–A15</td><td class="p-2"><code>PORTK</code></td></tr>
-          <tr><td class="p-2">17–20, 22–25</td><td class="p-2">A8–A15</td><td class="p-2">A0–A7</td><td class="p-2"><code>PORTF</code></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3 class="font-bold mt-6 mb-2">Databuss (via 100 Ω)</h3>
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white">
-          <tr><th class="p-2 text-left">CPU-pinne</th><th class="p-2 text-left">Data</th><th class="p-2 text-left">Arduino</th><th class="p-2 text-left">Register</th></tr>
-        </thead>
-        <tbody class="divide-y">
-          <tr><td class="p-2">33</td><td class="p-2">D0</td><td class="p-2">D22</td><td class="p-2"><code>PORTA</code> bit 0</td></tr>
-          <tr><td class="p-2">32</td><td class="p-2">D1</td><td class="p-2">D23</td><td class="p-2"><code>PORTA</code> bit 1</td></tr>
-          <tr><td class="p-2">31</td><td class="p-2">D2</td><td class="p-2">D24</td><td class="p-2"><code>PORTA</code> bit 2</td></tr>
-          <tr><td class="p-2">30</td><td class="p-2">D3</td><td class="p-2">D25</td><td class="p-2"><code>PORTA</code> bit 3</td></tr>
-          <tr><td class="p-2">29</td><td class="p-2">D4</td><td class="p-2">D26</td><td class="p-2"><code>PORTA</code> bit 4</td></tr>
-          <tr><td class="p-2">28</td><td class="p-2">D5</td><td class="p-2">D27</td><td class="p-2"><code>PORTA</code> bit 5</td></tr>
-          <tr><td class="p-2">27</td><td class="p-2">D6</td><td class="p-2">D28</td><td class="p-2"><code>PORTA</code> bit 6</td></tr>
-          <tr><td class="p-2">26</td><td class="p-2">D7</td><td class="p-2">D29</td><td class="p-2"><code>PORTA</code> bit 7</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3 class="font-bold mt-6 mb-2">I/O</h3>
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white">
-          <tr><th class="p-2 text-left">Enhet</th><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Arduino</th></tr>
-        </thead>
-        <tbody class="divide-y">
-          <tr><td class="p-2">LCD SDA</td><td class="p-2">I²C-data</td><td class="p-2">Pin 20</td></tr>
-          <tr><td class="p-2">LCD SCL</td><td class="p-2">I²C-klocka</td><td class="p-2">Pin 21</td></tr>
-          <tr><td class="p-2">Knapp 1 (klocksteg)</td><td class="p-2">Tryckknapp → GND</td><td class="p-2">D5 (INPUT_PULLUP)</td></tr>
-          <tr><td class="p-2">Knapp 2 (instr.steg)</td><td class="p-2">Tryckknapp → GND</td><td class="p-2">D6 (INPUT_PULLUP)</td></tr>
-        </tbody>
-      </table>
     </div>
   </section>
 
