@@ -88,11 +88,18 @@ void setup() {
   Serial.print(PROGRAM_SIZE);
   Serial.println(" bytes");
 
-  for (unsigned int i = 0; i < PROGRAM_SIZE; i++) {
+  // Ladda programkod ($8000–$87FF): PROGRAM[] minus de sista 6 vektor-byten
+  unsigned int code_size = PROGRAM_SIZE - 6;
+  for (unsigned int i = 0; i < code_size; i++) {
     write_mem(0x8000 + i, pgm_read_byte(&PROGRAM[i]));
   }
 
-  Serial.println("Program laddat.");
+  // Ladda vektorer ($FFFA–$FFFF) från slutet av PROGRAM[]
+  for (unsigned int i = 0; i < 6; i++) {
+    write_mem(0xFFFA + i, pgm_read_byte(&PROGRAM[code_size + i]));
+  }
+
+  Serial.println("Program + vektorer laddat.");
 
   // Reset-sekvens
   for (int i = 0; i < 5; i++) pulse();

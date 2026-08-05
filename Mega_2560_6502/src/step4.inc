@@ -28,7 +28,7 @@ void pulse() {
   digitalWrite(PHI2, LOW);
   delay(10);
 
-  uint16_t a = (PINF << 0) | (PINK << 8);
+  uint16_t a = (PINK << 0) | (PINF << 8);
   bool rw = digitalRead(RWB);
 
   if (rw) { DDRA = 0xFF; PORTA = read_mem(a); }

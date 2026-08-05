@@ -16,6 +16,7 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 | 1 | 220 Ω motstånd (LCD-bakgrundsbelysning) |
 | 1 | 10 kΩ potentiometer (LCD-kontrast) |
 | 4 | 10 kΩ motstånd (pull-up: RDY, IRQB, NMIB, SOB) |
+| 1 | 10 kΩ motstånd (pull-down: BE → GND) |
 | 8 | 100 Ω motstånd (databuss-skydd) |
 | 1 | 100 nF keramisk kondensator (avkoppling CPU) |
 | 1 | 10 µF elektrolytisk kondensator (strömstabilisering) |
@@ -65,7 +66,7 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 | 33 | D0 | I/O | Databuss bit 0 (LSB) |
 | 34 | RWB | Ut | Read/Write — HÖG = läs, LÅG = skriv |
 | 35 | NC | — | Ej ansluten |
-| 36 | BE | In | Bus Enable — HÖG = bussar aktiva, LÅG = tri-state |
+| 36 | BE | In | Bus Enable — LÅG = bussar aktiva, HÖG = tri-state |
 | 37 | PHI2 | In | Phase 2 In — klockingång |
 | 38 | SOB | In | Set Overflow (aktiv LÅG) |
 | 39 | PHI2O | Ut | Phase 2 Out — klocka ut, ansluts ej |
@@ -95,7 +96,7 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 | 2 | RDY | 5V via 10kΩ | Pull-up |
 | 4 | /IRQ | 5V via 10kΩ | Pull-up |
 | 6 | /NMI | 5V via 10kΩ | Pull-up |
-| 36 | BE | 5V via 10kΩ | Bus Enable — HÖG = bussar aktiva |
+| 36 | BE | GND | Bus Enable — LÅG = bussar aktiva |
 | 38 | /SO | 5V via 10kΩ | Pull-up |
 
 ### Adressbuss (1:1)

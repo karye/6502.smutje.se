@@ -36,7 +36,7 @@ void loop() {
   digitalWrite(PHI2, LOW);
   delay(10);
 
-  uint16_t addr = (PINF << 0) | (PINK << 8);
+  uint16_t addr = (PINK << 0) | (PINF << 8);
 
   digitalWrite(PHI2, HIGH);
   delay(10);
