@@ -28,7 +28,7 @@
 
 <main class="max-w-5xl mx-auto px-4 py-8">
 
-  <h1 class="text-2xl font-bold mb-6">Steg 7 — "Hello 6502!" via VIA och LCD</h1>
+  <h1 class="text-2xl font-bold mb-6">Steg 7 — VIA + LCD, styrd av 6502</h1>
 
   <!-- Mål -->
   <section class="mb-8">
@@ -39,8 +39,8 @@
       <p>6502-programmet på <code>$8000</code> gör följande:</p>
       <ol class="list-decimal pl-5 space-y-1">
         <li>Sätter VIA:ns portar som utgångar</li>
-        <li>Initierar LCD:n i 8-bitarsläge</li>
-        <li>Skriver <strong>"Hello 6502!"</strong> — ett tecken i taget, genom att lägga ASCII-värdet på port B och pulsa enable-signalen på port A</li>
+        <li>Initierar LCD:n i 8-bitarsläge (8-bitars databuss, 2 rader, 5×8 font, display on, entry mode)</li>
+        <li>Skriver fyra rader text genom att lägga ASCII-värden på port B och pulsa enable-signalen på port A — sedan <strong>clear display</strong> och loopa om från början</li>
       </ol>
       <p>När allt fungerar har vi en dator där <strong>CPU:n själv styr I/O</strong> via minnesmappade adresser. Arduino är nu bara minnesemulator och klocka — all logik för LCD:n körs på 6502.</p>
     </div>
@@ -110,7 +110,7 @@
           <tr><td class="p-2">26–33</td><td class="p-2">D0–D7</td><td class="p-2">CPU D0–D7</td><td class="p-2">Databuss — VIAn läser/skriver data här</td></tr>
           <tr><td class="p-2">38–35</td><td class="p-2">RS0–RS3</td><td class="p-2">CPU A0–A3</td><td class="p-2">Registerväljare — vilket av VIAns 16 register som adresseras</td></tr>
           <tr><td class="p-2">24</td><td class="p-2">CS1</td><td class="p-2">+5V</td><td class="p-2">Chip Select 1 — aktiv HÖG. Permanent aktiverad</td></tr>
-          <tr><td class="p-2">23</td><td class="p-2">/CS2</td><td class="p-2">74HC00 pin 8 (utgång)</td><td class="p-2">Chip Select 2 — aktiv LÅG. 74HC00 drar denna LÅG när A14=A15=1</td></tr>
+          <tr><td class="p-2">23</td><td class="p-2">/CS2</td><td class="p-2">74HC00 pin 6 (utgång)</td><td class="p-2">Chip Select 2 — aktiv LÅG. 74HC00 drar denna LÅG när A15=0, A14=1</td></tr>
           <tr><td class="p-2">2</td><td class="p-2">PA0</td><td class="p-2">LCD RS (pin 4)</td><td class="p-2">Register Select: LÅG = kommando, HÖG = data</td></tr>
           <tr><td class="p-2">4</td><td class="p-2">PA2</td><td class="p-2">LCD E (pin 6)</td><td class="p-2">Enable — fallande flank får LCD:n att läsa databussen</td></tr>
           <tr><td class="p-2">10–17</td><td class="p-2">PB0–PB7</td><td class="p-2">LCD DB0–DB7</td><td class="p-2">8-bitars parallell data till LCD:n</td></tr>
@@ -158,8 +158,8 @@
 
   <!-- Programmering -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">6502-program — "Hello 6502!"</h2>
-    <p class="text-gray-700 mb-3 text-sm">Programmet ligger på <code>$8000</code> och gör tre saker: (1) sätter VIA:ns portar som utgångar, (2) initierar LCD:n i 8-bitarsläge, (3) skriver "Hello 6502!" ett tecken i taget via VIA. För varje tecken: lägg data på PORTB, pulsa E (PA2) på PORTA.</p>
+    <h2 class="text-lg font-bold mb-2">6502-program — fyra rader via VIA</h2>
+    <p class="text-gray-700 mb-3 text-sm">Programmet ligger på <code>$8000</code>: (1) sätter VIA-portar som utgångar, (2) initierar LCD i 8-bitarsläge, (3) skriver fyra rader text med cursor-positionering, (4) clear display och loopa om. För varje byte: lägg data på PORTB, pulsa E (PA2) på PORTA.</p>
 
     <h3 class="font-bold mt-4 mb-2">VIAns register (adress <code>$4000</code>–<code>$4003</code>)</h3>
     <div class="overflow-x-auto">
@@ -184,28 +184,32 @@
     <h3 class="font-bold mt-4 mb-2">Programmet i maskinkod</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Adress</th><th class="p-2 text-left">Bytes</th><th class="p-2 text-left">Assembler</th><th class="p-2 text-left">Kommentar</th></tr></thead>
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Steg</th><th class="p-2 text-left">Assembler</th><th class="p-2 text-left">Bytes</th><th class="p-2 text-left">Förklaring</th></tr></thead>
         <tbody class="divide-y">
-          <tr><td class="p-2 font-mono">$8000</td><td class="p-2 font-mono">A9 FF</td><td class="p-2 font-mono">LDA #$FF</td><td class="p-2">Alla pinnar = utgång</td></tr>
-          <tr><td class="p-2 font-mono">$8002</td><td class="p-2 font-mono">8D 02 C0</td><td class="p-2 font-mono">STA $4002</td><td class="p-2">DDRB = $FF</td></tr>
-          <tr><td class="p-2 font-mono">$8005</td><td class="p-2 font-mono">8D 03 C0</td><td class="p-2 font-mono">STA $4003</td><td class="p-2">DDRA = $FF</td></tr>
-          <tr><td class="p-2 font-mono">$8008</td><td class="p-2 font-mono">A9 38</td><td class="p-2 font-mono">LDA #$38</td><td class="p-2">Function set: 8-bit, 2 rader</td></tr>
-          <tr><td class="p-2 font-mono">$800A</td><td class="p-2 font-mono">8D 00 C0</td><td class="p-2 font-mono">STA $4000</td><td class="p-2">Data till PORTB</td></tr>
-          <tr><td class="p-2 font-mono">$800D</td><td class="p-2 font-mono">A9 04</td><td class="p-2 font-mono">LDA #$04</td><td class="p-2">RS=0, E=1 (kommando)</td></tr>
-          <tr><td class="p-2 font-mono">$800F</td><td class="p-2 font-mono">8D 01 C0</td><td class="p-2 font-mono">STA $4001</td><td class="p-2">E hög</td></tr>
-          <tr><td class="p-2 font-mono">$8012</td><td class="p-2 font-mono">A9 00</td><td class="p-2 font-mono">LDA #$00</td><td class="p-2">RS=0, E=0</td></tr>
-          <tr><td class="p-2 font-mono">$8014</td><td class="p-2 font-mono">8D 01 C0</td><td class="p-2 font-mono">STA $4001</td><td class="p-2">E låg → LCD läser</td></tr>
-          <tr class="bg-gray-100"><td class="p-2 font-mono" colspan="4">… Display ON, Entry mode, Clear display (liknande mönster) …</td></tr>
-          <tr><td class="p-2 font-mono">$8029</td><td class="p-2 font-mono">A9 01</td><td class="p-2 font-mono">LDA #$01</td><td class="p-2">RS=1 (data-läge)</td></tr>
-          <tr><td class="p-2 font-mono">$802B</td><td class="p-2 font-mono">8D 01 C0</td><td class="p-2 font-mono">STA $4001</td><td class="p-2"></td></tr>
-          <tr><td class="p-2 font-mono">$802E</td><td class="p-2 font-mono">A9 48</td><td class="p-2 font-mono">LDA #$48</td><td class="p-2">'H'</td></tr>
-          <tr><td class="p-2 font-mono">$8030</td><td class="p-2 font-mono">8D 00 C0</td><td class="p-2 font-mono">STA $4000</td><td class="p-2">Data → LCD</td></tr>
-          <tr><td class="p-2 font-mono">$8033</td><td class="p-2 font-mono">A9 05</td><td class="p-2 font-mono">LDA #$05</td><td class="p-2">RS=1, E=1</td></tr>
-          <tr><td class="p-2 font-mono">$8035</td><td class="p-2 font-mono">8D 01 C0</td><td class="p-2 font-mono">STA $4001</td><td class="p-2">E hög</td></tr>
-          <tr><td class="p-2 font-mono">$8038</td><td class="p-2 font-mono">A9 01</td><td class="p-2 font-mono">LDA #$01</td><td class="p-2">RS=1, E=0</td></tr>
-          <tr><td class="p-2 font-mono">$803A</td><td class="p-2 font-mono">8D 01 C0</td><td class="p-2 font-mono">STA $4001</td><td class="p-2">E låg → 'H' skrivs</td></tr>
-          <tr class="bg-gray-100"><td class="p-2 font-mono" colspan="4">… e, l, l, o, mellanslag, 6, 5, 0, 2, ! (samma mönster per tecken) …</td></tr>
-          <tr><td class="p-2 font-mono">$80D3</td><td class="p-2 font-mono">4C D3 80</td><td class="p-2 font-mono">JMP $80D3</td><td class="p-2">Oändlig loop — klart!</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">VIA-init — sätt portar som utgångar</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2 font-mono">LDA #$FF</td><td class="p-2 font-mono">A9 FF</td><td class="p-2">Alla pinnar = utgång</td></tr>
+          <tr><td class="p-2">2</td><td class="p-2 font-mono">STA $4002</td><td class="p-2 font-mono">8D 02 40</td><td class="p-2">DDRB = $FF (LCD data)</td></tr>
+          <tr><td class="p-2">3</td><td class="p-2 font-mono">STA $4003</td><td class="p-2 font-mono">8D 03 40</td><td class="p-2">DDRA = $FF (RS + E)</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">LCD-init — tvinga 8-bitarsläge ($30 × 3)</td></tr>
+          <tr><td class="p-2">4–6</td><td class="p-2 font-mono">LDA #$30<br>STA $4000<br>LDA #$04 · STA $4001<br>LDA #$00 · STA $4001</td><td class="p-2 font-mono">A9 30<br>8D 00 40<br>A9 04 8D 01 40<br>A9 00 8D 01 40</td><td class="p-2">$30 till PORTB, pulsa E (RS=0). Upprepas 3 gånger för att garantera 8-bit</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Function Set: 8-bit, 2 rader, 5×8 font</td></tr>
+          <tr><td class="p-2">7</td><td class="p-2 font-mono">LDA #$38<br>STA $4000<br>LDA #$04 · STA $4001<br>LDA #$00 · STA $4001</td><td class="p-2 font-mono">A9 38<br>8D 00 40<br>A9 04 8D 01 40<br>A9 00 8D 01 40</td><td class="p-2">$38 = 8-bit, 2 rader, 5×8 — pulsa E</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Display ON/OFF: display on, cursor off, blink off</td></tr>
+          <tr><td class="p-2">8</td><td class="p-2 font-mono">LDA #$0C<br>STA $4000<br>LDA #$04 · STA $4001<br>LDA #$00 · STA $4001</td><td class="p-2 font-mono">A9 0C<br>8D 00 40<br>A9 04 8D 01 40<br>A9 00 8D 01 40</td><td class="p-2">Display ON, cursor OFF</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Clear display + Entry mode: increment, no shift</td></tr>
+          <tr><td class="p-2">9</td><td class="p-2 font-mono">LDA #$01<br>STA $4000<br>LDA #$04 · STA $4001<br>LDA #$00 · STA $4001</td><td class="p-2 font-mono">A9 01<br>8D 00 40<br>A9 04 8D 01 40<br>A9 00 8D 01 40</td><td class="p-2">Clear display</td></tr>
+          <tr><td class="p-2">10</td><td class="p-2 font-mono">LDA #$06<br>STA $4000<br>LDA #$04 · STA $4001<br>LDA #$00 · STA $4001</td><td class="p-2 font-mono">A9 06<br>8D 00 40<br>A9 04 8D 01 40<br>A9 00 8D 01 40</td><td class="p-2">Entry mode: increment, no shift</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Rad 1: "=== 6502 VIA LCD ===" (cursor till $00)</td></tr>
+          <tr><td class="p-2">11</td><td class="p-2 font-mono">LDA #$80 · STA $4000<br>LDA #$04 · STA $4001<br>LDA #$00 · STA $4001</td><td class="p-2 font-mono">A9 80 8D 00 40 …</td><td class="p-2">Kommando $80 = sätt DDRAM-adress 0 (rad 1, pos 0)</td></tr>
+          <tr><td class="p-2">12</td><td class="p-2 font-mono">LDA #$01 · STA $4001</td><td class="p-2 font-mono">A9 01 8D 01 40</td><td class="p-2">RS=1 (data-läge)</td></tr>
+          <tr><td class="p-2">13</td><td class="p-2 font-mono">För varje tecken:<br>LDA #tecken · STA $4000<br>LDA #$05 · STA $4001<br>LDA #$01 · STA $4001</td><td class="p-2 font-mono">A9 xx 8D 00 40<br>A9 05 8D 01 40<br>A9 01 8D 01 40</td><td class="p-2">Data + RS=1,E=1 → RS=1,E=0 (fallande flank). 19 tecken</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Rad 2–4: samma mönster med cursor-kommandon $C0, $94, $D4</td></tr>
+          <tr><td class="p-2">14</td><td class="p-2 font-mono">LDA #$C0 …</td><td class="p-2 font-mono" colspan="2">Cursor till rad 2 → "Hello from W65C02!"</td></tr>
+          <tr><td class="p-2">15</td><td class="p-2 font-mono">LDA #$94 …</td><td class="p-2 font-mono" colspan="2">Cursor till rad 3 → "Arduino = RAM + CLK"</td></tr>
+          <tr><td class="p-2">16</td><td class="p-2 font-mono">LDA #$D4 …</td><td class="p-2 font-mono" colspan="2">Cursor till rad 4 → "smutje.se 2026"</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Clear + loop</td></tr>
+          <tr><td class="p-2">17</td><td class="p-2 font-mono">LDA #$01 · STA $4000<br>LDA #$04 · STA $4001<br>LDA #$00 · STA $4001</td><td class="p-2 font-mono">A9 01 8D 00 40 …</td><td class="p-2">Clear display</td></tr>
+          <tr><td class="p-2">18</td><td class="p-2 font-mono">JMP hello_start</td><td class="p-2 font-mono">4C xx xx</td><td class="p-2">Hoppa tillbaka till rad 1 — oändlig loop</td></tr>
         </tbody>
       </table>
     </div>
@@ -219,18 +223,18 @@
       <li>Ladda upp koden och öppna serieövervakaren (115200 baud)</li>
       <li>Verifiera att CPU:n startar: du ska se <code>R $FFFC</code>, <code>R $FFFD</code>, <code>R $8000</code>…</li>
       <li>Leta efter VIA-adresser: <code>W $4002</code>, <code>W $4003</code> betyder att CPU:n konfigurerar VIA:ns portar</li>
-      <li>LCD:n ska visa "Hello 6502!" efter ~300 klockcykler (tar några sekunder vid 20 Hz)</li>
+      <li>LCD:n ska visa fyra rader text, sedan clear och loopa om — tar ~2000 klockcykler (ca 40 sek vid 20 Hz)</li>
     </ol>
 
     <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
       <span class="font-bold text-green-800">✅ Förväntat:</span>
-      <span class="text-green-700">"Hello 6502!" på LCD:n — helt styrd av 6502 via VIA:n. Arduinon är nu bara minnesemulator och klocka.</span>
+      <span class="text-green-700">Fyra rader text på LCD:n, helt styrd av 6502 via VIA:n. Arduinon är nu bara minnesemulator och klocka.</span>
     </div>
 
     <h3 class="font-bold mt-6 mb-2">Om det inte fungerar</h3>
     <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-3">
       <p><strong>1. CPU:n startar inte?</strong> Ser du <code>W $0</code> eller <code>W $1</code>? Kontrollera BE (HÖG), PHI2 (pulser), RESB (HÖG efter reset).</p>
-      <p><strong>2. Ser inga $Cxxx-adresser?</strong> Dubbelkolla 74HC00-kopplingen och att VIA:ns bussanslutningar sitter rätt.</p>
+      <p><strong>2. Ser inga $4xxx-adresser?</strong> Dubbelkolla 74HC00-kopplingen och att VIA:ns bussanslutningar sitter rätt.</p>
       <p><strong>3. Mät med multimeter:</strong></p>
       <ul class="list-disc pl-5 space-y-1">
         <li>PHI2 (CPU pin 37): ~2.5V medel (20 Hz fyrkant)</li>
