@@ -70,6 +70,29 @@
                                               main.cpp ◀──┘  #include "program.h"</code></pre>
   </section>
 
+  <!-- Minneskarta -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Minneskarta — hela adressrymden ($0000–$FFFF)</h2>
+    <p class="text-gray-700 mb-3 text-sm">6502-processorn har 16 adresslinjer = 64 KB adressrymd. Arduinon svarar på adresser där den har data, och tri-statar vid VIA-adresser så den fysiska kretsen kan svara.</p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow font-mono">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Adress</th><th class="p-2 text-left">Storlek</th><th class="p-2 text-left">Innehåll</th><th class="p-2 text-left">Arduino</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">$FFFA–$FFFF</td><td class="p-2">6 B</td><td class="p-2">NMI, RESET, IRQ-vektorer</td><td class="p-2"><code>vectors[6]</code></td></tr>
+          <tr class="bg-gray-50"><td class="p-2">$8800–$FFF9</td><td class="p-2">~30 KB</td><td class="p-2">Oanvänt → returnerar $EA (NOP)</td><td class="p-2">fallback</td></tr>
+          <tr><td class="p-2">$8000–$87FF</td><td class="p-2">2 KB</td><td class="p-2">6502-program (assembler-koden)</td><td class="p-2"><code>program[2048]</code></td></tr>
+          <tr class="bg-gray-50"><td class="p-2">$4010–$7FFF</td><td class="p-2">~16 KB</td><td class="p-2">Oanvänt → returnerar $EA (NOP)</td><td class="p-2">fallback</td></tr>
+          <tr><td class="p-2">$4000–$400F</td><td class="p-2">16 B</td><td class="p-2"><strong>W65C22 VIA</strong> (fysisk krets)</td><td class="p-2"><code>DDRA=0x00</code> (tri-state)</td></tr>
+          <tr class="bg-gray-50"><td class="p-2">$0400–$3FFF</td><td class="p-2">~15 KB</td><td class="p-2">Oanvänt → returnerar $EA (NOP)</td><td class="p-2">fallback</td></tr>
+          <tr><td class="p-2">$0200–$03FF</td><td class="p-2">512 B</td><td class="p-2">Ledigt RAM (dina data)</td><td class="p-2"><code>ram[1024]</code></td></tr>
+          <tr class="bg-gray-50"><td class="p-2">$0100–$01FF</td><td class="p-2">256 B</td><td class="p-2">Stack (JSR/RTS, PHA/PLA, avbrott)</td><td class="p-2"><code>ram[1024]</code></td></tr>
+          <tr><td class="p-2">$0000–$00FF</td><td class="p-2">256 B</td><td class="p-2">Zero page (snabbast, register-liknande)</td><td class="p-2"><code>ram[1024]</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-gray-700 mt-3 text-sm"><strong>0xEA = NOP</strong> — ofarlig fallback för oanvända adresser. CPU:n bara hoppar över och går vidare. Arduino svarar alltid med något för att inte låsa bussen.</p>
+  </section>
+
   <!-- Byggskript -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">PlatformIO-byggskript</h2>
