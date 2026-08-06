@@ -982,219 +982,6 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Device:R_Potentiometer_Trim"
-			(pin_names
-				(offset 1.016)
-				(hide yes)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(in_pos_files yes)
-			(duplicate_pin_numbers_are_jumpers no)
-			(property "Reference" "RV"
-				(at -4.445 0 90)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "R_Potentiometer_Trim"
-				(at -2.54 0 90)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Datasheet" ""
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Description" "Trim-potentiometer"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Sim.Device" "R"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Sim.Type" "POT"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Sim.Pins" "1=r0 2=wiper 3=r1"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_keywords" "resistor variable trimpot trimmer"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_fp_filters" "Potentiometer*"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(symbol "R_Potentiometer_Trim_0_1"
-				(rectangle
-					(start 1.016 2.54)
-					(end -1.016 -2.54)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.524 0.762) (xy 1.524 -0.762)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.54 0) (xy 1.524 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "R_Potentiometer_Trim_1_1"
-				(pin passive line
-					(at 0 3.81 270)
-					(length 1.27)
-					(name "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 3.81 0 180)
-					(length 1.27)
-					(name "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 0 -3.81 90)
-					(length 1.27)
-					(name "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
 		(symbol "Device:R_US"
 			(pin_numbers
 				(hide yes)
@@ -4991,7 +4778,7 @@
 	)
 	(wire
 		(pts
-			(xy 87.63 53.34) (xy 312.42 53.34)
+			(xy 90.17 53.34) (xy 313.69 53.34)
 		)
 		(stroke
 			(width 0)
@@ -5261,16 +5048,6 @@
 	)
 	(wire
 		(pts
-			(xy 311.15 82.55) (xy 312.42 82.55)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "453ebbcd-1aff-4238-9082-727ec4be3b82")
-	)
-	(wire
-		(pts
 			(xy 175.26 106.68) (xy 182.88 106.68)
 		)
 		(stroke
@@ -5311,7 +5088,7 @@
 	)
 	(wire
 		(pts
-			(xy 88.9 54.61) (xy 313.69 54.61)
+			(xy 88.9 54.61) (xy 312.42 54.61)
 		)
 		(stroke
 			(width 0)
@@ -5331,7 +5108,7 @@
 	)
 	(wire
 		(pts
-			(xy 87.63 53.34) (xy 87.63 78.74)
+			(xy 90.17 53.34) (xy 90.17 78.74)
 		)
 		(stroke
 			(width 0)
@@ -5591,7 +5368,7 @@
 	)
 	(wire
 		(pts
-			(xy 87.63 78.74) (xy 93.98 78.74)
+			(xy 90.17 78.74) (xy 93.98 78.74)
 		)
 		(stroke
 			(width 0)
@@ -5661,7 +5438,7 @@
 	)
 	(wire
 		(pts
-			(xy 313.69 85.09) (xy 311.15 85.09)
+			(xy 312.42 85.09) (xy 311.15 85.09)
 		)
 		(stroke
 			(width 0)
@@ -5721,7 +5498,7 @@
 	)
 	(wire
 		(pts
-			(xy 313.69 54.61) (xy 313.69 85.09)
+			(xy 312.42 54.61) (xy 312.42 85.09)
 		)
 		(stroke
 			(width 0)
@@ -5801,7 +5578,7 @@
 	)
 	(wire
 		(pts
-			(xy 312.42 53.34) (xy 312.42 82.55)
+			(xy 313.69 53.34) (xy 313.69 82.55)
 		)
 		(stroke
 			(width 0)
@@ -6068,6 +5845,16 @@
 			(type default)
 		)
 		(uuid "e3c70d01-6b13-4f60-ba1b-cb4ec5b7aaca")
+	)
+	(wire
+		(pts
+			(xy 313.69 82.55) (xy 311.15 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e71d159e-6d25-4a89-b478-2405a6ffa65b")
 	)
 	(wire
 		(pts
@@ -6760,8 +6547,8 @@
 		(uuid "fd36f0b0-9439-473f-ac5f-59fb1c6275b2")
 	)
 	(symbol
-		(lib_id "power:Earth")
-		(at 207.01 107.95 0)
+		(lib_id "Device:R_US")
+		(at 207.01 104.14 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -6769,10 +6556,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "03a1b87c-b7d0-4228-954c-d5e061348a9b")
-		(property "Reference" "#PWR060"
-			(at 207.01 114.3 0)
+		(uuid "0da45940-c179-45a9-aef4-b91327655093")
+		(property "Reference" "R13"
+			(at 205.7399 101.6 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6780,21 +6566,22 @@
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
-		(property "Value" "Earth"
-			(at 207.01 113.03 0)
-			(hide yes)
+		(property "Value" ""
+			(at 208.2799 101.6 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
-			(at 207.01 107.95 0)
+			(at 207.264 103.124 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6805,7 +6592,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 207.01 107.95 0)
+			(at 207.01 104.14 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6815,8 +6602,8 @@
 				)
 			)
 		)
-		(property "Description" "Power symbol creates a global label with name \"Earth\""
-			(at 207.01 107.95 0)
+		(property "Description" "Resistor, US symbol"
+			(at 207.01 104.14 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6827,12 +6614,15 @@
 			)
 		)
 		(pin "1"
-			(uuid "6870b5e7-b9a9-4396-82b8-69bd609e68fd")
+			(uuid "64a07820-5421-4004-827a-3358c866b9f3")
+		)
+		(pin "2"
+			(uuid "849ab35c-5ed3-40ba-a685-7efbdd31c565")
 		)
 		(instances
 			(project "6502.smutje.se"
 				(path "/2f94eef7-ba60-41d7-948a-a400f17ff44b"
-					(reference "#PWR060")
+					(reference "R13")
 					(unit 1)
 				)
 			)
@@ -6992,6 +6782,85 @@
 			(project "6502.smutje.se"
 				(path "/2f94eef7-ba60-41d7-948a-a400f17ff44b"
 					(reference "#PWR0131")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:Earth")
+		(at 210.82 104.14 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "28a81848-eef8-4dc8-904b-cee4c368b696")
+		(property "Reference" "#PWR032"
+			(at 210.82 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Earth"
+			(at 210.82 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 210.82 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 210.82 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"Earth\""
+			(at 210.82 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "f3040fd9-834a-4b26-97f6-f676969dce16")
+		)
+		(instances
+			(project "6502.smutje.se"
+				(path "/2f94eef7-ba60-41d7-948a-a400f17ff44b"
+					(reference "#PWR032")
 					(unit 1)
 				)
 			)
@@ -7180,9 +7049,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "220"
+		(property "Value" ""
 			(at 220.98 106.6799 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -7319,125 +7187,6 @@
 			(project "6502.smutje.se"
 				(path "/2f94eef7-ba60-41d7-948a-a400f17ff44b"
 					(reference "C6")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R_Potentiometer_Trim")
-		(at 207.01 104.14 180)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "44641573-6839-4479-8119-007623e82a98")
-		(property "Reference" "RV2"
-			(at 209.55 102.8699 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "R_Potentiometer_Trim"
-			(at 209.55 105.4099 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" ""
-			(at 207.01 104.14 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 207.01 104.14 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Trim-potentiometer"
-			(at 207.01 104.14 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Sim.Device" "R"
-			(at 207.01 104.14 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Sim.Type" "POT"
-			(at 207.01 104.14 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Sim.Pins" "1=r0 2=wiper 3=r1"
-			(at 207.01 104.14 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "3"
-			(uuid "e8b36d60-196d-48fe-8337-0740746fcae7")
-		)
-		(pin "2"
-			(uuid "7be17d35-b78d-4296-994b-d03ec2fc9b44")
-		)
-		(pin "1"
-			(uuid "cf155392-af3e-4e2d-892f-9451d594ac2d")
-		)
-		(instances
-			(project "6502.smutje.se"
-				(path "/2f94eef7-ba60-41d7-948a-a400f17ff44b"
-					(reference "RV2")
 					(unit 1)
 				)
 			)
@@ -7673,84 +7422,6 @@
 			(project "6502.smutje.se"
 				(path "/2f94eef7-ba60-41d7-948a-a400f17ff44b"
 					(reference "#PWR027")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+5V")
-		(at 207.01 100.33 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "74e6ed39-42af-42f0-aec1-6d2b610c41a5")
-		(property "Reference" "#PWR059"
-			(at 207.01 104.14 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "+5V"
-			(at 207.01 95.25 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 207.01 100.33 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 207.01 100.33 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+5V\""
-			(at 207.01 100.33 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "9f3a7632-d6ba-40ab-bf3f-04b647bd6c5e")
-		)
-		(instances
-			(project "6502.smutje.se"
-				(path "/2f94eef7-ba60-41d7-948a-a400f17ff44b"
-					(reference "#PWR059")
 					(unit 1)
 				)
 			)
