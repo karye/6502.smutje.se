@@ -82,13 +82,13 @@
         <tbody class="divide-y">
           <tr><td class="p-2">8</td><td class="p-2">VDD</td><td class="p-2">+5V</td><td class="p-2">Strömmatning — CPU:ns driftspänning</td></tr>
           <tr><td class="p-2">21</td><td class="p-2">VSS</td><td class="p-2">GND</td><td class="p-2">Systemjord — sluten krets</td></tr>
-          <tr><td class="p-2">37</td><td class="p-2">PHI2</td><td class="p-2">Arduino D2</td><td class="p-2">Klockingång — Arduino skickar fyrkantsvåg</td></tr>
+          <tr><td class="p-2">37</td><td class="p-2">PHI2</td><td class="p-2"><strong>Arduino D2</strong></td><td class="p-2">Klockingång — Arduino skickar fyrkantsvåg</td></tr>
           <tr><td class="p-2">2</td><td class="p-2">RDY</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Ready — HÖG = CPU får köra. Utan denna stannar CPU:n</td></tr>
           <tr><td class="p-2">4</td><td class="p-2">/IRQ</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Interrupt request — HÖG = inget avbrott (vi använder ej avbrott än)</td></tr>
           <tr><td class="p-2">6</td><td class="p-2">/NMI</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Non-maskable interrupt — måste vara HÖG, annars kraschar CPU:n</td></tr>
           <tr><td class="p-2">36</td><td class="p-2">BE</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad!</td></tr>
           <tr><td class="p-2">38</td><td class="p-2">/SO</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Set Overflow — HÖG = avaktiverad</td></tr>
-          <tr><td class="p-2">40</td><td class="p-2">/RESET</td><td class="p-2">Arduino D4 (senare steg)</td><td class="p-2">Lämnas flytande tills vidare — CPU:n startar själv</td></tr>
+          <tr><td class="p-2">40</td><td class="p-2">/RESET</td><td class="p-2"><strong>Arduino D4</strong> (senare steg)</td><td class="p-2">Lämnas flytande tills vidare — CPU:n startar själv</td></tr>
           <tr class="bg-yellow-50"><td class="p-2">—</td><td class="p-2">100nF</td><td class="p-2">Mellan VDD (pin 8) och VSS (pin 21)</td><td class="p-2">Avkopplingskondensator — filtrerar bort brus på strömmatningen. Sätt den så nära CPU:n som möjligt!</td></tr>
         </tbody>
       </table>

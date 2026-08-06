@@ -75,14 +75,14 @@
         <tbody class="divide-y">
           <tr><td class="p-2">8</td><td class="p-2">VDD</td><td class="p-2">+5V</td><td class="p-2">Strömmatning — CPU:ns driftspänning</td></tr>
           <tr><td class="p-2">21</td><td class="p-2">VSS</td><td class="p-2">GND</td><td class="p-2">Systemjord — sluten krets</td></tr>
-          <tr><td class="p-2">37</td><td class="p-2">PHI2</td><td class="p-2">Arduino D2</td><td class="p-2">Klockingång — Arduino skickar fyrkantsvåg</td></tr>
+          <tr><td class="p-2">37</td><td class="p-2">PHI2</td><td class="p-2"><strong>Arduino D2</strong></td><td class="p-2">Klockingång — Arduino skickar fyrkantsvåg</td></tr>
           <tr><td class="p-2">2</td><td class="p-2">RDY</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Ready — HÖG = CPU får köra. Utan denna stannar CPU:n</td></tr>
           <tr><td class="p-2">4</td><td class="p-2">/IRQ</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Interrupt request — HÖG = inget avbrott</td></tr>
           <tr><td class="p-2">6</td><td class="p-2">/NMI</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Non-maskable interrupt — måste vara HÖG</td></tr>
           <tr><td class="p-2">36</td><td class="p-2">BE</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad!</td></tr>
-          <tr><td class="p-2">38</td><td class="p-2">/SO</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Set Overflow — avaktiverad</td></tr>          <tr><td class="p-2">40</td><td class="p-2">/RESET</td><td class="p-2">Arduino D4</td><td class="p-2">Kontrollerad reset — Arduino håller CPU:n i reset tills vi är redo</td></tr>
-          <tr><td class="p-2">9–16</td><td class="p-2">A0–A7</td><td class="p-2">Arduino A0–A7</td><td class="p-2">Låga adressbyte — läses via PORTF</td></tr>
-          <tr><td class="p-2">17–20, 22–25</td><td class="p-2">A8–A15</td><td class="p-2">Arduino A8–A15</td><td class="p-2">Höga adressbyte — läses via PORTK</td></tr>
+          <tr><td class="p-2">38</td><td class="p-2">/SO</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Set Overflow — avaktiverad</td></tr>          <tr><td class="p-2">40</td><td class="p-2">/RESET</td><td class="p-2"><strong>Arduino D4</strong></td><td class="p-2">Kontrollerad reset — Arduino håller CPU:n i reset tills vi är redo</td></tr>
+          <tr><td class="p-2">9–16</td><td class="p-2">A0–A7</td><td class="p-2"><strong>Arduino A0–A7</strong></td><td class="p-2">Låga adressbyte — läses via PORTF</td></tr>
+          <tr><td class="p-2">17–20, 22–25</td><td class="p-2">A8–A15</td><td class="p-2"><strong>Arduino A8–A15</strong></td><td class="p-2">Höga adressbyte — läses via PORTK</td></tr>
         </tbody>
       </table>
     </div>

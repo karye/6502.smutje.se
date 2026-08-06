@@ -74,22 +74,22 @@
         <tbody class="divide-y">
           <tr><td class="p-2">8</td><td class="p-2">VDD</td><td class="p-2">+5V</td><td class="p-2">Strömmatning — CPU:ns driftspänning</td></tr>
           <tr><td class="p-2">21</td><td class="p-2">VSS</td><td class="p-2">GND</td><td class="p-2">Systemjord — sluten krets</td></tr>
-          <tr><td class="p-2">37</td><td class="p-2">PHI2</td><td class="p-2">Arduino D2</td><td class="p-2">Klockingång — Arduino skickar fyrkantsvåg</td></tr>
+          <tr><td class="p-2">37</td><td class="p-2">PHI2</td><td class="p-2"><strong>Arduino D2</strong></td><td class="p-2">Klockingång — Arduino skickar fyrkantsvåg</td></tr>
           <tr><td class="p-2">2</td><td class="p-2">RDY</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Ready — HÖG = CPU får köra. Utan denna stannar CPU:n</td></tr>
           <tr><td class="p-2">4</td><td class="p-2">/IRQ</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Interrupt request — HÖG = inget avbrott</td></tr>
           <tr><td class="p-2">6</td><td class="p-2">/NMI</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Non-maskable interrupt — måste vara HÖG</td></tr>
           <tr><td class="p-2">36</td><td class="p-2">BE</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad!</td></tr>
-          <tr><td class="p-2">38</td><td class="p-2">/SO</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Set Overflow — avaktiverad</td></tr>          <tr><td class="p-2">40</td><td class="p-2">/RESET</td><td class="p-2">Arduino D4</td><td class="p-2">Kontrollerad reset — Arduino håller CPU:n i reset tills vi är redo</td></tr>
-          <tr><td class="p-2">9–16</td><td class="p-2">A0–A7</td><td class="p-2">Arduino A0–A7</td><td class="p-2">Låga adressbyte — läses via PORTF</td></tr>
-          <tr><td class="p-2">17–20, 22–25</td><td class="p-2">A8–A15</td><td class="p-2">Arduino A8–A15</td><td class="p-2">Höga adressbyte — läses via PORTK</td></tr>          <tr><td class="p-2">34</td><td class="p-2">R/W</td><td class="p-2">Arduino D3</td><td class="p-2">HÖG = CPU läser, LÅG = CPU skriver. Arduino måste veta detta</td></tr>
-          <tr><td class="p-2">33</td><td class="p-2">D0</td><td class="p-2">Arduino D22 via 100Ω</td><td class="p-2">Databit 0 (LSB)</td></tr>
-          <tr><td class="p-2">32</td><td class="p-2">D1</td><td class="p-2">Arduino D23 via 100Ω</td><td class="p-2">Databit 1</td></tr>
-          <tr><td class="p-2">31</td><td class="p-2">D2</td><td class="p-2">Arduino D24 via 100Ω</td><td class="p-2">Databit 2</td></tr>
-          <tr><td class="p-2">30</td><td class="p-2">D3</td><td class="p-2">Arduino D25 via 100Ω</td><td class="p-2">Databit 3</td></tr>
-          <tr><td class="p-2">29</td><td class="p-2">D4</td><td class="p-2">Arduino D26 via 100Ω</td><td class="p-2">Databit 4</td></tr>
-          <tr><td class="p-2">28</td><td class="p-2">D5</td><td class="p-2">Arduino D27 via 100Ω</td><td class="p-2">Databit 5</td></tr>
-          <tr><td class="p-2">27</td><td class="p-2">D6</td><td class="p-2">Arduino D28 via 100Ω</td><td class="p-2">Databit 6</td></tr>
-          <tr><td class="p-2">26</td><td class="p-2">D7</td><td class="p-2">Arduino D29 via 100Ω</td><td class="p-2">Databit 7 (MSB)</td></tr>          <tr><td class="p-2">7</td><td class="p-2">SYNC</td><td class="p-2">Arduino D13</td><td class="p-2">HÖG = CPU:n hämtar första byten av ny instruktion</td></tr>
+          <tr><td class="p-2">38</td><td class="p-2">/SO</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Set Overflow — avaktiverad</td></tr>          <tr><td class="p-2">40</td><td class="p-2">/RESET</td><td class="p-2"><strong>Arduino D4</strong></td><td class="p-2">Kontrollerad reset — Arduino håller CPU:n i reset tills vi är redo</td></tr>
+          <tr><td class="p-2">9–16</td><td class="p-2">A0–A7</td><td class="p-2"><strong>Arduino A0–A7</strong></td><td class="p-2">Låga adressbyte — läses via PORTF</td></tr>
+          <tr><td class="p-2">17–20, 22–25</td><td class="p-2">A8–A15</td><td class="p-2"><strong>Arduino A8–A15</strong></td><td class="p-2">Höga adressbyte — läses via PORTK</td></tr>          <tr><td class="p-2">34</td><td class="p-2">R/W</td><td class="p-2"><strong>Arduino D3</strong></td><td class="p-2">HÖG = CPU läser, LÅG = CPU skriver. Arduino måste veta detta</td></tr>
+          <tr><td class="p-2">33</td><td class="p-2">D0</td><td class="p-2"><strong>Arduino D22</strong> via 100Ω</td><td class="p-2">Databit 0 (LSB)</td></tr>
+          <tr><td class="p-2">32</td><td class="p-2">D1</td><td class="p-2"><strong>Arduino D23</strong> via 100Ω</td><td class="p-2">Databit 1</td></tr>
+          <tr><td class="p-2">31</td><td class="p-2">D2</td><td class="p-2"><strong>Arduino D24</strong> via 100Ω</td><td class="p-2">Databit 2</td></tr>
+          <tr><td class="p-2">30</td><td class="p-2">D3</td><td class="p-2"><strong>Arduino D25</strong> via 100Ω</td><td class="p-2">Databit 3</td></tr>
+          <tr><td class="p-2">29</td><td class="p-2">D4</td><td class="p-2"><strong>Arduino D26</strong> via 100Ω</td><td class="p-2">Databit 4</td></tr>
+          <tr><td class="p-2">28</td><td class="p-2">D5</td><td class="p-2"><strong>Arduino D27</strong> via 100Ω</td><td class="p-2">Databit 5</td></tr>
+          <tr><td class="p-2">27</td><td class="p-2">D6</td><td class="p-2"><strong>Arduino D28</strong> via 100Ω</td><td class="p-2">Databit 6</td></tr>
+          <tr><td class="p-2">26</td><td class="p-2">D7</td><td class="p-2"><strong>Arduino D29</strong> via 100Ω</td><td class="p-2">Databit 7 (MSB)</td></tr>          <tr><td class="p-2">7</td><td class="p-2">SYNC</td><td class="p-2"><strong>Arduino D13</strong></td><td class="p-2">HÖG = CPU:n hämtar första byten av ny instruktion</td></tr>
         </tbody>
       </table>
     </div>
