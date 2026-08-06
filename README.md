@@ -145,6 +145,7 @@ $0000 └──────────────┘
 | 6 | Eget 6502-program (räknare) | — (samma hårdvara) |
 | 7 | W65C22 VIA + 74HC00, LCD via VIA | VIA, 74HC00 |
 | 8 | Assembler-bygge med ca65 | — (samma hårdvara) |
+| 9 | Riktigt RAM (62256 SRAM) | 62256 SRAM |
 
 ---
 

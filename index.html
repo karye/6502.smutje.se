@@ -22,6 +22,7 @@
       <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
       <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
       <a href="step8.html" class="hover:text-blue-300 transition">Steg 8</a>
+      <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
     </div>
   </div>
 </nav>
@@ -205,6 +206,7 @@
       <p><strong class="text-gray-900">Steg 6 — Eget 6502-program:</strong> En räknare i maskinkod: LDX #$00 · INX · STX $0200 · JMP. CPU:n ökar X-registret 0→255 i loop. LCD:n visar exekveringen.</p>
       <p><strong class="text-gray-900">Steg 7 — W65C22 VIA + 74HC00:</strong> LCD:n kopplas till VIA:ns I/O-portar. 74HC00 avkodar adress $4000. CPU:n styr LCD:n själv — Arduino är nu bara minne och klocka.</p>
       <p><strong class="text-gray-900">Steg 8 — Assembler-bygge:</strong> 6502-programmet skrivs i assembler (ca65) istället för hårdkodade hex-bytes. PlatformIO bygger automatiskt program.asm → program.h vid varje uppladdning.</p>
+      <p><strong class="text-gray-900">Steg 9 — Riktigt RAM:</strong> 62256 SRAM (32KB) kopplas in på adressbussen. Zero page, stack och data lagras i riktigt RAM-chip — inte i Arduinons arrayer. Arduino går tri-state och låter SRAM hantera $0000–$3FFF.</p>
     </div>
   </section>
 

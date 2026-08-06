@@ -18,6 +18,8 @@
   #include "step7.inc"
 #elif defined(STEP8)
   #include "step8.inc"
+#elif defined(STEP9)
+  #include "step9.inc"
 #else
   #include "step8.inc"
 #endif
