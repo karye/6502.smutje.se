@@ -37,8 +37,8 @@
     <h2 class="text-lg font-bold mb-2">Mål</h2>
     <div class="text-gray-700 space-y-3">
       <p>Hittills har Arduino emulerat <strong>allt</strong> minne — varje gång CPU:n läser eller skriver en byte är det Arduino som svarar. Det fungerar utmärkt för inlärning och felsökning, men en riktig dator har riktigt minne. Nu tar vi steget och kopplar in ett <strong>62256 SRAM-chip</strong> — 32 kilobyte statiskt RAM i en DIP-28-kapsel.</p>
-      <p>SRAM-chippet tar över adresserna <strong>$0000–$3FFF</strong> (16 KB). Det täcker zero page, stacken och gott om utrymme för variabler. Arduino fortsätter att leverera programkoden från $8000 och uppåt, samt vektorerna på $FFFA–$FFFF. VIA:n ligger kvar på $4000–$400F.</p>
-      <p>Den stora förändringen i koden: Arduino går <strong>tri-state</strong> (hög impedans) för alla adresser under $4000. När CPU:n läser från $0200 är det SRAM-chippet som lägger ut data på bussen — inte Arduino. Vi har nu <strong>tre enheter</strong> som delar på databussen: SRAM, VIA och Arduino.</p>
+      <p>SRAM-chippet tar över adresserna <strong>$0000–$7FFF</strong> (32 KB). Det täcker zero page, stacken och gott om utrymme för variabler. Arduino fortsätter att leverera programkoden från $8000 och uppåt, samt vektorerna på $FFFA–$FFFF. VIA:n ligger på $C000–$C00F — högre upp i adressrymden.</p>
+      <p>Den stora förändringen i koden: Arduino går <strong>tri-state</strong> (hög impedans) för alla adresser under $8000. När CPU:n läser från $0200 är det SRAM-chippet som lägger ut data på bussen — inte Arduino. Vi har nu <strong>tre enheter</strong> som delar på databussen: SRAM, VIA och Arduino.</p>
     </div>
   </section>
 
@@ -99,7 +99,7 @@
           <tr><td class="p-2">1, 2</td><td class="p-2"><strong>U4A</strong> in</td><td class="p-2"><strong>CPU A15</strong></td><td class="p-2">NOT A15</td></tr>
           <tr><td class="p-2">3</td><td class="p-2"><strong>U4A</strong> ut</td><td class="p-2"><strong>U4B</strong> pin 4</td><td class="p-2">NOT A15 → U4B</td></tr>
           <tr><td class="p-2">4, 5</td><td class="p-2"><strong>U4B</strong> in</td><td class="p-2">U4A ut + <strong>CPU A14</strong></td><td class="p-2">NAND → VIA /CS2</td></tr>
-          <tr><td class="p-2">6</td><td class="p-2"><strong>U4B</strong> ut</td><td class="p-2"><strong>VIA</strong> /CS2 (pin 23)</td><td class="p-2">LÅG vid $4000–$7FFF</td></tr>
+          <tr><td class="p-2">6</td><td class="p-2"><strong>U4B</strong> ut</td><td class="p-2"><strong>VIA</strong> /CS2 (pin 23)</td><td class="p-2">LÅG vid $C000–$DFFF</td></tr>
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">SRAM-avkodning (U4C + U4D — nytt i steg 9)</td></tr>
           <tr><td class="p-2">8, 9</td><td class="p-2"><strong>U4C</strong> in</td><td class="p-2"><strong>CPU A15</strong> + <strong>CPU A14</strong></td><td class="p-2">NAND: båda HÖG → ut LÅG. Men vi vill ha LÅG när båda är LÅG!</td></tr>
           <tr><td class="p-2">10</td><td class="p-2"><strong>U4C</strong> ut</td><td class="p-2"><strong>U4D</strong> pin 11, 12</td><td class="p-2">A15 NAND A14 → U4D (inverterare)</td></tr>
@@ -110,7 +110,7 @@
         </tbody>
       </table>
     </div>
-    <p class="text-gray-700 mt-2 text-sm"><strong>Logik:</strong> U4C gör A15 NAND A14. U4D inverterar resultatet → LÅG när A15=0 OCH A14=0 → SRAM aktiveras vid <strong>$0000–$3FFF</strong>. VIAn aktiveras vid $4000–$7FFF (A15=0, A14=1). Inga krockar — perfekt!</p>
+    <p class="text-gray-700 mt-2 text-sm"><strong>Logik:</strong> U4A inverterar A15 → LÅG när A15=0 → SRAM aktiveras vid <strong>$0000–$7FFF</strong> (32 KB).. VIAn aktiveras vid $C000–$DFFF (A15=1, A14=1). Inga krockar — perfekt!</p>
 
     <h3 class="font-bold mt-6 mb-2">CPU, VIA och LCD</h3>
     <p class="text-gray-700 mb-3 text-sm">CPU, VIA och LCD är oförändrade från steg 7. Här är den kompletta kopplingslistan.</p>
@@ -177,7 +177,7 @@
       <div class="flex items-stretch border-b border-gray-300" style="height:128px">
         <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$8000</div>
         <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt (Arduino NOP-fallback)</div>
-        <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~16 KB</div>
+        <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~32 KB</div>
       </div>
       <div class="flex items-center border-b-2 border-yellow-500" style="min-height:8px">
         <div class="w-20 text-right pr-3 text-gray-500">$4010</div>
@@ -185,9 +185,9 @@
         <div class="w-14 text-right text-gray-500 pr-2">16 B</div>
       </div>
       <div class="flex items-stretch border-b-2 border-green-500" style="height:248px">
-        <div class="w-20 text-right pr-3 text-gray-500 self-start pt-1">$4000</div>
+        <div class="w-20 text-right pr-3 text-gray-500 self-start pt-1">$8000</div>
         <div class="flex-1 bg-green-100 border-l border-r border-green-400 px-2 flex items-center font-bold">62256 SRAM — 16 KB riktigt RAM</div>
-        <div class="w-14 text-right text-gray-500 pr-2 self-start pt-1">~16 KB</div>
+        <div class="w-14 text-right text-gray-500 pr-2 self-start pt-1">~32 KB</div>
       </div>
       <div class="flex items-center" style="min-height:8px">
         <div class="w-20 text-right pr-3 text-gray-500">$0000</div>
@@ -201,12 +201,12 @@
   <!-- Arduino-kod -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
-    <p class="text-gray-700 mb-3 text-sm">Den stora förändringen: <code>is_sram()</code> kollar om adressen är under $4000. I så fall rör inte Arduino databussen — SRAM-chippet sköter allt.</p>
+    <p class="text-gray-700 mb-3 text-sm">Den stora förändringen: <code>is_sram()</code> kollar om adressen är under $8000. I så fall rör inte Arduino databussen — SRAM-chippet sköter allt.</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// ==============================================================
 // Steg 9 — Riktigt RAM (62256 32KB SRAM)
 // ==============================================================
 // SRAM på $0000–$3FFF. Arduino tri-state för SRAM-adresser.
-// VIA på $4000–$400F, program på $8000+ (Arduino).
+// VIA på $C000–$C00F, program på $8000+ (Arduino).
 
 #include &lt;Arduino.h&gt;
 #include &lt;LiquidCrystal.h&gt;
@@ -223,8 +223,8 @@ LiquidCrystal lcd(5, 6, 10, 9, 8, 7);
 uint8_t program[2048];      // $8000–$87FF (6502-program)
 uint8_t vectors[6];         // $FFFA–$FFFF
 
-#define VIA_BASE     0x4000
-#define SRAM_END     0x3FFF
+#define VIA_BASE     0xC000
+#define SRAM_END     0x7FFF
 
 // --- is_sram() — hanteras av fysisk 62256 ---
 bool is_sram(uint16_t addr) { return addr &lt;= SRAM_END; }
@@ -345,12 +345,12 @@ void loop() {
     <h2 class="text-lg font-bold mb-2">Testning och felsökning</h2>
     <ol class="list-decimal pl-5 space-y-1 text-gray-700">
       <li>Ladda upp med <code>pio run -e step9 -t upload -t monitor</code></li>
-      <li>I serieövervakaren: adresser under $4000 ska markeras med <code>&lt;- SRAM</code></li>
+      <li>I serieövervakaren: adresser under $8000 ska markeras med <code>&lt;- SRAM</code></li>
       <li>Tryck på instruktionssteg — följ programflödet. STX $0200 ska visa <code>W $0200 &lt;- SRAM</code></li>
     </ol>
     <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
       <span class="font-bold text-green-800">✅ Förväntat:</span>
-      <span class="text-green-700">CPU:n läser/skriver till SRAM för adresser under $4000. Arduino är helt ur vägen — SRAM-chippet svarar på egen hand.</span>
+      <span class="text-green-700">CPU:n läser/skriver till SRAM för adresser under $8000. Arduino är helt ur vägen — SRAM-chippet svarar på egen hand.</span>
     </div>
     <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
       <h3 class="font-bold">Om det inte fungerar</h3>

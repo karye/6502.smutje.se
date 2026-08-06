@@ -12,10 +12,10 @@
 ;   $4002 = DDRB
 ;   $4003 = DDRA
 
-VIA_ORB  = $4000
-VIA_ORA  = $4001
-VIA_DDRB = $4002
-VIA_DDRA = $4003
+VIA_ORB  = $C000
+VIA_ORA  = $C001
+VIA_DDRB = $C002
+VIA_DDRA = $C003
 
 .segment "CODE"
 .org $8000

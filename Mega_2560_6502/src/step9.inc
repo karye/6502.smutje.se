@@ -18,8 +18,8 @@ uint8_t ram[1024];          // Används ej längre för $0000–$03FF — SRAM h
 uint8_t program[2048];      // $8000–$87FF (6502-program)
 uint8_t vectors[6];         // $FFFA–$FFFF
 
-#define VIA_BASE     0x4000
-#define SRAM_END     0x3FFF
+#define VIA_BASE     0xC000
+#define SRAM_END     0x7FFF
 
 // --- is_sram() — hanteras av fysisk 62256 ---
 bool is_sram(uint16_t addr) { return addr <= SRAM_END; }

@@ -15,7 +15,7 @@ uint8_t ram[1024];       // $0000–$03FF (stack + zero page)
 uint8_t program[2048];   // $8000–$87FF (6502-program, Arduino svarar)
 uint8_t vectors[6];      // $FFFA–$FFFF
 
-#define VIA_BASE 0x4000
+#define VIA_BASE 0xC000
 
 bool is_via(uint16_t addr) {
   return (addr >= VIA_BASE && addr < VIA_BASE + 16);
@@ -74,8 +74,8 @@ void pulse() {
   // Fasövergångar
   if      (a == 0xFFFC && last_a != 0xFFFC)           new_phase = 1; // Reset-vektor
   else if (a >= 0x8000 && a <= 0x800F && rw && phase <= 1) new_phase = 2; // Programstart
-  else if (a == 0x4002 && !rw && phase <= 2)           new_phase = 3; // VIA init
-  else if (a == 0x4000 && !rw && phase == 3)           new_phase = 4; // LCD init
+  else if (a == 0xC002 && !rw && phase <= 2)           new_phase = 3; // VIA init
+  else if (a == 0xC000 && !rw && phase == 3)           new_phase = 4; // LCD init
   else if (rw && a >= 0x8000 && phase == 5)            new_phase = 6; // Hello JMP loop
   
   if (new_phase != phase) {
@@ -99,7 +99,7 @@ void pulse() {
   Serial.print(" PINF=0x");   Serial.print(PINF, HEX);
   Serial.print(" RWB=");      Serial.print(rw ? "H" : "L");
   
-  if      (a >= 0x4000 && !rw) { Serial.print("  ← VIA: "); Serial.print(PINA, HEX); }
+  if      (a >= 0xC000 && !rw) { Serial.print("  ← VIA: "); Serial.print(PINA, HEX); }
   else if (a >= 0x8000 && rw)   Serial.print("  ← OPCODE");
   else if (a == 0xFFFC)         Serial.print("  ← RESET-VEKTOR LÅG");
   else if (a == 0xFFFD)         Serial.print("  ← RESET-VEKTOR HÖG");
@@ -143,44 +143,44 @@ void setup() {
   // === Steg 3: Skicka $30 tre gånger (tvinga 8-bit mode) ===
   for (int i = 0; i < 3; i++) {
     write_mem(next++, 0xA9); write_mem(next++, 0x30);  // LDA #$30
-    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40); // STA $4000
+    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0); // STA $C000
     write_mem(next++, 0xA9); write_mem(next++, 0x04);  // LDA #$04 (RS=0, E=1)
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40); // STA $4001
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0); // STA $C001
     write_mem(next++, 0xA9); write_mem(next++, 0x00);  // LDA #$00 (RS=0, E=0)
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40); // STA $4001
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0); // STA $C001
   }
 
   // === Steg 4: Function Set: 8-bit, 2 rader, 5x8 font ===
   write_mem(next++, 0xA9); write_mem(next++, 0x38);  // LDA #$38
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40); // STA $4000
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0); // STA $C000
   write_mem(next++, 0xA9); write_mem(next++, 0x04);  // LDA #$04 (RS=0, E=1)
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40); // STA $4001
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0); // STA $C001
   write_mem(next++, 0xA9); write_mem(next++, 0x00);  // LDA #$00 (RS=0, E=0)
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40); // STA $4001
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0); // STA $C001
 
   // === Steg 5: Display ON, cursor OFF, blink OFF ===
   write_mem(next++, 0xA9); write_mem(next++, 0x0C);  // LDA #$0C
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40); // STA $4000
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0); // STA $C000
   write_mem(next++, 0xA9); write_mem(next++, 0x04);  // LDA #$04
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40); // STA $4001
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0); // STA $C001
   write_mem(next++, 0xA9); write_mem(next++, 0x00);  // LDA #$00
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40); // STA $4001
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0); // STA $C001
 
   // === Steg 6: Clear Display ===
   write_mem(next++, 0xA9); write_mem(next++, 0x01);  // LDA #$01
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40); // STA $4000
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0); // STA $C000
   write_mem(next++, 0xA9); write_mem(next++, 0x04);  // LDA #$04
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40); // STA $4001
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0); // STA $C001
   write_mem(next++, 0xA9); write_mem(next++, 0x00);  // LDA #$00
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40); // STA $4001
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0); // STA $C001
 
   // === Steg 7: Entry Mode: increment, no shift ===
   write_mem(next++, 0xA9); write_mem(next++, 0x06);  // LDA #$06
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40); // STA $4000
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0); // STA $C000
   write_mem(next++, 0xA9); write_mem(next++, 0x04);  // LDA #$04
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40); // STA $4001
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0); // STA $C001
   write_mem(next++, 0xA9); write_mem(next++, 0x00);  // LDA #$00
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40); // STA $4001
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0); // STA $C001
 
   // === Hello-rutin: 4 rader → clear → loop ===
   uint16_t hello_start = next;
@@ -192,15 +192,15 @@ void setup() {
   // Rad 1: "=== 6502 VIA LCD ==="
   // Först: sätt cursor till rad 1 (DDRAM $00): kommando $80
   write_mem(next++, 0xA9); write_mem(next++, 0x80);  // LDA #$80
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40); // STA $4000
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0); // STA $C000
   write_mem(next++, 0xA9); write_mem(next++, 0x04);  // LDA #$04 (RS=0, E=1)
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40); // STA $4001
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0); // STA $C001
   write_mem(next++, 0xA9); write_mem(next++, 0x00);  // LDA #$00 (E=0)
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40); // STA $4001
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0); // STA $C001
 
   // RS=1 (data-läge)
   write_mem(next++, 0xA9); write_mem(next++, 0x01);  // LDA #$01
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40); // STA $4001
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0); // STA $C001
 
   const char* line1 = "=== 6502 VIA LCD ===";
   for (const char* p = line1; *p; p++) {

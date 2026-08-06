@@ -37,7 +37,7 @@
     <h2 class="text-lg font-bold mb-2">Mål</h2>
     <div class="text-gray-700 space-y-3">
       <p>I steg 6 styrde Arduino LCD-displayen direkt. Nu tar vi nästa stora kliv: vi kopplar in en <strong>W65C22 VIA</strong> (Versatile Interface Adapter) — en I/O-krets som ger 6502-processorn 20 egna pinnar att styra. VIAn sitter på CPU:ns adress- och databuss, precis som ett RAM-minne, men istället för att lagra data styr den fysiska pinnar.</p>
-      <p>En <strong>74HC00</strong> (två NAND-grindar) avkodar adressbussen så att VIA:n hamnar på adress <code>$4000–$400F</code>. U4A inverterar A15, U4B NAND:ar med A14 — resultat: VIA aktiveras när A14=1 och A15=0.</p>
+      <p>En <strong>74HC00</strong> (två NAND-grindar) avkodar adressbussen så att VIA:n hamnar på adress <code>$C000–$400F</code>. U4B gör A15 NAND A14 — resultat: VIA aktiveras när A15=1 och A14=1.</p>
       <p>6502-programmet på <code>$8000</code> gör följande:</p>
       <ol class="list-decimal pl-5 space-y-1">
         <li>Sätter VIA:ns portar som utgångar</li>
@@ -115,7 +115,7 @@
           <tr><td class="p-2">26–33</td><td class="p-2">D0–D7</td><td class="p-2">CPU D0–D7</td><td class="p-2">Databuss — VIAn läser/skriver data här</td></tr>
           <tr><td class="p-2">38–35</td><td class="p-2">RS0–RS3</td><td class="p-2"><strong>CPU A0–A3</strong></td><td class="p-2">Registerväljare — vilket av VIAns 16 register som adresseras</td></tr>
           <tr><td class="p-2">24</td><td class="p-2">CS1</td><td class="p-2">+5V</td><td class="p-2">Chip Select 1 — aktiv HÖG. Permanent aktiverad</td></tr>
-          <tr><td class="p-2">23</td><td class="p-2">/CS2</td><td class="p-2">74HC00 pin 6 (utgång)</td><td class="p-2">Chip Select 2 — aktiv LÅG. 74HC00 drar denna LÅG när A15=0, A14=1</td></tr>
+          <tr><td class="p-2">23</td><td class="p-2">/CS2</td><td class="p-2">74HC00 pin 6 (utgång)</td><td class="p-2">Chip Select 2 — aktiv LÅG. 74HC00 drar denna LÅG när A15=1, A14=1</td></tr>
           <tr><td class="p-2">2</td><td class="p-2">PA0</td><td class="p-2">LCD RS (pin 4)</td><td class="p-2">Register Select: LÅG = kommando, HÖG = data</td></tr>
           <tr><td class="p-2">4</td><td class="p-2">PA2</td><td class="p-2">LCD E (pin 6)</td><td class="p-2">Enable — fallande flank får LCD:n att läsa databussen</td></tr>
           <tr><td class="p-2">10–17</td><td class="p-2">PB0–PB7</td><td class="p-2">LCD DB0–DB7</td><td class="p-2">8-bitars parallell data till LCD:n</td></tr>
@@ -133,13 +133,13 @@
           <tr><td class="p-2">3</td><td class="p-2"><strong>U4A</strong> ut</td><td class="p-2"><strong>U4B</strong> pin 4</td><td class="p-2">NOT A15 → grind B ingång 1</td></tr>
           <tr><td class="p-2">4</td><td class="p-2"><strong>U4B</strong> in</td><td class="p-2"><strong>U4A</strong> pin 3</td><td class="p-2">NOT A15</td></tr>
           <tr><td class="p-2">5</td><td class="p-2"><strong>U4B</strong> in</td><td class="p-2"><strong>CPU A14</strong></td><td class="p-2">(NOT A15) NAND A14 → LÅG när A15=0, A14=1</td></tr>
-          <tr><td class="p-2">6</td><td class="p-2"><strong>U4B</strong> ut</td><td class="p-2">VIA /CS2 (pin 23)</td><td class="p-2">LÅG vid $4000–$7FFF → VIA aktiverad</td></tr>
+          <tr><td class="p-2">6</td><td class="p-2"><strong>U4B</strong> ut</td><td class="p-2">VIA /CS2 (pin 23)</td><td class="p-2">LÅG vid $C000–$7FFF → VIA aktiverad</td></tr>
           <tr><td class="p-2">14</td><td class="p-2">VCC</td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
           <tr><td class="p-2">7</td><td class="p-2">GND</td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="text-gray-700 mt-2 text-sm"><strong>Logik:</strong> A15 inverteras av U4A. U4B gör (NOT A15) NAND A14 → LÅG när A15=0 och A14=1. VIAn aktiveras alltså vid adress <code>$4000–$7FFF</code>. CPU:ns A0–A3 går till VIAns RS0–RS3 vilket ger 16 register på <code>$4000–$400F</code>.</p>
+    <p class="text-gray-700 mt-2 text-sm"><strong>Logik:</strong> U4B gör A15 NAND A14 → LÅG när A15=1 och A14=1. VIAn aktiveras alltså vid adress <code>$C000–$7FFF</code>. CPU:ns A0–A3 går till VIAns RS0–RS3 vilket ger 16 register på <code>$C000–$400F</code>.</p>
 
     <!-- LCD -->
     <h3 class="font-bold mt-6 mb-2">LCD 16×2 / 20×4 (parallell)</h3>
@@ -187,12 +187,12 @@
         <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~16 KB</div>
       </div>
       <div class="flex items-center border-b-2 border-yellow-500" style="min-height:8px">
-        <div class="w-20 text-right pr-3 text-gray-500">$4010</div>
+        <div class="w-20 text-right pr-3 text-gray-500">$C010</div>
         <div class="flex-1 bg-yellow-100 border-l border-r border-yellow-400 px-2 flex items-center font-bold" style="min-height:8px">W65C22 VIA (fysisk krets)</div>
         <div class="w-14 text-right text-gray-500 pr-2">16 B</div>
       </div>
       <div class="flex items-stretch border-b border-gray-300" style="height:120px">
-        <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$4000</div>
+        <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$C000</div>
         <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt</div>
         <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~15 KB</div>
       </div>
@@ -221,24 +221,24 @@
     <h2 class="text-lg font-bold mb-2">6502-program — fyra rader via VIA</h2>
     <p class="text-gray-700 mb-3 text-sm">Programmet ligger på <code>$8000</code>: (1) sätter VIA-portar som utgångar, (2) initierar LCD i 8-bitarsläge, (3) skriver fyra rader text med cursor-positionering, (4) clear display och loopa om. För varje byte: lägg data på PORTB, pulsa E (PA2) på PORTA.</p>
 
-    <h3 class="font-bold mt-4 mb-2">VIAns register (adress <code>$4000</code>–<code>$4003</code>)</h3>
+    <h3 class="font-bold mt-4 mb-2">VIAns register (adress <code>$C000</code>–<code>$C003</code>)</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Adress</th><th class="p-2 text-left">Register</th><th class="p-2 text-left">Funktion</th></tr></thead>
         <tbody class="divide-y">
-          <tr><td class="p-2 font-mono">$4000</td><td class="p-2">ORB (PORTB)</td><td class="p-2">LCD data (DB0–DB7)</td></tr>
-          <tr><td class="p-2 font-mono">$4001</td><td class="p-2">ORA (PORTA)</td><td class="p-2">LCD kontroll (PA0=RS, PA2=E)</td></tr>
-          <tr><td class="p-2 font-mono">$4002</td><td class="p-2">DDRB</td><td class="p-2">Data Direction B ($FF = alla utgångar)</td></tr>
-          <tr><td class="p-2 font-mono">$4003</td><td class="p-2">DDRA</td><td class="p-2">Data Direction A</td></tr>
+          <tr><td class="p-2 font-mono">$C000</td><td class="p-2">ORB (PORTB)</td><td class="p-2">LCD data (DB0–DB7)</td></tr>
+          <tr><td class="p-2 font-mono">$C001</td><td class="p-2">ORA (PORTA)</td><td class="p-2">LCD kontroll (PA0=RS, PA2=E)</td></tr>
+          <tr><td class="p-2 font-mono">$C002</td><td class="p-2">DDRB</td><td class="p-2">Data Direction B ($FF = alla utgångar)</td></tr>
+          <tr><td class="p-2 font-mono">$C003</td><td class="p-2">DDRA</td><td class="p-2">Data Direction A</td></tr>
         </tbody>
       </table>
     </div>
 
     <h3 class="font-bold mt-4 mb-2">Att skriva ett tecken till LCD</h3>
     <ol class="list-decimal pl-5 space-y-1 text-gray-700 text-sm mb-3">
-      <li><strong>Sätt data:</strong> <code>STA $4000</code> — skicka ASCII-tecknet till PORTB (LCD DB0–DB7)</li>
-      <li><strong>Sätt RS=1, E=1:</strong> <code>LDA #$05; STA $4001</code> — PA0=RS=1 (data), PA2=E=1</li>
-      <li><strong>Sätt E=0:</strong> <code>LDA #$01; STA $4001</code> — PA2=E=0 (fallande flank → LCD läser)</li>
+      <li><strong>Sätt data:</strong> <code>STA $C000</code> — skicka ASCII-tecknet till PORTB (LCD DB0–DB7)</li>
+      <li><strong>Sätt RS=1, E=1:</strong> <code>LDA #$05; STA $C001</code> — PA0=RS=1 (data), PA2=E=1</li>
+      <li><strong>Sätt E=0:</strong> <code>LDA #$01; STA $C001</code> — PA2=E=0 (fallande flank → LCD läser)</li>
     </ol>
 
     <h3 class="font-bold mt-4 mb-2">Programmet i maskinkod</h3>
@@ -248,27 +248,27 @@
         <tbody class="divide-y">
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">VIA-init — sätt portar som utgångar</td></tr>
           <tr><td class="p-2">1</td><td class="p-2 font-mono">LDA #$FF</td><td class="p-2 font-mono">A9 FF</td><td class="p-2">Alla pinnar = utgång</td></tr>
-          <tr><td class="p-2">2</td><td class="p-2 font-mono">STA $4002</td><td class="p-2 font-mono">8D 02 40</td><td class="p-2">DDRB = $FF (LCD data)</td></tr>
-          <tr><td class="p-2">3</td><td class="p-2 font-mono">STA $4003</td><td class="p-2 font-mono">8D 03 40</td><td class="p-2">DDRA = $FF (RS + E)</td></tr>
+          <tr><td class="p-2">2</td><td class="p-2 font-mono">STA $C002</td><td class="p-2 font-mono">8D 02 C0</td><td class="p-2">DDRB = $FF (LCD data)</td></tr>
+          <tr><td class="p-2">3</td><td class="p-2 font-mono">STA $C003</td><td class="p-2 font-mono">8D 03 C0</td><td class="p-2">DDRA = $FF (RS + E)</td></tr>
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">LCD-init — tvinga 8-bitarsläge ($30 × 3)</td></tr>
-          <tr><td class="p-2">4–6</td><td class="p-2 font-mono">LDA #$30<br>STA $4000<br>LDA #$04 · STA $4001<br>LDA #$00 · STA $4001</td><td class="p-2 font-mono">A9 30<br>8D 00 40<br>A9 04 8D 01 40<br>A9 00 8D 01 40</td><td class="p-2">$30 till PORTB, pulsa E (RS=0). Upprepas 3 gånger för att garantera 8-bit</td></tr>
+          <tr><td class="p-2">4–6</td><td class="p-2 font-mono">LDA #$30<br>STA $C000<br>LDA #$04 · STA $C001<br>LDA #$00 · STA $C001</td><td class="p-2 font-mono">A9 30<br>8D 00 C0<br>A9 04 8D 01 C0<br>A9 00 8D 01 C0</td><td class="p-2">$30 till PORTB, pulsa E (RS=0). Upprepas 3 gånger för att garantera 8-bit</td></tr>
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Function Set: 8-bit, 2 rader, 5×8 font</td></tr>
-          <tr><td class="p-2">7</td><td class="p-2 font-mono">LDA #$38<br>STA $4000<br>LDA #$04 · STA $4001<br>LDA #$00 · STA $4001</td><td class="p-2 font-mono">A9 38<br>8D 00 40<br>A9 04 8D 01 40<br>A9 00 8D 01 40</td><td class="p-2">$38 = 8-bit, 2 rader, 5×8 — pulsa E</td></tr>
+          <tr><td class="p-2">7</td><td class="p-2 font-mono">LDA #$38<br>STA $C000<br>LDA #$04 · STA $C001<br>LDA #$00 · STA $C001</td><td class="p-2 font-mono">A9 38<br>8D 00 C0<br>A9 04 8D 01 C0<br>A9 00 8D 01 C0</td><td class="p-2">$38 = 8-bit, 2 rader, 5×8 — pulsa E</td></tr>
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Display ON/OFF: display on, cursor off, blink off</td></tr>
-          <tr><td class="p-2">8</td><td class="p-2 font-mono">LDA #$0C<br>STA $4000<br>LDA #$04 · STA $4001<br>LDA #$00 · STA $4001</td><td class="p-2 font-mono">A9 0C<br>8D 00 40<br>A9 04 8D 01 40<br>A9 00 8D 01 40</td><td class="p-2">Display ON, cursor OFF</td></tr>
+          <tr><td class="p-2">8</td><td class="p-2 font-mono">LDA #$0C<br>STA $C000<br>LDA #$04 · STA $C001<br>LDA #$00 · STA $C001</td><td class="p-2 font-mono">A9 0C<br>8D 00 C0<br>A9 04 8D 01 C0<br>A9 00 8D 01 C0</td><td class="p-2">Display ON, cursor OFF</td></tr>
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Clear display + Entry mode: increment, no shift</td></tr>
-          <tr><td class="p-2">9</td><td class="p-2 font-mono">LDA #$01<br>STA $4000<br>LDA #$04 · STA $4001<br>LDA #$00 · STA $4001</td><td class="p-2 font-mono">A9 01<br>8D 00 40<br>A9 04 8D 01 40<br>A9 00 8D 01 40</td><td class="p-2">Clear display</td></tr>
-          <tr><td class="p-2">10</td><td class="p-2 font-mono">LDA #$06<br>STA $4000<br>LDA #$04 · STA $4001<br>LDA #$00 · STA $4001</td><td class="p-2 font-mono">A9 06<br>8D 00 40<br>A9 04 8D 01 40<br>A9 00 8D 01 40</td><td class="p-2">Entry mode: increment, no shift</td></tr>
+          <tr><td class="p-2">9</td><td class="p-2 font-mono">LDA #$01<br>STA $C000<br>LDA #$04 · STA $C001<br>LDA #$00 · STA $C001</td><td class="p-2 font-mono">A9 01<br>8D 00 C0<br>A9 04 8D 01 C0<br>A9 00 8D 01 C0</td><td class="p-2">Clear display</td></tr>
+          <tr><td class="p-2">10</td><td class="p-2 font-mono">LDA #$06<br>STA $C000<br>LDA #$04 · STA $C001<br>LDA #$00 · STA $C001</td><td class="p-2 font-mono">A9 06<br>8D 00 C0<br>A9 04 8D 01 C0<br>A9 00 8D 01 C0</td><td class="p-2">Entry mode: increment, no shift</td></tr>
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Rad 1: "=== 6502 VIA LCD ===" (cursor till $00)</td></tr>
-          <tr><td class="p-2">11</td><td class="p-2 font-mono">LDA #$80 · STA $4000<br>LDA #$04 · STA $4001<br>LDA #$00 · STA $4001</td><td class="p-2 font-mono">A9 80 8D 00 40 …</td><td class="p-2">Kommando $80 = sätt DDRAM-adress 0 (rad 1, pos 0)</td></tr>
-          <tr><td class="p-2">12</td><td class="p-2 font-mono">LDA #$01 · STA $4001</td><td class="p-2 font-mono">A9 01 8D 01 40</td><td class="p-2">RS=1 (data-läge)</td></tr>
-          <tr><td class="p-2">13</td><td class="p-2 font-mono">För varje tecken:<br>LDA #tecken · STA $4000<br>LDA #$05 · STA $4001<br>LDA #$01 · STA $4001</td><td class="p-2 font-mono">A9 xx 8D 00 40<br>A9 05 8D 01 40<br>A9 01 8D 01 40</td><td class="p-2">Data + RS=1,E=1 → RS=1,E=0 (fallande flank). 19 tecken</td></tr>
+          <tr><td class="p-2">11</td><td class="p-2 font-mono">LDA #$80 · STA $C000<br>LDA #$04 · STA $C001<br>LDA #$00 · STA $C001</td><td class="p-2 font-mono">A9 80 8D 00 40 …</td><td class="p-2">Kommando $80 = sätt DDRAM-adress 0 (rad 1, pos 0)</td></tr>
+          <tr><td class="p-2">12</td><td class="p-2 font-mono">LDA #$01 · STA $C001</td><td class="p-2 font-mono">A9 01 8D 01 C0</td><td class="p-2">RS=1 (data-läge)</td></tr>
+          <tr><td class="p-2">13</td><td class="p-2 font-mono">För varje tecken:<br>LDA #tecken · STA $C000<br>LDA #$05 · STA $C001<br>LDA #$01 · STA $C001</td><td class="p-2 font-mono">A9 xx 8D 00 C0<br>A9 05 8D 01 C0<br>A9 01 8D 01 C0</td><td class="p-2">Data + RS=1,E=1 → RS=1,E=0 (fallande flank). 19 tecken</td></tr>
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Rad 2–4: samma mönster med cursor-kommandon $C0, $94, $D4</td></tr>
           <tr><td class="p-2">14</td><td class="p-2 font-mono">LDA #$C0 …</td><td class="p-2 font-mono" colspan="2">Cursor till rad 2 → "Hello from W65C02!"</td></tr>
           <tr><td class="p-2">15</td><td class="p-2 font-mono">LDA #$94 …</td><td class="p-2 font-mono" colspan="2">Cursor till rad 3 → "Arduino = RAM + CLK"</td></tr>
           <tr><td class="p-2">16</td><td class="p-2 font-mono">LDA #$D4 …</td><td class="p-2 font-mono" colspan="2">Cursor till rad 4 → "smutje.se 2026"</td></tr>
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Clear + loop</td></tr>
-          <tr><td class="p-2">17</td><td class="p-2 font-mono">LDA #$01 · STA $4000<br>LDA #$04 · STA $4001<br>LDA #$00 · STA $4001</td><td class="p-2 font-mono">A9 01 8D 00 40 …</td><td class="p-2">Clear display</td></tr>
+          <tr><td class="p-2">17</td><td class="p-2 font-mono">LDA #$01 · STA $C000<br>LDA #$04 · STA $C001<br>LDA #$00 · STA $C001</td><td class="p-2 font-mono">A9 01 8D 00 40 …</td><td class="p-2">Clear display</td></tr>
           <tr><td class="p-2">18</td><td class="p-2 font-mono">JMP hello_start</td><td class="p-2 font-mono">4C xx xx</td><td class="p-2">Hoppa tillbaka till rad 1 — oändlig loop</td></tr>
         </tbody>
       </table>
@@ -289,7 +289,7 @@ uint8_t ram[1024];       // $0000–$03FF (stack + zero page)
 uint8_t program[2048];   // $8000–$87FF (6502-program)
 uint8_t vectors[6];      // $FFFA–$FFFF
 
-#define VIA_BASE 0x4000
+#define VIA_BASE 0xC000
 
 bool is_via(uint16_t addr) {
   return (addr &gt;= VIA_BASE &amp;&amp; addr &lt; VIA_BASE + 16);
@@ -342,7 +342,7 @@ void pulse() {
   Serial.print(" PINF=0x");   Serial.print(PINF, HEX);
   Serial.print(" RWB=");      Serial.print(rw ? "H" : "L");
 
-  if      (a &gt;= 0x4000 &amp;&amp; !rw) { Serial.print("  ← VIA: "); Serial.print(PINA, HEX); }
+  if      (a &gt;= 0xC000 &amp;&amp; !rw) { Serial.print("  ← VIA: "); Serial.print(PINA, HEX); }
   else if (a &gt;= 0x8000 &amp;&amp; rw)   Serial.print("  ← OPCODE");
   else if (a == 0xFFFC)         Serial.print("  ← RESET-VEKTOR LÅG");
   else if (a == 0xFFFD)         Serial.print("  ← RESET-VEKTOR HÖG");
@@ -374,140 +374,140 @@ void setup() {
 
   // === Sätt VIA-portar som utgångar ===
   write_mem(next++, 0xA9); write_mem(next++, 0xFF);  // LDA #$FF
-  write_mem(next++, 0x8D); write_mem(next++, 0x02); write_mem(next++, 0x40); // STA $4002 (DDRB)
-  write_mem(next++, 0x8D); write_mem(next++, 0x03); write_mem(next++, 0x40); // STA $4003 (DDRA)
+  write_mem(next++, 0x8D); write_mem(next++, 0x02); write_mem(next++, 0xC0); // STA $C002 (DDRB)
+  write_mem(next++, 0x8D); write_mem(next++, 0x03); write_mem(next++, 0xC0); // STA $C003 (DDRA)
 
   // === Skicka $30 tre gånger (tvinga 8-bit mode) ===
   for (int i = 0; i &lt; 3; i++) {
     write_mem(next++, 0xA9); write_mem(next++, 0x30);  // LDA #$30
-    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40); // STA $4000
+    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0); // STA $C000
     write_mem(next++, 0xA9); write_mem(next++, 0x04);  // LDA #$04
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40); // STA $4001
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0); // STA $C001
     write_mem(next++, 0xA9); write_mem(next++, 0x00);  // LDA #$00
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40); // STA $4001
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0); // STA $C001
   }
 
   // === Function Set: 8-bit, 2 rader, 5x8 font ===
   write_mem(next++, 0xA9); write_mem(next++, 0x38);
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x04);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x00);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
 
   // === Display ON, cursor OFF ===
   write_mem(next++, 0xA9); write_mem(next++, 0x0C);
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x04);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x00);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
 
   // === Clear Display ===
   write_mem(next++, 0xA9); write_mem(next++, 0x01);
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x04);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x00);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
 
   // === Entry Mode: increment, no shift ===
   write_mem(next++, 0xA9); write_mem(next++, 0x06);
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x04);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x00);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
 
   uint16_t hello_start = next;
 
   // === Rad 1: cursor till $00, skriv "=== 6502 VIA LCD ===" ===
   write_mem(next++, 0xA9); write_mem(next++, 0x80);  // LDA #$80 (DDRAM 0)
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x04);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x00);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x01);  // RS=1
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
 
   const char* line1 = "=== 6502 VIA LCD ===";
   for (const char* p = line1; *p; p++) {
     write_mem(next++, 0xA9); write_mem(next++, *p);
-    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0);
     write_mem(next++, 0xA9); write_mem(next++, 0x05);  // RS=1, E=1
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
     write_mem(next++, 0xA9); write_mem(next++, 0x01);  // RS=1, E=0
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
   }
 
   // === Rad 2: cursor till $40, skriv "Hello from W65C02!" ===
   write_mem(next++, 0xA9); write_mem(next++, 0xC0);
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x04);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x00);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x01);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
 
   const char* line2 = "Hello from W65C02!";
   for (const char* p = line2; *p; p++) {
     write_mem(next++, 0xA9); write_mem(next++, *p);
-    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0);
     write_mem(next++, 0xA9); write_mem(next++, 0x05);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
     write_mem(next++, 0xA9); write_mem(next++, 0x01);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
   }
 
   // === Rad 3: cursor till $14, skriv "Arduino = RAM + CLK" ===
   write_mem(next++, 0xA9); write_mem(next++, 0x94);
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x04);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x00);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x01);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
 
   const char* line3 = "Arduino = RAM + CLK";
   for (const char* p = line3; *p; p++) {
     write_mem(next++, 0xA9); write_mem(next++, *p);
-    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0);
     write_mem(next++, 0xA9); write_mem(next++, 0x05);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
     write_mem(next++, 0xA9); write_mem(next++, 0x01);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
   }
 
   // === Rad 4: cursor till $54, skriv "smutje.se 2026" ===
   write_mem(next++, 0xA9); write_mem(next++, 0xD4);
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x04);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x00);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x01);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
 
   const char* line4 = "smutje.se 2026";
   for (const char* p = line4; *p; p++) {
     write_mem(next++, 0xA9); write_mem(next++, *p);
-    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0);
     write_mem(next++, 0xA9); write_mem(next++, 0x05);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
     write_mem(next++, 0xA9); write_mem(next++, 0x01);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
   }
 
   // === Clear display ===
   write_mem(next++, 0xA9); write_mem(next++, 0x01);
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x04);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
   write_mem(next++, 0xA9); write_mem(next++, 0x00);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0xC0);
 
   // === JMP tillbaka till hello_start ===
   write_mem(next++, 0x4C);
@@ -533,7 +533,7 @@ void loop() {
     <ol class="list-decimal pl-5 space-y-1 text-gray-700">
       <li>Ladda upp koden och öppna serieövervakaren (115200 baud)</li>
       <li>Verifiera att CPU:n startar: du ska se <code>R $FFFC</code>, <code>R $FFFD</code>, <code>R $8000</code>…</li>
-      <li>Leta efter VIA-adresser: <code>W $4002</code>, <code>W $4003</code> betyder att CPU:n konfigurerar VIA:ns portar</li>
+      <li>Leta efter VIA-adresser: <code>W $C002</code>, <code>W $C003</code> betyder att CPU:n konfigurerar VIA:ns portar</li>
       <li>LCD:n ska visa fyra rader text, sedan clear och loopa om — tar ~2000 klockcykler (ca 40 sek vid 20 Hz)</li>
     </ol>
 
@@ -545,12 +545,12 @@ void loop() {
     <h3 class="font-bold mt-6 mb-2">Om det inte fungerar</h3>
     <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-3">
       <p><strong>1. CPU:n startar inte?</strong> Ser du <code>W $0</code> eller <code>W $1</code>? Kontrollera BE (HÖG), PHI2 (pulser), RESB (HÖG efter reset).</p>
-      <p><strong>2. Ser inga $4xxx-adresser?</strong> Dubbelkolla 74HC00-kopplingen och att VIA:ns bussanslutningar sitter rätt.</p>
+      <p><strong>2. Ser inga $Cxxx-adresser?</strong> Dubbelkolla 74HC00-kopplingen och att VIA:ns bussanslutningar sitter rätt.</p>
       <p><strong>3. Mät med multimeter:</strong></p>
       <ul class="list-disc pl-5 space-y-1">
         <li>PHI2 (CPU pin 37): ~2.5V medel (20 Hz fyrkant)</li>
         <li>BE (CPU pin 36): >4.8V</li>
-        <li>VIA /CS2 (pin 23): ska gå LÅG vid $4000–$7FFF</li>
+        <li>VIA /CS2 (pin 23): ska gå LÅG vid $C000–$7FFF</li>
         <li>VIA VDD (pin 20): >4.8V</li>
         <li>74HC00 VCC (pin 14): >4.8V</li>
       </ul>

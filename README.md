@@ -126,8 +126,8 @@ $FFFF ┌──────────────┐
       │  Arduino ROM  │  $8000–$FFFF (6502-program + vektorer)
 $8000 ├──────────────┤
       │              │
-$4000 ├──────────────┤
-      │  W65C22 VIA   │  $4000–$400F (steg 7)
+$C000 ├──────────────┤
+      │  W65C22 VIA   │  $C000–$C00F (steg 7)
 $0000 └──────────────┘
 ```
 
@@ -198,7 +198,7 @@ src/
 
 ## Steg 7: LCD via VIA (8-bit parallell)
 
-CPU:n ($8000-programmet) styr LCD:n genom att skriva till VIA:ns register ($4000–$4003).
+CPU:n ($8000-programmet) styr LCD:n genom att skriva till VIA:ns register ($C000–$C003).
 Arduinon är endast minnesemulator + klocka — all LCD-logik körs på 6502.
 
 ### VIA → LCD
@@ -209,20 +209,20 @@ Arduinon är endast minnesemulator + klocka — all LCD-logik körs på 6502.
 | 4 | PA2 | 6 (E) | Enable |
 | 10–17 | PB0–PB7 | 7–14 (DB0–DB7) | 8-bitars data |
 
-### 74HC00 adressavkodning → VIA $4000–$400F
+### 74HC00 adressavkodning → VIA $C000–$C00F
 
 | 74HC00 | Ansluts till | Funktion |
 |--------|-------------|----------|
-| 1, 2 (U4A in) | CPU A15 | Inverterare (NOT A15) |
-| 3 (U4A ut) | U4B pin 4 | NOT A15 → NAND-ingång |
-| 5 (U4B in) | CPU A14 | (NOT A15) NAND A14 |
-| 6 (U4B ut) | VIA pin 23 (CS2B) | LÅG vid $4000–$7FFF → VIA aktiv |
+| 1, 2 (U4A in) | CPU A15 | NOT A15 → SRAM /CE (steg 9) |
+| 3 (U4A ut) | SRAM /CE (steg 9) | LÅG vid $0000–$7FFF |
+| 5 (U4B in) | CPU A14 | A15 NAND A14 |
+| 6 (U4B ut) | VIA pin 23 (CS2B) | LÅG vid $C000–$DFFF → VIA aktiv |
 | 14 (VCC) | +5V | Strömmatning |
 | 7 (GND) | GND | Systemjord |
 
 ### 6502-programflöde (steg 7)
 
-1. **Sätt VIA-portar:** `LDA #$FF` → `STA $4002` (DDRB) → `STA $4003` (DDRA)
+1. **Sätt VIA-portar:** `LDA #$FF` → `STA $C002` (DDRB) → `STA $C003` (DDRA)
 2. **LCD-init (8-bit):** $30 × 3 → $38 (function set) → $0C (display ON) → $01 (clear) → $06 (entry mode)
 3. **Skriv text:** Flytta cursor via kommando ($80, $C0, $94, $D4 för rad 1–4), skriv tecken via PORTB + pulsa E på PORTA
 4. **Clear + loop:** $01 (clear display) → JMP tillbaka till start

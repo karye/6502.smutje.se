@@ -99,12 +99,12 @@
         <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~16 KB</div>
       </div>
       <div class="flex items-center border-b-2 border-yellow-500" style="min-height:8px">
-        <div class="w-20 text-right pr-3 text-gray-500">$4010</div>
+        <div class="w-20 text-right pr-3 text-gray-500">$E000</div>
         <div class="flex-1 bg-yellow-100 border-l border-r border-yellow-400 px-2 flex items-center font-bold" style="min-height:8px">W65C22 VIA (fysisk krets)</div>
         <div class="w-14 text-right text-gray-500 pr-2">16 B</div>
       </div>
       <div class="flex items-stretch border-b border-gray-300" style="height:120px">
-        <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$4000</div>
+        <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$8000</div>
         <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt</div>
         <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~15 KB</div>
       </div>
@@ -235,10 +235,10 @@ if __name__ == '__main__':
     <h2 class="text-lg font-bold mb-2">6502-programmet i assembler</h2>
     <p class="text-gray-700 mb-3 text-sm">Samma 4-radersprogram som steg 7 — men nu som läsbar assembler med labels, subrutiner och nollterminerade strängar.</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-x86asm">; 6502-program — VIA LCD
-VIA_ORB  = $4000
-VIA_ORA  = $4001
-VIA_DDRB = $4002
-VIA_DDRA = $4003
+VIA_ORB  = $C000
+VIA_ORA  = $C001
+VIA_DDRB = $C002
+VIA_DDRA = $C003
 
 .segment "CODE"
 .org $8000
@@ -340,10 +340,10 @@ uint8_t ram[1024];
 uint8_t program_arr[2048];   // $8000–$87FF (6502-program)
 uint8_t vectors[6];          // $FFFA–$FFFF
 
-#define VIA_BASE 0x4000
+#define VIA_BASE 0xC000
 
 // --- is_via() — är detta en VIA-adress? ---
-// VIA sitter på $4000–$400F. Arduino ska INTE svara här —
+// VIA sitter på $C000–$C00F. Arduino ska INTE svara här —
 // den fysiska W65C22-kretsen hanterar dessa adresser.
 bool is_via(uint16_t addr) {
   return (addr >= VIA_BASE && addr < VIA_BASE + 16);
@@ -397,7 +397,7 @@ void pulse() {
   Serial.print(rw ? "R" : "W");
   Serial.print(" $");
   Serial.print(a, HEX);
-  if (a >= 0x4000 && !rw)      Serial.print("  <- VIA");
+  if (a >= 0xC000 && !rw)      Serial.print("  <- VIA");
   else if (a >= 0x8000 && rw)  Serial.print("  <- OPCODE");
   else if (a == 0xFFFC)        Serial.print("  <- RESET-VEKTOR LAG");
   else if (a == 0xFFFD)        Serial.print("  <- RESET-VEKTOR HOG");

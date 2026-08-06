@@ -16,7 +16,7 @@ uint8_t ram[1024];
 uint8_t program[2048];
 uint8_t vectors[6];
 
-#define VIA_BASE 0x4000
+#define VIA_BASE 0xC000
 
 bool is_via(uint16_t addr) {
   return (addr >= VIA_BASE && addr < VIA_BASE + 16);
