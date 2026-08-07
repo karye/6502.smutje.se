@@ -23,6 +23,7 @@
       <a href="step6.html" class="text-blue-300 font-semibold">Steg 6</a>
       <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
       <a href="step8.html" class="hover:text-blue-300 transition">Steg 8</a>
+      <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
     </div>
   </div>
 </nav>
@@ -86,6 +87,53 @@
     </div>
   </section>
 
+  <!-- Kretstabell -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Kopplingar</h2>
+    <p class="text-gray-700 mb-3 text-sm">Alla kopplingar för detta steg — från strömmatning till LCD. Varje pinne, vart den går, och <strong>varför</strong>.</p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">8</td><td class="p-2">VDD</td><td class="p-2">+5V</td><td class="p-2">Strömmatning — CPU:ns driftspänning</td></tr>
+          <tr><td class="p-2">21</td><td class="p-2">VSS</td><td class="p-2">GND</td><td class="p-2">Systemjord — sluten krets</td></tr>
+          <tr><td class="p-2">37</td><td class="p-2">PHI2</td><td class="p-2"><strong>Arduino D2</strong></td><td class="p-2">Klockingång — Arduino skickar fyrkantsvåg</td></tr>
+          <tr><td class="p-2">2</td><td class="p-2">RDY</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Ready — HÖG = CPU får köra</td></tr>
+          <tr><td class="p-2">4</td><td class="p-2">/IRQ</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Interrupt request — HÖG = inget avbrott</td></tr>
+          <tr><td class="p-2">6</td><td class="p-2">/NMI</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Non-maskable interrupt — måste vara HÖG</td></tr>
+          <tr><td class="p-2">36</td><td class="p-2">BE</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Bus Enable — HÖG = bussarna aktiva</td></tr>
+          <tr><td class="p-2">38</td><td class="p-2">/SO</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Set Overflow — avaktiverad</td></tr>
+          <tr><td class="p-2">40</td><td class="p-2">/RESET</td><td class="p-2"><strong>Arduino D4</strong></td><td class="p-2">Kontrollerad reset</td></tr>
+          <tr><td class="p-2">9–16</td><td class="p-2">A0–A7</td><td class="p-2"><strong>Arduino A0–A7</strong></td><td class="p-2">Låga adressbyte — läses via PORTF</td></tr>
+          <tr><td class="p-2">17–20, 22–25</td><td class="p-2">A8–A15</td><td class="p-2"><strong>Arduino A8–A15</strong></td><td class="p-2">Höga adressbyte — läses via PORTK</td></tr>
+          <tr><td class="p-2">34</td><td class="p-2">R/W</td><td class="p-2"><strong>Arduino D3</strong></td><td class="p-2">HÖG = CPU läser, LÅG = CPU skriver</td></tr>
+          <tr><td class="p-2">33</td><td class="p-2">D0</td><td class="p-2"><strong>Arduino D22</strong> via 100Ω</td><td class="p-2">Databit 0 (LSB)</td></tr>
+          <tr><td class="p-2">32</td><td class="p-2">D1</td><td class="p-2"><strong>Arduino D23</strong> via 100Ω</td><td class="p-2">Databit 1</td></tr>
+          <tr><td class="p-2">31</td><td class="p-2">D2</td><td class="p-2"><strong>Arduino D24</strong> via 100Ω</td><td class="p-2">Databit 2</td></tr>
+          <tr><td class="p-2">30</td><td class="p-2">D3</td><td class="p-2"><strong>Arduino D25</strong> via 100Ω</td><td class="p-2">Databit 3</td></tr>
+          <tr><td class="p-2">29</td><td class="p-2">D4</td><td class="p-2"><strong>Arduino D26</strong> via 100Ω</td><td class="p-2">Databit 4</td></tr>
+          <tr><td class="p-2">28</td><td class="p-2">D5</td><td class="p-2"><strong>Arduino D27</strong> via 100Ω</td><td class="p-2">Databit 5</td></tr>
+          <tr><td class="p-2">27</td><td class="p-2">D6</td><td class="p-2"><strong>Arduino D28</strong> via 100Ω</td><td class="p-2">Databit 6</td></tr>
+          <tr><td class="p-2">26</td><td class="p-2">D7</td><td class="p-2"><strong>Arduino D29</strong> via 100Ω</td><td class="p-2">Databit 7 (MSB)</td></tr>
+          <tr><td class="p-2">7</td><td class="p-2">SYNC</td><td class="p-2"><strong>Arduino D13</strong></td><td class="p-2">HÖG = CPU:n hämtar ny opcode</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">LCD 16×2 (parallell 4-bit)</td></tr>
+          <tr><td class="p-2"><strong>LCD 1</strong></td><td class="p-2">VSS</td><td class="p-2">GND</td><td class="p-2">Jord</td></tr>
+          <tr><td class="p-2"><strong>LCD 2</strong></td><td class="p-2">VDD</td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
+          <tr><td class="p-2"><strong>LCD 3</strong></td><td class="p-2">VO</td><td class="p-2">Potentiometer mittben</td><td class="p-2">Kontrast — sidoben till +5V och GND</td></tr>
+          <tr><td class="p-2"><strong>LCD 4</strong></td><td class="p-2">RS</td><td class="p-2"><strong>Arduino D5</strong></td><td class="p-2">Register Select — 0 = kommando, 1 = data</td></tr>
+          <tr><td class="p-2"><strong>LCD 5</strong></td><td class="p-2">R/W</td><td class="p-2">GND</td><td class="p-2">Alltid skrivläge</td></tr>
+          <tr><td class="p-2"><strong>LCD 6</strong></td><td class="p-2">E</td><td class="p-2"><strong>Arduino D6</strong></td><td class="p-2">Enable — Arduino pulserar för att skicka data</td></tr>
+          <tr><td class="p-2"><strong>LCD 11</strong></td><td class="p-2">DB4</td><td class="p-2"><strong>Arduino D10</strong></td><td class="p-2">Data bit 4 — omvänd ordning!</td></tr>
+          <tr><td class="p-2"><strong>LCD 12</strong></td><td class="p-2">DB5</td><td class="p-2"><strong>Arduino D9</strong></td><td class="p-2">Data bit 5</td></tr>
+          <tr><td class="p-2"><strong>LCD 13</strong></td><td class="p-2">DB6</td><td class="p-2"><strong>Arduino D8</strong></td><td class="p-2">Data bit 6</td></tr>
+          <tr><td class="p-2"><strong>LCD 14</strong></td><td class="p-2">DB7</td><td class="p-2"><strong>Arduino D7</strong></td><td class="p-2">Data bit 7</td></tr>
+          <tr><td class="p-2"><strong>LCD 15</strong></td><td class="p-2">A</td><td class="p-2">+5V via 220Ω</td><td class="p-2">Bakgrundsbelysning +</td></tr>
+          <tr><td class="p-2"><strong>LCD 16</strong></td><td class="p-2">K</td><td class="p-2">GND</td><td class="p-2">Bakgrundsbelysning −</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
   <!-- Programmet -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">6502-programmet — räknare</h2>
@@ -116,24 +164,125 @@
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Arduino-kod — setup()</h2>
     <p class="text-gray-700 mb-3 text-sm">Endast programladdningen i <code>setup()</code> ändras från steg 5. <code>pulse()</code>, <code>loop()</code> och LCD-koden är oförändrade.</p>
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// Steg 6 — ersätt NOP-laddningen i setup() med:
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// ==============================================================
+// Steg 6 — Eget 6502-program: räknare 0–255
+// ==============================================================
+// Första egna programmet! CPU:n kör LDX #$00 · INX · STX $0200
+// i oändlig loop. LCD:n visar adress och instruktion i realtid.
 
-// Reset-vektor → $8000
-write_mem(0xFFFC, 0x00);
-write_mem(0xFFFD, 0x80);
+#include <Arduino.h>
+#include <LiquidCrystal.h>
 
-// Räknarprogrammet
-write_mem(0x8000, 0xA2);  // LDX #$00
-write_mem(0x8001, 0x00);
-write_mem(0x8002, 0xE8);  // INX  ← loop-start
-write_mem(0x8003, 0x8E);  // STX $0200
-write_mem(0x8004, 0x00);
-write_mem(0x8005, 0x02);
-write_mem(0x8006, 0x4C);  // JMP $8002
-write_mem(0x8007, 0x02);
-write_mem(0x8008, 0x80);
+#define PHI2     2
+#define RESB     4
+#define RWB      3
+#define SYNC     13
+#define BTN_CLK  11
+#define BTN_INSTR 12
 
-// Resten av setup() oförändrad — reset-sekvens etc.</code></pre>
+LiquidCrystal lcd(5, 6, 10, 9, 8, 7);
+
+uint8_t ram[1024];
+uint8_t vectors[6];
+
+uint8_t read_mem(uint16_t addr) {
+  if (addr >= 0xFFFA && addr <= 0xFFFF) return vectors[addr - 0xFFFA];
+  if (addr < 1024) return ram[addr];
+  return 0xEA;
+}
+
+void write_mem(uint16_t addr, uint8_t val) {
+  if (addr >= 0xFFFA && addr <= 0xFFFF) { vectors[addr - 0xFFFA] = val; return; }
+  if (addr < 1024) ram[addr] = val;
+}
+
+// --- pulse() — en klockcykel + LCD-uppdatering ---
+void pulse() {
+  digitalWrite(PHI2, LOW);
+  delay(10);
+
+  uint16_t a = (PINK << 0) | (PINF << 8);
+  bool rw = digitalRead(RWB);
+  uint8_t data = 0;
+
+  if (rw) { DDRA = 0xFF; PORTA = read_mem(a); data = PORTA; }
+  else    { DDRA = 0x00; }
+
+  digitalWrite(PHI2, HIGH);
+  delay(10);
+
+  if (!rw) { data = PINA; write_mem(a, data); }
+
+  lcd.setCursor(0, 0);
+  lcd.print("A:$"); lcd.print(a, HEX);
+  if (a < 0x1000) lcd.print(" ");
+  if (a < 0x100)  lcd.print(" ");
+  lcd.print("    ");
+
+  lcd.setCursor(0, 1);
+  lcd.print("D:$");
+  if (data < 0x10) lcd.print("0");
+  lcd.print(data, HEX);
+  lcd.print("    ");
+}
+
+// --- setup() — ladda räknarprogrammet ---
+void setup() {
+  Serial.begin(115200);
+  pinMode(PHI2, OUTPUT);
+  pinMode(RESB, OUTPUT);
+  pinMode(RWB,  INPUT);
+  pinMode(SYNC, INPUT);
+  pinMode(BTN_CLK,   INPUT_PULLUP);
+  pinMode(BTN_INSTR, INPUT_PULLUP);
+  DDRK = 0x00; DDRF = 0x00; DDRA = 0x00;
+
+  lcd.begin(16, 2);
+  lcd.print("Steg 6 Raknare");
+
+  // Reset-vektor → $8000
+  write_mem(0xFFFC, 0x00);
+  write_mem(0xFFFD, 0x80);
+
+  // === Räknarprogrammet ===
+  // LDX #$00   — ladda X-registret med 0 (körs bara en gång)
+  write_mem(0x8000, 0xA2);
+  write_mem(0x8001, 0x00);
+
+  // INX        — öka X med 1 (loop-start, 1 byte)
+  write_mem(0x8002, 0xE8);
+
+  // STX $0200  — spara X till minnesadress $0200 (3 bytes)
+  write_mem(0x8003, 0x8E);
+  write_mem(0x8004, 0x00);  // Låg byte av $0200
+  write_mem(0x8005, 0x02);  // Hög byte av $0200
+
+  // JMP $8002  — hoppa tillbaka till INX (3 bytes)
+  write_mem(0x8006, 0x4C);
+  write_mem(0x8007, 0x02);  // Låg byte av $8002
+  write_mem(0x8008, 0x80);  // Hög byte av $8002
+
+  Serial.println("Steg 6 — Räknarprogram");
+  Serial.println("Program: LDX #$00 · INX · STX $0200 · JMP $8002");
+
+  // Reset-sekvens
+  digitalWrite(RESB, LOW);
+  for (int i = 0; i < 5; i++) pulse();
+  digitalWrite(RESB, HIGH);
+}
+
+// --- loop() — knappstyrning ---
+void loop() {
+  if (!digitalRead(BTN_CLK)) {
+    delay(50); while (!digitalRead(BTN_CLK)); delay(50);
+    pulse();
+  }
+  if (!digitalRead(BTN_INSTR)) {
+    delay(50); while (!digitalRead(BTN_INSTR)); delay(50);
+    do { pulse(); } while (!digitalRead(SYNC));
+  }
+}
+</code></pre>
   </section>
 
   <!-- Testning -->

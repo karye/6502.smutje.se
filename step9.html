@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steg 9 — SRAM | W65C02</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+<nav class="bg-gray-900 text-white sticky top-0 z-50 shadow">
+  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
+    <a href="index.html" class="font-bold text-lg">W65C02</a>
+    <div class="flex gap-4 text-sm">
+      <a href="index.html" class="hover:text-blue-300 transition">Översikt</a>
+      <a href="step1.html" class="hover:text-blue-300 transition">Steg 1</a>
+      <a href="step2.html" class="hover:text-blue-300 transition">Steg 2</a>
+      <a href="step3.html" class="hover:text-blue-300 transition">Steg 3</a>
+      <a href="step4.html" class="hover:text-blue-300 transition">Steg 4</a>
+      <a href="step5.html" class="hover:text-blue-300 transition">Steg 5</a>
+      <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
+      <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
+      <a href="step8.html" class="hover:text-blue-300 transition">Steg 8</a>
+      <a href="step9.html" class="text-blue-300 font-semibold">Steg 9</a>
+    </div>
+  </div>
+</nav>
+
+<main class="max-w-5xl mx-auto px-4 py-8">
+
+  <h1 class="text-2xl font-bold mb-6">Steg 9 — Riktigt RAM (62256 SRAM)</h1>
+
+  <!-- Mål -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Mål</h2>
+    <div class="text-gray-700 space-y-3">
+      <p>Hittills har Arduino emulerat <strong>allt</strong> minne — varje gång CPU:n läser eller skriver en byte är det Arduino som svarar. Det fungerar utmärkt för inlärning och felsökning, men en riktig dator har riktigt minne. Nu tar vi steget och kopplar in ett <strong>62256 SRAM-chip</strong> — 32 kilobyte statiskt RAM i en DIP-28-kapsel.</p>
+      <p>SRAM-chippet tar över adresserna <strong>$0000–$3FFF</strong> (16 KB). Det täcker zero page, stacken och gott om utrymme för variabler. Arduino fortsätter att leverera programkoden från $8000 och uppåt, samt vektorerna på $FFFA–$FFFF. VIA:n ligger kvar på $4000–$400F.</p>
+      <p>Den stora förändringen i koden: Arduino går <strong>tri-state</strong> (hög impedans) för alla adresser under $4000. När CPU:n läser från $0200 är det SRAM-chippet som lägger ut data på bussen — inte Arduino. Vi har nu <strong>tre enheter</strong> som delar på databussen: SRAM, VIA och Arduino.</p>
+    </div>
+  </section>
+
+  <!-- Nya komponenter -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Nya komponenter</h2>
+    <p class="text-gray-700 mb-3 text-sm">Plocka fram dessa ur komponentlådan. Inga överraskningar — bara det som tillkommer i detta steg.</p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">1</td><td class="p-2"><strong>62256 SRAM</strong> (32KB, DIP-28)</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2">100 nF keramisk kondensator (avkoppling SRAM)</td></tr>
+          <tr><td class="p-2">–</td><td class="p-2">Kopplingstråd (adress, data, kontroll)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Kopplingsschema -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
+    <p class="text-gray-700 mb-3 text-sm">SRAM-chippet delar adress- och databuss med CPU, VIA och Arduino. Tre kontrollsignaler avgör vem som pratar.</p>
+    <div class="bg-yellow-50 border border-yellow-300 rounded-lg p-4 text-sm mb-3">
+      <strong class="text-yellow-800">⚠ Schemat är inte ritat än.</strong>
+      <span class="text-yellow-700">Kommer som KiCad-schema inom kort.</span>
+    </div>
+  </section>
+
+  <!-- Kretstabell -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Kopplingar</h2>
+    <p class="text-gray-700 mb-3 text-sm">Alla kopplingar för detta steg — CPU, SRAM, VIA, 74HC00, LCD. Varje pinne, vart den går, och <strong>varför</strong>.</p>
+
+    <h3 class="font-bold mt-4 mb-2">62256 SRAM</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">28</td><td class="p-2">VDD</td><td class="p-2">+5V</td><td class="p-2">Strömmatning — glöm inte 100nF avkoppling till GND</td></tr>
+          <tr><td class="p-2">14</td><td class="p-2">VSS</td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
+          <tr><td class="p-2">10–3, 25, 24, 21, 23, 2, 26, 1</td><td class="p-2">A0–A14</td><td class="p-2"><strong>CPU A0</strong>–A14</td><td class="p-2">15 adresslinjer — SRAM behöver veta vilken byte CPU:n vill åt</td></tr>
+          <tr><td class="p-2">11–13, 15–19</td><td class="p-2">D0–D7</td><td class="p-2"><strong>CPU D0</strong>–D7 (databuss)</td><td class="p-2">8 datalinjer — SRAM läser/skriver data här</td></tr>
+          <tr><td class="p-2">20</td><td class="p-2">/CE</td><td class="p-2"><strong>U4C</strong> pin 8</td><td class="p-2">Chip Enable — LÅG = SRAM aktivt. 74HC00 drar LÅG vid $0000–$3FFF</td></tr>
+          <tr><td class="p-2">22</td><td class="p-2">/OE</td><td class="p-2">GND</td><td class="p-2">Output Enable — alltid LÅG (SRAM kör alltid ut data vid läsning)</td></tr>
+          <tr><td class="p-2">27</td><td class="p-2">/WE</td><td class="p-2"><strong>CPU R/W</strong> (pin 34)</td><td class="p-2">Write Enable — LÅG = skriv. CPU:ns R/W är LÅG vid skrivning</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="font-bold mt-6 mb-2">74HC00 — adressavkodning för SRAM</h3>
+    <p class="text-gray-700 mb-3 text-sm">Vi använder de två oanvända grindarna (U4C och U4D) för att avkoda SRAM-adressen. U4A och U4B används redan för VIA (steg 7).</p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Grind</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <tbody class="divide-y">
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">VIA-avkodning (U4A + U4B — samma som steg 7)</td></tr>
+          <tr><td class="p-2">1, 2</td><td class="p-2"><strong>U4A</strong> in</td><td class="p-2"><strong>CPU A15</strong></td><td class="p-2">NOT A15</td></tr>
+          <tr><td class="p-2">3</td><td class="p-2"><strong>U4A</strong> ut</td><td class="p-2"><strong>U4B</strong> pin 4</td><td class="p-2">NOT A15 → U4B</td></tr>
+          <tr><td class="p-2">4, 5</td><td class="p-2"><strong>U4B</strong> in</td><td class="p-2">U4A ut + <strong>CPU A14</strong></td><td class="p-2">NAND → VIA /CS2</td></tr>
+          <tr><td class="p-2">6</td><td class="p-2"><strong>U4B</strong> ut</td><td class="p-2"><strong>VIA</strong> /CS2 (pin 23)</td><td class="p-2">LÅG vid $4000–$7FFF</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">SRAM-avkodning (U4C + U4D — nytt i steg 9)</td></tr>
+          <tr><td class="p-2">8, 9</td><td class="p-2"><strong>U4C</strong> in</td><td class="p-2"><strong>CPU A15</strong> + <strong>CPU A14</strong></td><td class="p-2">NAND: båda HÖG → ut LÅG. Men vi vill ha LÅG när båda är LÅG!</td></tr>
+          <tr><td class="p-2">10</td><td class="p-2"><strong>U4C</strong> ut</td><td class="p-2"><strong>U4D</strong> pin 11, 12</td><td class="p-2">A15 NAND A14 → U4D (inverterare)</td></tr>
+          <tr><td class="p-2">11, 12</td><td class="p-2"><strong>U4D</strong> in</td><td class="p-2"><strong>U4C</strong> pin 10</td><td class="p-2">Båda ingångarna till U4C ut → NOT</td></tr>
+          <tr><td class="p-2">13</td><td class="p-2"><strong>U4D</strong> ut</td><td class="p-2">SRAM /CE (pin 20)</td><td class="p-2">LÅG när A15=0 OCH A14=0 → $0000–$3FFF</td></tr>
+          <tr><td class="p-2">14</td><td class="p-2">VCC</td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
+          <tr><td class="p-2">7</td><td class="p-2">GND</td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-gray-700 mt-2 text-sm"><strong>Logik:</strong> U4C gör A15 NAND A14. U4D inverterar resultatet → LÅG när A15=0 OCH A14=0 → SRAM aktiveras vid <strong>$0000–$3FFF</strong>. VIAn aktiveras vid $4000–$7FFF (A15=0, A14=1). Inga krockar — perfekt!</p>
+
+    <h3 class="font-bold mt-6 mb-2">CPU, VIA och LCD</h3>
+    <p class="text-gray-700 mb-3 text-sm">CPU, VIA och LCD är oförändrade från steg 7. Här är den kompletta kopplingslistan.</p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <tbody class="divide-y">
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">CPU — ström och kontroll</td></tr>
+          <tr><td class="p-2">8</td><td class="p-2">VDD</td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
+          <tr><td class="p-2">21</td><td class="p-2">VSS</td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
+          <tr><td class="p-2">37</td><td class="p-2">PHI2</td><td class="p-2"><strong>Arduino D2</strong></td><td class="p-2">Klocka — 20 Hz fyrkantsvåg</td></tr>
+          <tr><td class="p-2">34</td><td class="p-2">R/W</td><td class="p-2"><strong>Arduino D3</strong>, <strong>VIA</strong> pin 22, SRAM /WE</td><td class="p-2">Read/Write — alla kretsar behöver veta</td></tr>
+          <tr><td class="p-2">40</td><td class="p-2">/RESET</td><td class="p-2"><strong>Arduino D4</strong>, <strong>VIA</strong> pin 34</td><td class="p-2">Reset</td></tr>
+          <tr><td class="p-2">2</td><td class="p-2">RDY</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Ready — HÖG = CPU kör</td></tr>
+          <tr><td class="p-2">4</td><td class="p-2">/IRQ</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Interrupt — avaktiverad</td></tr>
+          <tr><td class="p-2">6</td><td class="p-2">/NMI</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">NMI — avaktiverad</td></tr>
+          <tr><td class="p-2">36</td><td class="p-2">BE</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Bus Enable — HÖG = bussar aktiva</td></tr>
+          <tr><td class="p-2">38</td><td class="p-2">/SO</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Set Overflow — avaktiverad</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">CPU — adressbuss (delas med SRAM, VIA, Arduino)</td></tr>
+          <tr><td class="p-2">9–16</td><td class="p-2">A0–A7</td><td class="p-2"><strong>Arduino A0</strong>–A7, SRAM A0–A7, VIA RS0–RS3 (A0–A3)</td><td class="p-2">Låga adressbyte</td></tr>
+          <tr><td class="p-2">17–20, 22–25</td><td class="p-2">A8–A15</td><td class="p-2"><strong>Arduino A8</strong>–A15, SRAM A8–A14, 74HC00</td><td class="p-2">Höga adressbyte + avkodning</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">CPU — databuss (delas med SRAM, VIA, Arduino)</td></tr>
+          <tr><td class="p-2">26–33</td><td class="p-2">D0–D7</td><td class="p-2"><strong>Arduino D22</strong>–D29, SRAM D0–D7, VIA D0–D7</td><td class="p-2">8-bit data — 100Ω seriemotstånd</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Övrigt</td></tr>
+          <tr><td class="p-2">7</td><td class="p-2">SYNC</td><td class="p-2"><strong>Arduino D13</strong></td><td class="p-2">Opcode fetch</td></tr>
+          <tr><td class="p-2">—</td><td class="p-2">BTN1</td><td class="p-2"><strong>Arduino D11</strong> → GND</td><td class="p-2">Klocksteg</td></tr>
+          <tr><td class="p-2">—</td><td class="p-2">BTN2</td><td class="p-2"><strong>Arduino D12</strong> → GND</td><td class="p-2">Instruktionssteg</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">VIA → LCD (oförändrat från steg 7)</td></tr>
+          <tr><td class="p-2">VIA 2</td><td class="p-2">PA0</td><td class="p-2"><strong>LCD 4</strong> (RS)</td><td class="p-2">Register Select</td></tr>
+          <tr><td class="p-2">VIA 4</td><td class="p-2">PA2</td><td class="p-2"><strong>LCD 6</strong> (E)</td><td class="p-2">Enable</td></tr>
+          <tr><td class="p-2">VIA 10–17</td><td class="p-2">PB0–PB7</td><td class="p-2"><strong>LCD 7</strong>–14 (DB0–DB7)</td><td class="p-2">8-bit data</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">LCD — ström och kontrast</td></tr>
+          <tr><td class="p-2"><strong>LCD 1</strong></td><td class="p-2">VSS</td><td class="p-2">GND</td><td class="p-2">Jord</td></tr>
+          <tr><td class="p-2"><strong>LCD 2</strong></td><td class="p-2">VDD</td><td class="p-2">+5V</td><td class="p-2">Ström</td></tr>
+          <tr><td class="p-2"><strong>LCD 3</strong></td><td class="p-2">VO</td><td class="p-2">Potentiometer mittben</td><td class="p-2">Kontrast</td></tr>
+          <tr><td class="p-2"><strong>LCD 5</strong></td><td class="p-2">R/W</td><td class="p-2">GND</td><td class="p-2">Write-only</td></tr>
+          <tr><td class="p-2"><strong>LCD 15</strong></td><td class="p-2">A</td><td class="p-2">+5V via 220Ω</td><td class="p-2">Belysning +</td></tr>
+          <tr><td class="p-2"><strong>LCD 16</strong></td><td class="p-2">K</td><td class="p-2">GND</td><td class="p-2">Belysning −</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Minneskarta -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Minneskarta — tre enheter delar på bussen</h2>
+    <p class="text-gray-700 mb-3 text-sm">Nu har vi tre enheter som svarar på olika adressområden. SRAM tar den lägre halvan, VIA har sina 16 bytes, och Arduino levererar program och vektorer.</p>
+    <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
+      <div class="flex items-center border-b border-gray-300" style="min-height:8px">
+        <div class="w-20 text-right pr-3 text-gray-500">$FFFF</div>
+        <div class="flex-1 bg-purple-100 border-l border-r border-purple-300 px-2 flex items-center" style="min-height:8px">vectors[6] — NMI, RESET, IRQ (Arduino)</div>
+        <div class="w-14 text-right text-gray-500 pr-2">6 B</div>
+      </div>
+      <div class="flex items-stretch border-b border-gray-300" style="height:239px">
+        <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$FFFA</div>
+        <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt</div>
+        <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~30 KB</div>
+      </div>
+      <div class="flex items-center border-b border-gray-300" style="height:16px">
+        <div class="w-20 text-right pr-3 text-gray-500">$8800</div>
+        <div class="flex-1 bg-blue-100 border-l border-r border-blue-300 px-2 flex items-center">program[2048] — 6502-program (Arduino)</div>
+        <div class="w-14 text-right text-gray-500 pr-2">2 KB</div>
+      </div>
+      <div class="flex items-stretch border-b border-gray-300" style="height:128px">
+        <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$8000</div>
+        <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt (Arduino NOP-fallback)</div>
+        <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~16 KB</div>
+      </div>
+      <div class="flex items-center border-b-2 border-yellow-500" style="min-height:8px">
+        <div class="w-20 text-right pr-3 text-gray-500">$4010</div>
+        <div class="flex-1 bg-yellow-100 border-l border-r border-yellow-400 px-2 flex items-center font-bold" style="min-height:8px">W65C22 VIA — fysisk I/O (steg 7)</div>
+        <div class="w-14 text-right text-gray-500 pr-2">16 B</div>
+      </div>
+      <div class="flex items-stretch border-b-2 border-green-500" style="height:248px">
+        <div class="w-20 text-right pr-3 text-gray-500 self-start pt-1">$4000</div>
+        <div class="flex-1 bg-green-100 border-l border-r border-green-400 px-2 flex items-center font-bold">62256 SRAM — 16 KB riktigt RAM</div>
+        <div class="w-14 text-right text-gray-500 pr-2 self-start pt-1">~16 KB</div>
+      </div>
+      <div class="flex items-center" style="min-height:8px">
+        <div class="w-20 text-right pr-3 text-gray-500">$0000</div>
+        <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">Zero page, stack, data — allt i riktigt SRAM</div>
+        <div class="w-14 text-right text-gray-500 pr-2"></div>
+      </div>
+    </div>
+    <p class="text-gray-700 mt-3 text-sm"><strong>Grön heldragen ram</strong> = 62256 SRAM. <strong>Gul</strong> = VIA. <strong>Blå/lila</strong> = Arduino. Tre enheter, en buss — adressavkodningen avgör vem som svarar.</p>
+  </section>
+
+  <!-- Arduino-kod -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
+    <p class="text-gray-700 mb-3 text-sm">Den stora förändringen: <code>is_sram()</code> kollar om adressen är under $4000. I så fall rör inte Arduino databussen — SRAM-chippet sköter allt.</p>
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// ==============================================================
+// Steg 9 — Riktigt RAM (62256 32KB SRAM)
+// ==============================================================
+// SRAM på $0000–$3FFF. Arduino tri-state för SRAM-adresser.
+// VIA på $4000–$400F, program på $8000+ (Arduino).
+
+#include &lt;Arduino.h&gt;
+#include &lt;LiquidCrystal.h&gt;
+
+#define PHI2     2
+#define RESB     4
+#define RWB      3
+#define SYNC     13
+#define BTN_CLK  11
+#define BTN_INSTR 12
+
+LiquidCrystal lcd(5, 6, 10, 9, 8, 7);
+
+uint8_t program[2048];      // $8000–$87FF (6502-program)
+uint8_t vectors[6];         // $FFFA–$FFFF
+
+#define VIA_BASE     0x4000
+#define SRAM_END     0x3FFF
+
+// --- is_sram() — hanteras av fysisk 62256 ---
+bool is_sram(uint16_t addr) { return addr &lt;= SRAM_END; }
+
+// --- is_via() — hanteras av fysisk W65C22 ---
+bool is_via(uint16_t addr) {
+  return (addr &gt;= VIA_BASE &amp;&amp; addr &lt; VIA_BASE + 16);
+}
+
+// --- read_mem() — Arduino svarar bara utanför SRAM/VIA ---
+uint8_t read_mem(uint16_t addr) {
+  if (is_sram(addr)) return 0;          // SRAM svarar
+  if (is_via(addr)) return 0;           // VIA svarar
+  if (addr &gt;= 0xFFFA &amp;&amp; addr &lt;= 0xFFFF)
+    return vectors[addr - 0xFFFA];
+  if (addr &gt;= 0x8000 &amp;&amp; addr &lt; 0x8000 + sizeof(program))
+    return program[addr - 0x8000];
+  return 0xEA;
+}
+
+void write_mem(uint16_t addr, uint8_t val) {
+  if (is_sram(addr)) return;            // SRAM tar emot
+  if (is_via(addr)) return;             // VIA tar emot
+  if (addr &gt;= 0xFFFA &amp;&amp; addr &lt;= 0xFFFF)
+    { vectors[addr - 0xFFFA] = val; return; }
+  if (addr &gt;= 0x8000 &amp;&amp; addr &lt; 0x8000 + sizeof(program))
+    { program[addr - 0x8000] = val; return; }
+}
+
+// --- pulse() — Arduino tri-state för SRAM och VIA ---
+void pulse() {
+  digitalWrite(PHI2, LOW);
+  DDRA = 0x00;               // Tri-state direkt
+  delay(10);
+
+  uint8_t kl = PINF;
+  uint8_t kh = PINK;
+  uint16_t a = (kl &lt;&lt; 0) | (kh &lt;&lt; 8);
+  bool rw = digitalRead(RWB);
+
+  // Arduino svarar ENDAST om adressen inte är SRAM eller VIA
+  if (rw &amp;&amp; !is_sram(a) &amp;&amp; !is_via(a)) {
+    DDRA = 0xFF;
+    PORTA = read_mem(a);
+  }
+
+  digitalWrite(PHI2, HIGH);
+  delay(10);
+
+  if (!rw &amp;&amp; !is_sram(a) &amp;&amp; !is_via(a)) write_mem(a, PINA);
+
+  // Diagnostik — visa vilken enhet som hanterar adressen
+  Serial.print(rw ? "R" : "W");
+  Serial.print(" $");
+  Serial.print(a, HEX);
+  if (is_sram(a))            Serial.print("  &lt;- SRAM");
+  else if (is_via(a))         Serial.print("  &lt;- VIA");
+  else if (a &gt;= 0x8000 &amp;&amp; rw) Serial.print("  &lt;- OPCODE");
+  else if (a == 0xFFFC)      Serial.print("  &lt;- RESET-VEKTOR LAG");
+  else if (a == 0xFFFD)      Serial.print("  &lt;- RESET-VEKTOR HOG");
+  Serial.println();
+
+  // LCD
+  lcd.setCursor(0, 0);
+  lcd.print("A:$"); lcd.print(a, HEX);
+  if (a &lt; 0x1000) lcd.print(" ");
+  if (a &lt; 0x100)  lcd.print(" ");
+  lcd.print("    ");
+}
+
+void setup() {
+  pinMode(RESB, OUTPUT); digitalWrite(RESB, LOW);
+  pinMode(PHI2, OUTPUT); digitalWrite(PHI2, LOW);
+  pinMode(SYNC, INPUT);
+  pinMode(BTN_CLK,   INPUT_PULLUP);
+  pinMode(BTN_INSTR, INPUT_PULLUP);
+  pinMode(RWB, INPUT);
+  Serial.begin(115200);
+  DDRK = 0x00; DDRF = 0x00; DDRA = 0x00;
+
+  lcd.begin(16, 2);
+  lcd.print("Steg 9 SRAM 62256");
+
+  // Ladda 6502-program — räknare som skriver till SRAM ($0200)
+  write_mem(0xFFFC, 0x00);
+  write_mem(0xFFFD, 0x80);
+  write_mem(0x8000, 0xA2);  // LDX #$00
+  write_mem(0x8001, 0x00);
+  write_mem(0x8002, 0xE8);  // INX
+  write_mem(0x8003, 0x8E);  // STX $0200  ← skriver till SRAM!
+  write_mem(0x8004, 0x00);
+  write_mem(0x8005, 0x02);
+  write_mem(0x8006, 0x4C);  // JMP $8002
+  write_mem(0x8007, 0x02);
+  write_mem(0x8008, 0x80);
+
+  Serial.println("Steg 9 — 62256 SRAM på $0000–$3FFF");
+
+  // Reset-sekvens
+  for (int i = 0; i &lt; 5; i++) pulse();
+  digitalWrite(RESB, HIGH);
+}
+
+void loop() {
+  if (!digitalRead(BTN_CLK)) {
+    delay(50); while (!digitalRead(BTN_CLK)); delay(50);
+    pulse();
+  }
+  if (!digitalRead(BTN_INSTR)) {
+    delay(50); while (!digitalRead(BTN_INSTR)); delay(50);
+    do { pulse(); } while (!digitalRead(SYNC));
+  }
+}</code></pre>
+  </section>
+
+  <!-- Testning -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">Testning och felsökning</h2>
+    <ol class="list-decimal pl-5 space-y-1 text-gray-700">
+      <li>Ladda upp med <code>pio run -e step9 -t upload -t monitor</code></li>
+      <li>I serieövervakaren: adresser under $4000 ska markeras med <code>&lt;- SRAM</code></li>
+      <li>Tryck på instruktionssteg — följ programflödet. STX $0200 ska visa <code>W $0200 &lt;- SRAM</code></li>
+    </ol>
+    <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
+      <span class="font-bold text-green-800">✅ Förväntat:</span>
+      <span class="text-green-700">CPU:n läser/skriver till SRAM för adresser under $4000. Arduino är helt ur vägen — SRAM-chippet svarar på egen hand.</span>
+    </div>
+    <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
+      <h3 class="font-bold">Om det inte fungerar</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li><strong>CPU:n läser $0000 vid reset?</strong> SRAM-chipets /OE är inte GND. Utan /OE=LÅG driver SRAM inte ut data vid läsning.</li>
+        <li><strong>Databuss-krockar?</strong> Arduino får INTE sätta DDRA=0xFF vid SRAM-adresser. Kontrollera att <code>is_sram()</code> returnerar rätt.</li>
+        <li><strong>SRAM skriver inte?</strong> /WE måste gå till CPU R/W (pin 34). /CE måste vara avkodad korrekt via 74HC00.</li>
+        <li><strong>Glitchar på bussen?</strong> 62256 är snabbare än Arduino. Se till att /CE och /WE är stabila innan databussen läses.</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="flex gap-4 mt-8">
+    <a href="step8.html" class="text-blue-600 hover:underline">← Steg 8</a>
+    <a href="index.html" class="text-blue-600 hover:underline">Översikt</a>
+  </div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</body>
+</html>

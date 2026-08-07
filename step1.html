@@ -23,6 +23,7 @@
       <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
       <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
       <a href="step8.html" class="hover:text-blue-300 transition">Steg 8</a>
+      <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
     </div>
   </div>
 </nav>
@@ -74,20 +75,21 @@
 
   <!-- Kretstabell -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Kopplingar — W65C02S CPU</h2>
+    <h2 class="text-lg font-bold mb-2">Kopplingar</h2>
+    <p class="text-gray-700 mb-3 text-sm">Alla kopplingar för detta steg — från strömmatning till klocka. Varje pinne, vart den går, och <strong>varför</strong>.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
           <tr><td class="p-2">8</td><td class="p-2">VDD</td><td class="p-2">+5V</td><td class="p-2">Strömmatning — CPU:ns driftspänning</td></tr>
           <tr><td class="p-2">21</td><td class="p-2">VSS</td><td class="p-2">GND</td><td class="p-2">Systemjord — sluten krets</td></tr>
-          <tr><td class="p-2">37</td><td class="p-2">PHI2</td><td class="p-2">Arduino D2</td><td class="p-2">Klockingång — Arduino skickar fyrkantsvåg</td></tr>
+          <tr><td class="p-2">37</td><td class="p-2">PHI2</td><td class="p-2"><strong>Arduino D2</strong></td><td class="p-2">Klockingång — Arduino skickar fyrkantsvåg</td></tr>
           <tr><td class="p-2">2</td><td class="p-2">RDY</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Ready — HÖG = CPU får köra. Utan denna stannar CPU:n</td></tr>
           <tr><td class="p-2">4</td><td class="p-2">/IRQ</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Interrupt request — HÖG = inget avbrott (vi använder ej avbrott än)</td></tr>
           <tr><td class="p-2">6</td><td class="p-2">/NMI</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Non-maskable interrupt — måste vara HÖG, annars kraschar CPU:n</td></tr>
           <tr><td class="p-2">36</td><td class="p-2">BE</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad!</td></tr>
           <tr><td class="p-2">38</td><td class="p-2">/SO</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Set Overflow — HÖG = avaktiverad</td></tr>
-          <tr><td class="p-2">40</td><td class="p-2">/RESET</td><td class="p-2">Arduino D4 (senare steg)</td><td class="p-2">Lämnas flytande tills vidare — CPU:n startar själv</td></tr>
+          <tr><td class="p-2">40</td><td class="p-2">/RESET</td><td class="p-2"><strong>Arduino D4</strong> (senare steg)</td><td class="p-2">Lämnas flytande tills vidare — CPU:n startar själv</td></tr>
           <tr class="bg-yellow-50"><td class="p-2">—</td><td class="p-2">100nF</td><td class="p-2">Mellan VDD (pin 8) och VSS (pin 21)</td><td class="p-2">Avkopplingskondensator — filtrerar bort brus på strömmatningen. Sätt den så nära CPU:n som möjligt!</td></tr>
         </tbody>
       </table>
@@ -99,18 +101,48 @@
     <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
     <p class="text-gray-700 mb-3 text-sm">Koden som laddas upp till Arduino Mega. Varje rad är kommenterad så du förstår vad som händer — kopiera, klistra in, ladda upp.</p>
     <p class="text-gray-700 mb-3 text-sm">Koden är enkel: sätt pinne D2 som utgång och växla mellan HÖG och LÅG med 500 ms fördröjning. Resultatet blir en symmetrisk fyrkantsvåg på 1 Hz — perfekt för att se lysdioden blinka.</p>
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// Steg 1 — Generera klockpulser (PHI2) för W65C02S
-#define PHI2 2   // Arduino D2 → CPU pin 37
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">// ==============================================================
+// Steg 1 — Strömmatning och klocka
+// ==============================================================
+// CPU:n får ström (+5V och GND) och en långsam klockpuls från
+// Arduino. En lysdiod på klocklinjen blinkar i takt med pulsen.
+// Inga andra anslutningar — adress- och databuss är inte inkopplade.
 
-void setup() {
-  pinMode(PHI2, OUTPUT);
+#include &lt;Arduino.h&gt;
+
+// --- Pindefinitioner ---
+#define PHI2 2   // Arduino D2 → CPU pin 37 (klockingång)
+#define RESB 4   // Arduino D4 → CPU pin 40 (reset, hålls låg)
+
+// --- pulse() — generera en komplett klockcykel ---
+// W65C02S reagerar på stigande flank av PHI2.
+// 500 ms HIGH + 500 ms LOW = 1 Hz (en blink per sekund).
+void pulse() {
+  digitalWrite(PHI2, HIGH);   // Stigande flank — CPU:n arbetar
+  delay(500);                 // Lysdiod lyser i 500 ms
+  digitalWrite(PHI2, LOW);    // Fallande flank — nästa cykel
+  delay(500);                 // Lysdiod släckt i 500 ms
 }
 
+// --- setup() — konfigurera pinnar, körs en gång vid start ---
+void setup() {
+  // Pin-konfiguration
+  pinMode(PHI2, OUTPUT);       // Arduino styr klockan
+  pinMode(RESB, OUTPUT);       // Arduino håller CPU i reset
+
+  // Starttillstånd
+  digitalWrite(RESB, LOW);     // CPU i reset (gör inget, bussarna tri-state)
+  digitalWrite(PHI2, LOW);     // Klockan börjar låg
+
+  // Serieövervakaren för diagnostik
+  Serial.begin(115200);
+  Serial.println("Steg 1 — Klocka och ström");
+  Serial.println("Lysdioden på PHI2 ska blinka 1 Hz");
+}
+
+// --- loop() — repeteras i oändlighet ---
 void loop() {
-  digitalWrite(PHI2, HIGH);   // Stigande flank — CPU:n arbetar
-  delay(500);                 // Lysdiod lyser
-  digitalWrite(PHI2, LOW);    // Fallande flank — nästa cykel
-  delay(500);                 // Lysdiod släckt
+  pulse();  // En klockcykel → lysdioden blinkar för alltid
 }</code></pre>
   </section>
 
