@@ -24,6 +24,9 @@ VIA_DDRA = $4003
 ; Reset — start av programmet
 ; ============================================================
 reset:
+    ; --- Power-on delay för LCD ---
+    jsr delay_30ms
+
     ; --- Sätt VIA-portar som utgångar ---
     lda #$FF
     sta VIA_DDRB       ; PORTB = utgång (LCD data)
@@ -32,36 +35,42 @@ reset:
     ; --- LCD-init: tvinga 8-bitarsläge ($30 × 3) ---
     lda #$30
     jsr lcd_command
+    jsr delay_5ms
     lda #$30
     jsr lcd_command
+    jsr delay_5ms
     lda #$30
     jsr lcd_command
+    jsr delay_5ms
 
     ; --- Function set: 8-bit, 2 rader, 5×8 ---
     lda #$38
     jsr lcd_command
+    jsr delay_50us
 
     ; --- Display ON, cursor OFF, blink OFF ---
     lda #$0C
     jsr lcd_command
+    jsr delay_50us
 
     ; --- Clear display ---
     lda #$01
     jsr lcd_command
+    jsr delay_2ms
 
     ; --- Entry mode: increment, no shift ---
     lda #$06
     jsr lcd_command
+    jsr delay_50us
 
 ; ============================================================
 ; Huvudloop — skriv fyra rader, cleara, loopa
 ; ============================================================
 hello:
-    ; --- Rad 1: cursor till $00, skriv "=== 6502 VIA LCD ===" ---
+    ; --- Rad 1: cursor till $00, skriv "6502 VIA LCD 2x16" ---
     lda #$80                ; DDRAM-adress 0
     jsr lcd_command
-    lda #$01                ; RS=1 (data-läge)
-    sta VIA_ORA
+    jsr delay_50us
     ldx #0
 @l1:
     lda line1,x
@@ -71,11 +80,10 @@ hello:
     jmp @l1
 @l1_done:
 
-    ; --- Rad 2: cursor till $40, skriv "Hello from W65C02!" ---
+    ; --- Rad 2: cursor till $40, skriv "smutje.se W65C02" ---
     lda #$C0
     jsr lcd_command
-    lda #$01
-    sta VIA_ORA
+    jsr delay_50us
     ldx #0
 @l2:
     lda line2,x
@@ -85,38 +93,10 @@ hello:
     jmp @l2
 @l2_done:
 
-    ; --- Rad 3 (20×4): cursor till $14, skriv "Arduino = RAM + CLK" ---
-    ; För 16×2 hoppas denna över (cursor $14 syns inte)
-    lda #$94
-    jsr lcd_command
-    lda #$01
-    sta VIA_ORA
-    ldx #0
-@l3:
-    lda line3,x
-    beq @l3_done
-    jsr lcd_data
-    inx
-    jmp @l3
-@l3_done:
-
-    ; --- Rad 4 (20×4): cursor till $54, skriv "smutje.se 2026" ---
-    lda #$D4
-    jsr lcd_command
-    lda #$01
-    sta VIA_ORA
-    ldx #0
-@l4:
-    lda line4,x
-    beq @l4_done
-    jsr lcd_data
-    inx
-    jmp @l4
-@l4_done:
-
     ; --- Clear och loopa om ---
     lda #$01
     jsr lcd_command
+    jsr delay_2ms
     jmp hello
 
 ; ============================================================
@@ -130,6 +110,7 @@ lcd_command:
     sta VIA_ORA
     lda #$00                ; RS=0, E=0 (fallande flank)
     sta VIA_ORA
+    jsr delay_50us          ; LCD-exec time (37+ µs)
     rts
 
 ; Skicka data i A (RS=1, E-puls)
@@ -139,15 +120,62 @@ lcd_data:
     sta VIA_ORA
     lda #$01                ; RS=1, E=0 (fallande flank)
     sta VIA_ORA
+    jsr delay_50us          ; LCD-exec time
     rts
 
 ; ============================================================
 ; Strängdata (null-terminerade)
 ; ============================================================
-line1:  .byte "=== 6502 VIA LCD ===", 0
-line2:  .byte "Hello from W65C02!", 0
-line3:  .byte "Arduino = RAM + CLK", 0
-line4:  .byte "smutje.se 2026", 0
+line1:  .byte "6502 VIA LCD 2x16", 0
+line2:  .byte "smutje.se W65C02", 0
+
+; ============================================================
+; Delay-rutiner (1 MHz = 1 µs per cykel)
+; ============================================================
+
+; 30 ms delay (för power-on)
+delay_30ms:
+    ldy #30
+@outer30:
+    ldx #0
+@inner30:
+    dex
+    bne @inner30
+    dey
+    bne @outer30
+    rts
+
+; 5 ms delay
+delay_5ms:
+    ldy #5
+@outer5:
+    ldx #0
+@inner5:
+    dex
+    bne @inner5
+    dey
+    bne @outer5
+    rts
+
+; 2 ms delay (för clear display)
+delay_2ms:
+    ldy #2
+@outer2:
+    ldx #0
+@inner2:
+    dex
+    bne @inner2
+    dey
+    bne @outer2
+    rts
+
+; ~50 µs delay (för vanliga kommandon)
+delay_50us:
+    ldx #17
+@d50:
+    dex
+    bne @d50
+    rts
 
 ; ============================================================
 ; Vektorer — placeras på $FFFA–$FFFF
