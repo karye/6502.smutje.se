@@ -167,7 +167,7 @@
           <tr><td class="p-2">14</td><td class="p-2">VSS</td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
           <tr><td class="p-2">10–3, 25, 24, 21, 23, 2, 26, 1</td><td class="p-2">A0–A14</td><td class="p-2"><strong>A0</strong>–A14</td><td class="p-2">15 adresslinjer — SRAM behöver veta vilken byte CPU:n vill åt</td></tr>
           <tr><td class="p-2">11–13, 15–19</td><td class="p-2">D0–D7</td><td class="p-2"><strong>D0</strong>–D7 (databuss)</td><td class="p-2">8 datalinjer — SRAM läser/skriver data här</td></tr>
-          <tr><td class="p-2">20</td><td class="p-2">/CE</td><td class="p-2"><strong>U4C</strong> pin 8</td><td class="p-2">Chip Enable — LÅG = SRAM aktivt. 74HC00 drar LÅG vid $0000–$3FFF</td></tr>
+          <tr><td class="p-2">20</td><td class="p-2">/CE</td><td class="p-2"><strong>U4D</strong> pin 11</td><td class="p-2">Chip Enable — LÅG = SRAM aktivt. 74HC00 drar LÅG vid $0000–$3FFF</td></tr>
           <tr><td class="p-2">22</td><td class="p-2">/OE</td><td class="p-2">GND</td><td class="p-2">Output Enable — alltid LÅG (SRAM kör alltid ut data vid läsning)</td></tr>
           <tr><td class="p-2">27</td><td class="p-2">/WE</td><td class="p-2"><strong>R/W</strong> (pin 34)</td><td class="p-2">Write Enable — LÅG = skriv. CPU:ns R/W är LÅG vid skrivning</td></tr>
         </tbody>
