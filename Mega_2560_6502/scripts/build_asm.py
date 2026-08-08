@@ -15,7 +15,7 @@ def build_asm(target, source, env):
     obj_path = os.path.join(asm_dir, "program_hello.o")
     bin_path = os.path.join(asm_dir, "program_hello.bin")
     h_path   = os.path.join(src_dir, "program.h")
-    cfg_path = os.path.join(src_dir, "program.cfg")
+    cfg_path = os.path.join(asm_dir, "program.cfg")
 
     print(f"[build_asm] Assemblerar {asm_path} …")
 
