@@ -449,10 +449,10 @@ void loop() {
     <h2 class="text-lg font-bold mb-2">Så här använder du det</h2>
     <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-3">
       <p><strong>1. Redigera assembler-koden:</strong></p>
-      <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="apache">nano src/program.asm</code></pre>
+      <pre><code class="apache">nano src/program.asm</code></pre>
 
       <p><strong>2. Bygg och ladda upp (Windows-maskinen):</strong></p>
-      <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="apache">pio run -t upload -t monitor</code></pre>
+      <pre><code class="apache">pio run -t upload -t monitor</code></pre>
 
       <p><strong>Viktigt:</strong> <code>platformio.ini</code> måste ha <code>build_src_filter = +&lt;*&gt; -&lt;program.asm&gt;</code> för att förhindra att AVR-assemblern försöker kompilera 6502-koden.</p>
 
@@ -477,7 +477,7 @@ void loop() {
       <h3 class="font-bold">Om det inte fungerar</h3>
       <ul class="list-disc pl-5 space-y-1">
         <li><strong>ca65: command not found?</strong> Installera cc65: <pre><code class="apache">sudo apt install cc65</code></pre></li>
-        <li><strong>"No such file: program.h"?</strong> Första bygget måste generera den. Kör <code class="apache">pio run -e step8</code> två gånger om det krävs.</li>
+        <li><strong>"No such file: program.h"?</strong> Första bygget måste generera den. Kör <pre><code class="apache">pio run -e step8</code></pre> två gånger om det krävs.</li>
         <li><strong>CPU:n gör inget?</strong> Kontrollera att <code>write_mem()</code>-loopen faktiskt kopierar <code>PROGRAM[]</code> till <code>program[]</code>. Logga med <code>Serial.print()</code>.</li>
       </ul>
     </div>
