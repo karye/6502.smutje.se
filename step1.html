@@ -137,75 +137,114 @@
     <h2 class="text-lg font-bold mb-2">Arduino Mega 2560 — anslutningar</h2>
     <p class="text-gray-700 mb-3 text-sm">Endast de pinnar vi använder i projektet. Grupperade efter funktion — adressbuss, databuss, kontroll och ström.</p>
     <div class="flex justify-center">
-      <div class="p-2 bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-xs leading-relaxed">
-        <div class="text-center text-sm text-gray-400 mb-2">Arduino Mega 2560 (endast använda pinnar)</div>
+      <div class="p-2 bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-xs leading-snug">
+        <div class="text-center text-sm text-gray-400 mb-2">Arduino Mega 2560 — komplett pinout</div>
         <div class="flex">
           <!-- Vänster kant -->
           <div class="flex flex-col gap-px">
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-r"></span><span class="w-16 pl-1 text-red-300">5V</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-r"></span><span class="w-16 pl-1 text-purple-300">RESET</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-r"></span><span class="w-16 pl-1 text-red-300">3.3V</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-r"></span><span class="w-16 pl-1 text-red-300">5V</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-r"></span><span class="w-16 pl-1 text-gray-400">GND</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-r"></span><span class="w-16 pl-1 text-gray-400">GND</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-r"></span><span class="w-16 pl-1 text-red-300">VIN</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-r"></span><span class="w-16 pl-1 text-blue-300">A0</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-r"></span><span class="w-16 pl-1 text-blue-300">A1</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-r"></span><span class="w-16 pl-1 text-blue-300">A2</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-r"></span><span class="w-16 pl-1 text-blue-300">A3</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-r"></span><span class="w-16 pl-1 text-blue-300">A4</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-r"></span><span class="w-16 pl-1 text-blue-300">A5</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-r"></span><span class="w-16 pl-1 text-blue-300">A6</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-r"></span><span class="w-16 pl-1 text-blue-300">A7</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-red-300">5V</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-purple-300">RESET</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-red-300">3.3V</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-red-300">5V</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-gray-400">GND</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-gray-400">GND</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-red-300">VIN</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-blue-300">A0</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-blue-300">A1</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-blue-300">A2</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-blue-300">A3</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-blue-300">A4</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-blue-300">A5</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-blue-300">A6</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-blue-300">A7</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-blue-300">A8</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-blue-300">A9</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-blue-300">A10</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-blue-300">A11</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-blue-300">A12</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-blue-300">A13</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-blue-300">A14</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-12 pl-1 text-blue-300">A15</span></div>
           </div>
           <!-- Body -->
-          <div class="bg-gray-700 border-2 border-gray-500 rounded px-4 flex flex-col">
+          <div class="bg-gray-700 border-2 border-gray-500 rounded px-3 flex flex-col">
             <div class="text-center py-3">
               <div class="text-sm text-gray-400">Arduino</div>
               <div class="text-base font-bold">Mega</div>
               <div class="text-sm text-gray-400">2560</div>
             </div>
-            <!-- Nedre kantpinnar -->
-            <div class="flex justify-end gap-px border-t border-gray-500 pt-1">
-              <div class="text-center"><div class="w-3 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">22</span></div>
-              <div class="text-center"><div class="w-3 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">24</span></div>
-              <div class="text-center"><div class="w-3 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">26</span></div>
-              <div class="text-center"><div class="w-3 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">28</span></div>
-              <div class="text-center"><div class="w-3 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">30</span></div>
-              <div class="text-center"><div class="w-3 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">32</span></div>
-              <div class="text-center"><div class="w-3 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">34</span></div>
-              <div class="text-center"><div class="w-3 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">36</span></div>
-              <div class="text-center"><div class="w-3 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">38</span></div>
-              <div class="text-center"><div class="w-3 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">40</span></div>
-              <div class="text-center"><div class="w-3 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">42</span></div>
-              <div class="text-center"><div class="w-3 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">44</span></div>
-              <div class="text-center"><div class="w-3 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">46</span></div>
-              <div class="text-center"><div class="w-3 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">48</span></div>
-              <div class="text-center"><div class="w-3 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">50</span></div>
-              <div class="text-center"><div class="w-3 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">52</span></div>
-              <div class="text-center"><div class="w-3 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-400">GND</span></div>
+            <!-- Nedre kant — dubbel rad -->
+            <div class="border-t border-gray-500 pt-1">
+              <div class="flex justify-end gap-0.5">
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">22</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">24</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">26</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">28</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">30</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">32</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">34</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">36</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">38</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">40</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">42</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">44</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">46</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">48</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">50</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">52</span></div>
+              </div>
+              <div class="flex justify-end gap-0.5">
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">23</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">25</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">27</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">29</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">31</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">33</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">35</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">37</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">39</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">41</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">43</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">45</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">47</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">49</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">51</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-500">53</span></div>
+                <div class="text-center"><div class="w-2 h-3 bg-yellow-500 mx-auto"></div><span class="text-gray-400">GND</span></div>
+              </div>
             </div>
           </div>
           <!-- Höger kant -->
           <div class="flex flex-col gap-px">
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pr-1 text-purple-300">SCL</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pr-1 text-purple-300">SDA</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pr-1 text-yellow-300">AREF</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pr-1 text-gray-400">GND</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pr-1 text-purple-300">13</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pr-1 text-purple-300">12</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pr-1 text-purple-300">11</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pr-1 text-purple-300">10</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pr-1 text-purple-300">9</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pr-1 text-purple-300">8</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pr-1 text-purple-300">7</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pr-1 text-purple-300">6</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pr-1 text-purple-300">5</span></div>
-            <div class="flex items-center"><span class="w-3 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pr-1 text-purple-300">4</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">SCL</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">SDA</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-yellow-300">AREF</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-gray-400">GND</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">13</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">12</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">11</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">10</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">9</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">8</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">7</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">6</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">5</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">4</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">3</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">2</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">1</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">0</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">14</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">15</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">16</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">17</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">18</span></div>
+            <div class="flex items-center h-4"><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-12 pr-1 text-right text-purple-300">19</span></div>
           </div>
         </div>
       </div>
     </div>
+    <p class="text-gray-700 mt-3 text-sm"><span class="text-blue-300">■</span> Används i projektet (adressbuss) &nbsp; <span class="text-purple-300">■</span> Används i projektet (kontroll/data) &nbsp; <span class="text-red-300">■</span> Ström &nbsp; <span class="text-gray-400">■</span> Oanvänd.</p>
   </section>
 
   <!-- Kopplingsschema -->
