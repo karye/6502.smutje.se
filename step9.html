@@ -143,6 +143,48 @@
     <p class="text-gray-700 mt-3 text-sm"><span class="text-blue-300">■</span> Adressbuss &nbsp; <span class="text-green-300">■</span> Databuss &nbsp; <span class="text-purple-300">■</span> Kontroll &nbsp; <span class="text-red-300">■</span> Ström. Notch/pin 1-markering: uppåt. <strong>/OE</strong> = GND (alltid läs ut). <strong>/CE</strong> = U4D pin 11 (aktiv vid $0000–$3FFF).</p>
   </section>
 
+  <!-- 74HC00 pinout -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">74HC00 — pinout</h2>
+    <p class="text-gray-700 mb-3 text-sm">DIP-14-kapsel. Alla fyra grindar används nu: U4A+U4B för VIA (steg 7), U4C+U4D för SRAM (steg 9).</p>
+    <div class="flex justify-center">
+      <div class="p-2 inline-flex bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-sm leading-relaxed">
+        <div class="flex flex-col justify-between py-2">
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-blue-300">U4A in A</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-blue-300">U4A in B</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-blue-300">U4A ut</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-green-300">U4B in A</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-green-300">U4B in B</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-green-300">U4B ut</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-red-300">GND</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+        </div>
+        <div class="bg-gray-700 px-2 flex items-center border-2 border-gray-500">
+          <div class="flex flex-col justify-between py-2 h-full">
+            <div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">1</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">2</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">3</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">4</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">5</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">6</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">7</span></div>
+          </div>
+          <div class="text-center px-2">
+            <div class="text-sm text-gray-400 mb-1">DIP-14</div>
+            <div class="text-lg font-bold">74HC00</div>
+            <div class="text-sm text-gray-400 mt-1">4× NAND</div>
+          </div>
+          <div class="flex flex-col justify-between py-2 h-full">
+            <div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">14</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">13</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">12</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">11</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">10</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">9</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">8</span></div>
+          </div>
+        </div>
+        <div class="flex flex-col justify-between py-2">
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-red-300">VCC (+5V)</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-purple-300">U4D in A</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-purple-300">U4D in B</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-purple-300">U4D ut</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-purple-300">U4C in A</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-purple-300">U4C in B</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-purple-300">U4C ut</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="text-gray-700 mt-3 text-sm"><span class="text-blue-300">■</span> U4A (NOT A15 → SRAM /CE) &nbsp; <span class="text-green-300">■</span> U4B (A15 NAND A14 → VIA /CS2) &nbsp; <span class="text-purple-300">■</span> U4C+D (SRAM-avkodning).</p>
+  </section>
+
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
