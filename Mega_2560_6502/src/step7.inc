@@ -1,8 +1,10 @@
 #include <Arduino.h>
 
-// -----------------------------------------------------------
+// ==============================================================
 // Steg 7 — VIA + LCD (LCD styrs av 6502 via W65C22 VIA)
-// -----------------------------------------------------------
+// ==============================================================
+// 6502-programmet initierar VIA + LCD och skriver 4 rader text.
+// Arduino är endast minnesemulator + klocka — all I/O via VIA.
 
 #define PHI2     2   // CPU pin 37
 #define RESB     4   // CPU pin 40
@@ -19,10 +21,16 @@ uint8_t vectors[6];      // $FFFA–$FFFF
 
 #define VIA_BASE 0x4000
 
+// --- is_via() — är detta en VIA-adress? ---
+// VIA sitter på $4000–$400F. Arduino ska INTE svara här —
+// den fysiska W65C22-kretsen hanterar dessa adresser själv.
 bool is_via(uint16_t addr) {
   return (addr >= VIA_BASE && addr < VIA_BASE + 16);
 }
 
+// --- read_mem() — slå upp ett minnesvärde ---
+// Returnerar 0 för VIA-adresser (Arduino tri-state, VIA svarar).
+// Returnerar NOP ($EA) som fallback för oanvända adresser.
 uint8_t read_mem(uint16_t addr) {
   if (is_via(addr)) return 0;
   if (addr >= 0xFFFA && addr <= 0xFFFF)
@@ -33,6 +41,8 @@ uint8_t read_mem(uint16_t addr) {
   return 0xEA;
 }
 
+// --- write_mem() — spara ett värde i minnet ---
+// Ignorera VIA-adresser — den fysiska kretsen tar emot skrivningen.
 void write_mem(uint16_t addr, uint8_t val) {
   if (is_via(addr)) return;
   if (addr >= 0xFFFA && addr <= 0xFFFF)
@@ -44,8 +54,10 @@ void write_mem(uint16_t addr, uint8_t val) {
 
 void pulse();  // Forward declaration
 
+// --- pulse() — en klockcykel med minnesemulering + VIA-pass-through ---
+// Kritiskt: DDRA = 0x00 direkt när PHI2 går låg, INNAN delay().
+// Arduino svarar ENDAST på adresser utanför VIA-området.
 void pulse() {
-  // -- Fas 1: PHI2 låg -- ALDRIG släpp bussen före klockan fallit!
   digitalWrite(PHI2, LOW);
 
   // Släpp databussen EFTER klockfall — håll kvar data under CPU:ns hold time (~10ns)
@@ -109,6 +121,7 @@ void pulse() {
   Serial.println();
 }
 
+// --- setup() — ladda 6502-program och starta CPU ---
 void setup() {
   // CPU i reset från start — avgörande!
   pinMode(RESB, OUTPUT); digitalWrite(RESB, LOW);
