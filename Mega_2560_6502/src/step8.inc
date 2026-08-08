@@ -1,11 +1,11 @@
 // ==============================================================
 // Steg 8 — Assembler-bygge med ca65
 // ==============================================================
-// 6502-programmet byggs från src/program.asm via ca65/ld65
-// → program.h. PlatformIO kör assembler-stegen automatiskt.
+// 6502-programmet byggs från asm/program_hello.asm via ca65/ld65
+// → program_hello.h. PlatformIO kör assembler-stegen automatiskt.
 
 #include <Arduino.h>
-#include "program.h"   // Genereras av byggskriptet (bin2h.py)
+#include "program_hello.h"   // Genereras av byggskriptet (bin2h.py)
 
 #define PHI2     2
 #define RESB     4
