@@ -56,7 +56,7 @@
     <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
       <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Verktyg</th><th class="p-2 text-left">Installation</th></tr></thead>
       <tbody class="divide-y">
-        <tr><td class="p-2">ca65 / ld65</td><td class="p-2"><code>sudo apt install cc65</code> (Linux) eller ladda ner från <a href="https://cc65.github.io/" class="text-blue-600 hover:underline">cc65.github.io</a> (Windows)</td></tr>
+        <tr><td class="p-2">ca65 / ld65</td><td class="p-2"><code class="apache">sudo apt install cc65</code> (Linux) eller ladda ner från <a href="https://cc65.github.io/" class="text-blue-600 hover:underline">cc65.github.io</a> (Windows)</td></tr>
         <tr><td class="p-2">Python 3</td><td class="p-2">Redan installerat med PlatformIO</td></tr>
       </tbody>
     </table>
@@ -477,7 +477,7 @@ void loop() {
       <h3 class="font-bold">Om det inte fungerar</h3>
       <ul class="list-disc pl-5 space-y-1">
         <li><strong>ca65: command not found?</strong> Installera cc65: <pre><code class="apache">sudo apt install cc65</code></pre></li>
-        <li><strong>"No such file: program.h"?</strong> Första bygget måste generera den. Kör <code>pio run -e step8</code> två gånger om det krävs.</li>
+        <li><strong>"No such file: program.h"?</strong> Första bygget måste generera den. Kör <code class="apache">pio run -e step8</code> två gånger om det krävs.</li>
         <li><strong>CPU:n gör inget?</strong> Kontrollera att <code>write_mem()</code>-loopen faktiskt kopierar <code>PROGRAM[]</code> till <code>program[]</code>. Logga med <code>Serial.print()</code>.</li>
       </ul>
     </div>
