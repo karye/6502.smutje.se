@@ -9,10 +9,11 @@ import os
 def build_asm(target, source, env):
     """Assemblera program.asm → program.bin → program.h"""
     src_dir = os.path.join(env.subst("$PROJECT_DIR"), "src")
+    asm_dir = os.path.join(env.subst("$PROJECT_DIR"), "asm")
 
-    asm_path = os.path.join(src_dir, "program.asm")
-    obj_path = os.path.join(src_dir, "program.o")
-    bin_path = os.path.join(src_dir, "program.bin")
+    asm_path = os.path.join(asm_dir, "program.asm")
+    obj_path = os.path.join(asm_dir, "program.o")
+    bin_path = os.path.join(asm_dir, "program.bin")
     h_path   = os.path.join(src_dir, "program.h")
     cfg_path = os.path.join(src_dir, "program.cfg")
 
