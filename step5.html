@@ -73,23 +73,33 @@
     <div class="flex justify-center">
       <div class="p-2 bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-sm leading-relaxed">
         <div class="text-center text-sm text-gray-400 mb-2">LCD 16×2 — SIL-16</div>
-        <div class="flex flex-col gap-px">
-          <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">1</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-red-300">VSS (GND)</span><span class="text-gray-500 ml-4">Jord</span></div>
-          <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">2</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-red-300">VDD (+5V)</span><span class="text-gray-500 ml-4">Ström</span></div>
-          <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">3</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-yellow-300">VO</span><span class="text-gray-500 ml-4">Kontrast (pot)</span></div>
-          <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">4</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-purple-300">RS</span><span class="text-gray-500 ml-4">Register Select</span></div>
-          <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">5</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-purple-300">R/W</span><span class="text-gray-500 ml-4">Read/Write</span></div>
-          <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">6</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-purple-300">E</span><span class="text-gray-500 ml-4">Enable</span></div>
-          <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">7</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">DB0</span><span class="text-gray-500 ml-4">Data bit 0</span></div>
-          <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">8</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">DB1</span><span class="text-gray-500 ml-4">Data bit 1</span></div>
-          <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">9</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">DB2</span><span class="text-gray-500 ml-4">Data bit 2</span></div>
-          <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">10</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">DB3</span><span class="text-gray-500 ml-4">Data bit 3</span></div>
-          <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">11</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">DB4</span><span class="text-gray-500 ml-4">Data bit 4</span></div>
-          <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">12</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">DB5</span><span class="text-gray-500 ml-4">Data bit 5</span></div>
-          <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">13</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">DB6</span><span class="text-gray-500 ml-4">Data bit 6</span></div>
-          <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">14</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">DB7</span><span class="text-gray-500 ml-4">Data bit 7</span></div>
-          <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">15</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-red-300">A (LED+)</span><span class="text-gray-500 ml-4">Belysning +</span></div>
-          <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">16</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-red-300">K (LED−)</span><span class="text-gray-500 ml-4">Belysning −</span></div>
+        <div class="flex">
+          <!-- LCD body -->
+          <div class="bg-green-700 border-2 border-green-500 rounded px-4 flex items-center justify-center" style="min-height:440px">
+            <div class="text-center">
+              <div class="text-lg font-bold text-green-200">16×2</div>
+              <div class="text-xs text-green-400">LCD</div>
+            </div>
+          </div>
+          <!-- Pins -->
+          <div class="flex flex-col gap-px">
+            <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">1</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-red-300">VSS (GND)</span><span class="text-gray-500 ml-4">Jord</span></div>
+            <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">2</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-red-300">VDD (+5V)</span><span class="text-gray-500 ml-4">Ström</span></div>
+            <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">3</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-yellow-300">VO</span><span class="text-gray-500 ml-4">Kontrast (pot)</span></div>
+            <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">4</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-purple-300">RS</span><span class="text-gray-500 ml-4">Register Select</span></div>
+            <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">5</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-purple-300">R/W</span><span class="text-gray-500 ml-4">Read/Write</span></div>
+            <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">6</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-purple-300">E</span><span class="text-gray-500 ml-4">Enable</span></div>
+            <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">7</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">DB0</span><span class="text-gray-500 ml-4">Data bit 0</span></div>
+            <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">8</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">DB1</span><span class="text-gray-500 ml-4">Data bit 1</span></div>
+            <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">9</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">DB2</span><span class="text-gray-500 ml-4">Data bit 2</span></div>
+            <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">10</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">DB3</span><span class="text-gray-500 ml-4">Data bit 3</span></div>
+            <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">11</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">DB4</span><span class="text-gray-500 ml-4">Data bit 4</span></div>
+            <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">12</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">DB5</span><span class="text-gray-500 ml-4">Data bit 5</span></div>
+            <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">13</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">DB6</span><span class="text-gray-500 ml-4">Data bit 6</span></div>
+            <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">14</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">DB7</span><span class="text-gray-500 ml-4">Data bit 7</span></div>
+            <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">15</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-red-300">A (LED+)</span><span class="text-gray-500 ml-4">Belysning +</span></div>
+            <div class="flex items-center"><span class="w-6 text-center text-gray-500 font-bold">16</span><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-red-300">K (LED−)</span><span class="text-gray-500 ml-4">Belysning −</span></div>
+          </div>
         </div>
       </div>
     </div>
