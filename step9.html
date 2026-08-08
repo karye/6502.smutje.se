@@ -62,28 +62,53 @@
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">62256 SRAM — pinout</h2>
     <p class="text-gray-700 mb-3 text-sm">DIP-28-kapsel. 15 adresslinjer, 8 datalinjer, 3 kontrollsignaler. Här ser du exakt hur kretsen ska vändas och vad varje pinne gör.</p>
-    <div class="bg-white rounded-lg shadow">
-      <table class="w-full text-sm border-collapse font-mono">
-        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-center w-1/4">Vänster sida</th><th class="p-2 text-center w-1/4">Pin</th><th class="p-2 text-center w-1/4">Pin</th><th class="p-2 text-center w-1/4">Höger sida</th></tr></thead>
-        <tbody class="divide-y">
-          <tr><td class="p-2 text-right"><strong>CPU A14</strong> →</td><td class="p-2 text-center bg-gray-100">1</td><td class="p-2 text-center bg-gray-100">28</td><td class="p-2">← <strong>+5V</strong> (VDD)</td></tr>
-          <tr><td class="p-2 text-right"><strong>CPU A12</strong> →</td><td class="p-2 text-center">2</td><td class="p-2 text-center">27</td><td class="p-2">← <strong>CPU R/W</strong> (/WE)</td></tr>
-          <tr><td class="p-2 text-right"><strong>CPU A7</strong> →</td><td class="p-2 text-center bg-gray-100">3</td><td class="p-2 text-center bg-gray-100">26</td><td class="p-2">← <strong>CPU A13</strong></td></tr>
-          <tr><td class="p-2 text-right"><strong>CPU A6</strong> →</td><td class="p-2 text-center">4</td><td class="p-2 text-center">25</td><td class="p-2">← <strong>CPU A8</strong></td></tr>
-          <tr><td class="p-2 text-right"><strong>CPU A5</strong> →</td><td class="p-2 text-center bg-gray-100">5</td><td class="p-2 text-center bg-gray-100">24</td><td class="p-2">← <strong>CPU A9</strong></td></tr>
-          <tr><td class="p-2 text-right"><strong>CPU A4</strong> →</td><td class="p-2 text-center">6</td><td class="p-2 text-center">23</td><td class="p-2">← <strong>CPU A11</strong></td></tr>
-          <tr><td class="p-2 text-right"><strong>CPU A3</strong> →</td><td class="p-2 text-center bg-gray-100">7</td><td class="p-2 text-center bg-gray-100">22</td><td class="p-2">← <strong>GND</strong> (/OE)</td></tr>
-          <tr><td class="p-2 text-right"><strong>CPU A2</strong> →</td><td class="p-2 text-center">8</td><td class="p-2 text-center">21</td><td class="p-2">← <strong>CPU A10</strong></td></tr>
-          <tr><td class="p-2 text-right"><strong>CPU A1</strong> →</td><td class="p-2 text-center bg-gray-100">9</td><td class="p-2 text-center bg-gray-100">20</td><td class="p-2">← <strong>U4A pin 3</strong> (/CE)</td></tr>
-          <tr><td class="p-2 text-right"><strong>CPU A0</strong> →</td><td class="p-2 text-center">10</td><td class="p-2 text-center">19</td><td class="p-2">↔ <strong>CPU D7</strong></td></tr>
-          <tr><td class="p-2 text-right"><strong>CPU D0</strong> ↔</td><td class="p-2 text-center bg-gray-100">11</td><td class="p-2 text-center bg-gray-100">18</td><td class="p-2">↔ <strong>CPU D6</strong></td></tr>
-          <tr><td class="p-2 text-right"><strong>CPU D1</strong> ↔</td><td class="p-2 text-center">12</td><td class="p-2 text-center">17</td><td class="p-2">↔ <strong>CPU D5</strong></td></tr>
-          <tr><td class="p-2 text-right"><strong>CPU D2</strong> ↔</td><td class="p-2 text-center bg-gray-100">13</td><td class="p-2 text-center bg-gray-100">16</td><td class="p-2">↔ <strong>CPU D4</strong></td></tr>
-          <tr><td class="p-2 text-right"><strong>GND</strong> →</td><td class="p-2 text-center">14</td><td class="p-2 text-center">15</td><td class="p-2">↔ <strong>CPU D3</strong></td></tr>
-        </tbody>
-      </table>
+    <div class="flex justify-center">
+      <div class="inline-flex bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-xs leading-relaxed">
+        <!-- Left pins -->
+        <div class="flex flex-col justify-between py-1">
+          <div class="flex items-center"><span class="w-16 text-right pr-1 text-blue-300">CPU A14</span><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-5 text-center text-gray-400">1</span></div>
+          <div class="flex items-center"><span class="w-16 text-right pr-1 text-blue-300">CPU A12</span><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-5 text-center text-gray-400">2</span></div>
+          <div class="flex items-center"><span class="w-16 text-right pr-1 text-blue-300">CPU A7</span><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-5 text-center text-gray-400">3</span></div>
+          <div class="flex items-center"><span class="w-16 text-right pr-1 text-blue-300">CPU A6</span><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-5 text-center text-gray-400">4</span></div>
+          <div class="flex items-center"><span class="w-16 text-right pr-1 text-blue-300">CPU A5</span><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-5 text-center text-gray-400">5</span></div>
+          <div class="flex items-center"><span class="w-16 text-right pr-1 text-blue-300">CPU A4</span><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-5 text-center text-gray-400">6</span></div>
+          <div class="flex items-center"><span class="w-16 text-right pr-1 text-blue-300">CPU A3</span><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-5 text-center text-gray-400">7</span></div>
+          <div class="flex items-center"><span class="w-16 text-right pr-1 text-blue-300">CPU A2</span><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-5 text-center text-gray-400">8</span></div>
+          <div class="flex items-center"><span class="w-16 text-right pr-1 text-blue-300">CPU A1</span><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-5 text-center text-gray-400">9</span></div>
+          <div class="flex items-center"><span class="w-16 text-right pr-1 text-blue-300">CPU A0</span><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-5 text-center text-gray-400">10</span></div>
+          <div class="flex items-center"><span class="w-16 text-right pr-1 text-green-300">CPU D0</span><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-5 text-center text-gray-400">11</span></div>
+          <div class="flex items-center"><span class="w-16 text-right pr-1 text-green-300">CPU D1</span><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-5 text-center text-gray-400">12</span></div>
+          <div class="flex items-center"><span class="w-16 text-right pr-1 text-green-300">CPU D2</span><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-5 text-center text-gray-400">13</span></div>
+          <div class="flex items-center"><span class="w-16 text-right pr-1 text-white">GND</span><span class="w-2 h-3 bg-yellow-500 rounded-r"></span><span class="w-5 text-center text-gray-400">14</span></div>
+        </div>
+        <!-- Chip body -->
+        <div class="bg-gray-700 px-6 flex items-center justify-center border-x-2 border-gray-500">
+          <div class="text-center">
+            <div class="text-xs text-gray-400 mb-1">DIP-28</div>
+            <div class="text-sm font-bold">62256</div>
+            <div class="text-xs text-gray-400 mt-1">32K×8 SRAM</div>
+          </div>
+        </div>
+        <!-- Right pins -->
+        <div class="flex flex-col justify-between py-1">
+          <div class="flex items-center"><span class="w-5 text-center text-gray-400">28</span><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pl-1 text-red-300">+5V VDD</span></div>
+          <div class="flex items-center"><span class="w-5 text-center text-gray-400">27</span><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pl-1 text-purple-300">/WE</span></div>
+          <div class="flex items-center"><span class="w-5 text-center text-gray-400">26</span><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pl-1 text-blue-300">CPU A13</span></div>
+          <div class="flex items-center"><span class="w-5 text-center text-gray-400">25</span><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pl-1 text-blue-300">CPU A8</span></div>
+          <div class="flex items-center"><span class="w-5 text-center text-gray-400">24</span><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pl-1 text-blue-300">CPU A9</span></div>
+          <div class="flex items-center"><span class="w-5 text-center text-gray-400">23</span><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pl-1 text-blue-300">CPU A11</span></div>
+          <div class="flex items-center"><span class="w-5 text-center text-gray-400">22</span><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pl-1 text-white">GND /OE</span></div>
+          <div class="flex items-center"><span class="w-5 text-center text-gray-400">21</span><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pl-1 text-blue-300">CPU A10</span></div>
+          <div class="flex items-center"><span class="w-5 text-center text-gray-400">20</span><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pl-1 text-purple-300">/CE ← U4A</span></div>
+          <div class="flex items-center"><span class="w-5 text-center text-gray-400">19</span><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pl-1 text-green-300">CPU D7</span></div>
+          <div class="flex items-center"><span class="w-5 text-center text-gray-400">18</span><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pl-1 text-green-300">CPU D6</span></div>
+          <div class="flex items-center"><span class="w-5 text-center text-gray-400">17</span><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pl-1 text-green-300">CPU D5</span></div>
+          <div class="flex items-center"><span class="w-5 text-center text-gray-400">16</span><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pl-1 text-green-300">CPU D4</span></div>
+          <div class="flex items-center"><span class="w-5 text-center text-gray-400">15</span><span class="w-2 h-3 bg-yellow-500 rounded-l"></span><span class="w-16 pl-1 text-green-300">CPU D3</span></div>
+        </div>
+      </div>
     </div>
-    <p class="text-gray-700 mt-3 text-sm"><strong>Notch / pin 1-markering:</strong> uppåt. <strong>→</strong> = signal in till SRAM, <strong>↔</strong> = dubbelriktad (databuss). <strong>/OE</strong> till GND = SRAM driver alltid ut data vid läsning. <strong>/CE</strong> från U4A = SRAM aktiveras vid $0000–$7FFF.</p>
+    <p class="text-gray-700 mt-3 text-sm"><span class="text-blue-300">■</span> Adressbuss &nbsp; <span class="text-green-300">■</span> Databuss &nbsp; <span class="text-purple-300">■</span> Kontroll &nbsp; <span class="text-red-300">■</span> Ström. Notch/pin 1-markering: uppåt. <strong>/OE</strong> = GND (alltid läs ut). <strong>/CE</strong> = U4A pin 3 (aktiv vid $0000–$7FFF).</p>
   </section>
 
   <!-- Kopplingsschema -->
