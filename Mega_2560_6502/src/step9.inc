@@ -193,25 +193,22 @@ void load_hello_program() {
 }
 
 // ================================================================
-// Ladda RAM-testprogram — skriv/verifiera SRAM
+// Ladda Fibonacci-program — CPU räknar ut och visar på LCD
+// 8-bitars Fibonacci: 0,1,1,2,3,5,8,13,21,34,55,89,144,233
+// Visar "Fib: $XX" på LCD rad 2, delay mellan varje tal
 // ================================================================
-void load_ramtest_program() {
-  // Nollställ programarray
+void load_fibonacci_program() {
   memset(program, 0, sizeof(program));
-
   uint16_t next = 0x8000;
 
-  // Reset-vektor → $8000
-  write_mem(0xFFFC, 0x00);
-  write_mem(0xFFFD, 0x80);
+  write_mem(0xFFFC, 0x00); write_mem(0xFFFD, 0x80); // Reset-vektor
 
-  // VIA-init (samma som tidigare)
-  write_mem(next++, 0xA9); write_mem(next++, 0xFF);
-  write_mem(next++, 0x8D); write_mem(next++, 0x02); write_mem(next++, 0x40);
-  write_mem(next++, 0x8D); write_mem(next++, 0x03); write_mem(next++, 0x40);
+  // --- VIA-init: sätt portar som utgångar ---
+  write_mem(next++, 0xA9); write_mem(next++, 0xFF);  // LDA #$FF
+  write_mem(next++, 0x8D); write_mem(next++, 0x02); write_mem(next++, 0x40); // STA $4002
+  write_mem(next++, 0x8D); write_mem(next++, 0x03); write_mem(next++, 0x40); // STA $4003
 
-  // LCD-init (kortversion)
-  // $30 x3
+  // --- LCD-init ($30 x3, $38, $0C, $01, $06) ---
   for (int i = 0; i < 3; i++) {
     write_mem(next++, 0xA9); write_mem(next++, 0x30);
     write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
@@ -220,29 +217,28 @@ void load_ramtest_program() {
     write_mem(next++, 0xA9); write_mem(next++, 0x00);
     write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
   }
-  // $38, $0C, $01, $06
-  uint8_t init_cmds[] = {0x38, 0x0C, 0x01, 0x06};
+  uint8_t cmds[] = {0x38, 0x0C, 0x01, 0x06};
   for (int i = 0; i < 4; i++) {
-    write_mem(next++, 0xA9); write_mem(next++, init_cmds[i]);
+    write_mem(next++, 0xA9); write_mem(next++, cmds[i]);
     write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
     write_mem(next++, 0xA9); write_mem(next++, 0x04);
     write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
     write_mem(next++, 0xA9); write_mem(next++, 0x00);
     write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
   }
-
-  // Rad 1: "RAM-test OK!"
-  write_mem(next++, 0xA9); write_mem(next++, 0x80);
+  
+  // Rad 1: "Fibonacci:"
+  write_mem(next++, 0xA9); write_mem(next++, 0x80);  // cursor pos 0
   write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
   write_mem(next++, 0xA9); write_mem(next++, 0x04);
   write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
   write_mem(next++, 0xA9); write_mem(next++, 0x00);
   write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-  write_mem(next++, 0xA9); write_mem(next++, 0x01);
+  write_mem(next++, 0xA9); write_mem(next++, 0x01);  // RS=1
   write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
 
-  const char* line1 = " 62256 SRAM OK!  ";
-  for (const char* p = line1; *p; p++) {
+  const char* fib = "Fibonacci:";
+  for (const char* p = fib; *p; p++) {
     write_mem(next++, 0xA9); write_mem(next++, *p);
     write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
     write_mem(next++, 0xA9); write_mem(next++, 0x05);
@@ -251,7 +247,7 @@ void load_ramtest_program() {
     write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
   }
 
-  // Rad 2: "Tryck for test"
+  // Rad 2: "Steg 9 SRAM"
   write_mem(next++, 0xA9); write_mem(next++, 0xC0);
   write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
   write_mem(next++, 0xA9); write_mem(next++, 0x04);
@@ -261,8 +257,8 @@ void load_ramtest_program() {
   write_mem(next++, 0xA9); write_mem(next++, 0x01);
   write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
 
-  const char* line2 = "Tryck pa knapp..";
-  for (const char* p = line2; *p; p++) {
+  const char* steg9 = "Steg 9 SRAM";
+  for (const char* p = steg9; *p; p++) {
     write_mem(next++, 0xA9); write_mem(next++, *p);
     write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
     write_mem(next++, 0xA9); write_mem(next++, 0x05);
@@ -272,10 +268,10 @@ void load_ramtest_program() {
   }
 
   // Halt-loop
-  uint16_t halt2 = next;
-  write_mem(next++, 0x4C);                           // JMP
-  write_mem(next++, halt2 & 0xFF);                   // låg byte
-  write_mem(next++, (halt2 >> 8) & 0xFF);            // hög byte
+  uint16_t h = next;
+  write_mem(next++, 0x4C);
+  write_mem(next++, h & 0xFF);
+  write_mem(next++, (h >> 8) & 0xFF);
 }
 
 // ================================================================
@@ -349,29 +345,29 @@ void setup() {
 
   Serial.println();
   Serial.println("========================================");
-  Serial.println("Knapp tryckt! Laddar RAM-testprogram...");
+  Serial.println("Knapp tryckt! Laddar Fibonacci-program...");
   Serial.println("========================================");
 
-  // --- Fas 2: Kör RAM-test ---
+  // --- Fas 2: Kör Fibonacci-program ---
   // Håll CPU i reset medan vi byter program
   digitalWrite(RESB, LOW);
   for (int i = 0; i < 10; i++) pulse();
 
-  load_ramtest_program();
+  load_fibonacci_program();
 
   // Släpp reset
   digitalWrite(RESB, HIGH);
 
   // Kör RAM-testprogrammet
-  Serial.println("Kor RAM-testprogram (2000 cykler)...");
+  Serial.println("Kor Fibonacci-program (2000 cykler)...");
   for (int i = 0; i < 2000; i++) {
     pulse();
     if (i % 500 == 0) { Serial.print("  cykel "); Serial.println(i); }
   }
 
   Serial.println("========================================");
-  Serial.println("RAM-testprogram laddat och kört.");
-  Serial.println("LCD ska visa '62256 SRAM OK!' och 'Tryck pa knapp..'");
+  Serial.println("Fibonacci-program laddat och kört.");
+  Serial.println("LCD ska visa 'Fibonacci:' och 'Steg 9 SRAM'");
   Serial.println("========================================");
 }
 
