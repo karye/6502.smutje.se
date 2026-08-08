@@ -1,9 +1,11 @@
+// ==============================================================
 // Steg 8 — Assembler-bygge med ca65
-// 6502-programmet byggs från src/program.asm via ca65/ld65 → program.h
-// Vid bygge anropas scripts/build_asm.py automatiskt
+// ==============================================================
+// 6502-programmet byggs från src/program.asm via ca65/ld65
+// → program.h. PlatformIO kör assembler-stegen automatiskt.
 
 #include <Arduino.h>
-#include "program.h"
+#include "program.h"   // Genereras av byggskriptet (bin2h.py)
 
 #define PHI2     2
 #define RESB     4
@@ -20,10 +22,12 @@ uint8_t vectors[6];
 
 #define VIA_BASE 0x4000
 
+// --- is_via() — är detta en VIA-adress? ---
 bool is_via(uint16_t addr) {
   return (addr >= VIA_BASE && addr < VIA_BASE + 16);
 }
 
+// --- read_mem() — slå upp minnesvärde ---
 uint8_t read_mem(uint16_t addr) {
   if (is_via(addr)) return 0;
   if (addr >= 0xFFFA && addr <= 0xFFFF)
@@ -34,6 +38,7 @@ uint8_t read_mem(uint16_t addr) {
   return 0xEA;
 }
 
+// --- write_mem() — spara minnesvärde ---
 void write_mem(uint16_t addr, uint8_t val) {
   if (is_via(addr)) return;
   if (addr >= 0xFFFA && addr <= 0xFFFF)
@@ -43,6 +48,7 @@ void write_mem(uint16_t addr, uint8_t val) {
   if (addr < sizeof(ram)) ram[addr] = val;
 }
 
+// --- pulse() — en klockcykel med VIA-pass-through ---
 void pulse() {
   digitalWrite(PHI2, LOW);
   DDRA = 0x00;
@@ -72,6 +78,7 @@ void pulse() {
   Serial.println();
 }
 
+// --- setup() — ladda 6502-program från assembler-bygget ---
 void setup() {
   pinMode(RESB, OUTPUT); digitalWrite(RESB, LOW);
   pinMode(PHI2, OUTPUT); digitalWrite(PHI2, LOW);
@@ -110,6 +117,7 @@ void setup() {
   for (int i = 0; i < 2000; i++) pulse();
 }
 
+// --- loop() — manuell stegning via knappar ---
 void loop() {
   pulse();
 }
