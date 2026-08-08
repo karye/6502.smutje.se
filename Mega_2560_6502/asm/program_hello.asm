@@ -1,89 +1,89 @@
-; 6502-program för steg 7/8 — VIA LCD
-; Byggs med ca65/ld65 → program.bin → program.h → inkluderas av Arduino
+; ================================================================
+; 6502-program för steg 8 — VIA LCD
+; ================================================================
+; Det här programmet körs på 6502-processorn, inte på Arduino!
+; Processorn pratar direkt med W65C22 VIA-kretsen som i sin tur
+; styr LCD-displayen. Varje instruktion är en enda byte (opcode)
+; följt av 0–2 byte operander (data/address).
 ;
-; Adressrymd:
-;   $8000–$87FF: program (2 KB)
-;   $4000–$400F: W65C22 VIA
-;   $FFFA–$FFFF: vektorer
-;
-; VIA-register:
-;   $4000 = ORB  (PORTB) — LCD data D0–D7
-;   $4001 = ORA  (PORTA) — PA0=RS, PA2=E
-;   $4002 = DDRB
-;   $4003 = DDRA
+; Minneskarta för VIA-register:
+;   $4000 = PORTB — skickar data till LCD (8 bitar: DB0–DB7)
+;   $4001 = PORTA — styr LCD (bit 0 = RS, bit 2 = E)
+;   $4002 = DDRB  — styr riktning på port B ($FF = alla utgång)
+;   $4003 = DDRA  — styr riktning på port A
 
-VIA_ORB  = $4000
-VIA_ORA  = $4001
-VIA_DDRB = $4002
-VIA_DDRA = $4003
+VIA_ORB  = $4000    ; PORTB — LCD:ns 8 datapinnar
+VIA_ORA  = $4001    ; PORTA — bit 0 = RS (Register Select)
+                     ;         bit 2 = E  (Enable)
+VIA_DDRB = $4002    ; Data Direction Register för port B
+VIA_DDRA = $4003    ; Data Direction Register för port A
 
+; --- Programmet börjar här ($8000) ---
 .segment "CODE"
-.org $8000
+.org $8000           ; Placera koden från adress $8000
 
-; ============================================================
-; Reset — start av programmet
-; ============================================================
+; ================================================================
+; RESET — hit hoppar processorn när den startar
+; ================================================================
 reset:
-    ; --- Power-on delay för LCD ---
-    jsr delay_30ms
+    ; --- Steg 1: Gör VIA-portarna till utgångar ---
+    lda #$FF          ; Ladda talet 255 (binärt: 11111111)
+    sta VIA_DDRB      ; Alla 8 pinnar på port B = UTGÅNG
+    sta VIA_DDRA      ; Alla 8 pinnar på port A = UTGÅNG
 
-    ; --- Sätt VIA-portar som utgångar ---
-    lda #$FF
-    sta VIA_DDRB       ; PORTB = utgång (LCD data)
-    sta VIA_DDRA       ; PORTA = utgång (RS + E)
+    ; --- Steg 2: Initiera LCD-displayen ---
+    ; En LCD måste få en specifik sekvens av kommandon för att
+    ; vakna i rätt läge. Det här är standard för HD44780.
 
-    ; --- LCD-init: tvinga 8-bitarsläge ($30 × 3) ---
+    ; $30 × 3 — tvinga LCD till 8-bitarsläge
+    ; (LCD kan vakna i 4-bitarsläge, så vi skickar 8-bitars-
+    ;  kommandot tre gånger för att vara säkra)
+    lda #$30          ; "Function set" — 8-bitars interface
+    jsr lcd_command   ; Hoppa till subrutinen som skickar kommandot
     lda #$30
-    jsr lcd_command
-    jsr delay_5ms
+    jsr lcd_command   ; Andra gången — ifall LCD missade första
     lda #$30
-    jsr lcd_command
-    jsr delay_5ms
-    lda #$30
-    jsr lcd_command
-    jsr delay_5ms
+    jsr lcd_command   ; Tredje gången — nu är den garanterat i 8-bit
 
-    ; --- Function set: 8-bit, 2 rader, 5×8 ---
+    ; $38 — Function set: 8-bit data, 2 displayrader, 5×8 tecken
     lda #$38
     jsr lcd_command
-    jsr delay_50us
 
-    ; --- Display ON, cursor OFF, blink OFF ---
+    ; $0C — Display ON/OFF: skärm på, markör av, blink av
     lda #$0C
     jsr lcd_command
-    jsr delay_50us
 
-    ; --- Clear display ---
+    ; $01 — Clear display: töm skärmen, markören till hemposition
     lda #$01
     jsr lcd_command
-    jsr delay_2ms
 
-    ; --- Entry mode: increment, no shift ---
+    ; $06 — Entry mode: flytta markören åt höger efter varje tecken
     lda #$06
     jsr lcd_command
-    jsr delay_50us
 
-; ============================================================
-; Huvudloop — skriv fyra rader, cleara, loopa
-; ============================================================
+; ================================================================
+; HUVUDLOOP — skriv 4 rader text, rensa, börja om
+; ================================================================
 hello:
-    ; --- Rad 1: cursor till $00, skriv "6502 VIA LCD 2x16" ---
-    lda #$80                ; DDRAM-adress 0
-    jsr lcd_command
-    jsr delay_50us
-    ldx #0
+    ; --- Rad 1: "=== 6502 VIA LCD ===" ---
+    lda #$80          ; Sätt DDRAM-adress = 0 (rad 1, position 0)
+    jsr lcd_command   ; (DDRAM-adress $80 + 0 = $80)
+    lda #$01          ; RS = 1 = dataläge (istället för kommandoläge)
+    sta VIA_ORA       ; Skriv till PORTA — RS blir hög
+    ldx #0            ; X-registret = 0 (räknare för teckenindex)
 @l1:
-    lda line1,x
-    beq @l1_done
-    jsr lcd_data
-    inx
-    jmp @l1
+    lda line1,x       ; Hämta tecken nr X från strängen "line1"
+    beq @l1_done      ; Om tecknet är 0 (null) — hoppa ur loopen
+    jsr lcd_data      ; Skicka tecknet till LCD
+    inx               ; X = X + 1 (peka på nästa tecken)
+    jmp @l1           ; Tillbaka och hämta nästa tecken
 @l1_done:
 
-    ; --- Rad 2: cursor till $40, skriv "smutje.se W65C02" ---
-    lda #$C0
-    jsr lcd_command
-    jsr delay_50us
+    ; --- Rad 2: "Hello from W65C02!" ---
+    lda #$C0          ; DDRAM-adress $40 → rad 2, position 0
+    jsr lcd_command   ; ($80 + $40 = $C0)
+    lda #$01
+    sta VIA_ORA       ; RS = 1 (data)
     ldx #0
 @l2:
     lda line2,x
@@ -93,95 +93,90 @@ hello:
     jmp @l2
 @l2_done:
 
-    ; --- Clear och loopa om ---
-    lda #$01
+    ; --- Rad 3: "Arduino = RAM + CLK" (20×4 display) ---
+    lda #$94          ; DDRAM-adress $14 → rad 3, position 0
     jsr lcd_command
-    jsr delay_2ms
-    jmp hello
+    lda #$01
+    sta VIA_ORA
+    ldx #0
+@l3:
+    lda line3,x
+    beq @l3_done
+    jsr lcd_data
+    inx
+    jmp @l3
+@l3_done:
 
-; ============================================================
-; Subrutiner
-; ============================================================
+    ; --- Rad 4: "smutje.se 2026" (20×4 display) ---
+    lda #$D4          ; DDRAM-adress $54 → rad 4, position 0
+    jsr lcd_command
+    lda #$01
+    sta VIA_ORA
+    ldx #0
+@l4:
+    lda line4,x
+    beq @l4_done
+    jsr lcd_data
+    inx
+    jmp @l4
+@l4_done:
 
-; Skicka kommando i A (RS=0)
+    ; --- Rensa skärmen och börja om ---
+    lda #$01          ; Clear display
+    jsr lcd_command
+    jmp hello         ; Hoppa tillbaka till hello — oändlig loop!
+
+; ================================================================
+; SUBRUTIN: lcd_command — skicka ett kommando till LCD
+; ================================================================
+; LCD tar emot data på DB0–DB7 (PORTB) och läser av på
+; fallande flank av E (Enable). RS avgör om det är ett
+; kommando (RS=0) eller teckendata (RS=1).
+;
+; Så här går det till, steg för steg:
+;   1. Lägg kommandobyten på PORTB (LCD:ns datapinnar)
+;   2. Sätt RS=0, E=1 — "här är ett kommando, var redo!"
+;   3. Sätt E=0 — fallande flank → LCD läser PORTB
 lcd_command:
-    sta VIA_ORB             ; Data till PORTB
-    lda #$04                ; RS=0, E=1
-    sta VIA_ORA
-    lda #$00                ; RS=0, E=0 (fallande flank)
-    sta VIA_ORA
-    jsr delay_50us          ; LCD-exec time (37+ µs)
-    rts
+    sta VIA_ORB       ; Steg 1: A-registret → PORTB (LCD data)
+    lda #$04          ; Steg 2: binärt 00000100 → PA2=E=1, PA0=RS=0
+    sta VIA_ORA       ;         Skriv till PORTA
+    lda #$00          ; Steg 3: binärt 00000000 → E=0 (fallande flank!)
+    sta VIA_ORA       ;         LCD läser PORTB nu
+    rts               ; Återvänd till anroparen
 
-; Skicka data i A (RS=1, E-puls)
+; ================================================================
+; SUBRUTIN: lcd_data — skicka teckendata (ASCII) till LCD
+; ================================================================
+; Exakt samma som lcd_command, men med RS=1 istället för RS=0.
+; RS=1 betyder "det här är ett tecken, visa det på skärmen".
 lcd_data:
-    sta VIA_ORB
-    lda #$05                ; RS=1, E=1
+    sta VIA_ORB       ; ASCII-tecknet → PORTB
+    lda #$05          ; 00000101 → PA2=E=1, PA0=RS=1 (data!)
     sta VIA_ORA
-    lda #$01                ; RS=1, E=0 (fallande flank)
-    sta VIA_ORA
-    jsr delay_50us          ; LCD-exec time
+    lda #$01          ; 00000001 → E=0, RS=1 (fallande flank)
+    sta VIA_ORA       ; LCD läser och visar tecknet
     rts
 
-; ============================================================
-; Strängdata (null-terminerade)
-; ============================================================
-line1:  .byte "6502 VIA LCD 2x16", 0
-line2:  .byte "smutje.se W65C02", 0
+; ================================================================
+; STRÄNGDATA — texten som ska visas
+; ================================================================
+; .byte lägger in ASCII-värden i minnet, ett efter ett.
+; 0 i slutet betyder "null-terminator" — subrutinen vet
+; att strängen är slut när den hittar en nolla.
+line1: .byte "=== 6502 VIA LCD ===", 0
+line2: .byte "Hello from W65C02!", 0
+line3: .byte "Arduino = RAM + CLK", 0
+line4: .byte "smutje.se 2026", 0
 
-; ============================================================
-; Delay-rutiner (1 MHz = 1 µs per cykel)
-; ============================================================
-
-; 30 ms delay (för power-on)
-delay_30ms:
-    ldy #30
-@outer30:
-    ldx #0
-@inner30:
-    dex
-    bne @inner30
-    dey
-    bne @outer30
-    rts
-
-; 5 ms delay
-delay_5ms:
-    ldy #5
-@outer5:
-    ldx #0
-@inner5:
-    dex
-    bne @inner5
-    dey
-    bne @outer5
-    rts
-
-; 2 ms delay (för clear display)
-delay_2ms:
-    ldy #2
-@outer2:
-    ldx #0
-@inner2:
-    dex
-    bne @inner2
-    dey
-    bne @outer2
-    rts
-
-; ~50 µs delay (för vanliga kommandon)
-delay_50us:
-    ldx #17
-@d50:
-    dex
-    bne @d50
-    rts
-
-; ============================================================
-; Vektorer — placeras på $FFFA–$FFFF
-; ============================================================
+; ================================================================
+; RESET-VEKTOR — processorns startadress
+; ================================================================
+; När 6502:an startar (efter reset) läser den adress $FFFC
+; och $FFFD för att få reda på var programmet börjar.
+; .word lägger in en 16-bitars adress (låg byte först!).
 .segment "VECTORS"
 .org $FFFA
-    .word $0000     ; NMI   (oanvänd)
-    .word reset     ; RESET → $8000
-    .word $0000     ; IRQ   (oanvänd)
+    .word $0000       ; NMI   — används inte
+    .word reset       ; RESET — här börjar programmet ($8000)
+    .word $0000       ; IRQ   — används inte
