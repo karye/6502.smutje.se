@@ -457,9 +457,14 @@
         "filename": "steg_7.kicad_sch",
         "name": "Steg 7",
         "uuid": "f262aa45-115f-469a-81c7-b0607ca8ec38"
+      },
+      {
+        "filename": "steg_9.kicad_sch",
+        "name": "Steg 9",
+        "uuid": "e2622cdd-3a74-416e-a490-4594b7511041"
       }
     ],
-    "used_designators": "RV1-3,U1-14,R1-62,BTN1-10,C1-8,D1-20,A1-8,#PWR1-133",
+    "used_designators": "RV1-4,U1-18,R1-62,BTN1-10,C1-10,D1-20,A1-8,#PWR1-143",
     "variants": []
   },
   "sheets": [
@@ -490,6 +495,10 @@
     [
       "f262aa45-115f-469a-81c7-b0607ca8ec38",
       "Steg 7"
+    ],
+    [
+      "e2622cdd-3a74-416e-a490-4594b7511041",
+      "Steg 9"
     ]
   ],
   "text_variables": {},
