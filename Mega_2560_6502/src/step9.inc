@@ -239,6 +239,8 @@ void setup() {
   for (int i = 0; i < 1000; i++) pulse();
   debug_pulse = true;
 
+  Serial.println("Fas 1 klar — vantar pa knapptryck...");
+
   // --- Vänta på knapptryck ---
   bool knapp_tryckt = false;
   while (!knapp_tryckt) {
