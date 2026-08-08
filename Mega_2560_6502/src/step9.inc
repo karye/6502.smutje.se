@@ -235,8 +235,8 @@ void setup() {
   digitalWrite(RESB, HIGH);
 
   // Kör ~2500 cykler så LCD-init + text hinner visas
-  Serial.println("Kor 2500 cykler (tyst)...");
-  for (int i = 0; i < 2500; i++) pulse();
+  Serial.println("Kor 500 cykler (tyst)...");
+  for (int i = 0; i < 500; i++) pulse();
   debug_pulse = true;
 
   // --- Vänta på knapptryck ---

@@ -3,7 +3,6 @@
 ;
 ; Visar "Fib:" på rad 1, och varje tal i sekvensen på rad 2
 ; Sekvens: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233
-; Efter 233 wrappar det (byte overflow) och börjar om
 
 VIA_ORB  = $4000
 VIA_ORA  = $4001
@@ -26,19 +25,19 @@ reset:
     jsr lcd_cmd
     lda #$30
     jsr lcd_cmd
-    lda #$38          ; 8-bit, 2 rader
+    lda #$38
     jsr lcd_cmd
-    lda #$0C          ; Display on
+    lda #$0C
     jsr lcd_cmd
-    lda #$01          ; Clear
+    lda #$01
     jsr lcd_cmd
-    lda #$06          ; Entry mode
+    lda #$06
     jsr lcd_cmd
 
     ; --- Rad 1: "Fib:" ---
-    lda #$80          ; Cursor rad 1 pos 0
+    lda #$80
     jsr lcd_cmd
-    lda #$01          ; RS=1
+    lda #$01
     sta VIA_ORA
     ldx #0
 @l1:
@@ -51,21 +50,27 @@ reset:
 
     ; --- Initiera Fibonacci ---
     lda #0
-    sta $00           ; F(n-2) = 0
+    sta $00           ; F(0) = 0
     lda #1
-    sta $01           ; F(n-1) = 1
+    sta $01           ; F(1) = 1
 
-    ; --- Visa F(0) = 0 först ---
+    ; --- Visa F(0) = 0 ---
     lda #0
     jsr show_num
+    jsr delay_ms
+
+    ; --- Visa F(1) = 1 ---
+    lda #1
+    jsr show_num
+    jsr delay_ms
 
 fib_loop:
-    ; --- Beräkna nästa tal: F(n) = F(n-1) + F(n-2) ---
+    ; --- Beräkna nästa: F(n) = F(n-1) + F(n-2) ---
     clc
-    lda $00           ; F(n-2)
-    adc $01           ; + F(n-1)
-    bcc no_wrap       ; Hoppa om ingen overflow
-    ; --- Wrappa ---
+    lda $00
+    adc $01
+    bcc no_wrap
+    ; Wrappa
     lda #0
     sta $00
     lda #1
@@ -74,92 +79,91 @@ fib_loop:
 no_wrap:
     sta $02           ; Spara F(n)
 
-    ; --- Skifta: F(n-2) ← F(n-1), F(n-1) ← F(n) ---
+    ; --- Skifta ---
     lda $01
     sta $00
     lda $02
     sta $01
 
-    ; --- Visa talet på LCD ---
+    ; --- Visa talet ---
     jsr show_num
-
-    ; --- Delay (kort — anpassat för 20 Hz klocka) ---
-    ldx #1
-delay_outer:
-    ldy #10
-delay_inner:
-    dey
-    bne delay_inner
-    dex
-    bne delay_outer
-
+    jsr delay_ms
     jmp fib_loop
 
 ; ============================================================
-; show_num — visa A-registret som decimaltal på LCD rad 2
+; delay_ms — paus (~0.5s vid 20Hz)
+; ============================================================
+delay_ms:
+    ldx #5
+dly_outer:
+    ldy #5
+dly_inner:
+    dey
+    bne dly_inner
+    dex
+    bne dly_outer
+    rts
+
+; ============================================================
+; show_num — visa A som decimal på LCD rad 2, pos 0
 ; ============================================================
 show_num:
     sta $10           ; Spara värdet
 
-    ; Rad 2, pos 0
+    ; Rad 2, pos 0 — rensa med mellanslag
     lda #$C0
     jsr lcd_cmd
     lda #$01          ; RS=1
     sta VIA_ORA
 
-    ; Rensa resten av raden med mellanslag
     lda #' '
     jsr lcd_data
     jsr lcd_data
     jsr lcd_data
-    jsr lcd_data
 
-    ; Rad 2, pos 0 igen (skriv över)
+    ; Rad 2, pos 0 igen
     lda #$C0
     jsr lcd_cmd
     lda #$01
     sta VIA_ORA
 
-    ; Konvertera till decimal (0-233, max 3 siffror)
+    ; --- Hundratal ---
     lda $10
-    ldx #0           ; Hundratal
-
-@hundreds:
+    ldx #0
+@h:
     cmp #100
-    bcc @do_tens
+    bcc @t
     inx
     sec
     sbc #100
-    jmp @hundreds
-
-@do_tens:
-    pha               ; Spara rest
+    jmp @h
+@t:
+    pha
     txa
-    beq @skip_h       ; Hoppa över om hundratal = 0
+    beq @skip_h
     clc
-    adc #'0'          ; Konvertera till ASCII
+    adc #'0'
     jsr lcd_data
 @skip_h:
-    pla               ; Återställ rest
+    pla
     ldx #0
 
+    ; --- Tiotal ---
 @tens:
     cmp #10
-    bcc @do_ones
+    bcc @ones
     inx
     sec
     sbc #10
     jmp @tens
-
-@do_ones:
+@ones:
     pha
-    ; Visa tiotal om >0 eller om hundratal visades
     txa
-    bne @show_tens
+    bne @show_t
     lda $10
     cmp #10
     bcc @skip_t
-@show_tens:
+@show_t:
     txa
     clc
     adc #'0'
@@ -172,10 +176,10 @@ show_num:
     rts
 
 ; ============================================================
-; lcd_cmd — skicka kommando i A
+; lcd_cmd — skicka kommando i A (RS=0)
 ; ============================================================
 lcd_cmd:
-    sta VIA_ORB       ; Data till PORTB
+    sta VIA_ORB
     lda #$04          ; RS=0, E=1
     sta VIA_ORA
     lda #$00          ; RS=0, E=0
@@ -183,7 +187,7 @@ lcd_cmd:
     rts
 
 ; ============================================================
-; lcd_data — skicka data (tecken) i A
+; lcd_data — skicka data i A (RS=1)
 ; ============================================================
 lcd_data:
     sta VIA_ORB
