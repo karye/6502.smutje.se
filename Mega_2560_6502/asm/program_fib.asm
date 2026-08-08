@@ -83,10 +83,10 @@ no_wrap:
     ; --- Visa talet på LCD ---
     jsr show_num
 
-    ; --- Delay ---
-    ldx #5
+    ; --- Delay (kort — anpassat för 20 Hz klocka) ---
+    ldx #1
 delay_outer:
-    ldy #0
+    ldy #10
 delay_inner:
     dey
     bne delay_inner
