@@ -58,6 +58,34 @@
     </div>
   </section>
 
+  <!-- 62256 pinout -->
+  <section class="mb-8">
+    <h2 class="text-lg font-bold mb-2">62256 SRAM — pinout</h2>
+    <p class="text-gray-700 mb-3 text-sm">DIP-28-kapsel. 15 adresslinjer, 8 datalinjer, 3 kontrollsignaler. Här ser du exakt hur kretsen ska vändas och vad varje pinne gör.</p>
+    <div class="bg-white rounded-lg shadow">
+      <table class="w-full text-sm border-collapse font-mono">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-center w-1/4">Vänster sida</th><th class="p-2 text-center w-1/4">Pin</th><th class="p-2 text-center w-1/4">Pin</th><th class="p-2 text-center w-1/4">Höger sida</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2 text-right"><strong>CPU A14</strong> →</td><td class="p-2 text-center bg-gray-100">1</td><td class="p-2 text-center bg-gray-100">28</td><td class="p-2">← <strong>+5V</strong> (VDD)</td></tr>
+          <tr><td class="p-2 text-right"><strong>CPU A12</strong> →</td><td class="p-2 text-center">2</td><td class="p-2 text-center">27</td><td class="p-2">← <strong>CPU R/W</strong> (/WE)</td></tr>
+          <tr><td class="p-2 text-right"><strong>CPU A7</strong> →</td><td class="p-2 text-center bg-gray-100">3</td><td class="p-2 text-center bg-gray-100">26</td><td class="p-2">← <strong>CPU A13</strong></td></tr>
+          <tr><td class="p-2 text-right"><strong>CPU A6</strong> →</td><td class="p-2 text-center">4</td><td class="p-2 text-center">25</td><td class="p-2">← <strong>CPU A8</strong></td></tr>
+          <tr><td class="p-2 text-right"><strong>CPU A5</strong> →</td><td class="p-2 text-center bg-gray-100">5</td><td class="p-2 text-center bg-gray-100">24</td><td class="p-2">← <strong>CPU A9</strong></td></tr>
+          <tr><td class="p-2 text-right"><strong>CPU A4</strong> →</td><td class="p-2 text-center">6</td><td class="p-2 text-center">23</td><td class="p-2">← <strong>CPU A11</strong></td></tr>
+          <tr><td class="p-2 text-right"><strong>CPU A3</strong> →</td><td class="p-2 text-center bg-gray-100">7</td><td class="p-2 text-center bg-gray-100">22</td><td class="p-2">← <strong>GND</strong> (/OE)</td></tr>
+          <tr><td class="p-2 text-right"><strong>CPU A2</strong> →</td><td class="p-2 text-center">8</td><td class="p-2 text-center">21</td><td class="p-2">← <strong>CPU A10</strong></td></tr>
+          <tr><td class="p-2 text-right"><strong>CPU A1</strong> →</td><td class="p-2 text-center bg-gray-100">9</td><td class="p-2 text-center bg-gray-100">20</td><td class="p-2">← <strong>U4A pin 3</strong> (/CE)</td></tr>
+          <tr><td class="p-2 text-right"><strong>CPU A0</strong> →</td><td class="p-2 text-center">10</td><td class="p-2 text-center">19</td><td class="p-2">↔ <strong>CPU D7</strong></td></tr>
+          <tr><td class="p-2 text-right"><strong>CPU D0</strong> ↔</td><td class="p-2 text-center bg-gray-100">11</td><td class="p-2 text-center bg-gray-100">18</td><td class="p-2">↔ <strong>CPU D6</strong></td></tr>
+          <tr><td class="p-2 text-right"><strong>CPU D1</strong> ↔</td><td class="p-2 text-center">12</td><td class="p-2 text-center">17</td><td class="p-2">↔ <strong>CPU D5</strong></td></tr>
+          <tr><td class="p-2 text-right"><strong>CPU D2</strong> ↔</td><td class="p-2 text-center bg-gray-100">13</td><td class="p-2 text-center bg-gray-100">16</td><td class="p-2">↔ <strong>CPU D4</strong></td></tr>
+          <tr><td class="p-2 text-right"><strong>GND</strong> →</td><td class="p-2 text-center">14</td><td class="p-2 text-center">15</td><td class="p-2">↔ <strong>CPU D3</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-gray-700 mt-3 text-sm"><strong>Notch / pin 1-markering:</strong> uppåt. <strong>→</strong> = signal in till SRAM, <strong>↔</strong> = dubbelriktad (databuss). <strong>/OE</strong> till GND = SRAM driver alltid ut data vid läsning. <strong>/CE</strong> från U4A = SRAM aktiveras vid $0000–$7FFF.</p>
+  </section>
+
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
