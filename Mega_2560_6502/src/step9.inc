@@ -282,7 +282,7 @@ void setup() {
   digitalWrite(RESB, HIGH);
 
   debug_pulse = false;
-  for (int i = 0; i < 4000; i++) pulse();
+  for (int i = 0; i < 8000; i++) pulse();
   debug_pulse = true;
 
   Serial.println("Fibonacci-program kört.");
