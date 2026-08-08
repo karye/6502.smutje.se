@@ -5,7 +5,8 @@
 
 #define PHI2 2
 #define RESB 4
-#define CLOCK_DELAY 1   // ms per klockfas (1 = ~500 Hz, 10 = ~50 Hz)
+#define CLOCK_HZ 500                         // Klockfrekvens i Hz
+#define CLOCK_DELAY (1000 / (CLOCK_HZ * 2))  // ms per klockfas
 
 void pulse() {
   digitalWrite(PHI2, LOW);

@@ -6,14 +6,12 @@
 
 #define PHI2     2
 #define RESB     4
-#define CLOCK_DELAY 1   // ms per klockfas (1 = ~500 Hz, 10 = ~50 Hz)
+#define CLOCK_HZ 500                         // Klockfrekvens i Hz
+#define CLOCK_DELAY (1000 / (CLOCK_HZ * 2))  // ms per klockfas
 #define RWB      3
-#define CLOCK_DELAY 1   // ms per klockfas (1 = ~500 Hz, 10 = ~50 Hz)
 #define SYNC     13
-#define CLOCK_DELAY 1   // ms per klockfas (1 = ~500 Hz, 10 = ~50 Hz)
 #define BTN_CLK  11
 #define BTN_INSTR 12
-#define CLOCK_DELAY 1   // ms per klockfas (1 = ~500 Hz, 10 = ~50 Hz)
 
 LiquidCrystal lcd(5, 6, 10, 9, 8, 7);
 
@@ -43,7 +41,6 @@ void pulse() {
   else    { DDRA = 0x00; }
 
   digitalWrite(PHI2, HIGH);
-  delay(CLOCK_DELAY);
 
   if (!rw) { data = PINA; write_mem(a, data); }
 
