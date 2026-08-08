@@ -18,6 +18,8 @@ LiquidCrystal lcd(5, 6, 10, 9, 8, 7);
 uint8_t program[2048];      // $8000–$87FF (6502-program)
 uint8_t vectors[6];         // $FFFA–$FFFF
 
+bool debug_pulse = false;   // Styr loggutskrift i pulse()
+
 #define VIA_BASE     0x4000
 #define SRAM_END     0x3FFF
 
@@ -72,19 +74,21 @@ void pulse() {
 
   if (!rw && !is_sram(a) && !is_via(a)) write_mem(a, PINA);
 
-  // Diagnostik (var 20:e cykel för att minska utskriften)
+  // Diagnostik (tyst under bulk-körning)
   static int count = 0;
-  count++;
-  if (count % 20 == 0 || is_via(a) || is_sram(a) || a == 0xFFFC || a == 0xFFFD) {
-    Serial.print(rw ? "R" : "W");
-    Serial.print(" $");
-    Serial.print(a, HEX);
-    if (is_sram(a))            Serial.print("  <- SRAM");
-    else if (is_via(a))         Serial.print("  <- VIA");
-    else if (a >= 0x8000 && a < 0xFFFA) {}
-    else if (a == 0xFFFC)      Serial.print("  <- RESET-VEKTOR LAG");
-    else if (a == 0xFFFD)      Serial.print("  <- RESET-VEKTOR HOG");
-    Serial.println();
+  if (debug_pulse) {
+    count++;
+    if (count % 20 == 0 || is_via(a) || is_sram(a) || a == 0xFFFC || a == 0xFFFD) {
+      Serial.print(rw ? "R" : "W");
+      Serial.print(" $");
+      Serial.print(a, HEX);
+      if (is_sram(a))            Serial.print("  <- SRAM");
+      else if (is_via(a))         Serial.print("  <- VIA");
+      else if (a >= 0x8000 && a < 0xFFFA) {}
+      else if (a == 0xFFFC)      Serial.print("  <- RESET-VEKTOR LAG");
+      else if (a == 0xFFFD)      Serial.print("  <- RESET-VEKTOR HOG");
+      Serial.println();
+    }
   }
 }
 
@@ -302,73 +306,43 @@ void setup() {
   digitalWrite(RESB, HIGH);
 
   // Kör ~2500 cykler så LCD-init + text hinner visas
-  Serial.println("Kor 2500 cykler for LCD-init + text...");
-  for (int i = 0; i < 2500; i++) {
-    pulse();
-    if (i % 500 == 0) { Serial.print("  cykel "); Serial.println(i); }
-  }
-
-  Serial.println("========================================");
-  Serial.println("Fas 1 klar — 'Tryck pa knapp...' visas på LCD.");
-  Serial.println("Väntar på knapptryck (tryck på valfri knapp)...");
-  Serial.println("========================================");
+  Serial.println("Kor 2500 cykler (tyst)...");
+  for (int i = 0; i < 2500; i++) pulse();
+  debug_pulse = true;
 
   // --- Vänta på knapptryck ---
   bool knapp_tryckt = false;
-  int wait_count = 0;
   while (!knapp_tryckt) {
-    // Läs båda knapparna
-    bool b1 = !digitalRead(BTN_CLK);   // LÅG = tryckt (INPUT_PULLUP)
+    bool b1 = !digitalRead(BTN_CLK);
     bool b2 = !digitalRead(BTN_INSTR);
     if (b1 || b2) {
-      delay(50);  // Debounce
-      // Läs igen för att bekräfta
+      delay(50);
       b1 = !digitalRead(BTN_CLK);
       b2 = !digitalRead(BTN_INSTR);
       if (b1 || b2) {
         knapp_tryckt = true;
-        Serial.println();
         Serial.print(">>> Knapp ");
-        Serial.print(b1 ? "1 (BTN_CLK)" : "2 (BTN_INSTR)");
+        Serial.print(b1 ? "1" : "2");
         Serial.println(" tryckt! <<<");
       }
     }
-    wait_count++;
-    if (wait_count % 50000 == 0) {
-      Serial.print("Vantar pa knapptryck... (BTN1=");
-      Serial.print(digitalRead(BTN_CLK));
-      Serial.print(", BTN2=");
-      Serial.print(digitalRead(BTN_INSTR));
-      Serial.println(")");
-    }
   }
 
-  Serial.println();
-  Serial.println("========================================");
-  Serial.println("Knapp tryckt! Laddar Fibonacci-program...");
-  Serial.println("========================================");
+  Serial.println("Laddar Fibonacci-program...");
 
   // --- Fas 2: Kör Fibonacci-program ---
-  // Håll CPU i reset medan vi byter program
   digitalWrite(RESB, LOW);
   for (int i = 0; i < 10; i++) pulse();
 
   load_fibonacci_program();
 
-  // Släpp reset
   digitalWrite(RESB, HIGH);
 
-  // Kör RAM-testprogrammet
-  Serial.println("Kor Fibonacci-program (2000 cykler)...");
-  for (int i = 0; i < 2000; i++) {
-    pulse();
-    if (i % 500 == 0) { Serial.print("  cykel "); Serial.println(i); }
-  }
+  debug_pulse = false;
+  for (int i = 0; i < 2000; i++) pulse();
+  debug_pulse = true;
 
-  Serial.println("========================================");
-  Serial.println("Fibonacci-program laddat och kört.");
-  Serial.println("LCD ska visa 'Fibonacci:' och 'Steg 9 SRAM'");
-  Serial.println("========================================");
+  Serial.println("Fibonacci-program kört.");
 }
 
 // ================================================================
