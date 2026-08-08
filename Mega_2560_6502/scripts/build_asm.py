@@ -1,5 +1,5 @@
 # Byggscript för PlatformIO — anropas före C++-kompilering
-# Kör ca65 + ld65 för att assemblera program.asm → program.h
+# Kör ca65 + ld65 för att assemblera program_hello.asm → program.h
 # Inkluderas via platformio.ini: extra_scripts = pre:scripts/build_asm.py
 
 Import("env")
@@ -7,13 +7,13 @@ import subprocess
 import os
 
 def build_asm(target, source, env):
-    """Assemblera program.asm → program.bin → program.h"""
+    """Assemblera program_hello.asm → program_hello.bin → program.h"""
     src_dir = os.path.join(env.subst("$PROJECT_DIR"), "src")
     asm_dir = os.path.join(env.subst("$PROJECT_DIR"), "asm")
 
-    asm_path = os.path.join(asm_dir, "program.asm")
-    obj_path = os.path.join(asm_dir, "program.o")
-    bin_path = os.path.join(asm_dir, "program.bin")
+    asm_path = os.path.join(asm_dir, "program_hello.asm")
+    obj_path = os.path.join(asm_dir, "program_hello.o")
+    bin_path = os.path.join(asm_dir, "program_hello.bin")
     h_path   = os.path.join(src_dir, "program.h")
     cfg_path = os.path.join(src_dir, "program.cfg")
 
