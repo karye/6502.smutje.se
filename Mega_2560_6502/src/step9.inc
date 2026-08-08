@@ -202,8 +202,15 @@ void load_hello_program() {
 // ================================================================
 void load_fibonacci_program() {
   memset(program, 0, sizeof(program));
-  for (unsigned int i = 0; i < PROGRAM_FIB_SIZE; i++) {
+
+  // Ladda program ($8000–$87FF) — 2048 bytes
+  for (unsigned int i = 0; i < 2048; i++) {
     write_mem(0x8000 + i, pgm_read_byte(&PROGRAM_FIB[i]));
+  }
+
+  // Ladda vektorer ($FFFA–$FFFF) — sista 6 byten
+  for (unsigned int i = 0; i < 6; i++) {
+    write_mem(0xFFFA + i, pgm_read_byte(&PROGRAM_FIB[2048 + i]));
   }
 }
 
