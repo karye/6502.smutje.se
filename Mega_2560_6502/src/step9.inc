@@ -5,6 +5,7 @@
 
 #include <Arduino.h>
 #include <LiquidCrystal.h>
+#include "program_fib.h"   // Fibonacci-program, byggt med ca65
 
 #define PHI2     2
 #define RESB     4
@@ -197,85 +198,13 @@ void load_hello_program() {
 }
 
 // ================================================================
-// Ladda Fibonacci-program — CPU räknar ut och visar på LCD
-// 8-bitars Fibonacci: 0,1,1,2,3,5,8,13,21,34,55,89,144,233
-// Visar "Fib: $XX" på LCD rad 2, delay mellan varje tal
+// Ladda Fibonacci-program från assembler-bygge (program_fib.h)
 // ================================================================
 void load_fibonacci_program() {
   memset(program, 0, sizeof(program));
-  uint16_t next = 0x8000;
-
-  write_mem(0xFFFC, 0x00); write_mem(0xFFFD, 0x80); // Reset-vektor
-
-  // --- VIA-init: sätt portar som utgångar ---
-  write_mem(next++, 0xA9); write_mem(next++, 0xFF);  // LDA #$FF
-  write_mem(next++, 0x8D); write_mem(next++, 0x02); write_mem(next++, 0x40); // STA $4002
-  write_mem(next++, 0x8D); write_mem(next++, 0x03); write_mem(next++, 0x40); // STA $4003
-
-  // --- LCD-init ($30 x3, $38, $0C, $01, $06) ---
-  for (int i = 0; i < 3; i++) {
-    write_mem(next++, 0xA9); write_mem(next++, 0x30);
-    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x04);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x00);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  for (unsigned int i = 0; i < PROGRAM_FIB_SIZE; i++) {
+    write_mem(0x8000 + i, pgm_read_byte(&PROGRAM_FIB[i]));
   }
-  uint8_t cmds[] = {0x38, 0x0C, 0x01, 0x06};
-  for (int i = 0; i < 4; i++) {
-    write_mem(next++, 0xA9); write_mem(next++, cmds[i]);
-    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x04);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x00);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-  }
-  
-  // Rad 1: "Fibonacci:"
-  write_mem(next++, 0xA9); write_mem(next++, 0x80);  // cursor pos 0
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
-  write_mem(next++, 0xA9); write_mem(next++, 0x04);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-  write_mem(next++, 0xA9); write_mem(next++, 0x00);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-  write_mem(next++, 0xA9); write_mem(next++, 0x01);  // RS=1
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-
-  const char* fib = "Fibonacci:";
-  for (const char* p = fib; *p; p++) {
-    write_mem(next++, 0xA9); write_mem(next++, *p);
-    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x05);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x01);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-  }
-
-  // Rad 2: "Steg 9 SRAM"
-  write_mem(next++, 0xA9); write_mem(next++, 0xC0);
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
-  write_mem(next++, 0xA9); write_mem(next++, 0x04);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-  write_mem(next++, 0xA9); write_mem(next++, 0x00);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-  write_mem(next++, 0xA9); write_mem(next++, 0x01);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-
-  const char* steg9 = "Steg 9 SRAM";
-  for (const char* p = steg9; *p; p++) {
-    write_mem(next++, 0xA9); write_mem(next++, *p);
-    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x05);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x01);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-  }
-
-  // Halt-loop
-  uint16_t h = next;
-  write_mem(next++, 0x4C);
-  write_mem(next++, h & 0xFF);
-  write_mem(next++, (h >> 8) & 0xFF);
 }
 
 // ================================================================
