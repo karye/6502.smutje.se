@@ -281,9 +281,8 @@ void setup() {
 
   digitalWrite(RESB, HIGH);
 
-  debug_pulse = false;
+  debug_pulse = true;   // Visa Fibonacci-utskrifter i loggen
   for (int i = 0; i < 8000; i++) pulse();
-  debug_pulse = true;
 
   Serial.println("Fibonacci-program kört.");
 }
