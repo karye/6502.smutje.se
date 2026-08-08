@@ -151,70 +151,119 @@
     <p class="text-gray-700 mb-3 text-sm">Koden som laddas upp till Arduino Mega. Varje rad är kommenterad så du förstår vad som händer — kopiera, klistra in, ladda upp.</p>
     <p class="text-gray-700 mb-3 text-sm">Koden bygger vidare på steg 2. Den stora nyheten är <code>pulse()</code> som nu emulerar ett minne: läser adress + R/W, och antingen skickar data (<code>DDRA=0xFF, PORTA=…</code>) eller tar emot (<code>DDRA=0x00</code>).</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
+// ==============================================================
 // Steg 3 — Databuss och minnesemulering
-// Arduino emulerar minne. CPU:n kör NOP i loop från $8000.
+// ==============================================================
+// Arduino blir en fullständig minnesemulator. CPU:n får ett
+// NOP-program på $8000 och loopar för evigt — varje minnes-
+// access loggas i serieövervakaren.
 
 #include &lt;Arduino.h&gt;
 
-#define PHI2 2
-#define RESB 4
+// --- Pindefinitioner ---
+#define PHI2 2   // Arduino D2 → CPU pin 37 (klocka)
+#define RESB 4   // Arduino D4 → CPU pin 40 (reset)
+#define RWB  3   // Arduino D3 → CPU pin 34 (Read/Write)
+
 #define CLOCK_HZ 500                         // Klockfrekvens i Hz
 #define CLOCK_DELAY (1000 / (CLOCK_HZ * 2))  // ms per klockfas
-#define RWB  3
 
-uint8_t ram[1024];
-uint8_t vectors[6];
+// --- Minnesarrayer ---
+uint8_t ram[1024];       // $0000–$03FF (zero page + stack + ledigt)
+uint8_t vectors[6];      // $FFFA–$FFFF (NMI, RESET, IRQ)
 
+// --- read_mem() — slå upp ett minnesvärde ---
+// Anropas när CPU:n vill läsa (RWB = HIGH).
+// Returnerar rätt byte för varje adressområde.
 uint8_t read_mem(uint16_t addr) {
+  // Vektorer ($FFFA–$FFFF)
   if (addr &gt;= 0xFFFA &amp;&amp; addr &lt;= 0xFFFF) return vectors[addr - 0xFFFA];
+  // RAM ($0000–$03FF)
   if (addr &lt; 1024) return ram[addr];
-  return 0xEA;  // NOP — ofarlig fallback
+  // Allt annat → NOP ($EA) — ofarlig fallback, CPU:n hoppar bara över
+  return 0xEA;
 }
 
+// --- write_mem() — spara ett värde i minnet ---
+// Anropas när CPU:n vill skriva (RWB = LOW).
 void write_mem(uint16_t addr, uint8_t val) {
-  if (addr &gt;= 0xFFFA &amp;&amp; addr &lt;= 0xFFFF) { vectors[addr - 0xFFFA] = val; return; }
+  if (addr &gt;= 0xFFFA &amp;&amp; addr &lt;= 0xFFFF)
+    { vectors[addr - 0xFFFA] = val; return; }
   if (addr &lt; 1024) ram[addr] = val;
 }
 
+// --- pulse() — en klockcykel med minnesemulering ---
+// Detta är hjärtat i hela datorn. Varje cykel:
+// 1. Läs adressbuss (PORTF + PORTK)
+// 2. Läs R/W-signal
+// 3. Om CPU läser: lägg ut rätt byte på databussen (PORTA)
+// 4. Om CPU skriver: läs av vad som skrevs och spara
 void pulse() {
+  // --- Fas 1: PHI2 låg ---
   digitalWrite(PHI2, LOW);
   delay(CLOCK_DELAY);
 
-  uint16_t a = (PINK &lt;&lt; 0) | (PINF &lt;&lt; 8);
-  bool rw = digitalRead(RWB);
+  uint16_t a = (PINK &lt;&lt; 0) | (PINF &lt;&lt; 8);  // Läs adressbuss
+  bool rw = digitalRead(RWB);               // Läs R/W
 
-  if (rw) { DDRA = 0xFF; PORTA = read_mem(a); }
-  else    { DDRA = 0x00; }
+  // Styr databussen baserat på R/W
+  if (rw) {
+    // CPU läser → Arduino driver PORTA med rätt värde
+    DDRA = 0xFF;               // PORTA = OUTPUT
+    PORTA = read_mem(a);       // Lägg ut byten på databussen
+  } else {
+    // CPU skriver → Arduino lyssnar (tri-state, hög impedans)
+    DDRA = 0x00;               // PORTA = INPUT
+  }
 
+  // --- Fas 2: PHI2 hög ---
   digitalWrite(PHI2, HIGH);
+  delay(CLOCK_DELAY);
 
+  // Om CPU:n skrev — spara värdet som låg på databussen
   if (!rw) write_mem(a, PINA);
 
+  // Diagnostik: skriv ut vad som hände
   Serial.print(rw ? "R" : "W");
   Serial.print(" $");
   Serial.println(a, HEX);
 }
 
+// --- setup() — ladda program och starta CPU ---
 void setup() {
   Serial.begin(115200);
   pinMode(PHI2, OUTPUT);
   pinMode(RESB, OUTPUT);
   pinMode(RWB,  INPUT);
-  DDRK = 0x00; DDRF = 0x00; DDRA = 0x00;
+  DDRK = 0x00;                 // Adressbuss A8–A15 = INPUT
+  DDRF = 0x00;                 // Adressbuss A0–A7  = INPUT
+  DDRA = 0x00;                 // Databuss = INPUT (tri-state från start)
 
-  write_mem(0xFFFC, 0x00);  // Reset-vektor → $8000
-  write_mem(0xFFFD, 0x80);
-  write_mem(0x8000, 0xEA);  // NOP
+  // --- Ladda programmet i minnet ---
+  // Reset-vektor: CPU:n startar på $8000
+  write_mem(0xFFFC, 0x00);     // Låg byte av $8000
+  write_mem(0xFFFD, 0x80);     // Hög byte av $8000
+
+  // Program på $8000: en NOP-instruktion ($EA)
+  // NOP gör ingenting — CPU:n går till nästa adress.
+  // Nästa adress är också $EA → oändlig loop.
+  write_mem(0x8000, 0xEA);
 
   Serial.println("Steg 3 — Databuss och minnesemulering");
 
+  // Reset-sekvens
   digitalWrite(RESB, LOW);
   for (int i = 0; i &lt; 5; i++) pulse();
   digitalWrite(RESB, HIGH);
+
+  // Kör 10 cykler så vi ser reset-vektorn i serieövervakaren
   for (int i = 0; i &lt; 10; i++) pulse();
 }
 
-void loop() { pulse(); }
+// --- loop() — fortsätt köra, en klockcykel i taget ---
+void loop() {
+  pulse();
+}
 </code></pre>
   </section>
 
