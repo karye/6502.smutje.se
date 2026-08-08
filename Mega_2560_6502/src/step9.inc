@@ -72,16 +72,20 @@ void pulse() {
 
   if (!rw && !is_sram(a) && !is_via(a)) write_mem(a, PINA);
 
-  // Diagnostik
-  Serial.print(rw ? "R" : "W");
-  Serial.print(" $");
-  Serial.print(a, HEX);
-  if (is_sram(a))            Serial.print("  <- SRAM");
-  else if (is_via(a))         Serial.print("  <- VIA");
-  else if (a >= 0x8000 && rw) Serial.print("  <- OPCODE");
-  else if (a == 0xFFFC)      Serial.print("  <- RESET-VEKTOR LAG");
-  else if (a == 0xFFFD)      Serial.print("  <- RESET-VEKTOR HOG");
-  Serial.println();
+  // Diagnostik (var 20:e cykel för att minska utskriften)
+  static int count = 0;
+  count++;
+  if (count % 20 == 0 || is_via(a) || is_sram(a) || a == 0xFFFC || a == 0xFFFD) {
+    Serial.print(rw ? "R" : "W");
+    Serial.print(" $");
+    Serial.print(a, HEX);
+    if (is_sram(a))            Serial.print("  <- SRAM");
+    else if (is_via(a))         Serial.print("  <- VIA");
+    else if (a >= 0x8000 && a < 0xFFFA) {}
+    else if (a == 0xFFFC)      Serial.print("  <- RESET-VEKTOR LAG");
+    else if (a == 0xFFFD)      Serial.print("  <- RESET-VEKTOR HOG");
+    Serial.println();
+  }
 }
 
 // ================================================================
