@@ -110,21 +110,10 @@ dly_inner:
 show_num:
     sta $10           ; Spara värdet
 
-    ; Rad 2, pos 0 — rensa med mellanslag
+    ; Rad 2, pos 0
     lda #$C0
     jsr lcd_cmd
     lda #$01          ; RS=1
-    sta VIA_ORA
-
-    lda #' '
-    jsr lcd_data
-    jsr lcd_data
-    jsr lcd_data
-
-    ; Rad 2, pos 0 igen
-    lda #$C0
-    jsr lcd_cmd
-    lda #$01
     sta VIA_ORA
 
     ; --- Hundratal ---
@@ -172,6 +161,8 @@ show_num:
     pla
     clc
     adc #'0'
+    jsr lcd_data
+    lda #' '          ; Rensa nästa position
     jsr lcd_data
     rts
 
