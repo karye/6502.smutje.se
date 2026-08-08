@@ -182,9 +182,10 @@ void load_hello_program() {
   }
 
   // --- Halt-loop (vänta på omstart efter knapptryck) ---
-  write_mem(next++, 0x4C);
-  write_mem(next++, (next - 3) & 0xFF);
-  write_mem(next++, ((next - 3) >> 8) & 0xFF);
+  uint16_t halt1 = next;
+  write_mem(next++, 0x4C);                           // JMP
+  write_mem(next++, halt1 & 0xFF);                   // låg byte
+  write_mem(next++, (halt1 >> 8) & 0xFF);            // hög byte
 }
 
 // ================================================================
@@ -267,9 +268,10 @@ void load_ramtest_program() {
   }
 
   // Halt-loop
-  write_mem(next++, 0x4C);
-  write_mem(next++, (next - 3) & 0xFF);
-  write_mem(next++, ((next - 3) >> 8) & 0xFF);
+  uint16_t halt2 = next;
+  write_mem(next++, 0x4C);                           // JMP
+  write_mem(next++, halt2 & 0xFF);                   // låg byte
+  write_mem(next++, (halt2 >> 8) & 0xFF);            // hög byte
 }
 
 // ================================================================
