@@ -243,6 +243,7 @@ void setup() {
 
   // --- Vänta på knapptryck ---
   bool knapp_tryckt = false;
+  unsigned long last_msg = 0;
   while (!knapp_tryckt) {
     bool b1 = !digitalRead(BTN_CLK);
     bool b2 = !digitalRead(BTN_INSTR);
@@ -256,6 +257,10 @@ void setup() {
         Serial.print(b1 ? "1" : "2");
         Serial.println(" tryckt! <<<");
       }
+    }
+    if (millis() - last_msg > 2000) {
+      Serial.println("Vantar pa knapp...");
+      last_msg = millis();
     }
   }
 
