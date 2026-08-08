@@ -1,9 +1,7 @@
-// Steg 9 — Riktigt RAM (62256 32KB SRAM)
-// SRAM på $0000–$3FFF (16 KB). Arduino tri-state för SRAM-adresser.
-// VIA på $4000–$400F, program på $8000+ (Arduino).
+// Steg 9 — Riktigt RAM (62256 32KB SRAM) + VIA + LCD
+// Samma knapp-logik som step7. Enda skillnad: is_sram() tri-state för $0000–$3FFF.
 
 #include <Arduino.h>
-#include <LiquidCrystal.h>
 
 #define PHI2     2
 #define RESB     4
@@ -12,25 +10,18 @@
 #define BTN_CLK  11
 #define BTN_INSTR 12
 
-LiquidCrystal lcd(5, 6, 10, 9, 8, 7);
-
-uint8_t ram[1024];          // Används ej längre för $0000–$03FF — SRAM hanterar detta
-uint8_t program[2048];      // $8000–$87FF (6502-program)
+uint8_t program[2048];      // $8000–$87FF
 uint8_t vectors[6];         // $FFFA–$FFFF
 
 #define VIA_BASE     0x4000
 #define SRAM_END     0x3FFF
 
-// --- is_sram() — hanteras av fysisk 62256 ---
 bool is_sram(uint16_t addr) { return addr <= SRAM_END; }
+bool is_via(uint16_t addr)  { return (addr >= VIA_BASE && addr < VIA_BASE + 16); }
 
-// --- is_via() — hanteras av fysisk W65C22 ---
-bool is_via(uint16_t addr) { return (addr >= VIA_BASE && addr < VIA_BASE + 16); }
-
-// --- read_mem() — Arduino svarar bara utanför SRAM/VIA ---
 uint8_t read_mem(uint16_t addr) {
-  if (is_sram(addr)) return 0;          // SRAM svarar
-  if (is_via(addr)) return 0;           // VIA svarar
+  if (is_sram(addr)) return 0;
+  if (is_via(addr))  return 0;
   if (addr >= 0xFFFA && addr <= 0xFFFF)
     return vectors[addr - 0xFFFA];
   if (addr >= 0x8000 && addr < 0x8000 + sizeof(program))
@@ -39,8 +30,8 @@ uint8_t read_mem(uint16_t addr) {
 }
 
 void write_mem(uint16_t addr, uint8_t val) {
-  if (is_sram(addr)) return;            // SRAM tar emot
-  if (is_via(addr)) return;             // VIA tar emot
+  if (is_sram(addr)) return;
+  if (is_via(addr))  return;
   if (addr >= 0xFFFA && addr <= 0xFFFF)
     { vectors[addr - 0xFFFA] = val; return; }
   if (addr >= 0x8000 && addr < 0x8000 + sizeof(program))
@@ -49,7 +40,7 @@ void write_mem(uint16_t addr, uint8_t val) {
 
 void pulse() {
   digitalWrite(PHI2, LOW);
-  DDRA = 0x00;               // Tri-state direkt — SRAM/VIA tar över om de ska
+  DDRA = 0x00;
   delay(10);
 
   uint8_t kl = PINF;
@@ -57,7 +48,6 @@ void pulse() {
   uint16_t a = (kl << 0) | (kh << 8);
   bool rw = digitalRead(RWB);
 
-  // Arduino svarar endast på adresser utanför SRAM och VIA
   if (rw && !is_sram(a) && !is_via(a)) {
     DDRA = 0xFF;
     PORTA = read_mem(a);
@@ -68,23 +58,14 @@ void pulse() {
 
   if (!rw && !is_sram(a) && !is_via(a)) write_mem(a, PINA);
 
-  // Diagnostik
   Serial.print(rw ? "R" : "W");
-  Serial.print(" $");
-  Serial.print(a, HEX);
-  if (is_sram(a))            Serial.print("  <- SRAM");
-  else if (is_via(a))         Serial.print("  <- VIA");
-  else if (a >= 0x8000 && rw) Serial.print("  <- OPCODE");
-  else if (a == 0xFFFC)      Serial.print("  <- RESET-VEKTOR LAG");
-  else if (a == 0xFFFD)      Serial.print("  <- RESET-VEKTOR HOG");
+  Serial.print(" $"); Serial.print(a, HEX);
+  if (is_sram(a))            Serial.print(" SRAM");
+  else if (is_via(a))        Serial.print(" VIA");
+  else if (a >= 0x8000)      Serial.print(" OPCODE");
+  else if (a == 0xFFFC)      Serial.print(" RSTL");
+  else if (a == 0xFFFD)      Serial.print(" RSTH");
   Serial.println();
-
-  // LCD-uppdatering
-  lcd.setCursor(0, 0);
-  lcd.print("A:$"); lcd.print(a, HEX);
-  if (a < 0x1000) lcd.print(" ");
-  if (a < 0x100)  lcd.print(" ");
-  lcd.print("    ");
 }
 
 void setup() {
@@ -98,29 +79,89 @@ void setup() {
 
   DDRK = 0x00; DDRF = 0x00; DDRA = 0x00;
 
-  lcd.begin(16, 2);
-  lcd.print("Steg 9 SRAM 62256");
+  Serial.println("Steg 9 — SRAM + VIA + LCD (med knappar)");
 
-  // Ladda 6502-program (samma som steg 8 — från program.h)
-  // För steg 9 laddar vi programmet på $8000 via Arduino
+  // Reset-vektor → $8000
   write_mem(0xFFFC, 0x00);
   write_mem(0xFFFD, 0x80);
 
-  // Räknarprogram som använder SRAM på $0200
-  write_mem(0x8000, 0xA2);  // LDX #$00
-  write_mem(0x8001, 0x00);
-  write_mem(0x8002, 0xE8);  // INX
-  write_mem(0x8003, 0x8E);  // STX $0200  ← skriver till SRAM!
-  write_mem(0x8004, 0x00);
-  write_mem(0x8005, 0x02);
-  write_mem(0x8006, 0x4C);  // JMP $8002
-  write_mem(0x8007, 0x02);
-  write_mem(0x8008, 0x80);
+  // === EXAKT samma 6502-program som step7 ===
+  uint16_t next = 0x8000;
 
-  Serial.println("Steg 9 — 62256 SRAM på $0000–$3FFF");
-  Serial.println("SRAM hanterar zero page, stack och data");
-  Serial.println("Arduino = program ($8000+) + vektorer");
-  Serial.println("VIA = I/O ($4000–$400F)");
+  write_mem(next++, 0xA9); write_mem(next++, 0xFF);  // LDA #$FF
+  write_mem(next++, 0x8D); write_mem(next++, 0x02); write_mem(next++, 0x40); // STA $4002 (DDRB)
+  write_mem(next++, 0x8D); write_mem(next++, 0x03); write_mem(next++, 0x40); // STA $4003 (DDRA)
+
+  for (int i = 0; i < 3; i++) {
+    write_mem(next++, 0xA9); write_mem(next++, 0x30);
+    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+    write_mem(next++, 0xA9); write_mem(next++, 0x04);
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+    write_mem(next++, 0xA9); write_mem(next++, 0x00);
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  }
+
+  write_mem(next++, 0xA9); write_mem(next++, 0x38);
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+  write_mem(next++, 0xA9); write_mem(next++, 0x04);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0xA9); write_mem(next++, 0x00);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+
+  write_mem(next++, 0xA9); write_mem(next++, 0x0C);
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+  write_mem(next++, 0xA9); write_mem(next++, 0x04);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0xA9); write_mem(next++, 0x00);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+
+  write_mem(next++, 0xA9); write_mem(next++, 0x01);
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+  write_mem(next++, 0xA9); write_mem(next++, 0x04);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0xA9); write_mem(next++, 0x00);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+
+  write_mem(next++, 0xA9); write_mem(next++, 0x06);
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+  write_mem(next++, 0xA9); write_mem(next++, 0x04);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0xA9); write_mem(next++, 0x00);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+
+  // Skriv "Steg 9 SRAM" på LCD
+  const char* msg1 = "Steg 9 SRAM";
+  for (int i = 0; msg1[i]; i++) {
+    write_mem(next++, 0xA9); write_mem(next++, msg1[i]);
+    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+    write_mem(next++, 0xA9); write_mem(next++, 0x05);
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+    write_mem(next++, 0xA9); write_mem(next++, 0x01);
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  }
+
+  // Cursor rad 2
+  write_mem(next++, 0xA9); write_mem(next++, 0xC0);
+  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+  write_mem(next++, 0xA9); write_mem(next++, 0x04);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  write_mem(next++, 0xA9); write_mem(next++, 0x00);
+  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+
+  const char* msg2 = "62256 SRAM OK!";
+  for (int i = 0; msg2[i]; i++) {
+    write_mem(next++, 0xA9); write_mem(next++, msg2[i]);
+    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
+    write_mem(next++, 0xA9); write_mem(next++, 0x05);
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+    write_mem(next++, 0xA9); write_mem(next++, 0x01);
+    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
+  }
+
+  // JMP $8000
+  write_mem(next++, 0x4C); write_mem(next++, 0x00); write_mem(next++, 0x80);
+
+  Serial.print("Program: "); Serial.print(next - 0x8000); Serial.println(" bytes");
 
   // Reset-sekvens
   for (int i = 0; i < 5; i++) pulse();
