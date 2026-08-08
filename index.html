@@ -197,64 +197,109 @@
   <!-- Byggsteg -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Byggsteg</h2>
-    <div class="text-gray-700 text-sm space-y-3">
-      <p><strong class="text-gray-900">Steg 1 — Ström, klocka, reset:</strong> W65C02S får spänning och klockpulser från Arduino D2. En lysdiod blinkar i takt med klockan. Pull-up-motstånd på RDY, IRQB, NMIB, BE, SOB. 100 nF avkoppling vid VDD/VSS.</p>
-      <p><strong class="text-gray-900">Steg 2 — Adressbuss A0–A15:</strong> Samtliga 16 adresslinjer kopplas till Arduinons analoga portar (PORTF + PORTK). RESB kopplas till D4 för kontrollerad reset. Serieövervakaren visar att CPU:n läser reset-vektorn $FFFC/$FFFD.</p>
-      <p><strong class="text-gray-900">Steg 3 — Databuss D0–D7:</strong> 8 datalinjer + RWB kopplas in via 100 Ω skyddsmotstånd. Arduinon emulerar minnet. Ett NOP-testprogram laddas på $8000.</p>
-      <p><strong class="text-gray-900">Steg 4 — Manuell stegning:</strong> Två tryckknappar (D11, D12) för manuell stegning — en klockcykel eller en hel instruktion i taget. SYNC-pinnen (D13) detekterar instruktionsstart.</p>
-      <p><strong class="text-gray-900">Steg 5 — LCD-display (parallell 4-bit):</strong> LCD 16×2 kopplas direkt till Arduino (D5–D10). Visar adress och data i realtid — ingen datorskärm behövs.</p>
-      <p><strong class="text-gray-900">Steg 6 — Eget 6502-program:</strong> En räknare i maskinkod: LDX #$00 · INX · STX $0200 · JMP. CPU:n ökar X-registret 0→255 i loop. LCD:n visar exekveringen.</p>
-      <p><strong class="text-gray-900">Steg 7 — W65C22 VIA + 74HC00:</strong> LCD:n kopplas till VIA:ns I/O-portar. 74HC00 avkodar adress $4000. CPU:n styr LCD:n själv — Arduino är nu bara minne och klocka.</p>
-      <p><strong class="text-gray-900">Steg 8 — Assembler-bygge:</strong> 6502-programmet skrivs i assembler (ca65) istället för hårdkodade hex-bytes. PlatformIO bygger automatiskt program.asm → program.h vid varje uppladdning.</p>
-      <p><strong class="text-gray-900">Steg 9 — Riktigt RAM:</strong> 62256 SRAM (32KB) kopplas in på adressbussen. Zero page, stack och data lagras i riktigt RAM-chip — inte i Arduinons arrayer. Arduino går tri-state och låter SRAM hantera $0000–$3FFF.</p>
-    </div>
-  </section>
+    <div class="text-gray-700 text-sm space-y-4">
 
-  <!-- Komponenter -->
-  <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Komponenter (alla steg)</h2>
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white">
-          <tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr>
-        </thead>
-        <tbody class="divide-y">
-          <tr><td class="p-2">1</td><td class="p-2"><strong>W65C02S</strong> (DIP-40)</td></tr>
-          <tr><td class="p-2">1</td><td class="p-2"><strong>Arduino Mega 2560</strong></td></tr>
-          <tr><td class="p-2">1</td><td class="p-2"><strong>W65C22 VIA</strong> (DIP-40) — steg 7–8</td></tr>
-          <tr><td class="p-2">1</td><td class="p-2"><strong>74HC00</strong> (quad NAND) — steg 7–8</td></tr>
-          <tr><td class="p-2">1</td><td class="p-2"><strong>LCD 16×2</strong> (parallell, t.ex. QC1602A)</td></tr>
-          <tr><td class="p-2">1</td><td class="p-2"><strong>10 kΩ potentiometer</strong> (LCD-kontrast)</td></tr>
-          <tr><td class="p-2">1</td><td class="p-2"><strong>Lysdiod</strong> (klockindikering)</td></tr>
-          <tr><td class="p-2">1</td><td class="p-2"><strong>220 Ω motstånd</strong> (klock-LED)</td></tr>
-          <tr><td class="p-2">1</td><td class="p-2"><strong>220 Ω motstånd</strong> (LCD-belysning)</td></tr>
-          <tr><td class="p-2">4</td><td class="p-2"><strong>10 kΩ motstånd</strong> (pull-up: RDY, IRQB, NMIB, SOB)</td></tr>
-          <tr><td class="p-2">8</td><td class="p-2"><strong>100 Ω motstånd</strong> (databuss-skydd)</td></tr>
-          <tr><td class="p-2">1</td><td class="p-2"><strong>100 nF keramisk kondensator</strong> (avkoppling CPU)</td></tr>
-          <tr><td class="p-2">1</td><td class="p-2"><strong>10 µF elektrolytisk kondensator</strong> (strömstabilisering)</td></tr>
-          <tr><td class="p-2">2</td><td class="p-2"><strong>Tryckknappar</strong></td></tr>
-          <tr><td class="p-2">–</td><td class="p-2">Kopplingsdäck + kopplingstråd</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+      <div>
+        <strong class="text-gray-900">Steg 1 — Ström, klocka, reset</strong>
+        <ul class="list-disc pl-5 space-y-1 mt-1">
+          <li>W65C02S får <strong>+5V och GND</strong> — processorn är spänningssatt men gör ingenting än</li>
+          <li>Arduino D2 genererar en <strong>långsam fyrkantsvåg</strong> (1 Hz) till PHI2-ingången</li>
+          <li>En <strong>lysdiod</strong> på klocklinjen blinkar i takt — du ser att klockan når fram</li>
+          <li><strong>Fyra pull-up-motstånd</strong> (10kΩ) på RDY, /IRQ, /NMI, /SO — utan dessa kan CPU:n bete sig oförutsägbart</li>
+          <li><strong>BE (Bus Enable)</strong> till +5V — annars är bussarna bortkopplade</li>
+          <li>100 nF keramisk kondensator mellan VDD och VSS, <strong>så nära CPU:n som möjligt</strong></li>
+        </ul>
+      </div>
 
-  <!-- Pinout-bilder -->
-  <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Pinout-referens</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="bg-white rounded-lg shadow p-3 border">
-        <p class="font-bold text-sm mb-2 text-center">W65C02S</p>
-        <img src="docs/w65c02s-pinout.png" alt="W65C02S pinout" class="w-full">
+      <div>
+        <strong class="text-gray-900">Steg 2 — Adressbuss A0–A15</strong>
+        <ul class="list-disc pl-5 space-y-1 mt-1">
+          <li>CPU:ns <strong>16 adresslinjer</strong> kopplas 1:1 till Arduinons analoga portar (PORTF + PORTK)</li>
+          <li>/RESET kopplas till Arduino D4 — vi får <strong>kontrollerad reset</strong> istället för att CPU:n startar okontrollerat</li>
+          <li>Efter reset läser <strong>alla 6502-processorer automatiskt</strong> adress $FFFC och $FFFD — reset-vektorn</li>
+          <li>Serieövervakaren visar adresserna i realtid: <code>R $FFFC</code>, <code>R $FFFD</code>…</li>
+          <li>Detta steg <strong>verifierar att samtliga 16 adressledningar</strong> är korrekt anslutna</li>
+        </ul>
       </div>
-      <div class="bg-white rounded-lg shadow p-3 border">
-        <p class="font-bold text-sm mb-2 text-center">W65C22 VIA</p>
-        <img src="docs/w65c22s-pinout.png" alt="W65C22 VIA pinout" class="w-full">
+
+      <div>
+        <strong class="text-gray-900">Steg 3 — Databuss D0–D7 och minnesemulering</strong>
+        <ul class="list-disc pl-5 space-y-1 mt-1">
+          <li>8 datalinjer + R/W kopplas in via <strong>100Ω skyddsmotstånd</strong> — obligatoriska för att förhindra busskrockar</li>
+          <li>Arduino blir en <strong>minnesemulator</strong>: arrayer i RAM (<code>ram[1024]</code>, <code>vectors[6]</code>) slår upp rätt byte för varje adress</li>
+          <li>Ett <strong>NOP-program</strong> ($EA) laddas på $8000 — CPU:n loopar för evigt, vi kan följa varje steg</li>
+          <li><code>pulse()</code>-funktionen implementerar hela bussprotokollet: läs adress, kolla R/W, styr databussen, spara vid skrivning</li>
+          <li>Serieövervakaren loggar varje minnesaccess: <code>R $8000</code>, <code>R $8001</code>…</li>
+        </ul>
       </div>
-      <div class="bg-white rounded-lg shadow p-3 border">
-        <p class="font-bold text-sm mb-2 text-center">74HC00</p>
-        <img src="docs/74hc00-pinout.png" alt="74HC00 pinout" class="w-full">
+
+      <div>
+        <strong class="text-gray-900">Steg 4 — Manuell stegning med knappar</strong>
+        <ul class="list-disc pl-5 space-y-1 mt-1">
+          <li>Två <strong>tryckknappar</strong> (D11, D12) med <code>INPUT_PULLUP</code> — inga externa motstånd behövs</li>
+          <li><strong>Knapp 1:</strong> en klockcykel per tryck — perfekt för att inspektera bussen i ultrarapid</li>
+          <li><strong>Knapp 2:</strong> kör tills SYNC (D13) går hög — stannar vid <strong>början av nästa instruktion</strong></li>
+          <li>W65C02S är <strong>statisk CMOS</strong> — klockan kan stoppas hur länge som helst utan att data förloras</li>
+          <li>Nu kan du <strong>stega igenom programmet</strong> manuellt, en instruktion i taget</li>
+        </ul>
       </div>
+
+      <div>
+        <strong class="text-gray-900">Steg 5 — LCD-display (parallell 4-bit)</strong>
+        <ul class="list-disc pl-5 space-y-1 mt-1">
+          <li>LCD 16×2 kopplas <strong>direkt till Arduino</strong> — RS→D5, E→D6, DB4–DB7→D10,D9,D8,D7</li>
+          <li><code>LiquidCrystal</code>-biblioteket sköter all kommunikation — vi behöver bara tala om vilka pinnar</li>
+          <li>LCD:n visar <strong>aktuell adress och data</strong> i realtid — ingen datorskärm behövs</li>
+          <li>En 10kΩ <strong>potentiometer</strong> på VO (pin 3) justerar kontrasten</li>
+          <li>Nu är datorn <strong>helt fristående</strong> från datorn — all feedback sker på kopplingsdäcket</li>
+        </ul>
+      </div>
+
+      <div>
+        <strong class="text-gray-900">Steg 6 — Första egna 6502-programmet</strong>
+        <ul class="list-disc pl-5 space-y-1 mt-1">
+          <li>NOP ersätts med ett <strong>riktigt maskinkodsprogram</strong> på 9 bytes</li>
+          <li><code>LDX #$00 · INX · STX $0200 · JMP $8002</code> — öka X-registret, spara, loopa</li>
+          <li>Programmet skrivs som <strong>råa hex-bytes</strong> i Arduinons <code>setup()</code> — inga externa verktyg</li>
+          <li>LCD:n visar programmets exekvering — du ser adressen växla mellan $8002, $8003, $8006…</li>
+          <li>Samma hårdvara som steg 5 — <strong>allt nytt är mjukvara</strong></li>
+        </ul>
+      </div>
+
+      <div>
+        <strong class="text-gray-900">Steg 7 — W65C22 VIA + 74HC00 adressavkodning</strong>
+        <ul class="list-disc pl-5 space-y-1 mt-1">
+          <li><strong>W65C22 VIA</strong> (Versatile Interface Adapter) ger CPU:n 20 I/O-pinnar — två 8-bitarsportar + 4 kontrollsignaler</li>
+          <li><strong>74HC00</strong> (två NAND-grindar) avkodar adress $4000 — VIA hamnar på $4000–$400F</li>
+          <li>LCD:n kopplas till <strong>VIA:ns portar</strong> istället för direkt till Arduino: PA0=RS, PA2=E, PB0–PB7=DB0–DB7</li>
+          <li>6502-programmet initierar LCD:n och skriver fyra rader text — <strong>CPU:n styr allt själv</strong></li>
+          <li>Arduino är nu <strong>endast minnesemulator och klocka</strong> — all I/O-logik körs på 6502</li>
+          <li>Arduino <strong>tri-statar databussen</strong> vid VIA-adresser — den fysiska kretsen svarar</li>
+        </ul>
+      </div>
+
+      <div>
+        <strong class="text-gray-900">Steg 8 — Assembler-bygge med ca65</strong>
+        <ul class="list-disc pl-5 space-y-1 mt-1">
+          <li>6502-programmet flyttas från hårdkodade hex-bytes till en <strong>riktig assembler-fil</strong> (<code>program.asm</code>)</li>
+          <li><strong>ca65 + ld65</strong> (från cc65-verktygslådan) assemblerar och länkar — branschstandard för 6502</li>
+          <li>PlatformIO kör byggskriptet <strong>automatiskt</strong> före varje uppladdning — du märker inte av det</li>
+          <li><code>program.h</code> genereras med en byte-array som <code>main.cpp</code> inkluderar</li>
+          <li>Samma hårdvara som steg 7 — <strong>endast byggkedjan ändras</strong></li>
+        </ul>
+      </div>
+
+      <div>
+        <strong class="text-gray-900">Steg 9 — Riktigt RAM (62256 SRAM)</strong>
+        <ul class="list-disc pl-5 space-y-1 mt-1">
+          <li><strong>62256 SRAM</strong> (32KB, DIP-28) — ett riktigt statiskt RAM-chip ersätter Arduinons mjukvaruemulering</li>
+          <li>SRAM tar <strong>$0000–$3FFF</strong> (16 KB) — zero page, stack och variabler lagras i äkta hårdvara</li>
+          <li>74HC00-grind U4A (NOT A15) avkodar chip select — <strong>en enda grind</strong> räcker</li>
+          <li>Arduino <strong>tri-statar</strong> vid alla adresser under $4000 — SRAM-chippet driver databussen istället</li>
+          <li>Nu delar <strong>tre enheter</strong> på bussen: SRAM, VIA och Arduino</li>
+        </ul>
+      </div>
+
     </div>
   </section>
 
