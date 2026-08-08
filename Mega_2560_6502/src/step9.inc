@@ -315,21 +315,29 @@ void setup() {
   bool knapp_tryckt = false;
   int wait_count = 0;
   while (!knapp_tryckt) {
-    bool b1 = !digitalRead(BTN_CLK);
+    // Läs båda knapparna
+    bool b1 = !digitalRead(BTN_CLK);   // LÅG = tryckt (INPUT_PULLUP)
     bool b2 = !digitalRead(BTN_INSTR);
     if (b1 || b2) {
-      delay(50);
-      knapp_tryckt = true;
-      Serial.print("Knapp ");
-      Serial.print(b1 ? "1" : "2");
-      Serial.println(" tryckt!");
+      delay(50);  // Debounce
+      // Läs igen för att bekräfta
+      b1 = !digitalRead(BTN_CLK);
+      b2 = !digitalRead(BTN_INSTR);
+      if (b1 || b2) {
+        knapp_tryckt = true;
+        Serial.println();
+        Serial.print(">>> Knapp ");
+        Serial.print(b1 ? "1 (BTN_CLK)" : "2 (BTN_INSTR)");
+        Serial.println(" tryckt! <<<");
+      }
     }
     wait_count++;
-    if (wait_count % 10000 == 0) {
-      Serial.print("  Väntar... BTN1=");
+    if (wait_count % 50000 == 0) {
+      Serial.print("Vantar pa knapptryck... (BTN1=");
       Serial.print(digitalRead(BTN_CLK));
-      Serial.print(" BTN2=");
-      Serial.println(digitalRead(BTN_INSTR));
+      Serial.print(", BTN2=");
+      Serial.print(digitalRead(BTN_INSTR));
+      Serial.println(")");
     }
   }
 
