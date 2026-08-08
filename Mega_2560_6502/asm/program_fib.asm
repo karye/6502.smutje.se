@@ -162,7 +162,9 @@ show_num:
     clc
     adc #'0'
     jsr lcd_data
-    lda #' '          ; Rensa nästa position
+    lda #' '          ; Rensa nästa 2 positioner (sudda gamla siffror)
+    jsr lcd_data
+    lda #' '
     jsr lcd_data
     rts
 
