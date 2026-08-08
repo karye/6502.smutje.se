@@ -235,8 +235,8 @@ void setup() {
   digitalWrite(RESB, HIGH);
 
   // Kör ~2500 cykler så LCD-init + text hinner visas
-  Serial.println("Kor 500 cykler (tyst)...");
-  for (int i = 0; i < 500; i++) pulse();
+  Serial.println("Kor 1000 cykler (tyst)...");
+  for (int i = 0; i < 1000; i++) pulse();
   debug_pulse = true;
 
   // --- Vänta på knapptryck ---
@@ -268,7 +268,7 @@ void setup() {
   digitalWrite(RESB, HIGH);
 
   debug_pulse = false;
-  for (int i = 0; i < 2000; i++) pulse();
+  for (int i = 0; i < 4000; i++) pulse();
   debug_pulse = true;
 
   Serial.println("Fibonacci-program kört.");
