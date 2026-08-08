@@ -5,12 +5,13 @@
 
 #define PHI2 2
 #define RESB 4
+#define CLOCK_DELAY 1   // ms per klockfas (1 = ~500 Hz, 10 = ~50 Hz)
 
 void pulse() {
   digitalWrite(PHI2, LOW);
-  delay(10);
+  delay(CLOCK_DELAY);
   digitalWrite(PHI2, HIGH);
-  delay(10);
+  delay(CLOCK_DELAY);
 }
 
 void setup() {
@@ -34,12 +35,12 @@ void setup() {
 
 void loop() {
   digitalWrite(PHI2, LOW);
-  delay(10);
+  delay(CLOCK_DELAY);
 
   uint16_t addr = (PINK << 0) | (PINF << 8);
 
   digitalWrite(PHI2, HIGH);
-  delay(10);
+  delay(CLOCK_DELAY);
 
   Serial.print("R $");
   Serial.println(addr, HEX);

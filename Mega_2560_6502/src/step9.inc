@@ -14,6 +14,8 @@
 #define BTN_CLK  11
 #define BTN_INSTR 12
 
+#define CLOCK_DELAY 1   // ms per klockfas (1 = ~500 Hz, 10 = ~50 Hz)
+
 LiquidCrystal lcd(5, 6, 10, 9, 8, 7);
 
 uint8_t program[2048];      // $8000–$87FF (6502-program)
@@ -57,7 +59,7 @@ void write_mem(uint16_t addr, uint8_t val) {
 void pulse() {
   digitalWrite(PHI2, LOW);
   DDRA = 0x00;               // Tri-state direkt
-  delay(10);
+  delay(CLOCK_DELAY);
 
   uint8_t kl = PINF;
   uint8_t kh = PINK;
@@ -71,7 +73,7 @@ void pulse() {
   }
 
   digitalWrite(PHI2, HIGH);
-  delay(10);
+  delay(CLOCK_DELAY);
 
   if (!rw && !is_sram(a) && !is_via(a)) write_mem(a, PINA);
 

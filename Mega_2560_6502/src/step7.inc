@@ -6,10 +6,14 @@
 
 #define PHI2     2   // CPU pin 37
 #define RESB     4   // CPU pin 40
+#define CLOCK_DELAY 1   // ms per klockfas (1 = ~500 Hz, 10 = ~50 Hz)
 #define RWB      3   // CPU pin 34
+#define CLOCK_DELAY 1   // ms per klockfas (1 = ~500 Hz, 10 = ~50 Hz)
 #define SYNC     13  // CPU pin 7
+#define CLOCK_DELAY 1   // ms per klockfas (1 = ~500 Hz, 10 = ~50 Hz)
 #define BTN_CLK  11  // Knapp: en klockcykel per tryck
 #define BTN_INSTR 12 // Knapp: kör till nästa instruktion
+#define CLOCK_DELAY 1   // ms per klockfas (1 = ~500 Hz, 10 = ~50 Hz)
 
 uint8_t ram[1024];       // $0000–$03FF (stack + zero page)
 uint8_t program[2048];   // $8000–$87FF (6502-program, Arduino svarar)
@@ -48,7 +52,7 @@ void pulse() {
 
   // Släpp databussen EFTER klockfall — håll kvar data under CPU:ns hold time (~10ns)
   DDRA = 0x00;
-  delay(10);
+  delay(CLOCK_DELAY);
 
   uint8_t kl = PINF;   // CPU A0–A7 (via Arduino A0–A7)
   uint8_t kh = PINK;   // CPU A8–A15 (via Arduino A8–A15)
@@ -62,7 +66,7 @@ void pulse() {
 
   // -- Fas 2: PHI2 hög --
   digitalWrite(PHI2, HIGH);
-  delay(10);
+  delay(CLOCK_DELAY);
 
   if (!rw && !is_via(a)) write_mem(a, PINA);
 
