@@ -300,22 +300,43 @@ void setup() {
   digitalWrite(RESB, HIGH);
 
   // Kör ~2500 cykler så LCD-init + text hinner visas
-  for (int i = 0; i < 2500; i++) pulse();
+  Serial.println("Kor 2500 cykler for LCD-init + text...");
+  for (int i = 0; i < 2500; i++) {
+    pulse();
+    if (i % 500 == 0) { Serial.print("  cykel "); Serial.println(i); }
+  }
 
+  Serial.println("========================================");
   Serial.println("Fas 1 klar — 'Tryck pa knapp...' visas på LCD.");
   Serial.println("Väntar på knapptryck (tryck på valfri knapp)...");
+  Serial.println("========================================");
 
   // --- Vänta på knapptryck ---
-  // CPU:n loopar på halt — vi pollar knapparna manuellt
   bool knapp_tryckt = false;
+  int wait_count = 0;
   while (!knapp_tryckt) {
-    if (!digitalRead(BTN_CLK) || !digitalRead(BTN_INSTR)) {
+    bool b1 = !digitalRead(BTN_CLK);
+    bool b2 = !digitalRead(BTN_INSTR);
+    if (b1 || b2) {
       delay(50);
       knapp_tryckt = true;
+      Serial.print("Knapp ");
+      Serial.print(b1 ? "1" : "2");
+      Serial.println(" tryckt!");
+    }
+    wait_count++;
+    if (wait_count % 10000 == 0) {
+      Serial.print("  Väntar... BTN1=");
+      Serial.print(digitalRead(BTN_CLK));
+      Serial.print(" BTN2=");
+      Serial.println(digitalRead(BTN_INSTR));
     }
   }
 
+  Serial.println();
+  Serial.println("========================================");
   Serial.println("Knapp tryckt! Laddar RAM-testprogram...");
+  Serial.println("========================================");
 
   // --- Fas 2: Kör RAM-test ---
   // Håll CPU i reset medan vi byter program
@@ -328,10 +349,16 @@ void setup() {
   digitalWrite(RESB, HIGH);
 
   // Kör RAM-testprogrammet
-  for (int i = 0; i < 2000; i++) pulse();
+  Serial.println("Kor RAM-testprogram (2000 cykler)...");
+  for (int i = 0; i < 2000; i++) {
+    pulse();
+    if (i % 500 == 0) { Serial.print("  cykel "); Serial.println(i); }
+  }
 
+  Serial.println("========================================");
   Serial.println("RAM-testprogram laddat och kört.");
   Serial.println("LCD ska visa '62256 SRAM OK!' och 'Tryck pa knapp..'");
+  Serial.println("========================================");
 }
 
 // ================================================================
