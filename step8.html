@@ -40,9 +40,9 @@
       <p><strong>Ingen ny hårdvara.</strong> Samma kopplingar som steg 7. Allt nytt finns i byggkedjan.</p>
       <p>Arbetsflödet blir:</p>
       <ol class="list-decimal pl-5 space-y-1">
-        <li>Skriv 6502-kod i <code>src/program.asm</code> — med labels, subrutiner och kommentarer</li>
+        <li>Skriv 6502-kod i <code>asm/program_hello.asm</code> — med labels, subrutiner och kommentarer</li>
         <li>PlatformIO kör <code>ca65</code> + <code>ld65</code> före C++-kompileringen</li>
-        <li>Resultatet (<code>program.bin</code>) konverteras till en C-header (<code>program.h</code>)</li>
+        <li>Resultatet (<code>program_hello.bin</code>) konverteras till en C-header (<code>program.h</code>)</li>
         <li><code>setup()</code> läser <code>PROGRAM[]</code> och laddar in i minnesemulatorn</li>
       </ol>
       <p>Du redigerar en <strong>läsbar assembler-fil</strong> — inte en lång rad <code>write_mem()</code>-anrop.</p>
@@ -66,7 +66,7 @@
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Byggkedjan</h2>
     <p class="text-gray-700 mb-3 text-sm">Så här går din assembler-kod från en textfil till körbar kod i processorn. Tre steg, helt automatiskt — PlatformIO sköter allt.</p>
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code>program.asm  ──ca65──▶  program.o  ──ld65──▶  program.bin  ──bin2h.py──▶  program.h
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code>program.asm  ──ca65──▶  program_hello.o  ──ld65──▶  program_hello.bin  ──bin2h.py──▶  program.h
                                                           │
                                               (2048 bytes kod + 6 bytes vektorer)
                                                           │
@@ -133,7 +133,7 @@
     <h2 class="text-lg font-bold mb-2">PlatformIO-byggskript</h2>
     <p class="text-gray-700 mb-3 text-sm"><code>scripts/build_asm.py</code> är en <strong>pre-build hook</strong> som PlatformIO kör före C++-kompileringen. Den anropar ca65, ld65 och bin2h.py i sekvens. Konfigureras i <code>platformio.ini</code> med <code>extra_scripts = pre:scripts/build_asm.py</code>.</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-python"># Byggscript för PlatformIO — anropas före C++-kompilering
-# Kör ca65 + ld65 för att assemblera program.asm → program.h
+# Kör ca65 + ld65 för att assemblera program_hello.asm → program_hello.h
 
 Import("env")
 import subprocess
@@ -141,9 +141,9 @@ import os
 
 def build_asm(target, source, env):
     src_dir = os.path.join(env.subst("$PROJECT_DIR"), "src")
-    asm_path = os.path.join(src_dir, "program.asm")
-    obj_path = os.path.join(src_dir, "program.o")
-    bin_path = os.path.join(src_dir, "program.bin")
+    asm_path = os.path.join(src_dir, "program_hello.asm")
+    obj_path = os.path.join(src_dir, "program_hello.o")
+    bin_path = os.path.join(src_dir, "program_hello.bin")
     h_path   = os.path.join(src_dir, "program.h")
     cfg_path = os.path.join(src_dir, "program.cfg")
 
@@ -187,9 +187,9 @@ def build_asm(target, source, env):
 env.AddPreAction("buildprog", build_asm)</code></pre>
 
     <h3 class="font-bold mt-4 mb-2">bin2h.py — binär till C-header</h3>
-    <p class="text-gray-700 mb-3 text-sm">Konverterar <code>program.bin</code> till <code>PROGRAM[]</code> (en <code>PROGMEM</code>-array) som <code>main.cpp</code> inkluderar.</p>
+    <p class="text-gray-700 mb-3 text-sm">Konverterar <code>program_hello.bin</code> till <code>PROGRAM[]</code> (en <code>PROGMEM</code>-array) som <code>main.cpp</code> inkluderar.</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-python">#!/usr/bin/env python3
-"""bin2h.py — konvertera program.bin till program.h (C-header med byte-array)."""
+"""bin2h.py — konvertera program_hello.bin till program.h (C-header med byte-array)."""
 
 import sys
 
@@ -198,7 +198,7 @@ def bin2h(bin_path, h_path):
         data = f.read()
 
     lines = []
-    lines.append('// Genererad från program.bin — redigera inte för hand')
+    lines.append('// Genererad från program_hello.bin — redigera inte för hand')
     lines.append(f'// Storlek: {len(data)} bytes')
     lines.append('')
     lines.append('#include &lt;avr/pgmspace.h&gt;')
@@ -225,7 +225,7 @@ def bin2h(bin_path, h_path):
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
-        print(f'Användning: {sys.argv[0]} program.bin program.h')
+        print(f'Användning: {sys.argv[0]} program_hello.bin program.h')
         sys.exit(1)
     bin2h(sys.argv[1], sys.argv[2])</code></pre>
   </section>
@@ -416,7 +416,7 @@ line4: .byte "smutje.se 2026", 0
     .word $0000       ; NMI   — används inte
     .word reset       ; RESET — här börjar programmet ($8000)
     .word $0000       ; IRQ   — används inte</code></pre>
-    <p class="text-gray-700 mt-3 text-sm">Komplett assembler-kod: <code>Mega_2560_6502/src/program.asm</code>.</p>
+    <p class="text-gray-700 mt-3 text-sm">Komplett assembler-kod: <code>Mega_2560_6502/asm/program_hello.asm</code>.</p>
   </section>
 
   <!-- Arduino-kod -->
@@ -427,8 +427,8 @@ line4: .byte "smutje.se 2026", 0
 // ==============================================================
 // Steg 8 — Assembler-bygge med ca65
 // ==============================================================
-// 6502-programmet byggs från src/program.asm via ca65/ld65
-// → program.h. PlatformIO kör assembler-stegen automatiskt.
+// 6502-programmet byggs från asm/program_hello.asm via ca65/ld65
+// → program_hello.h. PlatformIO kör assembler-stegen automatiskt.
 
 #include &lt;Arduino.h&gt;
 #include "program.h"   // Genereras av byggskriptet (bin2h.py)
@@ -555,14 +555,14 @@ void loop() {
     <h2 class="text-lg font-bold mb-2">Så här använder du det</h2>
     <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-3">
       <p><strong>1. Redigera assembler-koden:</strong></p>
-      <pre><code class="apache">nano src/program.asm</code></pre>
+      <pre><code class="apache">nano asm/program_hello.asm</code></pre>
 
       <p><strong>2. Bygg och ladda upp (Windows-maskinen):</strong></p>
       <pre><code class="apache">pio run -t upload -t monitor</code></pre>
 
       <p><strong>Viktigt:</strong> <code>platformio.ini</code> måste ha <code>build_src_filter = +&lt;*&gt; -&lt;program.asm&gt;</code> för att förhindra att AVR-assemblern försöker kompilera 6502-koden.</p>
 
-      <p>Vid varje bygge körs <code>ca65</code> → <code>ld65</code> → <code>bin2h.py</code> automatiskt. Ändrar du <code>program.asm</code> byggs allt om.</p>
+      <p>Vid varje bygge körs <code>ca65</code> → <code>ld65</code> → <code>bin2h.py</code> automatiskt. Ändrar du <code>program_hello.asm</code> byggs allt om.</p>
     </div>
   </section>
 
