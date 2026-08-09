@@ -337,7 +337,6 @@
 // SRAM på $0000–$3FFF, VIA på $4000, program på $8000+ (Arduino).
 
 #include &lt;Arduino.h&gt;
-#include &lt;LiquidCrystal.h&gt;
 #include "program_fib.h"   // Fibonacci-program, byggt med ca65
 
 #define PHI2     2
@@ -350,11 +349,10 @@
 #define CLOCK_HZ 500                         // Klockfrekvens i Hz
 #define CLOCK_DELAY (1000 / (CLOCK_HZ * 2))  // ms per klockfas
 
-LiquidCrystal lcd(5, 6, 10, 9, 8, 7);
-
 uint8_t program[2048];      // $8000–$87FF (6502-program)
 uint8_t vectors[6];         // $FFFA–$FFFF
 
+// ==== INGEN Arduino-LCD — all LCD-output går via 6502 → VIA ====
 bool debug_pulse = false;   // Styr loggutskrift i pulse()
 
 #define VIA_BASE     0x4000
@@ -562,9 +560,6 @@ void setup() {
   pinMode(RWB, INPUT);
   Serial.begin(115200);
   DDRK = 0x00; DDRF = 0x00; DDRA = 0x00;
-
-  lcd.begin(16, 2);
-  lcd.print("Steg 9 SRAM...");
 
   Serial.println("Steg 9 — 62256 SRAM");
   Serial.println("Fas 1: Laddar 4-raders VIA/LCD-program...");
