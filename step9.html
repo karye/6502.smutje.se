@@ -45,7 +45,7 @@
   <!-- Nya komponenter -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Nya komponenter</h2>
-    <p class="text-gray-700 mb-3 text-sm">Plocka fram dessa ur komponentlådan. Inga överraskningar — bara det som tillkommer i detta steg.</p>
+    <p>Plocka fram dessa ur komponentlådan. Inga överraskningar — bara det som tillkommer i detta steg.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr></thead>
@@ -61,7 +61,7 @@
   <!-- 62256 pinout -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">62256 SRAM — pinout</h2>
-    <p class="text-gray-700 mb-3 text-sm">DIP-28-kapsel. 15 adresslinjer, 8 datalinjer, 3 kontrollsignaler. Här ser du exakt hur kretsen ska vändas och vad varje pinne gör.</p>
+    <p>DIP-28-kapsel. 15 adresslinjer, 8 datalinjer, 3 kontrollsignaler. Här ser du exakt hur kretsen ska vändas och vad varje pinne gör.</p>
     <div class="flex justify-center">
       <div class="p-2 inline-flex bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-sm leading-relaxed">
         <!-- Left pins -->
@@ -146,7 +146,7 @@
   <!-- 74HC00 pinout -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">74HC00 — pinout</h2>
-    <p class="text-gray-700 mb-3 text-sm">DIP-14-kapsel. Alla fyra grindar används nu: U4A+U4B för VIA (steg 7), U4C+U4D för SRAM (steg 9).</p>
+    <p>DIP-14-kapsel. Alla fyra grindar används nu: U4A+U4B för VIA (steg 7), U4C+U4D för SRAM (steg 9).</p>
     <div class="flex justify-center">
       <div class="p-2 inline-flex bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-sm leading-relaxed">
         <div class="flex flex-col justify-between py-2">
@@ -188,7 +188,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
-    <p class="text-gray-700 mb-3 text-sm">SRAM-chippet delar adress- och databuss med CPU, VIA och Arduino. Tre kontrollsignaler avgör vem som pratar.</p>
+    <p>SRAM-chippet delar adress- och databuss med CPU, VIA och Arduino. Tre kontrollsignaler avgör vem som pratar.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-9.png" alt="Steg 9 — SRAM 62256" class="w-full">
     </div>
@@ -197,7 +197,7 @@
   <!-- Kretstabell -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Kopplingar</h2>
-    <p class="text-gray-700 mb-3 text-sm">Alla kopplingar för detta steg — CPU, SRAM, VIA, 74HC00, LCD. Varje pinne, vart den går, och <strong>varför</strong>.</p>
+    <p>Alla kopplingar för detta steg — CPU, SRAM, VIA, 74HC00, LCD. Varje pinne, vart den går, och <strong>varför</strong>.</p>
 
     <h3 class="font-bold mt-4 mb-2">62256 SRAM</h3>
     <div class="overflow-x-auto">
@@ -216,7 +216,7 @@
     </div>
 
     <h3 class="font-bold mt-6 mb-2">74HC00 — adressavkodning för SRAM</h3>
-    <p class="text-gray-700 mb-3 text-sm">U4A (NOT A15) och U4B (NAND för VIA) är oförändrade från steg 7. U4C blir NOT A14. U4D gör (NOT A14) NAND (NOT A15) → LÅG endast vid $0000–$3FFF.</p>
+    <p>U4A (NOT A15) och U4B (NAND för VIA) är oförändrade från steg 7. U4C blir NOT A14. U4D gör (NOT A14) NAND (NOT A15) → LÅG endast vid $0000–$3FFF.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Grind</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -241,7 +241,7 @@
     <p class="text-gray-700 mt-2 text-sm"><strong>Logik:</strong> U4A inverterar A15, U4C inverterar A14. U4D gör (NOT A14) NAND (NOT A15) → LÅG <strong>endast</strong> när A14=0 OCH A15=0. SRAM aktiveras alltså vid <strong>$0000–$3FFF</strong> och ingen annanstans. VIAn (U4B) aktiveras vid $4000–$7FFF. Inga krockar.</p>
 
     <h3 class="font-bold mt-6 mb-2">CPU, VIA och LCD</h3>
-    <p class="text-gray-700 mb-3 text-sm">CPU, VIA och LCD är oförändrade från steg 7. Här är den kompletta kopplingslistan.</p>
+    <p>CPU, VIA och LCD är oförändrade från steg 7. Här är den kompletta kopplingslistan.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -285,7 +285,7 @@
   <!-- Minneskarta -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Minneskarta — tre enheter delar på bussen</h2>
-    <p class="text-gray-700 mb-3 text-sm">Nu har vi tre enheter som svarar på olika adressområden. SRAM tar den lägre halvan, VIA har sina 16 bytes, och Arduino levererar program och vektorer.</p>
+    <p>Nu har vi tre enheter som svarar på olika adressområden. SRAM tar den lägre halvan, VIA har sina 16 bytes, och Arduino levererar program och vektorer.</p>
     <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
       <div class="flex items-center border-b border-gray-300" style="min-height:8px">
         <div class="w-20 text-right pr-3 text-gray-500">$FFFF</div>
@@ -329,7 +329,7 @@
   <!-- Arduino-kod -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
-    <p class="text-gray-700 mb-3 text-sm">Den stora förändringen: <code>is_sram()</code> kollar om adressen är under $4000. I så fall rör inte Arduino databussen — SRAM-chippet sköter allt.</p>
+    <p>Den stora förändringen: <code>is_sram()</code> kollar om adressen är under $4000. I så fall rör inte Arduino databussen — SRAM-chippet sköter allt.</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // Steg 9 — Riktigt RAM (62256 32KB SRAM)
 // Baserat på steg 7: först visa 4-raders text via VIA/LCD,
@@ -639,7 +639,7 @@ void loop() {
   <!-- 6502 Fibonacci-program -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">6502-programmet — Fibonacci i assembler</h2>
-    <p class="text-gray-700 mb-3 text-sm">Fil: <code>asm/program_fib.asm</code>. Initierar VIA + LCD, visar "Fib:" på rad 1, och räknar ut Fibonacci-sekvensen 0–233 med decimalutskrift på rad 2. Byggs med ca65 till <code>program_fib.h</code>.</p>
+    <p>Fil: <code>asm/program_fib.asm</code>. Initierar VIA + LCD, visar "Fib:" på rad 1, och räknar ut Fibonacci-sekvensen 0–233 med decimalutskrift på rad 2. Byggs med ca65 till <code>program_fib.h</code>.</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-x86asm">; ================================================================
 ; Fibonacci-program för 6502 — VIA LCD
 ; ================================================================

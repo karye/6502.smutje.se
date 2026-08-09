@@ -51,7 +51,7 @@
   <!-- Nya komponenter -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Nya komponenter</h2>
-    <p class="text-gray-700 mb-3 text-sm">Plocka fram dessa ur komponentlådan. Inga överraskningar — bara det som tillkommer i detta steg.</p>
+    <p>Plocka fram dessa ur komponentlådan. Inga överraskningar — bara det som tillkommer i detta steg.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th><th class="p-2 text-left">Not</th></tr></thead>
@@ -68,7 +68,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
-    <p class="text-gray-700 mb-3 text-sm">Här ser du hela kopplingen på en bild — alla komponenter och ledningar precis som de ska sitta på kopplingsdäcket.</p>
+    <p>Här ser du hela kopplingen på en bild — alla komponenter och ledningar precis som de ska sitta på kopplingsdäcket.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-7.png" alt="Steg 7 — VIA + LCD" class="w-full">
     </div>
@@ -77,7 +77,7 @@
   <!-- W65C22 pinout -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">W65C22 VIA — pinout</h2>
-    <p class="text-gray-700 mb-3 text-sm">DIP-40-kapsel. Två 8-bitars I/O-portar (PA, PB), 4 kontrollpinnar (CA1–CB2), bussanslutning. Samma kapsel som CPU:n — var noga med orienteringen.</p>
+    <p>DIP-40-kapsel. Två 8-bitars I/O-portar (PA, PB), 4 kontrollpinnar (CA1–CB2), bussanslutning. Samma kapsel som CPU:n — var noga med orienteringen.</p>
     <div class="flex justify-center">
       <div class="p-2 inline-flex bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-sm leading-relaxed">
         <div class="flex flex-col justify-between py-2">
@@ -145,7 +145,7 @@
   <!-- 74HC00 pinout -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">74HC00 — pinout</h2>
-    <p class="text-gray-700 mb-3 text-sm">DIP-14-kapsel. Fyra 2-ingångars NAND-grindar. U4A+U4B används för VIA-avkodning, U4C+U4D är lediga (används för SRAM i steg 9).</p>
+    <p>DIP-14-kapsel. Fyra 2-ingångars NAND-grindar. U4A+U4B används för VIA-avkodning, U4C+U4D är lediga (används för SRAM i steg 9).</p>
     <div class="flex justify-center">
       <div class="p-2 inline-flex bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-sm leading-relaxed">
         <div class="flex flex-col justify-between py-2">
@@ -187,7 +187,7 @@
   <!-- Kretstabeller -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Kopplingar — krets för krets</h2>
-    <p class="text-gray-700 mb-3 text-sm">Här är varenda pinne på varenda krets — vad den heter, vart den går, och varför just den kopplingen behövs. Fyra kretsar, fyra tabeller.</p>
+    <p>Här är varenda pinne på varenda krets — vad den heter, vart den går, och varför just den kopplingen behövs. Fyra kretsar, fyra tabeller.</p>
 
     <!-- W65C02S -->
     <h3 class="font-bold mt-4 mb-2">W65C02S CPU</h3>
@@ -274,7 +274,7 @@
   <!-- Minneskarta -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Minneskarta — hela adressrymden ($0000–$FFFF)</h2>
-    <p class="text-gray-700 mb-3 text-sm">6502-processorn har 16 adresslinjer = 64 KB adressrymd. Arduinon svarar på adresser där den har data, och tri-statar vid VIA-adresser så den fysiska kretsen kan svara. Blockens höjd är proportionell mot deras storlek (1 px per 128 bytes, minst 8 px).</p>
+    <p>6502-processorn har 16 adresslinjer = 64 KB adressrymd. Arduinon svarar på adresser där den har data, och tri-statar vid VIA-adresser så den fysiska kretsen kan svara. Blockens höjd är proportionell mot deras storlek (1 px per 128 bytes, minst 8 px).</p>
     <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
       <div class="flex items-center border-b border-gray-300" style="min-height:8px">
         <div class="w-20 text-right pr-3 text-gray-500">$FFFF</div>
@@ -329,7 +329,7 @@
   <!-- Programmering -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">6502-program — fyra rader via VIA</h2>
-    <p class="text-gray-700 mb-3 text-sm">Programmet ligger på <code>$8000</code>: (1) sätter VIA-portar som utgångar, (2) initierar LCD i 8-bitarsläge, (3) skriver fyra rader text med cursor-positionering, (4) clear display och loopa om. För varje byte: lägg data på PORTB, pulsa E (PA2) på PORTA.</p>
+    <p>Programmet ligger på <code>$8000</code>: (1) sätter VIA-portar som utgångar, (2) initierar LCD i 8-bitarsläge, (3) skriver fyra rader text med cursor-positionering, (4) clear display och loopa om. För varje byte: lägg data på PORTB, pulsa E (PA2) på PORTA.</p>
 
     <h3 class="font-bold mt-4 mb-2">VIAns register (adress <code>$4000</code>–<code>$4003</code>)</h3>
     <div class="overflow-x-auto">
