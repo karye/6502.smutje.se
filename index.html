@@ -32,13 +32,43 @@
 
     <!-- Hero -->
     <section class="mb-8">
-      <h2 class="text-lg font-bold mb-2">Bakgrund</h2>
+      <h1 class="text-2xl font-bold mb-6">W65C02 8-bitarsdator</h1>
+      <p class="text-gray-600 text-lg mb-4">En hembyggd dator från grunden</p>
       <div class="text-gray-700 space-y-3">
         <p>
-          Detta är en <strong>hembyggd 8-bitarsdator</strong> där en klassisk
-          <strong>W65C02S-mikroprocessor</strong> får agera huvudprocessor. En
-          <strong>Arduino Mega 2560</strong> emulerar klocka, minne och I/O — allt i mjukvara.</p>
-          <p>Eftersom W65C02S är en CMOS-krets med helt statisk kärna kan klockan <strong>stoppas helt</strong> utan att processorn glömmer sitt tillstånd.</p>
+          Ända sedan jag först läste om hur enkla 8-bitarsprocessorer fungerar har jag drömt om att
+          <strong>bygga en egen dator</strong>. Inte en snabb, inte en modern — utan en dator där
+          <em>varje komponent går att förstå</em>. En dator där du kan följa varje etta och nolla
+          från processorns instruktionsregister hela vägen ut till en lysdiod eller en LCD-display.
+        </p>
+        <p>
+          Den drömmen har funnits där länge. Men att bränna EPROM, löda fast minneskretsar och
+          bygga en hel dator på veroboard — det är ett <strong>jätteprojekt</strong>. Man vill ju
+          testa, experimentera, göra om. Med fastlödda kretsar blir varje ändring ett bakslag.
+        </p>
+        <p>
+          Så kom <strong>W65C02S</strong> — en modern tillverkning av den klassiska 6502-processorn,
+          fortfarande i DIP-40, fortfarande 8-bitars. 6502:an är legendarisk: den satt i Apple II, Commodore 64, Nintendo NES,
+          Atari 2600 och BBC Micro — maskiner som tillsammans sålde i över 100 miljoner exemplar.
+        </p>
+        <p>
+          Och <strong>Arduino Mega 2560</strong> — en mikrokontroller med tillräckligt många
+          I/O-pinnar för att emulera hela minnet. Plötsligt gick det att <strong>bygga en riktig
+          6502-dator utan ett enda löddon</strong>. Allt på kopplingsdäck. Allt går att ändra på
+          sekunder. Kombinationen av 50-årig processordesign och modern mikrokontroller ger en
+          unik möjlighet: en dator som är precis så långsam och begriplig att du kan följa med i
+          varje klockcykel.
+        </p>
+          till en fullt fungerande dator med I/O-kretsar, LCD-display och äkta SRAM. Varje steg
+          är dokumenterat med schema, kod och förklaringar på svenska. Ingen tidigare erfarenhet
+          krävs — bara nyfikenhet och ett kopplingsdäck.
+        </p>
+        <p>
+          Eftersom W65C02S är en <strong>statisk CMOS-krets</strong> kan klockan stoppas helt
+          utan att processorn glömmer sitt tillstånd. Två fysiska knappar låter dig stega igenom
+          programmet — en klockcykel eller en hel instruktion i taget. Du ser allt som händer,
+          i din egen takt.
+        </p>
       </div>
     </section>
 
