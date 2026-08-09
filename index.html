@@ -1,312 +1,330 @@
 <!DOCTYPE html>
 <html lang="sv" class="scroll-smooth">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>W65C02 8-bitarsdator med Arduino Mega-emulering</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>W65C02 8-bitarsdator med Arduino Mega-emulering</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
 
-<nav class="bg-gray-900 text-white sticky top-0 z-50 shadow">
-  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
-    <a href="index.html" class="text-blue-300 font-semibold">W65C02</a>
-    <div class="flex gap-4 text-sm">
-      <a href="index.html" class="text-blue-300 font-semibold">Översikt</a>
-      <a href="step1.html" class="hover:text-blue-300 transition">Steg 1</a>
-      <a href="step2.html" class="hover:text-blue-300 transition">Steg 2</a>
-      <a href="step3.html" class="hover:text-blue-300 transition">Steg 3</a>
-      <a href="step4.html" class="hover:text-blue-300 transition">Steg 4</a>
-      <a href="step5.html" class="hover:text-blue-300 transition">Steg 5</a>
-      <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
-      <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
-      <a href="step8.html" class="hover:text-blue-300 transition">Steg 8</a>
-      <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
+  <nav class="bg-gray-900 text-white sticky top-0 z-50 shadow">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
+      <a href="index.html" class="font-bold text-lg">W65C02</a>
+      <div class="flex gap-4 text-sm">
+        <a href="index.html" class="text-blue-300 font-semibold">Översikt</a>
+        <a href="step1.html" class="hover:text-blue-300 transition">Steg 1</a>
+        <a href="step2.html" class="hover:text-blue-300 transition">Steg 2</a>
+        <a href="step3.html" class="hover:text-blue-300 transition">Steg 3</a>
+        <a href="step4.html" class="hover:text-blue-300 transition">Steg 4</a>
+        <a href="step5.html" class="hover:text-blue-300 transition">Steg 5</a>
+        <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
+        <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
+        <a href="step8.html" class="hover:text-blue-300 transition">Steg 8</a>
+        <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<main class="max-w-5xl mx-auto px-4 py-8">
-
-  <!-- Hero -->
-  <section class="mb-8">
+  <main class="max-w-5xl mx-auto px-4 py-8">
     <h1 class="text-2xl font-bold mb-6">W65C02 8-bitarsdator</h1>
-    <p class="text-gray-600 text-lg mb-4">Arduino Mega 2560 som minnesemulator och klockgenerator</p>
-    <div class="text-gray-700 space-y-3">
-      <p>
-        Detta är en <strong>hembyggd 8-bitarsdator</strong> där en klassisk
-        <strong>W65C02S-mikroprocessor</strong> får liv utan att en enda rad
-        maskinkod behöver brännas in i ett EEPROM. Istället agerar en
-        <strong>Arduino Mega 2560</strong> som datorns minne och klocka.
-      </p>
-      <p>
-        Eftersom W65C02S är en CMOS-krets med helt statisk kärna kan klockan
-        <strong>stoppas helt</strong> utan att processorn glömmer sitt tillstånd.
-        Två fysiska knappar låter dig stega igenom programmet — en klockcykel eller en hel instruktion
-        i taget. En lysdiod pulserar i takt med klockan och en LCD-display visar adress och instruktion i realtid.
-      </p>
-    </div>
-  </section>
 
-  <!-- Hur fungerar 6502? -->
-  <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Hur fungerar en 6502-processor?</h2>
-    <div class="text-gray-700 space-y-3">
+    <!-- Hero -->
+    <section class="mb-8">
+      <h2 class="text-lg font-bold mb-2">Bakgrund</h2>
+      <div class="text-gray-700 space-y-3">
+        <p>
+          Detta är en <strong>hembyggd 8-bitarsdator</strong> där en klassisk
+          <strong>W65C02S-mikroprocessor</strong> får agera huvudprocessor. En
+          <strong>Arduino Mega 2560</strong> emulerar vi klocka, minne och I/O — allt i mjukvara.</p>
+          <p>Eftersom W65C02S är en CMOS-krets med helt statisk kärna kan klockan <strong>stoppas helt</strong> utan att processorn glömmer sitt tillstånd.</p>
+      </div>
+    </section>
 
-      <p>
-        Tänk dig en dirigent som står framför en orkester. Dirigenten har ett partitur — ett program — och
-        taktpinnen är <strong>klockan</strong>. För varje taktslag händer exakt en sak:
-        dirigenten pekar på nästa not, läser vad som står, och utför den. En 6502-processor fungerar
-        precis likadant, fast med elektriska signaler istället för noter.
-      </p>
+    <!-- Hur fungerar 6502? -->
+    <section class="mb-8">
+      <h2 class="text-lg font-bold mb-2">Hur fungerar en 6502-processor?</h2>
+      <div class="text-gray-700 space-y-3">
 
-      <h3 class="font-bold mt-4 mb-2">Två bussar — adress och data</h3>
-      <p>
-        Processorn har två uppsättningar ledningar ut till världen. Den första är
-        <strong>adressbussen</strong> — 16 ledningar som tillsammans bildar ett tal
-        mellan 0 och 65 535. Det talet är en minnesadress: <em>"jag vill läsa från adress 32 768"</em>,
-        eller i hexadecimalt: <code>$8000</code>. Processorn lägger ut adressen på stiften A0–A15
-        och alla kretsar på bussen ser den samtidigt.
-      </p>
-      <p>
-        Den andra uppsättningen är <strong>databussen</strong> — 8 ledningar.
-        Här kommer svaret tillbaka. När processorn vill läsa från en adress lägger den ut adressen,
-        sätter R/W-signalen till HÖG (Read), och väntar. Den krets som känner igen adressen — i vårt fall
-        Arduino — lägger ut rätt byte på databussen. Processorn läser av den och går vidare till nästa
-        instruktion.
-      </p>
+        <p>Tänk dig en dirigent som står framför en orkester. Dirigenten har ett partitur — ett program — och
+          taktpinnen är <strong>klockan</strong>. För varje taktslag händer exakt en sak:
+          dirigenten pekar på nästa not, läser vad som står, och utför den. En 6502-processor fungerar
+          precis likadant, fast med elektriska signaler istället för noter.</p>
 
-      <h3 class="font-bold mt-4 mb-2">Instruktionscykeln — hämta, avkoda, utför</h3>
-      <p>
-        Varje gång processorn startar en ny instruktion tänder den <strong>SYNC</strong>-pinnen.
-        Det är processorns sätt att säga <em>"nu börjar jag på något nytt"</em>. Sedan följer en förutsägbar dans:
-      </p>
-      <ol class="list-decimal pl-5 space-y-1">
-        <li><strong>Hämta opcode:</strong> processorn läser byten på den adress som programräknaren (PC) pekar på. SYNC är hög under just denna cykel.</li>
-        <li><strong>Avkoda:</strong> processorn tittar på opcode-byten och förstår vad som ska göras. Är det <code>$A9</code>? Då ska nästa byte laddas in i A-registret (LDA #). Är det <code>$8D</code>? Då ska de två nästa byten tolkas som en adress (STA absolute).</li>
-        <li><strong>Utför:</strong> processorn läser eventuella extra bytes (operander), utför operationen, och ökar programräknaren.</li>
-        <li><strong>Nästa:</strong> PC pekar nu på nästa opcode. Börja om från steg 1.</li>
-      </ol>
+        <h3 class="font-bold mt-4 mb-2">Två bussar — adress och data</h3>
+        <p>Processorn har två uppsättningar ledningar ut till världen. Den första är
+          <strong>adressbussen</strong> — 16 ledningar som tillsammans bildar ett tal
+          mellan 0 och 65 535. Det talet är en minnesadress: <em>"jag vill läsa från adress 32 768"</em>,
+          eller i hexadecimalt: <code>$8000</code>. Processorn lägger ut adressen på stiften A0–A15
+          och alla kretsar på bussen ser den samtidigt.</p>
+        <p>Den andra uppsättningen är <strong>databussen</strong> — 8 ledningar.
+          Här kommer svaret tillbaka. När processorn vill läsa från en adress lägger den ut adressen,
+          sätter R/W-signalen till HÖG (Read), och väntar. Den krets som känner igen adressen — i vårt fall
+          Arduino — lägger ut rätt byte på databussen. Processorn läser av den och går vidare till nästa
+          instruktion.</p>
 
-      <h3 class="font-bold mt-4 mb-2">Minneskartan — processorns värld</h3>
-      <p>
-        6502-processorn ser hela sitt universum som 65 536 adresser — varken mer eller mindre. Varje
-        adress måste ha <em>något</em> som svarar, annars läser processorn in slumpmässiga värden
-        och kraschar. Vår Arduino ser till att <strong>varje adress alltid returnerar något</strong>.
-      </p>
+        <h3 class="font-bold mt-4 mb-2">Instruktionscykeln — hämta, avkoda, utför</h3>
+        <p>Varje gång processorn startar en ny instruktion tänder den <strong>SYNC</strong>-pinnen.
+          Det är processorns sätt att säga <em>"nu börjar jag på något nytt"</em>. Sedan följer en förutsägbar dans:</p>
+        <ol class="list-decimal pl-5 space-y-1">
+          <li><strong>Hämta opcode:</strong> processorn läser byten på den adress som programräknaren (PC) pekar på.
+            SYNC är hög under just denna cykel.</li>
+          <li><strong>Avkoda:</strong> processorn tittar på opcode-byten och förstår vad som ska göras. Är det
+            <code>$A9</code>? Då ska nästa byte laddas in i A-registret (LDA #). Är det <code>$8D</code>? Då ska de två
+            nästa byten tolkas som en adress (STA absolute).</li>
+          <li><strong>Utför:</strong> processorn läser eventuella extra bytes (operander), utför operationen, och ökar
+            programräknaren.</li>
+          <li><strong>Nästa:</strong> PC pekar nu på nästa opcode. Börja om från steg 1.</li>
+        </ol>
 
-      <!-- Minneskarta -->
-      <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
-        <div class="flex items-center border-b border-gray-300" style="min-height:8px">
-          <div class="w-20 text-right pr-3 text-gray-500">$FFFF</div>
-          <div class="flex-1 bg-purple-100 border-l border-r border-purple-300 px-2 flex items-center" style="min-height:8px">vectors[6] — här bor startadressen för programmet</div>
-          <div class="w-14 text-right text-gray-500 pr-2">6 B</div>
+        <h3 class="font-bold mt-4 mb-2">Minneskartan — processorns värld</h3>
+        <p>6502-processorn ser hela sitt universum som 65 536 adresser — varken mer eller mindre. Varje
+          adress måste ha <em>något</em> som svarar, annars läser processorn in slumpmässiga värden
+          och kraschar. Vår Arduino ser till att <strong>varje adress alltid returnerar något</strong>.</p>
+
+        <!-- Minneskarta -->
+        <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
+          <div class="flex items-center border-b border-gray-300" style="min-height:8px">
+            <div class="w-20 text-right pr-3 text-gray-500">$FFFF</div>
+            <div class="flex-1 bg-purple-100 border-l border-r border-purple-300 px-2 flex items-center"
+              style="min-height:8px">vectors[6] — här bor startadressen för programmet</div>
+            <div class="w-14 text-right text-gray-500 pr-2">6 B</div>
+          </div>
+          <div class="flex items-stretch border-b border-gray-300" style="height:239px">
+            <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$FFFA</div>
+            <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">
+              oanvänt (Arduino svarar med NOP = gör inget, gå vidare)</div>
+            <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~30 KB</div>
+          </div>
+          <div class="flex items-center border-b border-gray-300" style="height:16px">
+            <div class="w-20 text-right pr-3 text-gray-500">$8800</div>
+            <div class="flex-1 bg-blue-100 border-l border-r border-blue-300 px-2 flex items-center">program[2048] —
+              dina 6502-instruktioner</div>
+            <div class="w-14 text-right text-gray-500 pr-2">2 KB</div>
+          </div>
+          <div class="flex items-stretch border-b border-gray-300" style="height:128px">
+            <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$8000</div>
+            <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">
+              oanvänt</div>
+            <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~16 KB</div>
+          </div>
+          <div class="flex items-center border-b-2 border-yellow-500" style="min-height:8px">
+            <div class="w-20 text-right pr-3 text-gray-500">$4010</div>
+            <div class="flex-1 bg-yellow-100 border-l border-r border-yellow-400 px-2 flex items-center font-bold"
+              style="min-height:8px">W65C22 VIA — fysisk I/O-krets (steg 7–8)</div>
+            <div class="w-14 text-right text-gray-500 pr-2">16 B</div>
+          </div>
+          <div class="flex items-stretch border-b border-gray-300" style="height:120px">
+            <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$4000</div>
+            <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">
+              oanvänt</div>
+            <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~15 KB</div>
+          </div>
+          <div class="flex items-center border-b border-gray-300" style="min-height:8px">
+            <div class="w-20 text-right pr-3 text-gray-500">$0400</div>
+            <div class="flex-1 bg-green-100 border-l border-r border-green-300 px-2 flex items-center"
+              style="min-height:8px">ram[1024] — ledigt att använda för data</div>
+            <div class="w-14 text-right text-gray-500 pr-2">512 B</div>
+          </div>
+          <div class="flex items-center border-b border-gray-300" style="min-height:8px">
+            <div class="w-20 text-right pr-3 text-gray-500">$0200</div>
+            <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-center"
+              style="min-height:8px">Stack — processorns egen kladdlapp (JSR/RTS)</div>
+            <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
+          </div>
+          <div class="flex items-center" style="min-height:8px">
+            <div class="w-20 text-right pr-3 text-gray-500">$0100</div>
+            <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-center"
+              style="min-height:8px">Zero page — snabbaste minnet, som extra register</div>
+            <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
+          </div>
+          <div class="text-right text-gray-500 pr-2">$0000</div>
         </div>
-        <div class="flex items-stretch border-b border-gray-300" style="height:239px">
-          <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$FFFA</div>
-          <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt (Arduino svarar med NOP = gör inget, gå vidare)</div>
-          <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~30 KB</div>
+
+        <p>
+          <strong>De gröna områdena</strong> är RAM — här kan du lagra variabler och processorn använder
+          automatiskt stacken vid subrutinanrop. <strong>Det blå området</strong> är ditt program.
+          <strong>Det lila längst upp</strong> är reset-vektorn: när processorn startar går den först till
+          adress $FFFC, läser två bytes, och hoppar dit. I vårt fall står det $8000 där —
+          processorn hoppar till ditt program.
+        </p>
+        <p>
+          <strong>Det gula</strong> är W65C22 VIA — en fysisk I/O-krets som kopplas in i steg 7.
+          När processorn skriver till adresser i detta område är det VIA-kretsen som svarar,
+          inte Arduino. Arduino går ur vägen genom att tri-stata databussen.
+        </p>
+
+        <h3 class="font-bold mt-4 mb-2">Varför Arduino istället för riktiga minneskretsar?</h3>
+        <p>
+          En 6502-dator från 1970-talet hade ROM och RAM som fysiska chips. Varje gång du ville
+          testa ett nytt program fick du bränna ett nytt EPROM under UV-ljus — en process som tog
+          20 minuter per försök. Arduino vänder på det här: <strong>du laddar upp ett nytt program
+            på två sekunder över USB</strong>. Arduino läser av processorns adressbuss, slår upp rätt
+          byte i sin interna array, och lägger ut den på databussen — allt inom samma klockcykel.
+        </p>
+        <p>
+          Detta är inte en emulator i mjukvara — processorn kör på riktigt, med riktiga elektriska
+          signaler. Arduinon är bara minnet. Det betyder att <strong>allt du lär dig om 6502:ans
+            instruktionsuppsättning, timing och bussprotokoll gäller på riktigt</strong>. Du kan ta
+          bort Arduino och ersätta den med ett EEPROM och ett SRAM-chip — och datorn fungerar
+          precis likadant.
+        </p>
+
+        <h3 class="font-bold mt-4 mb-2">Hur läser Arduino adressbussen så snabbt?</h3>
+        <p>
+          Arduino Mega har 54 digitala I/O-pinnar — nästan tillräckligt för att täcka 16 adresslinjer
+          + 8 datalinjer + kontrollsignaler. Men den har också något bättre: <strong>portregister</strong>.
+          Istället för att läsa en pinne i taget med <code>digitalRead()</code> (långsamt!) läser vi
+          hela 8-bitarsportar på en gång:
+        </p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>PORTF</strong> — 8 bitar, läser CPU:ns A0–A7 i en enda maskininstruktion</li>
+          <li><strong>PORTK</strong> — 8 bitar, läser CPU:ns A8–A15</li>
+          <li><strong>PORTA</strong> — 8 bitar, driver databussen D0–D7 (eller går tri-state)</li>
+        </ul>
+        <p>
+          Tre registerläsningar, en villkorssats, och vi vet exakt vad processorn vill göra — redo
+          att svara inom samma klockcykel.
+        </p>
+      </div>
+    </section>
+
+    <!-- Byggsteg -->
+    <section class="mb-8">
+      <h2 class="text-lg font-bold mb-2">Byggsteg</h2>
+      <div class="text-gray-700 text-sm space-y-4">
+
+        <div>
+          <strong class="text-gray-900">Steg 1 — Ström, klocka, reset</strong>
+          <ul class="list-disc pl-5 space-y-1 mt-1">
+            <li>W65C02S får <strong>+5V och GND</strong> — processorn är spänningssatt men gör ingenting än</li>
+            <li>Arduino D2 genererar en <strong>långsam fyrkantsvåg</strong> (1 Hz) till PHI2-ingången</li>
+            <li>En <strong>lysdiod</strong> på klocklinjen blinkar i takt — du ser att klockan når fram</li>
+            <li><strong>Fyra pull-up-motstånd</strong> (10kΩ) på RDY, /IRQ, /NMI, /SO — utan dessa kan CPU:n bete sig
+              oförutsägbart</li>
+            <li><strong>BE (Bus Enable)</strong> till +5V — annars är bussarna bortkopplade</li>
+            <li>100 nF keramisk kondensator mellan VDD och VSS, <strong>så nära CPU:n som möjligt</strong></li>
+          </ul>
         </div>
-        <div class="flex items-center border-b border-gray-300" style="height:16px">
-          <div class="w-20 text-right pr-3 text-gray-500">$8800</div>
-          <div class="flex-1 bg-blue-100 border-l border-r border-blue-300 px-2 flex items-center">program[2048] — dina 6502-instruktioner</div>
-          <div class="w-14 text-right text-gray-500 pr-2">2 KB</div>
+
+        <div>
+          <strong class="text-gray-900">Steg 2 — Adressbuss A0–A15</strong>
+          <ul class="list-disc pl-5 space-y-1 mt-1">
+            <li>CPU:ns <strong>16 adresslinjer</strong> kopplas 1:1 till Arduinons analoga portar (PORTF + PORTK)</li>
+            <li>/RESET kopplas till Arduino D4 — vi får <strong>kontrollerad reset</strong> istället för att CPU:n
+              startar okontrollerat</li>
+            <li>Efter reset läser <strong>alla 6502-processorer automatiskt</strong> adress $FFFC och $FFFD —
+              reset-vektorn</li>
+            <li>Serieövervakaren visar adresserna i realtid: <code>R $FFFC</code>, <code>R $FFFD</code>…</li>
+            <li>Detta steg <strong>verifierar att samtliga 16 adressledningar</strong> är korrekt anslutna</li>
+          </ul>
         </div>
-        <div class="flex items-stretch border-b border-gray-300" style="height:128px">
-          <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$8000</div>
-          <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt</div>
-          <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~16 KB</div>
+
+        <div>
+          <strong class="text-gray-900">Steg 3 — Databuss D0–D7 och minnesemulering</strong>
+          <ul class="list-disc pl-5 space-y-1 mt-1">
+            <li>8 datalinjer + R/W kopplas in via <strong>100Ω skyddsmotstånd</strong> — obligatoriska för att förhindra
+              busskrockar</li>
+            <li>Arduino blir en <strong>minnesemulator</strong>: arrayer i RAM (<code>ram[1024]</code>,
+              <code>vectors[6]</code>) slår upp rätt byte för varje adress</li>
+            <li>Ett <strong>NOP-program</strong> ($EA) laddas på $8000 — CPU:n loopar för evigt, vi kan följa varje steg
+            </li>
+            <li><code>pulse()</code>-funktionen implementerar hela bussprotokollet: läs adress, kolla R/W, styr
+              databussen, spara vid skrivning</li>
+            <li>Serieövervakaren loggar varje minnesaccess: <code>R $8000</code>, <code>R $8001</code>…</li>
+          </ul>
         </div>
-        <div class="flex items-center border-b-2 border-yellow-500" style="min-height:8px">
-          <div class="w-20 text-right pr-3 text-gray-500">$4010</div>
-          <div class="flex-1 bg-yellow-100 border-l border-r border-yellow-400 px-2 flex items-center font-bold" style="min-height:8px">W65C22 VIA — fysisk I/O-krets (steg 7–8)</div>
-          <div class="w-14 text-right text-gray-500 pr-2">16 B</div>
+
+        <div>
+          <strong class="text-gray-900">Steg 4 — Manuell stegning med knappar</strong>
+          <ul class="list-disc pl-5 space-y-1 mt-1">
+            <li>Två <strong>tryckknappar</strong> (D11, D12) med <code>INPUT_PULLUP</code> — inga externa motstånd
+              behövs</li>
+            <li><strong>Knapp 1:</strong> en klockcykel per tryck — perfekt för att inspektera bussen i ultrarapid</li>
+            <li><strong>Knapp 2:</strong> kör tills SYNC (D13) går hög — stannar vid <strong>början av nästa
+                instruktion</strong></li>
+            <li>W65C02S är <strong>statisk CMOS</strong> — klockan kan stoppas hur länge som helst utan att data
+              förloras</li>
+            <li>Nu kan du <strong>stega igenom programmet</strong> manuellt, en instruktion i taget</li>
+          </ul>
         </div>
-        <div class="flex items-stretch border-b border-gray-300" style="height:120px">
-          <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$4000</div>
-          <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt</div>
-          <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~15 KB</div>
+
+        <div>
+          <strong class="text-gray-900">Steg 5 — LCD-display (parallell 4-bit)</strong>
+          <ul class="list-disc pl-5 space-y-1 mt-1">
+            <li>LCD 16×2 kopplas <strong>direkt till Arduino</strong> — RS→D5, E→D6, DB4–DB7→D10,D9,D8,D7</li>
+            <li><code>LiquidCrystal</code>-biblioteket sköter all kommunikation — vi behöver bara tala om vilka pinnar
+            </li>
+            <li>LCD:n visar <strong>aktuell adress och data</strong> i realtid — ingen datorskärm behövs</li>
+            <li>En 10kΩ <strong>potentiometer</strong> på VO (pin 3) justerar kontrasten</li>
+            <li>Nu är datorn <strong>helt fristående</strong> från datorn — all feedback sker på kopplingsdäcket</li>
+          </ul>
         </div>
-        <div class="flex items-center border-b border-gray-300" style="min-height:8px">
-          <div class="w-20 text-right pr-3 text-gray-500">$0400</div>
-          <div class="flex-1 bg-green-100 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">ram[1024] — ledigt att använda för data</div>
-          <div class="w-14 text-right text-gray-500 pr-2">512 B</div>
+
+        <div>
+          <strong class="text-gray-900">Steg 6 — Första egna 6502-programmet</strong>
+          <ul class="list-disc pl-5 space-y-1 mt-1">
+            <li>NOP ersätts med ett <strong>riktigt maskinkodsprogram</strong> på 9 bytes</li>
+            <li><code>LDX #$00 · INX · STX $0200 · JMP $8002</code> — öka X-registret, spara, loopa</li>
+            <li>Programmet skrivs som <strong>råa hex-bytes</strong> i Arduinons <code>setup()</code> — inga externa
+              verktyg</li>
+            <li>LCD:n visar programmets exekvering — du ser adressen växla mellan $8002, $8003, $8006…</li>
+            <li>Samma hårdvara som steg 5 — <strong>allt nytt är mjukvara</strong></li>
+          </ul>
         </div>
-        <div class="flex items-center border-b border-gray-300" style="min-height:8px">
-          <div class="w-20 text-right pr-3 text-gray-500">$0200</div>
-          <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">Stack — processorns egen kladdlapp (JSR/RTS)</div>
-          <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
+
+        <div>
+          <strong class="text-gray-900">Steg 7 — W65C22 VIA + 74HC00 adressavkodning</strong>
+          <ul class="list-disc pl-5 space-y-1 mt-1">
+            <li><strong>W65C22 VIA</strong> (Versatile Interface Adapter) ger CPU:n 20 I/O-pinnar — två 8-bitarsportar +
+              4 kontrollsignaler</li>
+            <li><strong>74HC00</strong> (två NAND-grindar) avkodar adress $4000 — VIA hamnar på $4000–$400F</li>
+            <li>LCD:n kopplas till <strong>VIA:ns portar</strong> istället för direkt till Arduino: PA0=RS, PA2=E,
+              PB0–PB7=DB0–DB7</li>
+            <li>6502-programmet initierar LCD:n och skriver fyra rader text — <strong>CPU:n styr allt själv</strong>
+            </li>
+            <li>Arduino är nu <strong>endast minnesemulator och klocka</strong> — all I/O-logik körs på 6502</li>
+            <li>Arduino <strong>tri-statar databussen</strong> vid VIA-adresser — den fysiska kretsen svarar</li>
+          </ul>
         </div>
-        <div class="flex items-center" style="min-height:8px">
-          <div class="w-20 text-right pr-3 text-gray-500">$0100</div>
-          <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">Zero page — snabbaste minnet, som extra register</div>
-          <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
+
+        <div>
+          <strong class="text-gray-900">Steg 8 — Assembler-bygge med ca65</strong>
+          <ul class="list-disc pl-5 space-y-1 mt-1">
+            <li>6502-programmet flyttas från hårdkodade hex-bytes till en <strong>riktig assembler-fil</strong>
+              (<code>program.asm</code>)</li>
+            <li><strong>ca65 + ld65</strong> (från cc65-verktygslådan) assemblerar och länkar — branschstandard för 6502
+            </li>
+            <li>PlatformIO kör byggskriptet <strong>automatiskt</strong> före varje uppladdning — du märker inte av det
+            </li>
+            <li><code>program.h</code> genereras med en byte-array som <code>main.cpp</code> inkluderar</li>
+            <li>Samma hårdvara som steg 7 — <strong>endast byggkedjan ändras</strong></li>
+          </ul>
         </div>
-        <div class="text-right text-gray-500 pr-2">$0000</div>
+
+        <div>
+          <strong class="text-gray-900">Steg 9 — Riktigt RAM (62256 SRAM)</strong>
+          <ul class="list-disc pl-5 space-y-1 mt-1">
+            <li><strong>62256 SRAM</strong> (32KB, DIP-28) — ett riktigt statiskt RAM-chip ersätter Arduinons
+              mjukvaruemulering</li>
+            <li>SRAM tar <strong>$0000–$3FFF</strong> (16 KB) — zero page, stack och variabler lagras i äkta hårdvara
+            </li>
+            <li>74HC00-grind U4A (NOT A15) avkodar chip select — <strong>en enda grind</strong> räcker</li>
+            <li>Arduino <strong>tri-statar</strong> vid alla adresser under $4000 — SRAM-chippet driver databussen
+              istället</li>
+            <li>Nu delar <strong>tre enheter</strong> på bussen: SRAM, VIA och Arduino</li>
+          </ul>
+        </div>
+
       </div>
+    </section>
 
-      <p>
-        <strong>De gröna områdena</strong> är RAM — här kan du lagra variabler och processorn använder
-        automatiskt stacken vid subrutinanrop. <strong>Det blå området</strong> är ditt program.
-        <strong>Det lila längst upp</strong> är reset-vektorn: när processorn startar går den först till
-        adress $FFFC, läser två bytes, och hoppar dit. I vårt fall står det $8000 där —
-        processorn hoppar till ditt program.
-      </p>
-      <p>
-        <strong>Det gula</strong> är W65C22 VIA — en fysisk I/O-krets som kopplas in i steg 7.
-        När processorn skriver till adresser i detta område är det VIA-kretsen som svarar,
-        inte Arduino. Arduino går ur vägen genom att tri-stata databussen.
-      </p>
+  </main>
 
-      <h3 class="font-bold mt-4 mb-2">Varför Arduino istället för riktiga minneskretsar?</h3>
-      <p>
-        En 6502-dator från 1970-talet hade ROM och RAM som fysiska chips. Varje gång du ville
-        testa ett nytt program fick du bränna ett nytt EPROM under UV-ljus — en process som tog
-        20 minuter per försök. Arduino vänder på det här: <strong>du laddar upp ett nytt program
-        på två sekunder över USB</strong>. Arduino läser av processorns adressbuss, slår upp rätt
-        byte i sin interna array, och lägger ut den på databussen — allt inom samma klockcykel.
-      </p>
-      <p>
-        Detta är inte en emulator i mjukvara — processorn kör på riktigt, med riktiga elektriska
-        signaler. Arduinon är bara minnet. Det betyder att <strong>allt du lär dig om 6502:ans
-        instruktionsuppsättning, timing och bussprotokoll gäller på riktigt</strong>. Du kan ta
-        bort Arduino och ersätta den med ett EEPROM och ett SRAM-chip — och datorn fungerar
-        precis likadant.
-      </p>
-
-      <h3 class="font-bold mt-4 mb-2">Hur läser Arduino adressbussen så snabbt?</h3>
-      <p>
-        Arduino Mega har 54 digitala I/O-pinnar — nästan tillräckligt för att täcka 16 adresslinjer
-        + 8 datalinjer + kontrollsignaler. Men den har också något bättre: <strong>portregister</strong>.
-        Istället för att läsa en pinne i taget med <code>digitalRead()</code> (långsamt!) läser vi
-        hela 8-bitarsportar på en gång:
-      </p>
-      <ul class="list-disc pl-5 space-y-1">
-        <li><strong>PORTF</strong> — 8 bitar, läser CPU:ns A0–A7 i en enda maskininstruktion</li>
-        <li><strong>PORTK</strong> — 8 bitar, läser CPU:ns A8–A15</li>
-        <li><strong>PORTA</strong> — 8 bitar, driver databussen D0–D7 (eller går tri-state)</li>
-      </ul>
-      <p>
-        Tre registerläsningar, en villkorssats, och vi vet exakt vad processorn vill göra — redo
-        att svara inom samma klockcykel.
-      </p>
-    </div>
-  </section>
-
-  <!-- Byggsteg -->
-  <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Byggsteg</h2>
-    <div class="text-gray-700 text-sm space-y-4">
-
-      <div>
-        <strong class="text-gray-900">Steg 1 — Ström, klocka, reset</strong>
-        <ul class="list-disc pl-5 space-y-1 mt-1">
-          <li>W65C02S får <strong>+5V och GND</strong> — processorn är spänningssatt men gör ingenting än</li>
-          <li>Arduino D2 genererar en <strong>långsam fyrkantsvåg</strong> (1 Hz) till PHI2-ingången</li>
-          <li>En <strong>lysdiod</strong> på klocklinjen blinkar i takt — du ser att klockan når fram</li>
-          <li><strong>Fyra pull-up-motstånd</strong> (10kΩ) på RDY, /IRQ, /NMI, /SO — utan dessa kan CPU:n bete sig oförutsägbart</li>
-          <li><strong>BE (Bus Enable)</strong> till +5V — annars är bussarna bortkopplade</li>
-          <li>100 nF keramisk kondensator mellan VDD och VSS, <strong>så nära CPU:n som möjligt</strong></li>
-        </ul>
-      </div>
-
-      <div>
-        <strong class="text-gray-900">Steg 2 — Adressbuss A0–A15</strong>
-        <ul class="list-disc pl-5 space-y-1 mt-1">
-          <li>CPU:ns <strong>16 adresslinjer</strong> kopplas 1:1 till Arduinons analoga portar (PORTF + PORTK)</li>
-          <li>/RESET kopplas till Arduino D4 — vi får <strong>kontrollerad reset</strong> istället för att CPU:n startar okontrollerat</li>
-          <li>Efter reset läser <strong>alla 6502-processorer automatiskt</strong> adress $FFFC och $FFFD — reset-vektorn</li>
-          <li>Serieövervakaren visar adresserna i realtid: <code>R $FFFC</code>, <code>R $FFFD</code>…</li>
-          <li>Detta steg <strong>verifierar att samtliga 16 adressledningar</strong> är korrekt anslutna</li>
-        </ul>
-      </div>
-
-      <div>
-        <strong class="text-gray-900">Steg 3 — Databuss D0–D7 och minnesemulering</strong>
-        <ul class="list-disc pl-5 space-y-1 mt-1">
-          <li>8 datalinjer + R/W kopplas in via <strong>100Ω skyddsmotstånd</strong> — obligatoriska för att förhindra busskrockar</li>
-          <li>Arduino blir en <strong>minnesemulator</strong>: arrayer i RAM (<code>ram[1024]</code>, <code>vectors[6]</code>) slår upp rätt byte för varje adress</li>
-          <li>Ett <strong>NOP-program</strong> ($EA) laddas på $8000 — CPU:n loopar för evigt, vi kan följa varje steg</li>
-          <li><code>pulse()</code>-funktionen implementerar hela bussprotokollet: läs adress, kolla R/W, styr databussen, spara vid skrivning</li>
-          <li>Serieövervakaren loggar varje minnesaccess: <code>R $8000</code>, <code>R $8001</code>…</li>
-        </ul>
-      </div>
-
-      <div>
-        <strong class="text-gray-900">Steg 4 — Manuell stegning med knappar</strong>
-        <ul class="list-disc pl-5 space-y-1 mt-1">
-          <li>Två <strong>tryckknappar</strong> (D11, D12) med <code>INPUT_PULLUP</code> — inga externa motstånd behövs</li>
-          <li><strong>Knapp 1:</strong> en klockcykel per tryck — perfekt för att inspektera bussen i ultrarapid</li>
-          <li><strong>Knapp 2:</strong> kör tills SYNC (D13) går hög — stannar vid <strong>början av nästa instruktion</strong></li>
-          <li>W65C02S är <strong>statisk CMOS</strong> — klockan kan stoppas hur länge som helst utan att data förloras</li>
-          <li>Nu kan du <strong>stega igenom programmet</strong> manuellt, en instruktion i taget</li>
-        </ul>
-      </div>
-
-      <div>
-        <strong class="text-gray-900">Steg 5 — LCD-display (parallell 4-bit)</strong>
-        <ul class="list-disc pl-5 space-y-1 mt-1">
-          <li>LCD 16×2 kopplas <strong>direkt till Arduino</strong> — RS→D5, E→D6, DB4–DB7→D10,D9,D8,D7</li>
-          <li><code>LiquidCrystal</code>-biblioteket sköter all kommunikation — vi behöver bara tala om vilka pinnar</li>
-          <li>LCD:n visar <strong>aktuell adress och data</strong> i realtid — ingen datorskärm behövs</li>
-          <li>En 10kΩ <strong>potentiometer</strong> på VO (pin 3) justerar kontrasten</li>
-          <li>Nu är datorn <strong>helt fristående</strong> från datorn — all feedback sker på kopplingsdäcket</li>
-        </ul>
-      </div>
-
-      <div>
-        <strong class="text-gray-900">Steg 6 — Första egna 6502-programmet</strong>
-        <ul class="list-disc pl-5 space-y-1 mt-1">
-          <li>NOP ersätts med ett <strong>riktigt maskinkodsprogram</strong> på 9 bytes</li>
-          <li><code>LDX #$00 · INX · STX $0200 · JMP $8002</code> — öka X-registret, spara, loopa</li>
-          <li>Programmet skrivs som <strong>råa hex-bytes</strong> i Arduinons <code>setup()</code> — inga externa verktyg</li>
-          <li>LCD:n visar programmets exekvering — du ser adressen växla mellan $8002, $8003, $8006…</li>
-          <li>Samma hårdvara som steg 5 — <strong>allt nytt är mjukvara</strong></li>
-        </ul>
-      </div>
-
-      <div>
-        <strong class="text-gray-900">Steg 7 — W65C22 VIA + 74HC00 adressavkodning</strong>
-        <ul class="list-disc pl-5 space-y-1 mt-1">
-          <li><strong>W65C22 VIA</strong> (Versatile Interface Adapter) ger CPU:n 20 I/O-pinnar — två 8-bitarsportar + 4 kontrollsignaler</li>
-          <li><strong>74HC00</strong> (två NAND-grindar) avkodar adress $4000 — VIA hamnar på $4000–$400F</li>
-          <li>LCD:n kopplas till <strong>VIA:ns portar</strong> istället för direkt till Arduino: PA0=RS, PA2=E, PB0–PB7=DB0–DB7</li>
-          <li>6502-programmet initierar LCD:n och skriver fyra rader text — <strong>CPU:n styr allt själv</strong></li>
-          <li>Arduino är nu <strong>endast minnesemulator och klocka</strong> — all I/O-logik körs på 6502</li>
-          <li>Arduino <strong>tri-statar databussen</strong> vid VIA-adresser — den fysiska kretsen svarar</li>
-        </ul>
-      </div>
-
-      <div>
-        <strong class="text-gray-900">Steg 8 — Assembler-bygge med ca65</strong>
-        <ul class="list-disc pl-5 space-y-1 mt-1">
-          <li>6502-programmet flyttas från hårdkodade hex-bytes till en <strong>riktig assembler-fil</strong> (<code>program.asm</code>)</li>
-          <li><strong>ca65 + ld65</strong> (från cc65-verktygslådan) assemblerar och länkar — branschstandard för 6502</li>
-          <li>PlatformIO kör byggskriptet <strong>automatiskt</strong> före varje uppladdning — du märker inte av det</li>
-          <li><code>program.h</code> genereras med en byte-array som <code>main.cpp</code> inkluderar</li>
-          <li>Samma hårdvara som steg 7 — <strong>endast byggkedjan ändras</strong></li>
-        </ul>
-      </div>
-
-      <div>
-        <strong class="text-gray-900">Steg 9 — Riktigt RAM (62256 SRAM)</strong>
-        <ul class="list-disc pl-5 space-y-1 mt-1">
-          <li><strong>62256 SRAM</strong> (32KB, DIP-28) — ett riktigt statiskt RAM-chip ersätter Arduinons mjukvaruemulering</li>
-          <li>SRAM tar <strong>$0000–$3FFF</strong> (16 KB) — zero page, stack och variabler lagras i äkta hårdvara</li>
-          <li>74HC00-grind U4A (NOT A15) avkodar chip select — <strong>en enda grind</strong> räcker</li>
-          <li>Arduino <strong>tri-statar</strong> vid alla adresser under $4000 — SRAM-chippet driver databussen istället</li>
-          <li>Nu delar <strong>tre enheter</strong> på bussen: SRAM, VIA och Arduino</li>
-        </ul>
-      </div>
-
-    </div>
-  </section>
-
-</main>
-
-<footer class="border-t bg-white py-6 text-center text-sm text-gray-500">
-  <p>W65C02 8-bitarsdator · <a href="https://github.com/karye/6502.smutje.se" class="underline hover:text-gray-700">GitHub</a></p>
-</footer>
+  <footer class="border-t bg-white py-6 text-center text-sm text-gray-500">
+    <p>W65C02 8-bitarsdator · <a href="https://github.com/karye/6502.smutje.se"
+        class="underline hover:text-gray-700">GitHub</a></p>
+  </footer>
 </body>
 </html>

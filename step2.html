@@ -1,100 +1,184 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Steg 2 — Adressbuss | W65C02</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/monokai.min.css">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Steg 2 — Adressbuss | W65C02</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/monokai.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
 
-<nav class="bg-gray-900 text-white sticky top-0 z-50 shadow">
-  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
-    <a href="index.html" class="font-bold text-lg">W65C02</a>
-    <div class="flex gap-4 text-sm">
-      <a href="index.html" class="hover:text-blue-300 transition">Översikt</a>
-      <a href="step1.html" class="hover:text-blue-300 transition">Steg 1</a>
-      <a href="step2.html" class="text-blue-300 font-semibold">Steg 2</a>
-      <a href="step3.html" class="hover:text-blue-300 transition">Steg 3</a>
-      <a href="step4.html" class="hover:text-blue-300 transition">Steg 4</a>
-      <a href="step5.html" class="hover:text-blue-300 transition">Steg 5</a>
-      <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
-      <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
-      <a href="step8.html" class="hover:text-blue-300 transition">Steg 8</a>
-      <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
+  <nav class="bg-gray-900 text-white sticky top-0 z-50 shadow">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
+      <a href="index.html" class="font-bold text-lg">W65C02</a>
+      <div class="flex gap-4 text-sm">
+        <a href="index.html" class="hover:text-blue-300 transition">Översikt</a>
+        <a href="step1.html" class="hover:text-blue-300 transition">Steg 1</a>
+        <a href="step2.html" class="text-blue-300 font-semibold">Steg 2</a>
+        <a href="step3.html" class="hover:text-blue-300 transition">Steg 3</a>
+        <a href="step4.html" class="hover:text-blue-300 transition">Steg 4</a>
+        <a href="step5.html" class="hover:text-blue-300 transition">Steg 5</a>
+        <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
+        <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
+        <a href="step8.html" class="hover:text-blue-300 transition">Steg 8</a>
+        <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<main class="max-w-5xl mx-auto px-4 py-8">
+  <main class="max-w-5xl mx-auto px-4 py-8">
 
-  <h1 class="text-2xl font-bold mb-6">Steg 2 — Adressbuss och reset</h1>
+    <h1 class="text-2xl font-bold mb-6">Steg 2 — Adressbuss och reset</h1>
 
-  <!-- Mål -->
-  <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Mål</h2>
-    <div class="text-gray-700 space-y-3">
-      <p>I steg 1 gav vi processorn ström och klocka. Nu ska vi ge den kontroll över <strong>adressbussen</strong> — 16 ledningar som talar om <em>var</em> i minnet CPU:n vill läsa eller skriva.</p>
-      <p>Alla 6502-processorer startar på samma sätt: efter reset läser de adress <code>$FFFC</code> och <code>$FFFD</code> för att få reda på var programmet börjar. Det är inbyggt i kisel — ingen mjukvara, ingen konfiguration. Genom att koppla in adressbussen och en reset-signal kan vi se detta hända i serieövervakaren.</p>
-      <p>Vi kopplar också in <strong>/RESET</strong> (pin 40) till Arduino D4. När vi håller RESB låg i minst 2 klockcykler nollställs CPU:ns interna register. När vi sedan släpper den (HÖG) börjar CPU:n köra från reset-vektorn.</p>
-      <p>Adressbussen läser vi via Arduinons analoga portar — <strong>PORTF</strong> (A0–A7) och <strong>PORTK</strong> (A8–A15). Det ger oss 16 bitar i två registerläsningar.</p>
-    </div>
-  </section>
+    <!-- Mål -->
+    <section class="mb-8">
+      <h2 class="text-lg font-bold mb-2">Mål</h2>
+      <div class="text-gray-700 space-y-3">
+        <p>I steg 1 gav vi processorn ström och klocka. Nu ska vi ge den kontroll över <strong>adressbussen</strong> —
+          16 ledningar som talar om <em>var</em> i minnet CPU:n vill läsa eller skriva.</p>
+        <p>Alla 6502-processorer startar på samma sätt: efter reset läser de adress <code>$FFFC</code> och
+          <code>$FFFD</code> för att få reda på var programmet börjar. Det är inbyggt i kisel — ingen mjukvara, ingen
+          konfiguration. Genom att koppla in adressbussen och en reset-signal kan vi se detta hända i serieövervakaren.
+        </p>
+        <p>Vi kopplar också in <strong>/RESET</strong> (pin 40) till Arduino D4. När vi håller RESB låg i minst 2
+          klockcykler nollställs CPU:ns interna register. När vi sedan släpper den (HÖG) börjar CPU:n köra från
+          reset-vektorn.</p>
+        <p>Adressbussen läser vi via Arduinons analoga portar — <strong>PORTF</strong> (A0–A7) och
+          <strong>PORTK</strong> (A8–A15). Det ger oss 16 bitar i två registerläsningar.</p>
+      </div>
+    </section>
 
-  <!-- Nya komponenter -->
-  <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Nya komponenter</h2>
-    <p class="text-gray-700 mb-3 text-sm">Plocka fram dessa ur komponentlådan. Inga överraskningar — bara det som tillkommer i detta steg.</p>
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr></thead>
-        <tbody class="divide-y">
-          <tr><td class="p-2">17</td><td class="p-2">Kopplingstrådar (16 adress + 1 RESB)</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+    <!-- Nya komponenter -->
+    <section class="mb-8">
+      <h2 class="text-lg font-bold mb-2">Nya komponenter</h2>
+      <p class="text-gray-700 mb-3 text-sm">Plocka fram dessa ur komponentlådan. Inga överraskningar — bara det som
+        tillkommer i detta steg.</p>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+          <thead class="bg-gray-900 text-white">
+            <tr>
+              <th class="p-2 text-left">Antal</th>
+              <th class="p-2 text-left">Komponent</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y">
+            <tr>
+              <td class="p-2">17</td>
+              <td class="p-2">Kopplingstrådar (16 adress + 1 RESB)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-  <!-- Kopplingsschema -->
-  <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
-    <p class="text-gray-700 mb-3 text-sm">Här ser du hela kopplingen på en bild — alla komponenter och ledningar precis som de ska sitta på kopplingsdäcket.</p>
-    <div class="schematic bg-white rounded-lg shadow p-4">
-      <img src="schematics/steg-2.png" alt="Steg 2 — Adressbuss och reset" class="w-full">
-    </div>
-  </section>
+    <!-- Kopplingsschema -->
+    <section class="mb-8">
+      <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
+      <p class="text-gray-700 mb-3 text-sm">Här ser du hela kopplingen på en bild — alla komponenter och ledningar
+        precis som de ska sitta på kopplingsdäcket.</p>
+      <div class="schematic bg-white rounded-lg shadow p-4">
+        <img src="schematics/steg-2.png" alt="Steg 2 — Adressbuss och reset" class="w-full">
+      </div>
+    </section>
 
     <!-- Kretstabell -->
-  <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Kopplingar</h2>
-    <p class="text-gray-700 mb-3 text-sm">Alla kopplingar för detta steg — från strömmatning till signaler. Varje pinne, vart den går, och <strong>varför</strong>.</p>
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
-        <tbody class="divide-y">
-          <tr><td class="p-2">8</td><td class="p-2">VDD</td><td class="p-2">+5V</td><td class="p-2">Strömmatning — CPU:ns driftspänning</td></tr>
-          <tr><td class="p-2">21</td><td class="p-2">VSS</td><td class="p-2">GND</td><td class="p-2">Systemjord — sluten krets</td></tr>
-          <tr><td class="p-2">37</td><td class="p-2">PHI2</td><td class="p-2"><strong>Arduino D2</strong></td><td class="p-2">Klockingång — Arduino skickar fyrkantsvåg</td></tr>
-          <tr><td class="p-2">2</td><td class="p-2">RDY</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Ready — HÖG = CPU får köra. Utan denna stannar CPU:n</td></tr>
-          <tr><td class="p-2">4</td><td class="p-2">/IRQ</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Interrupt request — HÖG = inget avbrott</td></tr>
-          <tr><td class="p-2">6</td><td class="p-2">/NMI</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Non-maskable interrupt — måste vara HÖG</td></tr>
-          <tr><td class="p-2">36</td><td class="p-2">BE</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad!</td></tr>
-          <tr><td class="p-2">38</td><td class="p-2">/SO</td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Set Overflow — avaktiverad</td></tr>          <tr><td class="p-2">40</td><td class="p-2">/RESET</td><td class="p-2"><strong>Arduino D4</strong></td><td class="p-2">Kontrollerad reset — Arduino håller CPU:n i reset tills vi är redo</td></tr>
-          <tr><td class="p-2">9–16</td><td class="p-2">A0–A7</td><td class="p-2"><strong>Arduino A0–A7</strong></td><td class="p-2">Låga adressbyte — läses via PORTF</td></tr>
-          <tr><td class="p-2">17–20, 22–25</td><td class="p-2">A8–A15</td><td class="p-2"><strong>Arduino A8–A15</strong></td><td class="p-2">Höga adressbyte — läses via PORTK</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+    <section class="mb-8">
+      <h2 class="text-lg font-bold mb-2">Kopplingar</h2>
+      <p class="text-gray-700 mb-3 text-sm">Alla kopplingar för detta steg — från strömmatning till signaler. Varje
+        pinne, vart den går, och <strong>varför</strong>.</p>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+          <thead class="bg-gray-900 text-white">
+            <tr>
+              <th class="p-2 text-left">Pin</th>
+              <th class="p-2 text-left">Signal</th>
+              <th class="p-2 text-left">Kopplas till</th>
+              <th class="p-2 text-left">Varför</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y">
+            <tr>
+              <td class="p-2">8</td>
+              <td class="p-2">VDD</td>
+              <td class="p-2">+5V</td>
+              <td class="p-2">Strömmatning — CPU:ns driftspänning</td>
+            </tr>
+            <tr>
+              <td class="p-2">21</td>
+              <td class="p-2">VSS</td>
+              <td class="p-2">GND</td>
+              <td class="p-2">Systemjord — sluten krets</td>
+            </tr>
+            <tr>
+              <td class="p-2">37</td>
+              <td class="p-2">PHI2</td>
+              <td class="p-2"><strong>Arduino D2</strong></td>
+              <td class="p-2">Klockingång — Arduino skickar fyrkantsvåg</td>
+            </tr>
+            <tr>
+              <td class="p-2">2</td>
+              <td class="p-2">RDY</td>
+              <td class="p-2">+5V via 10kΩ</td>
+              <td class="p-2">Ready — HÖG = CPU får köra. Utan denna stannar CPU:n</td>
+            </tr>
+            <tr>
+              <td class="p-2">4</td>
+              <td class="p-2">/IRQ</td>
+              <td class="p-2">+5V via 10kΩ</td>
+              <td class="p-2">Interrupt request — HÖG = inget avbrott</td>
+            </tr>
+            <tr>
+              <td class="p-2">6</td>
+              <td class="p-2">/NMI</td>
+              <td class="p-2">+5V via 10kΩ</td>
+              <td class="p-2">Non-maskable interrupt — måste vara HÖG</td>
+            </tr>
+            <tr>
+              <td class="p-2">36</td>
+              <td class="p-2">BE</td>
+              <td class="p-2">+5V via 10kΩ</td>
+              <td class="p-2">Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad!</td>
+            </tr>
+            <tr>
+              <td class="p-2">38</td>
+              <td class="p-2">/SO</td>
+              <td class="p-2">+5V via 10kΩ</td>
+              <td class="p-2">Set Overflow — avaktiverad</td>
+            </tr>
+            <tr>
+              <td class="p-2">40</td>
+              <td class="p-2">/RESET</td>
+              <td class="p-2"><strong>Arduino D4</strong></td>
+              <td class="p-2">Kontrollerad reset — Arduino håller CPU:n i reset tills vi är redo</td>
+            </tr>
+            <tr>
+              <td class="p-2">9–16</td>
+              <td class="p-2">A0–A7</td>
+              <td class="p-2"><strong>Arduino A0–A7</strong></td>
+              <td class="p-2">Låga adressbyte — läses via PORTF</td>
+            </tr>
+            <tr>
+              <td class="p-2">17–20, 22–25</td>
+              <td class="p-2">A8–A15</td>
+              <td class="p-2"><strong>Arduino A8–A15</strong></td>
+              <td class="p-2">Höga adressbyte — läses via PORTK</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-  <!-- Kod -->
-  <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
-    <p class="text-gray-700 mb-3 text-sm">Koden som laddas upp till Arduino Mega. Varje rad är kommenterad så du förstår vad som händer — kopiera, klistra in, ladda upp.</p>
-    <p class="text-gray-700 mb-3 text-sm">Koden gör tre saker: (1) håller CPU:n i reset i 5 klockcykler, (2) släpper reset så CPU:n startar, (3) läser och skriver ut adressbussen i varje cykel. Första utskrifterna ska vara <code>$FFFC</code> och <code>$FFFD</code> — reset-vektorn.</p>
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
+    <!-- Kod -->
+    <section class="mb-8">
+      <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
+      <p class="text-gray-700 mb-3 text-sm">Koden som laddas upp till Arduino Mega. Varje rad är kommenterad så du
+        förstår vad som händer — kopiera, klistra in, ladda upp.</p>
+      <p class="text-gray-700 mb-3 text-sm">Koden gör tre saker: (1) håller CPU:n i reset i 5 klockcykler, (2) släpper
+        reset så CPU:n startar, (3) läser och skriver ut adressbussen i varje cykel. Första utskrifterna ska vara
+        <code>$FFFC</code> och <code>$FFFD</code> — reset-vektorn.</p>
+      <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 2 — Adressbuss och reset-sekvens
 // ==============================================================
@@ -163,35 +247,38 @@ void loop() {
   Serial.println(addr, HEX);   // Adress i hexadecimalt format
 }
 </code></pre>
-  </section>
+    </section>
 
-  <!-- Testning -->
-  <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Testning och felsökning</h2>
-    <ol class="list-decimal pl-5 space-y-1 text-gray-700">
-      <li>Öppna serieövervakaren (115200 baud)</li>
-      <li>Första raderna ska vara <code>FFFC</code>, <code>FFFD</code>, följt av en adress</li>
-    </ol>
-    <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
-      <span class="font-bold text-green-800">✅ Förväntat:</span>
-      <span class="text-green-700">CPU:n läser reset-vektorn. Adresserna $FFFC, $FFFD syns först.</span>
-    </div>
-    <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
-      <h3 class="font-bold">Om det inte fungerar</h3>
-      <ul class="list-disc pl-5 space-y-1">
-        <li><strong>Ser du bara <code>0</code> eller <code>1</code>?</strong> CPU:n är fortfarande i reset eller BE är LÅG. Kontrollera att RESB går HÖG efter reset-sekvensen, och att BE har +5V.</li>
-        <li><strong>Ser du <code>FFFC</code> men inte <code>FFFD</code>?</strong> Någon adresslinje är felkopplad. Dubbelkolla A0–A15 en och en.</li>
-        <li><strong>Skräptecken i serieövervakaren?</strong> Baud rate måste vara 115200. Kontrollera <code>platformio.ini</code> om du använder PlatformIO.</li>
-      </ul>
-    </div>
-  </section>
+    <!-- Testning -->
+    <section class="mb-8">
+      <h2 class="text-lg font-bold mb-2">Testning och felsökning</h2>
+      <ol class="list-decimal pl-5 space-y-1 text-gray-700">
+        <li>Öppna serieövervakaren (115200 baud)</li>
+        <li>Första raderna ska vara <code>FFFC</code>, <code>FFFD</code>, följt av en adress</li>
+      </ol>
+      <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
+        <span class="font-bold text-green-800">✅ Förväntat:</span>
+        <span class="text-green-700">CPU:n läser reset-vektorn. Adresserna $FFFC, $FFFD syns först.</span>
+      </div>
+      <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
+        <h3 class="font-bold">Om det inte fungerar</h3>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>Ser du bara <code>0</code> eller <code>1</code>?</strong> CPU:n är fortfarande i reset eller BE är
+            LÅG. Kontrollera att RESB går HÖG efter reset-sekvensen, och att BE har +5V.</li>
+          <li><strong>Ser du <code>FFFC</code> men inte <code>FFFD</code>?</strong> Någon adresslinje är felkopplad.
+            Dubbelkolla A0–A15 en och en.</li>
+          <li><strong>Skräptecken i serieövervakaren?</strong> Baud rate måste vara 115200. Kontrollera
+            <code>platformio.ini</code> om du använder PlatformIO.</li>
+        </ul>
+      </div>
+    </section>
 
-  <div class="flex gap-4 mt-8">
-    <a href="step1.html" class="text-blue-600 hover:underline">← Steg 1</a>
-    <a href="step3.html" class="text-blue-600 hover:underline">Steg 3 →</a>
-  </div>
-</main>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
-<script>hljs.highlightAll();</script>
+    <div class="flex gap-4 mt-8">
+      <a href="step1.html" class="text-blue-600 hover:underline">← Steg 1</a>
+      <a href="step3.html" class="text-blue-600 hover:underline">Steg 3 →</a>
+    </div>
+  </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
 </body>
 </html>
