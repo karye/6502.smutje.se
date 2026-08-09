@@ -70,7 +70,7 @@
                                                           │
                                               (2048 bytes kod + 6 bytes vektorer)
                                                           │
-                                              main.cpp ◀──┘  #include "program.h"</code></pre>
+                                              main.cpp ◀──┘  #include "program_hello.h"</code></pre>
   </section>
 
   <!-- Minneskarta -->
@@ -141,10 +141,10 @@ import os
 
 def build_asm(target, source, env):
     src_dir = os.path.join(env.subst("$PROJECT_DIR"), "src")
-    asm_path = os.path.join(src_dir, "program_hello.asm")
-    obj_path = os.path.join(src_dir, "program_hello.o")
-    bin_path = os.path.join(src_dir, "program_hello.bin")
-    h_path   = os.path.join(src_dir, "program.h")
+    asm_path = os.path.join(asm_dir, "program_hello.asm")
+    obj_path = os.path.join(asm_dir, "program_hello.o")
+    bin_path = os.path.join(asm_dir, "program_hello.bin")
+    h_path   = os.path.join(asm_dir, "program_hello.h")
     cfg_path = os.path.join(src_dir, "program.cfg")
 
     print(f"[build_asm] Assemblerar {asm_path} …")
@@ -431,7 +431,7 @@ line4: .byte "smutje.se 2026", 0
 // → program_hello.h. PlatformIO kör assembler-stegen automatiskt.
 
 #include &lt;Arduino.h&gt;
-#include "program.h"   // Genereras av byggskriptet (bin2h.py)
+#include "program_hello.h"   // Genereras av byggskriptet (bin2h.py)
 
 #define PHI2     2
 #define RESB     4
