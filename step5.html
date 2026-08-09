@@ -36,7 +36,7 @@
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Mål</h2>
     <div class="text-gray-700 space-y-3">
-      <p>Datorn fungerar — men all feedback går via serieövervakaren på en dator. Nu kopplar vi in en <strong>LCD-display (16×2 tecken)</strong> som visar vad CPU:n gör direkt på kopplingsdäcket. Ingen datorskärm behövs längre.</p>
+      <p>Datorn fungerar — men all feedback går via seriemonitorn på en laptopen. Nu kopplar vi in en <strong>LCD-display (16×2 tecken)</strong> som visar vad CPU:n gör direkt på kopplingsdäcket. Ingen datorskärm behövs längre.</p>
       <p>LCD:n kopplas i <strong>4-bitars parallellt läge</strong> till Arduino. Det innebär att vi skickar data 4 bitar i taget via pinnar D7–D10. Arduino-biblioteket <code>LiquidCrystal</code> sköter all kommunikation — vi behöver bara tala om vilka pinnar som används.</p>
       <p><strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. Arduino D10 går till LCD DB4, D9 till DB5, D8 till DB6, D7 till DB7. Koden måste spegla detta: <code>LiquidCrystal lcd(5, 6, 10, 9, 8, 7)</code>.</p>
       <p>LCD:ns R/W-pinne kopplas till GND — vi ska bara skriva till displayen, aldrig läsa.</p>

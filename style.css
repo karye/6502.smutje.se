@@ -7,3 +7,9 @@
 pre code {
   font-size: 0.8rem;
 }
+code {
+    background: cornsilk;
+    border: 1px solid blanchedalmond;
+    font-weight: 600;
+    color: cornflowerblue;
+}
