@@ -892,7 +892,7 @@ txt_fib:
       <span class="text-green-700">CPU:n läser/skriver till SRAM för adresser under $4000. Arduino är helt ur vägen — SRAM-chippet svarar på egen hand.</span>
     </div>
     <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
-      <h3 class="font-bold">Om det inte fungerar</h3>
+      <h3 class="font-bold mt-4 mb-2">Om det inte fungerar</h3>
       <ul class="list-disc pl-5 space-y-1">
         <li><strong>CPU:n läser $0000 vid reset?</strong> SRAM-chipets /OE är inte GND. Utan /OE=LÅG driver SRAM inte ut data vid läsning.</li>
         <li><strong>Databuss-krockar?</strong> Arduino får INTE sätta DDRA=0xFF vid SRAM-adresser. Kontrollera att <code>is_sram()</code> returnerar rätt.</li>

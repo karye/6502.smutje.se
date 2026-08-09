@@ -279,7 +279,7 @@ void loop() {
       <span class="text-green-700">CPU:n läser reset-vektor, hoppar till $8000, exekverar NOP i loop.</span>
     </div>
     <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
-      <h3 class="font-bold">Om det inte fungerar</h3>
+      <h3 class="font-bold mt-4 mb-2">Om det inte fungerar</h3>
       <ul class="list-disc pl-5 space-y-1">
         <li><strong>Ser du <code>W $0</code> eller <code>W $1</code>?</strong> CPU:n driver inte bussarna. Kontrollera BE (måste vara HÖG) och att PHI2 når CPU:n.</li>
         <li><strong>Ser du <code>R $FFFC</code> men inget mer?</strong> Databussen är felaktig. Kontrollera D22–D29 och att 100Ω-motstånden sitter på alla 8 ledningar.</li>

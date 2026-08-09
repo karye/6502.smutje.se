@@ -311,7 +311,7 @@ void loop() {
       <span class="text-green-700">CPU:n kör räknarprogrammet i loop. LCD:n visar exekveringen i realtid. Första egna 6502-programmet!</span>
     </div>
     <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
-      <h3 class="font-bold">Om det inte fungerar</h3>
+      <h3 class="font-bold mt-4 mb-2">Om det inte fungerar</h3>
       <ul class="list-disc pl-5 space-y-1">
         <li><strong>CPU:n kör NOP istället?</strong> Du har glömt att ladda det nya programmet. Kontrollera <code>write_mem()</code>-anropen i <code>setup()</code>.</li>
         <li><strong>CPU:n hoppar till fel adress?</strong> JMP-adressen är fel. <code>$8002</code> är <code>$02 $80</code> (låg byte först!).</li>
