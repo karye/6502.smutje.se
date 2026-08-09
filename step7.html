@@ -42,7 +42,7 @@
       <ol class="list-decimal pl-5 space-y-1">
         <li>Sätter VIA:ns portar som utgångar</li>
         <li>Initierar LCD:n i 8-bitarsläge (8-bitars databuss, 2 rader, 5×8 font, display on, entry mode)</li>
-        <li>Skriver fyra rader text genom att lägga ASCII-värden på port B och pulsa enable-signalen på port A — sedan <strong>clear display</strong> och loopa om från början</li>
+        <li>Skriver två rader text genom att lägga ASCII-värden på port B och pulsa enable-signalen på port A — sedan <strong>clear display</strong> och loopa om från början</li>
       </ol>
       <p>När allt fungerar har vi en dator där <strong>CPU:n själv styr I/O</strong> via minnesmappade adresser. Arduino är nu bara minnesemulator och klocka — all logik för LCD:n körs på 6502.</p>
     </div>
@@ -58,7 +58,7 @@
         <tbody class="divide-y">
           <tr><td class="p-2">1</td><td class="p-2">W65C22 VIA (DIP-40)</td><td class="p-2">2×8-bit I/O-portar (PA0–PA7, PB0–PB7), 4 registerväljare</td></tr>
           <tr><td class="p-2">1</td><td class="p-2">74HC00 (quad 2-input NAND)</td><td class="p-2">Adressavkodning — genererar chip select-signaler</td></tr>
-          <tr><td class="p-2">1</td><td class="p-2"><strong>LCD 16</strong>×2 eller 20×4 (parallell, t.ex. QC1602A)</td><td class="p-2">Ansluts till VIA:ns PB0–PB7 + kontrollpinnar</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2"><strong>LCD 16×2</strong> (parallell, t.ex. QC1602A)</td><td class="p-2">Ansluts till VIA:ns PB0–PB7 + kontrollpinnar</td></tr>
           <tr><td class="p-2">1</td><td class="p-2">100 nF keramisk kondensator</td><td class="p-2">Avkoppling vid VIA:ns VCC/GND</td></tr>
         </tbody>
       </table>
@@ -252,7 +252,7 @@
     <p class="text-gray-700 mt-2 text-sm"><strong>Logik:</strong> A15 inverteras av U4A. U4B gör (NOT A15) NAND A14 → LÅG när A15=0 och A14=1. VIAn aktiveras alltså vid adress <code>$4000–$7FFF</code>. CPU:ns A0–A3 går till VIAns RS0–RS3 vilket ger 16 register på <code>$4000–$400F</code>.</p>
 
     <!-- LCD -->
-    <h3 class="font-bold mt-6 mb-2">LCD 16×2 / 20×4 (parallell)</h3>
+    <h3 class="font-bold mt-6 mb-2">LCD 16×2 (parallell)</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -328,8 +328,8 @@
 
   <!-- Programmering -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">6502-program — fyra rader via VIA</h2>
-    <p>Programmet ligger på <code>$8000</code>: (1) sätter VIA-portar som utgångar, (2) initierar LCD i 8-bitarsläge, (3) skriver fyra rader text med cursor-positionering, (4) clear display och loopa om. För varje byte: lägg data på PORTB, pulsa E (PA2) på PORTA.</p>
+    <h2 class="text-lg font-bold mb-2">6502-program — två rader via VIA</h2>
+    <p>Programmet ligger på <code>$8000</code>: (1) sätter VIA-portar som utgångar, (2) initierar LCD i 8-bitarsläge, (3) skriver två rader text, (4) clear display och loopa om och loopa om. För varje byte: lägg data på PORTB, pulsa E (PA2) på PORTA.</p>
 
     <h3 class="font-bold mt-4 mb-2">VIAns register (adress <code>$4000</code>–<code>$4003</code>)</h3>
     <div class="overflow-x-auto">
@@ -373,10 +373,8 @@
           <tr><td class="p-2">11</td><td class="p-2 font-mono">LDA #$80 · STA $4000<br>LDA #$04 · STA $4001<br>LDA #$00 · STA $4001</td><td class="p-2 font-mono">A9 80 8D 00 40 …</td><td class="p-2">Kommando $80 = sätt DDRAM-adress 0 (rad 1, pos 0)</td></tr>
           <tr><td class="p-2">12</td><td class="p-2 font-mono">LDA #$01 · STA $4001</td><td class="p-2 font-mono">A9 01 8D 01 40</td><td class="p-2">RS=1 (data-läge)</td></tr>
           <tr><td class="p-2">13</td><td class="p-2 font-mono">För varje tecken:<br>LDA #tecken · STA $4000<br>LDA #$05 · STA $4001<br>LDA #$01 · STA $4001</td><td class="p-2 font-mono">A9 xx 8D 00 40<br>A9 05 8D 01 40<br>A9 01 8D 01 40</td><td class="p-2">Data + RS=1,E=1 → RS=1,E=0 (fallande flank). 19 tecken</td></tr>
-          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Rad 2–4: samma mönster med cursor-kommandon $C0, $94, $D4</td></tr>
-          <tr><td class="p-2">14</td><td class="p-2 font-mono">LDA #$C0 …</td><td class="p-2 font-mono" colspan="2">Cursor till rad 2 → "Hello from W65C02!"</td></tr>
-          <tr><td class="p-2">15</td><td class="p-2 font-mono">LDA #$94 …</td><td class="p-2 font-mono" colspan="2">Cursor till rad 3 → "Arduino = RAM + CLK"</td></tr>
-          <tr><td class="p-2">16</td><td class="p-2 font-mono">LDA #$D4 …</td><td class="p-2 font-mono" colspan="2">Cursor till rad 4 → "smutje.se 2026"</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Rad 2: "smutje.se W65C02" (cursor $C0)</td></tr>
+          <tr><td class="p-2">14</td><td class="p-2 font-mono">LDA #$C0 …</td><td class="p-2 font-mono" colspan="2">Cursor till rad 2 → "smutje.se W65C02"</td></tr>
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Clear + loop</td></tr>
           <tr><td class="p-2">17</td><td class="p-2 font-mono">LDA #$01 · STA $4000<br>LDA #$04 · STA $4001<br>LDA #$00 · STA $4001</td><td class="p-2 font-mono">A9 01 8D 00 40 …</td><td class="p-2">Clear display</td></tr>
           <tr><td class="p-2">18</td><td class="p-2 font-mono">JMP hello_start</td><td class="p-2 font-mono">4C xx xx</td><td class="p-2">Hoppa tillbaka till rad 1 — oändlig loop</td></tr>
@@ -390,7 +388,7 @@
 // ==============================================================
 // Steg 7 — VIA + LCD (LCD styrs av 6502 via W65C22 VIA)
 // ==============================================================
-// 6502-programmet initierar VIA + LCD och skriver 4 rader text.
+// 6502-programmet initierar VIA + LCD och skriver 2 rader text.
 // Arduino är endast minnesemulator + klocka — all I/O via VIA.
 
 #define PHI2     2   // CPU pin 37
@@ -583,7 +581,7 @@ void setup() {
   write_mem(next++, 0xA9); write_mem(next++, 0x00);  // LDA #$00
   write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40); // STA $4001
 
-  // === Hello-rutin: 4 rader → clear → loop ===
+  // === Hello-rutin: 2 rader → clear → loop ===
   uint16_t hello_start = next;
 
   // -- Hjälpfunktion: skicka LCD-kommando --
@@ -734,7 +732,7 @@ void loop() {
       <li>Ladda upp koden och öppna serieövervakaren (115200 baud)</li>
       <li>Verifiera att CPU:n startar: du ska se <code>R $FFFC</code>, <code>R $FFFD</code>, <code>R $8000</code>…</li>
       <li>Leta efter VIA-adresser: <code>W $4002</code>, <code>W $4003</code> betyder att CPU:n konfigurerar VIA:ns portar</li>
-      <li>LCD:n ska visa fyra rader text, sedan clear och loopa om — tar ~2000 klockcykler (ca 40 sek vid 20 Hz)</li>
+      <li>LCD:n ska visa två rader text, sedan clear och loopa om — tar ~2000 klockcykler (ca 40 sek vid 20 Hz)</li>
     </ol>
 
     <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
