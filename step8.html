@@ -95,8 +95,11 @@
       <p>6502-processorn har 16 adresslinjer = 64 KB adressrymd. Blockens höjd är proportionell mot deras storlek (1 px
         per 128 bytes, minst 8 px).</p>
       <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
-        <div class="flex items-center border-b border-gray-300" style="min-height:8px">
-          <div class="w-20 text-right pr-3 text-gray-500">$FFFF</div>
+      <div class="flex items-center border-b border-gray-300" style="min-height:8px">
+        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
+          <span class="text-gray-500">$FFFF</span>
+          <span class="text-gray-400">$FFFA</span>
+        </div>
           <div class="flex-1 bg-purple-100 border-l border-r border-purple-300 px-2 flex items-center"
             style="min-height:8px">vectors[6] — NMI, RESET, IRQ</div>
           <div class="w-14 text-right text-gray-500 pr-2">6 B</div>

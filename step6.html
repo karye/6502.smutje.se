@@ -49,41 +49,55 @@
     <p>Arduinon emulerar minne med <code>ram[1024]</code> ($0000–$03FF), program på $8000, och vektorer på $FFFA. </p>
     <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
       <div class="flex items-center border-b border-gray-300" style="min-height:8px">
-        <div class="w-20 text-right pr-3 text-gray-500">$FFFF</div>
+        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
+          <span class="text-gray-500">$FFFF</span>
+          <span class="text-gray-400">$FFFA</span>
+        </div>
         <div class="flex-1 bg-purple-100 border-l border-r border-purple-300 px-2 flex items-center" style="min-height:8px">vectors[6] — NMI, RESET, IRQ</div>
         <div class="w-14 text-right text-gray-500 pr-2">6 B</div>
       </div>
       <div class="flex items-stretch border-b border-gray-300" style="height:239px">
-        <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$FFFA</div>
+        <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$FFF9</div>
         <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt (returnerar $EA = NOP)</div>
         <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~30 KB</div>
       </div>
       <div class="flex items-center border-b border-gray-300" style="height:16px">
-        <div class="w-20 text-right pr-3 text-gray-500">$8800</div>
+        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="height:16px">
+          <span class="text-gray-500">$8800</span>
+          <span class="text-gray-400">$8000</span>
+        </div>
         <div class="flex-1 bg-blue-100 border-l border-r border-blue-300 px-2 flex items-center">6502-program (från setup())</div>
         <div class="w-14 text-right text-gray-500 pr-2">2 KB</div>
       </div>
       <div class="flex items-stretch border-b border-gray-300" style="height:248px">
-        <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$8000</div>
+        <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$7FFF</div>
         <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt (returnerar $EA = NOP)</div>
         <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~31 KB</div>
       </div>
       <div class="flex items-center border-b border-gray-300" style="min-height:8px">
-        <div class="w-20 text-right pr-3 text-gray-500">$0400</div>
+        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
+          <span class="text-gray-500">$0400</span>
+          <span class="text-gray-400">$0200</span>
+        </div>
         <div class="flex-1 bg-green-100 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">ram[1024] — ledigt RAM</div>
         <div class="w-14 text-right text-gray-500 pr-2">512 B</div>
       </div>
       <div class="flex items-center border-b border-gray-300" style="min-height:8px">
-        <div class="w-20 text-right pr-3 text-gray-500">$0200</div>
+        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
+          <span class="text-gray-500">$0200</span>
+          <span class="text-gray-400">$0100</span>
+        </div>
         <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">Stack (JSR/RTS, PHA/PLA)</div>
         <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
       </div>
       <div class="flex items-center" style="min-height:8px">
-        <div class="w-20 text-right pr-3 text-gray-500">$0100</div>
+        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
+          <span class="text-gray-500">$0100</span>
+          <span class="text-gray-400">$0000</span>
+        </div>
         <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">Zero page (snabbast)</div>
         <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
       </div>
-      <div class="text-right text-gray-500 pr-2">$0000</div>
     </div>
   </section>
 
