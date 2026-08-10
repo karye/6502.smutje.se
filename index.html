@@ -37,22 +37,17 @@
         <p>
           Ända sedan jag först läste om hur enkla 8-bitarsprocessorer fungerar har jag drömt om att
           <strong>bygga en egen dator</strong>. Inte en snabb, inte en modern — utan en dator där
-          <em>varje komponent går att förstå</em>. En dator där du kan följa varje etta och nolla
+          <em>varje komponent går att förstå</em>. En dator där jag kan följa varje etta och nolla
           från processorns instruktionsregister hela vägen ut till en lysdiod eller en LCD-display.
         </p>
         <p>
-          Den drömmen har funnits där länge. Men att bränna EPROM, löda fast minneskretsar och
+          Den drömmen har funnits där länge. Men att bränna EEPROM, löda fast minneskretsar och
           bygga en hel dator på breadboard — det är ett <strong>jätteprojekt</strong>. Man vill ju
           testa, experimentera, göra om.
         </p>
         <p>
-          Så kom <strong>W65C02S</strong> — en modern tillverkning av den klassiska 6502-processorn,
-          fortfarande i DIP-40, fortfarande 8-bitars. 6502:an är legendarisk: den satt i Apple II, Commodore 64, Nintendo NES,
-          Atari 2600 och BBC Micro — maskiner som tillsammans sålde i över 100 miljoner exemplar.
-        </p>
-        <p>
           Med en <strong>Arduino Mega 2560</strong> — en mikrokontroller med tillräckligt många
-          I/O-pinnar kan vi emulera hela minnet. Plötsligt gick det att <strong>bygga en riktig
+          I/O-pinnar kan jag emulera klocka, ram och rom. Plötsligt gick det att <strong>bygga en riktig
           6502-dator</strong>. Allt på kopplingsdäck. Allt går att ändra på
           sekunder. Kombinationen av 50-årig processordesign och modern mikrokontroller ger en
           unik möjlighet: en dator som är precis så långsam och begriplig att du kan följa med i
@@ -97,83 +92,6 @@
             programräknaren.</li>
           <li><strong>Nästa:</strong> PC pekar nu på nästa opcode. Börja om från steg 1.</li>
         </ol>
-
-        <h3>Minneskartan — processorns värld</h3>
-        <p>6502-processorn ser hela sitt universum som 65 536 adresser — varken mer eller mindre. Varje
-          adress måste ha <em>något</em> som svarar, annars läser processorn in slumpmässiga värden
-          och kraschar. Vår Arduino ser till att <strong>varje adress alltid returnerar något</strong>.</p>
-
-        <!-- Minneskarta -->
-        <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
-          <div class="flex items-center border-b border-gray-300" style="min-height:8px">
-            <div class="w-20 text-right pr-3 text-gray-500">$FFFF</div>
-            <div class="flex-1 bg-purple-100 border-l border-r border-purple-300 px-2 flex items-center"
-              style="min-height:8px">vectors[6] — här bor startadressen för programmet</div>
-            <div class="w-14 text-right text-gray-500 pr-2">6 B</div>
-          </div>
-          <div class="flex items-stretch border-b border-gray-300" style="height:239px">
-            <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$FFFA</div>
-            <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">
-              oanvänt (Arduino svarar med NOP = gör inget, gå vidare)</div>
-            <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~30 KB</div>
-          </div>
-          <div class="flex items-center border-b border-gray-300" style="height:16px">
-            <div class="w-20 text-right pr-3 text-gray-500">$8800</div>
-            <div class="flex-1 bg-blue-100 border-l border-r border-blue-300 px-2 flex items-center">program[2048] —
-              dina 6502-instruktioner</div>
-            <div class="w-14 text-right text-gray-500 pr-2">2 KB</div>
-          </div>
-          <div class="flex items-stretch border-b border-gray-300" style="height:128px">
-            <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$8000</div>
-            <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">
-              oanvänt</div>
-            <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~16 KB</div>
-          </div>
-          <div class="flex items-center border-b-2 border-yellow-500" style="min-height:8px">
-            <div class="w-20 text-right pr-3 text-gray-500">$4010</div>
-            <div class="flex-1 bg-yellow-100 border-l border-r border-yellow-400 px-2 flex items-center font-bold"
-              style="min-height:8px">W65C22 VIA — fysisk I/O-krets (steg 7–8)</div>
-            <div class="w-14 text-right text-gray-500 pr-2">16 B</div>
-          </div>
-          <div class="flex items-stretch border-b border-gray-300" style="height:120px">
-            <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$4000</div>
-            <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">
-              oanvänt</div>
-            <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~15 KB</div>
-          </div>
-          <div class="flex items-center border-b border-gray-300" style="min-height:8px">
-            <div class="w-20 text-right pr-3 text-gray-500">$0400</div>
-            <div class="flex-1 bg-green-100 border-l border-r border-green-300 px-2 flex items-center"
-              style="min-height:8px">ram[1024] — ledigt att använda för data</div>
-            <div class="w-14 text-right text-gray-500 pr-2">512 B</div>
-          </div>
-          <div class="flex items-center border-b border-gray-300" style="min-height:8px">
-            <div class="w-20 text-right pr-3 text-gray-500">$0200</div>
-            <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-center"
-              style="min-height:8px">Stack — processorns egen kladdlapp (JSR/RTS)</div>
-            <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
-          </div>
-          <div class="flex items-center" style="min-height:8px">
-            <div class="w-20 text-right pr-3 text-gray-500">$0100</div>
-            <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-center"
-              style="min-height:8px">Zero page — snabbaste minnet, som extra register</div>
-            <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
-          </div>
-          <div class="text-right text-gray-500 pr-2">$0000</div>
-        </div>
-
-        <p>
-          <strong>De gröna områdena</strong> är RAM — här kan du lagra variabler och processorn använder
-          automatiskt stacken vid subrutinanrop. <strong>Det blå området</strong> är ditt program.
-          <strong>Det lila längst upp</strong> är reset-vektorn: när processorn startar går den först till
-          adress $FFFC, läser två bytes, och hoppar dit. I vårt fall står det $8000 där —
-          processorn hoppar till ditt program.
-        </p>
-        <p>
-          <strong>Det gula</strong> är W65C22 VIA — en fysisk I/O-krets som kopplas in i steg 7.
-          När processorn skriver till adresser i detta område är det VIA-kretsen som svarar,
-          inte Arduino. Arduino går ur vägen genom att tri-stata databussen.
-        </p>
 
         <h3>Arduino emulerar ROM?</h3>
         <p>
