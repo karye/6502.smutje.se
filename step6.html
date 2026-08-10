@@ -50,7 +50,7 @@
     <ul class="list-disc pl-5 space-y-1 mb-3">
       <li><strong>Lila</strong> ($FFFA–$FFFF): vektorer — processorn läser här efter reset för att veta var programmet börjar</li>
       <li><strong>Blå</strong> ($8000–$87FF): vårt 6502-program — 9 bytes maskinkod som Arduino laddar in från <code>setup()</code></li>
-      <li><strong>Grön</strong> ($0000–$03FF): arbetsminne — zero page, stack och ledigt RAM. Här kan CPU:n läsa och skriva fritt</li>
+      <li><strong>Grön</strong> ($0000–$03FF): arbetsminne — zero page ($0000–$00FF, snabbast åtkomst), stack ($0100–$01FF, JSR/RTS/PHA/PLA), och ledigt RAM ($0200–$03FF). Här kan CPU:n läsa och skriva fritt</li>
       <li><strong>Grå</strong>: oanvänt — Arduino returnerar $EA (NOP) så CPU:n hoppar bara vidare</li>
     </ul>
     <p>Blockens höjd är proportionell mot deras storlek.</p>
