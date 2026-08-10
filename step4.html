@@ -99,7 +99,7 @@
   <!-- Minneskarta -->
   <section class="mb-8">
     <h2>Minneskarta ($0000–$FFFF)</h2>
-    <p>Arduinon emulerar minne med <code>ram[1024]</code> ($0000–$03FF), program på $8000, och vektorer på $FFFA. </p>
+    <p>Arduinon emulerar minne med <code>ram[1024]</code> ($0000–$03FF), en NOP-loop på $8000, och vektorer på $FFFA. </p>
     <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
       <div class="flex items-center border-b border-gray-300" style="min-height:8px">
         <div class="w-20 text-right pr-3 text-gray-500">$FFFF</div>
@@ -113,7 +113,7 @@
       </div>
       <div class="flex items-center border-b border-gray-300" style="height:16px">
         <div class="w-20 text-right pr-3 text-gray-500">$8800</div>
-        <div class="flex-1 bg-blue-100 border-l border-r border-blue-300 px-2 flex items-center">6502-program (från setup())</div>
+        <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt (returnerar $EA = NOP)</div>
         <div class="w-14 text-right text-gray-500 pr-2">2 KB</div>
       </div>
       <div class="flex items-stretch border-b border-gray-300" style="height:248px">
