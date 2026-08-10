@@ -41,11 +41,6 @@
           från processorns instruktionsregister hela vägen ut till en lysdiod eller en LCD-display.
         </p>
         <p>
-          Den drömmen har funnits där länge. Men att bränna EEPROM, löda fast minneskretsar och
-          bygga en hel dator på breadboard — det är ett <strong>jätteprojekt</strong>. Man vill ju
-          testa, experimentera, göra om.
-        </p>
-        <p>
           Med en <strong>Arduino Mega 2560</strong> — en mikrokontroller med tillräckligt många
           I/O-pinnar kan jag emulera klocka, ram och rom. Plötsligt gick det att <strong>bygga en riktig
           6502-dator</strong>. Allt på kopplingsdäck. Allt går att ändra på
@@ -95,16 +90,16 @@
 
         <h3>Arduino emulerar ram och rom</h3>
         <p>
-          En 6502-dator från 1970-talet hade ROM och RAM som fysiska chips. Varje gång du ville
-          testa ett nytt program fick du bränna ett nytt EPROM under UV-ljus — en process som tog
-          20 minuter per försök. Arduino vänder på det här: <strong>du laddar upp ett nytt program
+          En 6502-dator från 1970-talet hade ROM och RAM som fysiska chips. Varje gång man vill
+          testa ett nytt program får man bränna ett nytt EPROM under UV-ljus — en process som tar
+          20 minuter per försök. Arduino vänder på det här: <strong>man laddar upp ett nytt program
             på två sekunder över USB</strong>. Arduino läser av processorns adressbuss, slår upp rätt
           byte i sin interna array, och lägger ut den på databussen — allt inom samma klockcykel.
         </p>
         <p>
           Detta är inte en emulator i mjukvara — processorn kör på riktigt, med riktiga elektriska
-          signaler. Arduinon är bara minnet. Det betyder att <strong>allt du lär dig om 6502:ans
-            instruktionsuppsättning, timing och bussprotokoll gäller på riktigt</strong>. Du kan ta
+          signaler. Arduinon är bara minnet. Det betyder att <strong>allt man lär sig om 6502:ans
+            instruktionsuppsättning, timing och bussprotokoll gäller på riktigt</strong>. Man kan ta
           bort Arduino och ersätta den med ett EEPROM och ett SRAM-chip — och datorn fungerar
           precis likadant.
         </p>
@@ -231,12 +226,12 @@
           <h3>Steg 8 — assembler-bygge med ca65</h3>
           <ul class="list-disc pl-5 space-y-1 mt-1">
             <li>6502-programmet flyttas från hårdkodade hex-bytes till en <strong>riktig assembler-fil</strong>
-              (<code>program.asm</code>)</li>
+              (<code>program_hello.asm</code>)</li>
             <li><strong>ca65 + ld65</strong> (från cc65-verktygslådan) assemblerar och länkar — branschstandard för 6502
             </li>
             <li>PlatformIO kör byggskriptet <strong>automatiskt</strong> före varje uppladdning — du märker inte av det
             </li>
-            <li><code>program.h</code> genereras med en byte-array som <code>main.cpp</code> inkluderar</li>
+            <li><code>program_hello.h</code> genereras med en byte-array som <code>main.cpp</code> inkluderar</li>
             <li>Samma hårdvara som steg 7 — <strong>endast byggkedjan ändras</strong></li>
           </ul>
         </div>
