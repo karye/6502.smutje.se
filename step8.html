@@ -30,29 +30,29 @@
 
 <main class="max-w-5xl mx-auto px-4 py-8">
 
-  <h1 class="text-2xl font-bold mb-6">Steg 8 — assembler-bygge med ca65</h1>
+  <h1>Steg 8 — assembler-bygge med ca65</h1>
 
   <!-- Mål -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Mål</h2>
+    <h2>Mål</h2>
     <div class="text-gray-700 space-y-3">
-      <p class="mt-3 mb-3">Hittills har vi skrivit 6502-program som hårdkodade hex-bytes direkt i Arduinons <code>setup()</code>. Det fungerar — men det är inte hållbart i längden. Nu tar vi steget till <strong>riktig assembler</strong> med <strong>ca65</strong>, en professionell 6502-assembler från cc65-verktygslådan.</p>
-      <p class="mt-3 mb-3"><strong>Ingen ny hårdvara.</strong> Samma kopplingar som steg 7. Allt nytt finns i byggkedjan.</p>
-      <p class="mt-3 mb-3">Arbetsflödet blir:</p>
+      <p>Hittills har vi skrivit 6502-program som hårdkodade hex-bytes direkt i Arduinons <code>setup()</code>. Det fungerar — men det är inte hållbart i längden. Nu tar vi steget till <strong>riktig assembler</strong> med <strong>ca65</strong>, en professionell 6502-assembler från cc65-verktygslådan.</p>
+      <p><strong>Ingen ny hårdvara.</strong> Samma kopplingar som steg 7. Allt nytt finns i byggkedjan.</p>
+      <p>Arbetsflödet blir:</p>
       <ol class="list-decimal pl-5 space-y-1">
         <li>Skriv 6502-kod i <code>asm/program_hello.asm</code> — med labels, subrutiner och kommentarer</li>
         <li>PlatformIO kör <code>ca65</code> + <code>ld65</code> före C++-kompileringen</li>
         <li>Resultatet (<code>program_hello.bin</code>) konverteras till en C-header (<code>program.h</code>)</li>
         <li><code>setup()</code> läser <code>PROGRAM[]</code> och laddar in i minnesemulatorn</li>
       </ol>
-      <p class="mt-3 mb-3">Du redigerar en <strong>läsbar assembler-fil</strong> — inte en lång rad <code>write_mem()</code>-anrop.</p>
+      <p>Du redigerar en <strong>läsbar assembler-fil</strong> — inte en lång rad <code>write_mem()</code>-anrop.</p>
     </div>
   </section>
 
   <!-- Krav -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Nya verktyg</h2>
-    <p class="mt-3 mb-3">Ingen ny hårdvara — bara mjukvara. Dessa två program installerar du en gång, sedan bara rullar det på.</p>
+    <h2>Nya verktyg</h2>
+    <p>Ingen ny hårdvara — bara mjukvara. Dessa två program installerar du en gång, sedan bara rullar det på.</p>
     <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
       <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Verktyg</th><th class="p-2 text-left">Installation</th></tr></thead>
       <tbody class="divide-y">
@@ -64,8 +64,8 @@
 
   <!-- Byggkedja -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Byggkedjan</h2>
-    <p class="mt-3 mb-3">Så här går din assembler-kod från en textfil till körbar kod i processorn. Tre steg, helt automatiskt — PlatformIO sköter allt.</p>
+    <h2>Byggkedjan</h2>
+    <p>Så här går din assembler-kod från en textfil till körbar kod i processorn. Tre steg, helt automatiskt — PlatformIO sköter allt.</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><codeprogram_hello.asm  ──ca65──▶  program_hello.o  ──ld65──▶  program_hello.bin  ──bin2h.py──▶  program.h
                                                           │
                                               (2048 bytes kod + 6 bytes vektorer)
@@ -75,8 +75,8 @@
 
   <!-- Minneskarta -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Minneskarta — hela adressrymden ($0000–$FFFF)</h2>
-    <p class="mt-3 mb-3">6502-processorn har 16 adresslinjer = 64 KB adressrymd. Blockens höjd är proportionell mot deras storlek (1 px per 128 bytes, minst 8 px).</p>
+    <h2>Minneskarta — hela adressrymden ($0000–$FFFF)</h2>
+    <p>6502-processorn har 16 adresslinjer = 64 KB adressrymd. Blockens höjd är proportionell mot deras storlek (1 px per 128 bytes, minst 8 px).</p>
     <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
       <div class="flex items-center border-b border-gray-300" style="min-height:8px">
         <div class="w-20 text-right pr-3 text-gray-500">$FFFF</div>
@@ -125,13 +125,13 @@
       </div>
       <div class="text-right text-gray-500 pr-2">$0000</div>
     </div>
-    <p class="mt-3 mb-3"><strong>0xEA = NOP</strong> — ofarlig fallback. CPU:n hoppar över oanvända adresser. <strong>Gul markering</strong> = Arduino rör inte dessa adresser, den fysiska VIA-kretsen svarar.</p>
+    <p><strong>0xEA = NOP</strong> — ofarlig fallback. CPU:n hoppar över oanvända adresser. <strong>Gul markering</strong> = Arduino rör inte dessa adresser, den fysiska VIA-kretsen svarar.</p>
   </section>
 
   <!-- Byggskript -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">PlatformIO-byggskript</h2>
-    <p class="mt-3 mb-3"><code>scripts/build_asm.py</code> är en <strong>pre-build hook</strong> som PlatformIO kör före C++-kompileringen. Den anropar ca65, ld65 och bin2h.py i sekvens. Konfigureras i <code>platformio.ini</code> med <code>extra_scripts = pre:scripts/build_asm.py</code>.</p>
+    <h2>PlatformIO-byggskript</h2>
+    <p><code>scripts/build_asm.py</code> är en <strong>pre-build hook</strong> som PlatformIO kör före C++-kompileringen. Den anropar ca65, ld65 och bin2h.py i sekvens. Konfigureras i <code>platformio.ini</code> med <code>extra_scripts = pre:scripts/build_asm.py</code>.</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-python"># Byggscript för PlatformIO — anropas före C++-kompilering
 # Kör ca65 + ld65 för att assemblera program_hello.asm → program_hello.h
 
@@ -186,8 +186,8 @@ def build_asm(target, source, env):
 # Registrera som pre-build hook
 env.AddPreAction("buildprog", build_asm)</code></pre>
 
-    <h3 class="font-bold mt-4 mb-2">bin2h.py — binär till C-header</h3>
-    <p class="mt-3 mb-3">Konverterar <code>program_hello.bin</code> till <code>PROGRAM[]</code> (en <code>PROGMEM</code>-array) som <code>main.cpp</code> inkluderar.</p>
+    <h3>bin2h.py — binär till C-header</h3>
+    <p>Konverterar <code>program_hello.bin</code> till <code>PROGRAM[]</code> (en <code>PROGMEM</code>-array) som <code>main.cpp</code> inkluderar.</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-python">#!/usr/bin/env python3
 """bin2h.py — konvertera program_hello.bin till program.h (C-header med byte-array)."""
 
@@ -232,8 +232,8 @@ if __name__ == '__main__':
 
   <!-- 6502-programmet -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">6502-programmet i assembler</h2>
-    <p class="mt-3 mb-3">Fil: <code>asm/program_hello.asm</code>. Samma 4-radersprogram som steg 7 — men nu som läsbar assembler med labels, subrutiner och nollterminerade strängar.</p>
+    <h2>6502-programmet i assembler</h2>
+    <p>Fil: <code>asm/program_hello.asm</code>. Samma 4-radersprogram som steg 7 — men nu som läsbar assembler med labels, subrutiner och nollterminerade strängar.</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-x86asm">; ================================================================
 ; 6502-program för steg 8 — VIA LCD
 ; ================================================================
@@ -416,13 +416,13 @@ line4: .byte "smutje.se 2026", 0
     .word $0000       ; NMI   — används inte
     .word reset       ; RESET — här börjar programmet ($8000)
     .word $0000       ; IRQ   — används inte</code></pre>
-    <p class="mt-3 mb-3">Komplett assembler-kod: <code>Mega_2560_6502/asm/program_hello.asm</code>.</p>
+    <p>Komplett assembler-kod: <code>Mega_2560_6502/asm/program_hello.asm</code>.</p>
   </section>
 
   <!-- Arduino-kod -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Arduino-kod — setup()</h2>
-    <p class="mt-3 mb-3">Enda skillnaden från steg 7: programmet laddas från <code>PROGRAM[]</code> istället för hårdkodade <code>write_mem()</code>.</p>
+    <h2>Arduino-kod — setup()</h2>
+    <p>Enda skillnaden från steg 7: programmet laddas från <code>PROGRAM[]</code> istället för hårdkodade <code>write_mem()</code>.</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 8 — assembler-bygge med ca65
@@ -552,23 +552,23 @@ void loop() {
 
   <!-- Användning -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Så här använder du det</h2>
+    <h2>Så här använder du det</h2>
     <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-3">
-      <p class="mt-3 mb-3"><strong>1. Redigera assembler-koden:</strong></p>
+      <p><strong>1. Redigera assembler-koden:</strong></p>
       <pre><code class="apache">nano asm/program_hello.asm</code></pre>
 
-      <p class="mt-3 mb-3"><strong>2. Bygg och ladda upp (Windows-maskinen):</strong></p>
+      <p><strong>2. Bygg och ladda upp (Windows-maskinen):</strong></p>
       <pre><code class="apache">pio run -t upload -t monitor</code></pre>
 
-      <p class="mt-3 mb-3"><strong>Viktigt:</strong> <code>platformio.ini</code> måste ha <code>build_src_filter = +&lt;*&gt; -&lt;program.asm&gt;</code> för att förhindra att AVR-assemblern försöker kompilera 6502-koden.</p>
+      <p><strong>Viktigt:</strong> <code>platformio.ini</code> måste ha <code>build_src_filter = +&lt;*&gt; -&lt;program.asm&gt;</code> för att förhindra att AVR-assemblern försöker kompilera 6502-koden.</p>
 
-      <p class="mt-3 mb-3">Vid varje bygge körs <code>ca65</code> → <code>ld65</code> → <code>bin2h.py</code> automatiskt. Ändrar du <code>program_hello.asm</code> byggs allt om.</p>
+      <p>Vid varje bygge körs <code>ca65</code> → <code>ld65</code> → <code>bin2h.py</code> automatiskt. Ändrar du <code>program_hello.asm</code> byggs allt om.</p>
     </div>
   </section>
 
   <!-- Testning -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Testning och felsökning</h2>
+    <h2>Testning och felsökning</h2>
     <ol class="list-decimal pl-5 space-y-1 text-gray-700">
       <li>Öppna terminal och kör 
         <pre><code class="apache">pio run -e step8 -t upload -t monitor</code></pre></li>
@@ -580,7 +580,7 @@ void loop() {
       <span class="text-green-700">Samma resultat som steg 7, men programmet är nu byggt från en .asm-fil med ca65.</span>
     </div>
     <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
-      <h3 class="font-bold mt-4 mb-2">Om det inte fungerar</h3>
+      <h3>Om det inte fungerar</h3>
       <ul class="list-disc pl-5 space-y-1">
         <li><strong>ca65: command not found?</strong> Installera cc65: <pre><code class="apache">sudo apt install cc65</code></pre></li>
         <li><strong>"No such file: program.h"?</strong> Första bygget måste generera den. Kör <pre><code class="apache">pio run -e step8</code></pre> två gånger om det krävs.</li>

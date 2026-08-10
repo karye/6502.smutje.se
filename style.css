@@ -13,3 +13,22 @@ code {
     font-weight: 600;
     color: cornflowerblue;
 }
+h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+h2 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+h3 {
+  font-weight: 700;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+p {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}

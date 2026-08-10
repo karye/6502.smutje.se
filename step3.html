@@ -29,23 +29,23 @@
 </nav>
 
 <main class="max-w-5xl mx-auto px-4 py-8">
-  <h1 class="text-2xl font-bold mb-6">Steg 3 — databuss och minne</h1>
+  <h1>Steg 3 — databuss och minne</h1>
 
   <!-- Mål -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Mål</h2>
+    <h2>Mål</h2>
     <div class="text-gray-700 space-y-3">
-      <p class="mt-3 mb-3">Hittills har CPU:n kunnat tala om <em>var</em> den vill läsa (adressbussen). Nu kopplar vi in <strong>databussen</strong> — 8 ledningar som bär den faktiska informationen mellan CPU:n och minnet. Utan databuss kan CPU:n inte hämta instruktioner och är helt blind.</p>
-      <p class="mt-3 mb-3">Vi kopplar också in <strong>R/W</strong>-signalen (pin 34). Den talar om ifall CPU:n vill läsa (HÖG) eller skriva (LÅG). Arduinon använder denna för att veta om den ska skicka data till CPU:n eller ta emot.</p>
-      <p class="mt-3 mb-3">Arduinon blir nu en <strong>minnesemulator</strong>: en array <code>ram[1024]</code> lagrar data, och i varje klockcykel kollar Arduinon adressen och R/W — om CPU:n läser, lägger den ut rätt byte på databussen via <code>PORTA</code>. Om CPU:n skriver, läser Arduinon av vad som skrevs.</p>
-      <p class="mt-3 mb-3">Vi laddar ett minimalt 6502-program på <code>$8000</code>: en enda <strong>NOP</strong>-instruktion (<code>$EA</code>) som gör ingenting och går vidare till nästa adress — vilket också är NOP. Resultat: CPU:n loopar för evigt, och vi kan följa varje steg i serieövervakaren.</p>
+      <p>Hittills har CPU:n kunnat tala om <em>var</em> den vill läsa (adressbussen). Nu kopplar vi in <strong>databussen</strong> — 8 ledningar som bär den faktiska informationen mellan CPU:n och minnet. Utan databuss kan CPU:n inte hämta instruktioner och är helt blind.</p>
+      <p>Vi kopplar också in <strong>R/W</strong>-signalen (pin 34). Den talar om ifall CPU:n vill läsa (HÖG) eller skriva (LÅG). Arduinon använder denna för att veta om den ska skicka data till CPU:n eller ta emot.</p>
+      <p>Arduinon blir nu en <strong>minnesemulator</strong>: en array <code>ram[1024]</code> lagrar data, och i varje klockcykel kollar Arduinon adressen och R/W — om CPU:n läser, lägger den ut rätt byte på databussen via <code>PORTA</code>. Om CPU:n skriver, läser Arduinon av vad som skrevs.</p>
+      <p>Vi laddar ett minimalt 6502-program på <code>$8000</code>: en enda <strong>NOP</strong>-instruktion (<code>$EA</code>) som gör ingenting och går vidare till nästa adress — vilket också är NOP. Resultat: CPU:n loopar för evigt, och vi kan följa varje steg i serieövervakaren.</p>
     </div>
   </section>
 
   <!-- Nya komponenter -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Nya komponenter</h2>
-    <p class="mt-3 mb-3">Plocka fram dessa ur komponentlådan. Inga överraskningar — bara det som tillkommer i detta steg.</p>
+    <h2>Nya komponenter</h2>
+    <p>Plocka fram dessa ur komponentlådan. Inga överraskningar — bara det som tillkommer i detta steg.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr></thead>
@@ -62,8 +62,8 @@
 
   <!-- Kopplingsschema -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
-    <p class="mt-3 mb-3">Här ser du hela kopplingen på en bild — alla komponenter och ledningar precis som de ska sitta på kopplingsdäcket.</p>
+    <h2>Kopplingsschema</h2>
+    <p>Här ser du hela kopplingen på en bild — alla komponenter och ledningar precis som de ska sitta på kopplingsdäcket.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-3.png" alt="Steg 3 — databuss och minne" class="w-full">
     </div>
@@ -71,8 +71,8 @@
 
     <!-- Kretstabell -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Kopplingar</h2>
-    <p class="mt-3 mb-3">Alla kopplingar för detta steg — från strömmatning till signaler. Varje pinne, vart den går, och <strong>varför</strong>.</p>
+    <h2>Kopplingar</h2>
+    <p>Alla kopplingar för detta steg — från strömmatning till signaler. Varje pinne, vart den går, och <strong>varför</strong>.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -102,8 +102,8 @@
 
   <!-- Minneskarta -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Minneskarta ($0000–$FFFF)</h2>
-    <p class="mt-3 mb-3">Arduinon emulerar minne med <code>ram[1024]</code> ($0000–$03FF), program på $8000, och vektorer på $FFFA. Blockens höjd är proportionell (1 px per 128 bytes, minst 8 px).</p>
+    <h2>Minneskarta ($0000–$FFFF)</h2>
+    <p>Arduinon emulerar minne med <code>ram[1024]</code> ($0000–$03FF), program på $8000, och vektorer på $FFFA. Blockens höjd är proportionell (1 px per 128 bytes, minst 8 px).</p>
     <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
       <div class="flex items-center border-b border-gray-300" style="min-height:8px">
         <div class="w-20 text-right pr-3 text-gray-500">$FFFF</div>
@@ -146,9 +146,9 @@
 
   <!-- Kod -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
-    <p class="mt-3 mb-3">Koden som laddas upp till Arduino Mega. Varje rad är kommenterad så du förstår vad som händer — kopiera, klistra in, ladda upp.</p>
-    <p class="mt-3 mb-3">Koden bygger vidare på steg 2. Den stora nyheten är <code>pulse()</code> som nu emulerar ett minne: läser adress + R/W, och antingen skickar data (<code>DDRA=0xFF, PORTA=…</code>) eller tar emot (<code>DDRA=0x00</code>).</p>
+    <h2>Arduino-kod</h2>
+    <p>Koden som laddas upp till Arduino Mega. Varje rad är kommenterad så du förstår vad som händer — kopiera, klistra in, ladda upp.</p>
+    <p>Koden bygger vidare på steg 2. Den stora nyheten är <code>pulse()</code> som nu emulerar ett minne: läser adress + R/W, och antingen skickar data (<code>DDRA=0xFF, PORTA=…</code>) eller tar emot (<code>DDRA=0x00</code>).</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 3 — databuss och minnesemulering
@@ -268,7 +268,7 @@ void loop() {
 
   <!-- Testning -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Testning och felsökning</h2>
+    <h2>Testning och felsökning</h2>
     <ol class="list-decimal pl-5 space-y-1 text-gray-700">
       <li>Öppna serieövervakaren (115200 baud)</li>
       <li>Du ska se: <code>R $FFFC</code>, <code>R $FFFD</code>, <code>R $8000</code>, <code>R $8001</code>…</li>
@@ -279,7 +279,7 @@ void loop() {
       <span class="text-green-700">CPU:n läser reset-vektor, hoppar till $8000, exekverar NOP i loop.</span>
     </div>
     <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
-      <h3 class="font-bold mt-4 mb-2">Om det inte fungerar</h3>
+      <h3>Om det inte fungerar</h3>
       <ul class="list-disc pl-5 space-y-1">
         <li><strong>Ser du <code>W $0</code> eller <code>W $1</code>?</strong> CPU:n driver inte bussarna. Kontrollera BE (måste vara HÖG) och att PHI2 når CPU:n.</li>
         <li><strong>Ser du <code>R $FFFC</code> men inget mer?</strong> Databussen är felaktig. Kontrollera D22–D29 och att 100Ω-motstånden sitter på alla 8 ledningar.</li>

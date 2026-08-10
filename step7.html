@@ -30,28 +30,28 @@
 
 <main class="max-w-5xl mx-auto px-4 py-8">
 
-  <h1 class="text-2xl font-bold mb-6">Steg 7 — VIA + LCD, styrd av 6502</h1>
+  <h1>Steg 7 — VIA + LCD, styrd av 6502</h1>
 
   <!-- Mål -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Mål</h2>
+    <h2>Mål</h2>
     <div class="text-gray-700 space-y-3">
-      <p class="mt-3 mb-3">I steg 6 styrde Arduino LCD-displayen direkt. Nu tar vi nästa stora kliv: vi kopplar in en <strong>W65C22 VIA</strong> (Versatile Interface Adapter) — en I/O-krets som ger 6502-processorn 20 egna pinnar att styra. VIAn sitter på CPU:ns adress- och databuss, precis som ett RAM-minne, men istället för att lagra data styr den fysiska pinnar.</p>
-      <p class="mt-3 mb-3">En <strong>74HC00</strong> (två NAND-grindar) avkodar adressbussen så att VIA:n hamnar på adress <code>$4000–$400F</code>. U4A inverterar A15, U4B NAND:ar med A14 — resultat: VIA aktiveras när A14=1 och A15=0.</p>
-      <p class="mt-3 mb-3">6502-programmet på <code>$8000</code> gör följande:</p>
+      <p>I steg 6 styrde Arduino LCD-displayen direkt. Nu tar vi nästa stora kliv: vi kopplar in en <strong>W65C22 VIA</strong> (Versatile Interface Adapter) — en I/O-krets som ger 6502-processorn 20 egna pinnar att styra. VIAn sitter på CPU:ns adress- och databuss, precis som ett RAM-minne, men istället för att lagra data styr den fysiska pinnar.</p>
+      <p>En <strong>74HC00</strong> (två NAND-grindar) avkodar adressbussen så att VIA:n hamnar på adress <code>$4000–$400F</code>. U4A inverterar A15, U4B NAND:ar med A14 — resultat: VIA aktiveras när A14=1 och A15=0.</p>
+      <p>6502-programmet på <code>$8000</code> gör följande:</p>
       <ol class="list-decimal pl-5 space-y-1">
         <li>Sätter VIA:ns portar som utgångar</li>
         <li>Initierar LCD:n i 8-bitarsläge (8-bitars databuss, 2 rader, 5×8 font, display on, entry mode)</li>
         <li>Skriver två rader text genom att lägga ASCII-värden på port B och pulsa enable-signalen på port A — sedan <strong>clear display</strong> och loopa om från början</li>
       </ol>
-      <p class="mt-3 mb-3">När allt fungerar har vi en dator där <strong>CPU:n själv styr I/O</strong> via minnesmappade adresser. Arduino är nu bara minnesemulator och klocka — all logik för LCD:n körs på 6502.</p>
+      <p>När allt fungerar har vi en dator där <strong>CPU:n själv styr I/O</strong> via minnesmappade adresser. Arduino är nu bara minnesemulator och klocka — all logik för LCD:n körs på 6502.</p>
     </div>
   </section>
 
   <!-- Nya komponenter -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Nya komponenter</h2>
-    <p class="mt-3 mb-3">Plocka fram dessa ur komponentlådan. Inga överraskningar — bara det som tillkommer i detta steg.</p>
+    <h2>Nya komponenter</h2>
+    <p>Plocka fram dessa ur komponentlådan. Inga överraskningar — bara det som tillkommer i detta steg.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th><th class="p-2 text-left">Not</th></tr></thead>
@@ -67,8 +67,8 @@
 
   <!-- Kopplingsschema -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
-    <p class="mt-3 mb-3">Här ser du hela kopplingen på en bild — alla komponenter och ledningar precis som de ska sitta på kopplingsdäcket.</p>
+    <h2>Kopplingsschema</h2>
+    <p>Här ser du hela kopplingen på en bild — alla komponenter och ledningar precis som de ska sitta på kopplingsdäcket.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-7.png" alt="Steg 7 — VIA + LCD" class="w-full">
     </div>
@@ -76,8 +76,8 @@
 
   <!-- W65C22 pinout -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">W65C22 VIA — pinout</h2>
-    <p class="mt-3 mb-3">DIP-40-kapsel. Två 8-bitars I/O-portar (PA, PB), 4 kontrollpinnar (CA1–CB2), bussanslutning. Samma kapsel som CPU:n — var noga med orienteringen.</p>
+    <h2>W65C22 VIA — pinout</h2>
+    <p>DIP-40-kapsel. Två 8-bitars I/O-portar (PA, PB), 4 kontrollpinnar (CA1–CB2), bussanslutning. Samma kapsel som CPU:n — var noga med orienteringen.</p>
     <div class="flex justify-center">
       <div class="p-2 inline-flex bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-sm leading-relaxed">
         <div class="flex flex-col justify-between py-2">
@@ -139,13 +139,13 @@
         </div>
       </div>
     </div>
-    <p class="mt-3 mb-3"><span class="text-green-300">■</span> Port A/B &nbsp; <span class="text-purple-300">■</span> Kontroll/buss &nbsp; <span class="text-red-300">■</span> Ström.</p>
+    <p><span class="text-green-300">■</span> Port A/B &nbsp; <span class="text-purple-300">■</span> Kontroll/buss &nbsp; <span class="text-red-300">■</span> Ström.</p>
   </section>
 
   <!-- 74HC00 pinout -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">74HC00 — pinout</h2>
-    <p class="mt-3 mb-3">DIP-14-kapsel. Fyra 2-ingångars NAND-grindar. U4A+U4B används för VIA-avkodning, U4C+U4D är lediga (används för SRAM i steg 9).</p>
+    <h2>74HC00 — pinout</h2>
+    <p>DIP-14-kapsel. Fyra 2-ingångars NAND-grindar. U4A+U4B används för VIA-avkodning, U4C+U4D är lediga (används för SRAM i steg 9).</p>
     <div class="flex justify-center">
       <div class="p-2 inline-flex bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-sm leading-relaxed">
         <div class="flex flex-col justify-between py-2">
@@ -181,16 +181,16 @@
         </div>
       </div>
     </div>
-    <p class="mt-3 mb-3"><span class="text-blue-300">■</span> U4A (NAND) &nbsp; <span class="text-green-300">■</span> U4B (NAND) &nbsp; <span class="text-purple-300">■</span> U4C+U4D (lediga) &nbsp; <span class="text-red-300">■</span> Ström.</p>
+    <p><span class="text-blue-300">■</span> U4A (NAND) &nbsp; <span class="text-green-300">■</span> U4B (NAND) &nbsp; <span class="text-purple-300">■</span> U4C+U4D (lediga) &nbsp; <span class="text-red-300">■</span> Ström.</p>
   </section>
 
   <!-- Kretstabeller -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Kopplingar — krets för krets</h2>
-    <p class="mt-3 mb-3">Här är varenda pinne på varenda krets — vad den heter, vart den går, och varför just den kopplingen behövs. Fyra kretsar, fyra tabeller.</p>
+    <h2>Kopplingar — krets för krets</h2>
+    <p>Här är varenda pinne på varenda krets — vad den heter, vart den går, och varför just den kopplingen behövs. Fyra kretsar, fyra tabeller.</p>
 
     <!-- W65C02S -->
-    <h3 class="font-bold mt-4 mb-2">W65C02S CPU</h3>
+    <h3>W65C02S CPU</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -212,7 +212,7 @@
     </div>
 
     <!-- W65C22 -->
-    <h3 class="font-bold mt-6 mb-2">W65C22 VIA</h3>
+    <h3>W65C22 VIA</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -234,7 +234,7 @@
     </div>
 
     <!-- 74HC00 -->
-    <h3 class="font-bold mt-6 mb-2">74HC00 (adressavkodning)</h3>
+    <h3>74HC00 (adressavkodning)</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Grind</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -249,10 +249,10 @@
         </tbody>
       </table>
     </div>
-    <p class="mt-3 mb-3"><strong>Logik:</strong> A15 inverteras av U4A. U4B gör (NOT A15) NAND A14 → LÅG när A15=0 och A14=1. VIAn aktiveras alltså vid adress <code>$4000–$7FFF</code>. CPU:ns A0–A3 går till VIAns RS0–RS3 vilket ger 16 register på <code>$4000–$400F</code>.</p>
+    <p><strong>Logik:</strong> A15 inverteras av U4A. U4B gör (NOT A15) NAND A14 → LÅG när A15=0 och A14=1. VIAn aktiveras alltså vid adress <code>$4000–$7FFF</code>. CPU:ns A0–A3 går till VIAns RS0–RS3 vilket ger 16 register på <code>$4000–$400F</code>.</p>
 
     <!-- LCD -->
-    <h3 class="font-bold mt-6 mb-2">LCD 16×2 (parallell)</h3>
+    <h3>LCD 16×2 (parallell)</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -273,8 +273,8 @@
 
   <!-- Minneskarta -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Minneskarta — hela adressrymden ($0000–$FFFF)</h2>
-    <p class="mt-3 mb-3">6502-processorn har 16 adresslinjer = 64 KB adressrymd. Arduinon svarar på adresser där den har data, och tri-statar vid VIA-adresser så den fysiska kretsen kan svara. Blockens höjd är proportionell mot deras storlek (1 px per 128 bytes, minst 8 px).</p>
+    <h2>Minneskarta — hela adressrymden ($0000–$FFFF)</h2>
+    <p>6502-processorn har 16 adresslinjer = 64 KB adressrymd. Arduinon svarar på adresser där den har data, och tri-statar vid VIA-adresser så den fysiska kretsen kan svara. Blockens höjd är proportionell mot deras storlek (1 px per 128 bytes, minst 8 px).</p>
     <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
       <div class="flex items-center border-b border-gray-300" style="min-height:8px">
         <div class="w-20 text-right pr-3 text-gray-500">$FFFF</div>
@@ -323,15 +323,15 @@
       </div>
       <div class="text-right text-gray-500 pr-2">$0000</div>
     </div>
-    <p class="mt-3 mb-3"><strong>0xEA = NOP</strong> — ofarlig fallback. CPU:n hoppar över oanvända adresser. <strong>Gul markering</strong> = Arduino rör inte dessa adresser, den fysiska VIA-kretsen svarar.</p>
+    <p><strong>0xEA = NOP</strong> — ofarlig fallback. CPU:n hoppar över oanvända adresser. <strong>Gul markering</strong> = Arduino rör inte dessa adresser, den fysiska VIA-kretsen svarar.</p>
   </section>
 
   <!-- Programmering -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">6502-program — två rader via VIA</h2>
-    <p class="mt-3 mb-3">Programmet ligger på <code>$8000</code>: (1) sätter VIA-portar som utgångar, (2) initierar LCD i 8-bitarsläge, (3) skriver två rader text, (4) clear display och loopa om och loopa om. För varje byte: lägg data på PORTB, pulsa E (PA2) på PORTA.</p>
+    <h2>6502-program — två rader via VIA</h2>
+    <p>Programmet ligger på <code>$8000</code>: (1) sätter VIA-portar som utgångar, (2) initierar LCD i 8-bitarsläge, (3) skriver två rader text, (4) clear display och loopa om och loopa om. För varje byte: lägg data på PORTB, pulsa E (PA2) på PORTA.</p>
 
-    <h3 class="font-bold mt-4 mb-2">VIAns register (adress <code>$4000</code>–<code>$4003</code>)</h3>
+    <h3>VIAns register (adress <code>$4000</code>–<code>$4003</code>)</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Adress</th><th class="p-2 text-left">Register</th><th class="p-2 text-left">Funktion</th></tr></thead>
@@ -344,15 +344,15 @@
       </table>
     </div>
 
-    <h3 class="font-bold mt-4 mb-2">Att skriva ett tecken till LCD</h3>
+    <h3>Att skriva ett tecken till LCD</h3>
     <ol class="list-decimal pl-5 space-y-1 text-gray-700 text-sm mb-3">
       <li><strong>Sätt data:</strong> <code>STA $4000</code> — skicka ASCII-tecknet till PORTB (LCD DB0–DB7)</li>
       <li><strong>Sätt RS=1, E=1:</strong> <code>LDA #$05; STA $4001</code> — PA0=RS=1 (data), PA2=E=1</li>
       <li><strong>Sätt E=0:</strong> <code>LDA #$01; STA $4001</code> — PA2=E=0 (fallande flank → LCD läser)</li>
     </ol>
 
-    <h3 class="font-bold mt-4 mb-2">Programmet i maskinkod</h3>
-    <p class="mt-3 mb-3">Tabellen nedan visar hur Arduino bygger 6502-programmet i minnet, byte för byte.
+    <h3>Programmet i maskinkod</h3>
+    <p>Tabellen nedan visar hur Arduino bygger 6502-programmet i minnet, byte för byte.
       Första delen initierar VIA-portarna och LCD-displayen (8-bitarsläge, 2 rader, 5&times;8 font).
       Därefter skrivs en textrad i taget: cursor-positionering (&rarr; rad 1), RS=1 (teckenläge),
       och så varje ASCII-tecken med en enable-puls. Efter sista tecknet kommer clear display
@@ -386,7 +386,7 @@
         </tbody>
       </table>
     </div>
-    <p class="mt-3 mb-3">Komplett Arduino-kod för steg 7 — programmet som körs på Arduino Mega 2560:</p>
+    <p>Komplett Arduino-kod för steg 7 — programmet som körs på Arduino Mega 2560:</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 #include &lt;Arduino.h&gt;
 
@@ -669,7 +669,7 @@ void loop() {
 
   <!-- Testning och diagnostik -->
   <section class="mb-8">
-    <h2 class="text-lg font-bold mb-2">Testning och felsökning</h2>
+    <h2>Testning och felsökning</h2>
     <ol class="list-decimal pl-5 space-y-1 text-gray-700">
       <li>Ladda upp koden och öppna serieövervakaren (115200 baud)</li>
       <li>Verifiera att CPU:n startar: du ska se <code>R $FFFC</code>, <code>R $FFFD</code>, <code>R $8000</code>…</li>
@@ -682,11 +682,11 @@ void loop() {
       <span class="text-green-700">Fyra rader text på LCD:n, helt styrd av 6502 via VIA:n. Arduinon är nu bara minnesemulator och klocka.</span>
     </div>
 
-    <h3 class="font-bold mt-6 mb-2">Om det inte fungerar</h3>
+    <h3>Om det inte fungerar</h3>
     <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-3">
-      <p class="mt-3 mb-3"><strong>1. CPU:n startar inte?</strong> Ser du <code>W $0</code> eller <code>W $1</code>? Kontrollera BE (HÖG), PHI2 (pulser), RESB (HÖG efter reset).</p>
-      <p class="mt-3 mb-3"><strong>2. Ser inga $4xxx-adresser?</strong> Dubbelkolla 74HC00-kopplingen och att VIA:ns bussanslutningar sitter rätt.</p>
-      <p class="mt-3 mb-3"><strong>3. Mät med multimeter:</strong></p>
+      <p><strong>1. CPU:n startar inte?</strong> Ser du <code>W $0</code> eller <code>W $1</code>? Kontrollera BE (HÖG), PHI2 (pulser), RESB (HÖG efter reset).</p>
+      <p><strong>2. Ser inga $4xxx-adresser?</strong> Dubbelkolla 74HC00-kopplingen och att VIA:ns bussanslutningar sitter rätt.</p>
+      <p><strong>3. Mät med multimeter:</strong></p>
       <ul class="list-disc pl-5 space-y-1">
         <li>PHI2 (CPU pin 37): ~2.5V medel (20 Hz fyrkant)</li>
         <li>BE (CPU pin 36): >4.8V</li>
@@ -694,9 +694,9 @@ void loop() {
         <li>VIA VDD (pin 20): >4.8V</li>
         <li>74HC00 VCC (pin 14): >4.8V</li>
       </ul>
-      <p class="mt-3 mb-3"><strong>4. Arduino som logikanalysator:</strong> koppla D8 till en mätpunkt och lägg till i <code>pulse()</code>:</p>
+      <p><strong>4. Arduino som logikanalysator:</strong> koppla D8 till en mätpunkt och lägg till i <code>pulse()</code>:</p>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code>Serial.print(" D8="); Serial.print(digitalRead(8));</code></pre>
-      <p class="mt-3 mb-3"><strong>5. Vanliga missar:</strong></p>
+      <p><strong>5. Vanliga missar:</strong></p>
       <ul class="list-disc pl-5 space-y-1">
         <li>CS1 (VIA pin 24) flytande — måste ha +5V</li>
         <li>74HC00 VCC/GND glömt</li>

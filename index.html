@@ -31,26 +31,26 @@
 
     <!-- Hero -->
     <section class="mb-8">
-      <h1 class="text-2xl font-bold mb-6">W65C02 8-bitarsdator</h1>
-      <h2 class="text-lg font-bold mb-2">En hembyggd dator från grunden</h2>
+      <h1>W65C02 8-bitarsdator</h1>
+      <h2>En hembyggd dator från grunden</h2>
       <div class="text-gray-700 space-y-3">
-        <p class="mt-3 mb-3">
+        <p>
           Ända sedan jag först läste om hur enkla 8-bitarsprocessorer fungerar har jag drömt om att
           <strong>bygga en egen dator</strong>. Inte en snabb, inte en modern — utan en dator där
           <em>varje komponent går att förstå</em>. En dator där du kan följa varje etta och nolla
           från processorns instruktionsregister hela vägen ut till en lysdiod eller en LCD-display.
         </p>
-        <p class="mt-3 mb-3">
+        <p>
           Den drömmen har funnits där länge. Men att bränna EPROM, löda fast minneskretsar och
           bygga en hel dator på breadboard — det är ett <strong>jätteprojekt</strong>. Man vill ju
           testa, experimentera, göra om.
         </p>
-        <p class="mt-3 mb-3">
+        <p>
           Så kom <strong>W65C02S</strong> — en modern tillverkning av den klassiska 6502-processorn,
           fortfarande i DIP-40, fortfarande 8-bitars. 6502:an är legendarisk: den satt i Apple II, Commodore 64, Nintendo NES,
           Atari 2600 och BBC Micro — maskiner som tillsammans sålde i över 100 miljoner exemplar.
         </p>
-        <p class="mt-3 mb-3">
+        <p>
           Med en <strong>Arduino Mega 2560</strong> — en mikrokontroller med tillräckligt många
           I/O-pinnar kan vi emulera hela minnet. Plötsligt gick det att <strong>bygga en riktig
           6502-dator</strong>. Allt på kopplingsdäck. Allt går att ändra på
@@ -58,7 +58,7 @@
           unik möjlighet: en dator som är precis så långsam och begriplig att du kan följa med i
           varje klockcykel.
         </p>
-        <p class="mt-3 mb-3">
+        <p>
           Eftersom W65C02S är en <strong>statisk CMOS-krets</strong> kan klockan stoppas helt
           utan att processorn glömmer sitt tillstånd. Två fysiska knappar låter dig stega igenom
           programmet — en klockcykel eller en hel instruktion i taget. Du ser allt som händer,
@@ -69,23 +69,23 @@
 
     <!-- Hur fungerar 6502? -->
     <section class="mb-8">
-      <h2 class="text-lg font-bold mb-2">Hur fungerar en 6502-processor?</h2>
+      <h2>Hur fungerar en 6502-processor?</h2>
       <div class="text-gray-700 space-y-3">
 
-        <h3 class="font-bold mt-4 mb-2">Två bussar — adress och data</h3>
-        <p class="mt-3 mb-3">Processorn har två uppsättningar ledningar ut till världen. Den första är
+        <h3>Två bussar — adress och data</h3>
+        <p>Processorn har två uppsättningar ledningar ut till världen. Den första är
           <strong>adressbussen</strong> — 16 ledningar som tillsammans bildar ett tal
           mellan 0 och 65 535. Det talet är en minnesadress: <em>"jag vill läsa från adress 32 768"</em>,
           eller i hexadecimalt: <code>$8000</code>. Processorn lägger ut adressen på stiften A0–A15
           och alla kretsar på bussen ser den samtidigt.</p>
-        <p class="mt-3 mb-3">Den andra uppsättningen är <strong>databussen</strong> — 8 ledningar.
+        <p>Den andra uppsättningen är <strong>databussen</strong> — 8 ledningar.
           Här kommer svaret tillbaka. När processorn vill läsa från en adress lägger den ut adressen,
           sätter R/W-signalen till HÖG (Read), och väntar. Den krets som känner igen adressen — i vårt fall
           Arduino — lägger ut rätt byte på databussen. Processorn läser av den och går vidare till nästa
           instruktion.</p>
 
-        <h3 class="font-bold mt-4 mb-2">Instruktionscykeln — hämta, avkoda, utför</h3>
-        <p class="mt-3 mb-3">Varje gång processorn startar en ny instruktion tänder den <strong>SYNC</strong>-pinnen.
+        <h3>Instruktionscykeln — hämta, avkoda, utför</h3>
+        <p>Varje gång processorn startar en ny instruktion tänder den <strong>SYNC</strong>-pinnen.
           Det är processorns sätt att säga <em>"nu börjar jag på något nytt"</em>. Sedan följer en förutsägbar dans:</p>
         <ol class="list-decimal pl-5 space-y-1">
           <li><strong>Hämta opcode:</strong> processorn läser byten på den adress som programräknaren (PC) pekar på.
@@ -98,8 +98,8 @@
           <li><strong>Nästa:</strong> PC pekar nu på nästa opcode. Börja om från steg 1.</li>
         </ol>
 
-        <h3 class="font-bold mt-4 mb-2">Minneskartan — processorns värld</h3>
-        <p class="mt-3 mb-3">6502-processorn ser hela sitt universum som 65 536 adresser — varken mer eller mindre. Varje
+        <h3>Minneskartan — processorns värld</h3>
+        <p>6502-processorn ser hela sitt universum som 65 536 adresser — varken mer eller mindre. Varje
           adress måste ha <em>något</em> som svarar, annars läser processorn in slumpmässiga värden
           och kraschar. Vår Arduino ser till att <strong>varje adress alltid returnerar något</strong>.</p>
 
@@ -162,28 +162,28 @@
           <div class="text-right text-gray-500 pr-2">$0000</div>
         </div>
 
-        <p class="mt-3 mb-3">
+        <p>
           <strong>De gröna områdena</strong> är RAM — här kan du lagra variabler och processorn använder
           automatiskt stacken vid subrutinanrop. <strong>Det blå området</strong> är ditt program.
           <strong>Det lila längst upp</strong> är reset-vektorn: när processorn startar går den först till
           adress $FFFC, läser två bytes, och hoppar dit. I vårt fall står det $8000 där —
           processorn hoppar till ditt program.
         </p>
-        <p class="mt-3 mb-3">
+        <p>
           <strong>Det gula</strong> är W65C22 VIA — en fysisk I/O-krets som kopplas in i steg 7.
           När processorn skriver till adresser i detta område är det VIA-kretsen som svarar,
           inte Arduino. Arduino går ur vägen genom att tri-stata databussen.
         </p>
 
-        <h3 class="font-bold mt-4 mb-2">Arduino emulerar ROM?</h3>
-        <p class="mt-3 mb-3">
+        <h3>Arduino emulerar ROM?</h3>
+        <p>
           En 6502-dator från 1970-talet hade ROM och RAM som fysiska chips. Varje gång du ville
           testa ett nytt program fick du bränna ett nytt EPROM under UV-ljus — en process som tog
           20 minuter per försök. Arduino vänder på det här: <strong>du laddar upp ett nytt program
             på två sekunder över USB</strong>. Arduino läser av processorns adressbuss, slår upp rätt
           byte i sin interna array, och lägger ut den på databussen — allt inom samma klockcykel.
         </p>
-        <p class="mt-3 mb-3">
+        <p>
           Detta är inte en emulator i mjukvara — processorn kör på riktigt, med riktiga elektriska
           signaler. Arduinon är bara minnet. Det betyder att <strong>allt du lär dig om 6502:ans
             instruktionsuppsättning, timing och bussprotokoll gäller på riktigt</strong>. Du kan ta
@@ -191,8 +191,8 @@
           precis likadant.
         </p>
 
-        <h3 class="font-bold mt-4 mb-2">Hur läser Arduino adressbussen så snabbt?</h3>
-        <p class="mt-3 mb-3">
+        <h3>Hur läser Arduino adressbussen så snabbt?</h3>
+        <p>
           Arduino Mega har 54 digitala I/O-pinnar — nästan tillräckligt för att täcka 16 adresslinjer
           + 8 datalinjer + kontrollsignaler. Men den har också något bättre: <strong>portregister</strong>.
           Istället för att läsa en pinne i taget med <code>digitalRead()</code> (långsamt!) läser vi
@@ -203,7 +203,7 @@
           <li><strong>PORTK</strong> — 8 bitar, läser CPU:ns A8–A15</li>
           <li><strong>PORTA</strong> — 8 bitar, driver databussen D0–D7 (eller går tri-state)</li>
         </ul>
-        <p class="mt-3 mb-3">
+        <p>
           Tre registerläsningar, en villkorssats, och vi vet exakt vad processorn vill göra — redo
           att svara inom samma klockcykel.
         </p>
@@ -212,7 +212,7 @@
 
     <!-- Byggsteg -->
     <section class="mb-8">
-      <h2 class="text-lg font-bold mb-2">Byggsteg</h2>
+      <h2>Byggsteg</h2>
       <div class="text-gray-700 text-sm space-y-4">
 
         <div>
@@ -343,7 +343,7 @@
   </main>
 
   <footer class="border-t bg-white py-6 text-center text-sm text-gray-500">
-    <p class="mt-3 mb-3">W65C02 8-bitarsdator · <a href="https://github.com/karye/6502.smutje.se"
+    <p>W65C02 8-bitarsdator · <a href="https://github.com/karye/6502.smutje.se"
         class="underline hover:text-gray-700">GitHub</a></p>
   </footer>
 </body>
