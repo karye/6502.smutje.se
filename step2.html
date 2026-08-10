@@ -173,11 +173,12 @@
     <!-- Kod -->
     <section class="mb-8">
       <h2>Arduino-kod</h2>
-      <p>Koden som laddas upp till Arduino Mega. Varje rad är kommenterad så du
-        förstår vad som händer — kopiera, klistra in, ladda upp.</p>
-      <p>Koden gör tre saker: (1) håller CPU:n i reset i 5 klockcykler, (2) släpper
-        reset så CPU:n startar, (3) läser och skriver ut adressbussen i varje cykel. Första utskrifterna ska vara
-        <code>$FFFC</code> och <code>$FFFD</code> — reset-vektorn.</p>
+      <p>Koden som laddas upp till Arduino Mega. Koden gör tre saker: </p>
+      <ol>
+        <li>(1) håller CPU:n i reset i 5 klockcykler,</li>
+        <li>(2) släpper reset så CPU:n startar,</li>
+        <li>(3) läser och skriver ut adressbussen i varje cykel. Första utskrifterna ska vara <code>$FFFC</code> och <code>$FFFD</code> — reset-vektorn.</li>
+      </ol>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 2 — adressbuss och reset-sekvens
