@@ -30,7 +30,7 @@
 
   <main class="max-w-5xl mx-auto px-4 py-8">
 
-    <h1 class="text-2xl font-bold mb-6">Steg 2 — Adressbuss och reset</h1>
+    <h1 class="text-2xl font-bold mb-6">Steg 2 — adressbuss och reset</h1>
 
     <!-- Mål -->
     <section class="mb-8">
@@ -79,7 +79,7 @@
       <p class="mt-3 mb-3">Här ser du hela kopplingen på en bild — alla komponenter och ledningar
         precis som de ska sitta på kopplingsdäcket.</p>
       <div class="schematic bg-white rounded-lg shadow p-4">
-        <img src="schematics/steg-2.png" alt="Steg 2 — Adressbuss och reset" class="w-full">
+        <img src="schematics/steg-2.png" alt="Steg 2 — adressbuss och reset" class="w-full">
       </div>
     </section>
 
@@ -180,7 +180,7 @@
         <code>$FFFC</code> och <code>$FFFD</code> — reset-vektorn.</p>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
-// Steg 2 — Adressbuss och reset-sekvens
+// Steg 2 — adressbuss och reset-sekvens
 // ==============================================================
 // CPU:ns 16 adresslinjer (A0–A15) kopplas till Arduinons analoga
 // portar. Efter kontrollerad reset läser CPU:n alltid från
@@ -215,7 +215,7 @@ void setup() {
   DDRK = 0x00;                 // PORTK (A8–A15) = INPUT, läser CPU A8–A15
   DDRF = 0x00;                 // PORTF (A0–A7)  = INPUT, läser CPU A0–A7
 
-  Serial.println("Steg 2 — Adressbuss och reset");
+  Serial.println("Steg 2 — adressbuss och reset");
 
   // --- Reset-sekvens ---
   // W65C02S kräver minst 2 klockcykler med RESB låg. Vi kör 5.

@@ -30,7 +30,7 @@
 
 <main class="max-w-5xl mx-auto px-4 py-8">
 
-  <h1 class="text-2xl font-bold mb-6">Steg 8 — Assembler-bygge med ca65</h1>
+  <h1 class="text-2xl font-bold mb-6">Steg 8 — assembler-bygge med ca65</h1>
 
   <!-- Mål -->
   <section class="mb-8">
@@ -425,7 +425,7 @@ line4: .byte "smutje.se 2026", 0
     <p class="mt-3 mb-3">Enda skillnaden från steg 7: programmet laddas från <code>PROGRAM[]</code> istället för hårdkodade <code>write_mem()</code>.</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
-// Steg 8 — Assembler-bygge med ca65
+// Steg 8 — assembler-bygge med ca65
 // ==============================================================
 // 6502-programmet byggs från asm/program_hello.asm via ca65/ld65
 // → program_hello.h. PlatformIO kör assembler-stegen automatiskt.
@@ -517,7 +517,7 @@ void setup() {
   DDRK = 0x00; DDRF = 0x00; DDRA = 0x00;
 
   // Ladda 6502-programmet från assembler-bygget
-  Serial.println("Steg 8 — Assembler-bygge med ca65");
+  Serial.println("Steg 8 — assembler-bygge med ca65");
   Serial.print("Programstorlek: ");
   Serial.print(PROGRAM_SIZE);
   Serial.println(" bytes");

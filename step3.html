@@ -29,7 +29,7 @@
 </nav>
 
 <main class="max-w-5xl mx-auto px-4 py-8">
-  <h1 class="text-2xl font-bold mb-6">Steg 3 — Databuss och minne</h1>
+  <h1 class="text-2xl font-bold mb-6">Steg 3 — databuss och minne</h1>
 
   <!-- Mål -->
   <section class="mb-8">
@@ -65,7 +65,7 @@
     <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
     <p class="mt-3 mb-3">Här ser du hela kopplingen på en bild — alla komponenter och ledningar precis som de ska sitta på kopplingsdäcket.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
-      <img src="schematics/steg-3.png" alt="Steg 3 — Databuss och minne" class="w-full">
+      <img src="schematics/steg-3.png" alt="Steg 3 — databuss och minne" class="w-full">
     </div>
   </section>
 
@@ -151,7 +151,7 @@
     <p class="mt-3 mb-3">Koden bygger vidare på steg 2. Den stora nyheten är <code>pulse()</code> som nu emulerar ett minne: läser adress + R/W, och antingen skickar data (<code>DDRA=0xFF, PORTA=…</code>) eller tar emot (<code>DDRA=0x00</code>).</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
-// Steg 3 — Databuss och minnesemulering
+// Steg 3 — databuss och minnesemulering
 // ==============================================================
 // Arduino blir en fullständig minnesemulator. CPU:n får ett
 // NOP-program på $8000 och loopar för evigt — varje minnes-
@@ -248,7 +248,7 @@ void setup() {
   // Nästa adress är också $EA → oändlig loop.
   write_mem(0x8000, 0xEA);
 
-  Serial.println("Steg 3 — Databuss och minnesemulering");
+  Serial.println("Steg 3 — databuss och minnesemulering");
 
   // Reset-sekvens
   digitalWrite(RESB, LOW);
