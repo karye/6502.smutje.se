@@ -329,7 +329,13 @@
   <!-- Programmering -->
   <section class="mb-8">
     <h2>6502-program — två rader via VIA</h2>
-    <p>Programmet ligger på <code>$8000</code>: (1) sätter VIA-portar som utgångar, (2) initierar LCD i 8-bitarsläge, (3) skriver två rader text, (4) clear display och loopa om och loopa om. För varje byte: lägg data på PORTB, pulsa E (PA2) på PORTA.</p>
+    <p>Programmet ligger på <code>$8000</code>: </p>
+    <ol class="list-decimal pl-5 space-y-1 text-gray-700 text-sm mb-3">
+      <li>(1) sätter VIA-portar som utgångar,</li>
+      <li>(2) initierar LCD i 8-bitarsläge,</li>
+      <li>(3) skriver två rader text,</li>
+      <li>(4) clear display och loopa om och loopa om. För varje byte: lägg data på PORTB, pulsa E (PA2) på PORTA.</li>
+    </ol>
 
     <h3>VIAns register (adress <code>$4000</code>–<code>$4003</code>)</h3>
     <div class="overflow-x-auto">
