@@ -102,7 +102,7 @@
           <div class="flex items-center"><span class="w-24 text-right pr-2 text-purple-300">CB2</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
           <div class="flex items-center"><span class="w-24 text-right pr-2 text-red-300">VDD</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
         </div>
-        <div class="bg-gray-700 px-2 flex items-center border-2 border-gray-500">
+        <div class="bg-gray-700 px-2 flex items-stretch border-2 border-gray-500">
           <div class="flex flex-col justify-between py-2 h-full">
             <div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">1</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">2</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">3</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">4</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">5</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">6</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">7</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">8</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">9</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">10</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">11</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">12</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">13</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">14</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">15</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">16</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">17</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">18</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">19</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">20</span></div>
           </div>
@@ -157,7 +157,7 @@
           <div class="flex items-center"><span class="w-24 text-right pr-2 text-green-300">U4B ut</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
           <div class="flex items-center"><span class="w-24 text-right pr-2 text-red-300">GND</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
         </div>
-        <div class="bg-gray-700 px-2 flex items-center border-2 border-gray-500">
+        <div class="bg-gray-700 px-2 flex items-stretch border-2 border-gray-500">
           <div class="flex flex-col justify-between py-2 h-full">
             <div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">1</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">2</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">3</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">4</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">5</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">6</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">7</span></div>
           </div>
@@ -276,12 +276,12 @@
     <h2>Minneskarta — hela adressrymden ($0000–$FFFF)</h2>
     <p>6502-processorn har 16 adresslinjer = 64 KB adressrymd. Arduinon svarar på adresser där den har data, och tri-statar vid VIA-adresser så den fysiska kretsen kan svara. Blockens höjd är proportionell mot deras storlek (1 px per 128 bytes, minst 8 px).</p>
     <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
-      <div class="flex items-center border-b border-gray-300" style="min-height:8px">
+      <div class="flex items-stretch border-b border-gray-300" style="min-height:8px">
         <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
           <span class="text-gray-500">$FFFF</span>
           <span class="text-gray-400">$FFFA</span>
         </div>
-        <div class="flex-1 bg-purple-100 border-l border-r border-purple-300 px-2 flex items-stretch" style="min-height:8px">vectors[6] — NMI, RESET, IRQ</div>
+        <div class="flex-1 bg-purple-100 border-l border-r border-purple-300 px-2 flex items-center" style="min-height:8px">vectors[6] — NMI, RESET, IRQ</div>
         <div class="w-14 text-right text-gray-500 pr-2">6 B</div>
       </div>
       <div class="flex items-stretch border-b border-gray-300" style="height:239px">
@@ -289,7 +289,7 @@
         <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt (returnerar $EA = NOP)</div>
         <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~30 KB</div>
       </div>
-      <div class="flex items-center border-b border-gray-300" style="height:16px">
+      <div class="flex items-stretch border-b border-gray-300" style="height:16px">
         <div class="w-20 pr-3 flex flex-col justify-between text-right" style="height:16px">
           <span class="text-gray-500">$8800</span>
           <span class="text-gray-400">$8000</span>
@@ -302,7 +302,7 @@
         <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt</div>
         <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~16 KB</div>
       </div>
-      <div class="flex items-center border-b-2 border-yellow-500" style="min-height:8px">
+      <div class="flex items-stretch border-b-2 border-yellow-500" style="min-height:8px">
         <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
           <span class="text-gray-500">$4010</span>
           <span class="text-gray-400">$4000</span>
@@ -315,20 +315,20 @@
         <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt</div>
         <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~15 KB</div>
       </div>
-      <div class="flex items-center border-b border-gray-300" style="min-height:8px">
+      <div class="flex items-stretch border-b border-gray-300" style="min-height:8px">
         <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
           <span class="text-gray-500">$0400</span>
           <span class="text-gray-400">$0200</span>
         </div>
-        <div class="flex-1 bg-green-100 border-l border-r border-green-300 px-2 flex items-stretch" style="min-height:8px">ram[1024] — ledigt RAM</div>
+        <div class="flex-1 bg-green-100 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">ram[1024] — ledigt RAM</div>
         <div class="w-14 text-right text-gray-500 pr-2">512 B</div>
       </div>
-      <div class="flex items-center border-b border-gray-300" style="min-height:8px">
+      <div class="flex items-stretch border-b border-gray-300" style="min-height:8px">
         <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
           <span class="text-gray-500">$0200</span>
           <span class="text-gray-400">$0100</span>
         </div>
-        <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-stretch" style="min-height:8px">Stack (JSR/RTS, PHA/PLA)</div>
+        <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">Stack (JSR/RTS, PHA/PLA)</div>
         <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
       </div>
       <div class="flex items-stretch" style="min-height:8px">
@@ -336,7 +336,7 @@
           <span class="text-gray-500">$0100</span>
           <span class="text-gray-400">$0000</span>
         </div>
-        <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-stretch" style="min-height:8px">Zero page (snabbast)</div>
+        <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">Zero page (snabbast)</div>
         <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
       </div>
     </div>
