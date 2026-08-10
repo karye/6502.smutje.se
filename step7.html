@@ -352,6 +352,11 @@
     </ol>
 
     <h3 class="font-bold mt-4 mb-2">Programmet i maskinkod</h3>
+    <p class="text-gray-700 mb-3 text-sm">Tabellen nedan visar hur Arduino bygger 6502-programmet i minnet, byte för byte.
+      Första delen initierar VIA-portarna och LCD-displayen (8-bitarsläge, 2 rader, 5&times;8 font).
+      Därefter skrivs en textrad i taget: cursor-positionering (&rarr; rad 1), RS=1 (teckenläge),
+      och så varje ASCII-tecken med en enable-puls. Efter sista tecknet kommer clear display
+      och ett JMP-hopp tillbaka till början.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Steg</th><th class="p-2 text-left">Assembler</th><th class="p-2 text-left">Bytes</th><th class="p-2 text-left">Förklaring</th></tr></thead>
