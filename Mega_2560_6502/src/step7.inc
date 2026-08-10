@@ -237,72 +237,9 @@ void setup() {
   write_mem(next++, 0xA9); write_mem(next++, 0x01);  // RS=1
   write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
 
+  // Rad 2: smutje.se W65C02
   const char* line2 = "smutje.se W65C02";
   for (const char* p = line2; *p; p++) {
-    write_mem(next++, 0xA9); write_mem(next++, *p);
-    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x05);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x01);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-  }
-
-  // Rad 3: cursor till $14 (kommando $94)
-  write_mem(next++, 0xA9); write_mem(next++, 0x94);  // LDA #$94
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
-  write_mem(next++, 0xA9); write_mem(next++, 0x04);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-  write_mem(next++, 0xA9); write_mem(next++, 0x00);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-
-  write_mem(next++, 0xA9); write_mem(next++, 0x01);  // RS=1
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-
-  const char* line3 = "";
-  if (line3[0]) {
-    // Rad 3: cursor till $14 (kommando $94)
-    write_mem(next++, 0xA9); write_mem(next++, 0x94);  // LDA #$94
-    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x04);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x00);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x01);  // RS=1
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-  }
-  for (const char* p = line3; *p; p++) {
-    write_mem(next++, 0xA9); write_mem(next++, *p);
-    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x05);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x01);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-  }
-
-  // Rad 4: cursor till $54 (kommando $D4)
-  write_mem(next++, 0xA9); write_mem(next++, 0xD4);  // LDA #$D4
-  write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
-  write_mem(next++, 0xA9); write_mem(next++, 0x04);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-  write_mem(next++, 0xA9); write_mem(next++, 0x00);
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-
-  write_mem(next++, 0xA9); write_mem(next++, 0x01);  // RS=1
-  write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-
-  const char* line4 = "";
-  if (line4[0]) {
-    // Rad 4: cursor till $54 (kommando $D4)
-    write_mem(next++, 0xA9); write_mem(next++, 0xD4);  // LDA #$D4
-    write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x04);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x00);
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-    write_mem(next++, 0xA9); write_mem(next++, 0x01);  // RS=1
-    write_mem(next++, 0x8D); write_mem(next++, 0x01); write_mem(next++, 0x40);
-  }
-  for (const char* p = line4; *p; p++) {
     write_mem(next++, 0xA9); write_mem(next++, *p);
     write_mem(next++, 0x8D); write_mem(next++, 0x00); write_mem(next++, 0x40);
     write_mem(next++, 0xA9); write_mem(next++, 0x05);
