@@ -216,7 +216,7 @@
       <div class="text-gray-700 text-sm space-y-4">
 
         <div>
-          <strong class="text-gray-900">Steg 1 — Ström, klocka, reset</strong>
+          <h3>Steg 1 — ström, klocka, reset</h3>
           <ul class="list-disc pl-5 space-y-1 mt-1">
             <li>W65C02S får <strong>+5V och GND</strong> — processorn är spänningssatt men gör ingenting än</li>
             <li>Arduino D2 genererar en <strong>långsam fyrkantsvåg</strong> (1 Hz) till PHI2-ingången</li>
@@ -229,7 +229,7 @@
         </div>
 
         <div>
-          <strong class="text-gray-900">Steg 2 — Adressbuss A0–A15</strong>
+          <h3>Steg 2 — adressbuss A0–A15</h3>
           <ul class="list-disc pl-5 space-y-1 mt-1">
             <li>CPU:ns <strong>16 adresslinjer</strong> kopplas 1:1 till Arduinons analoga portar (PORTF + PORTK)</li>
             <li>/RESET kopplas till Arduino D4 — vi får <strong>kontrollerad reset</strong> istället för att CPU:n
@@ -242,7 +242,7 @@
         </div>
 
         <div>
-          <strong class="text-gray-900">Steg 3 — Databuss D0–D7 och minnesemulering</strong>
+          <h3>Steg 3 — databuss D0–D7 och minnesemulering</h3>
           <ul class="list-disc pl-5 space-y-1 mt-1">
             <li>8 datalinjer + R/W kopplas in via <strong>100Ω skyddsmotstånd</strong> — obligatoriska för att förhindra
               busskrockar</li>
@@ -257,7 +257,7 @@
         </div>
 
         <div>
-          <strong class="text-gray-900">Steg 4 — Manuell stegning med knappar</strong>
+          <h3>Steg 4 — manuell stegning med knappar</h3>
           <ul class="list-disc pl-5 space-y-1 mt-1">
             <li>Två <strong>tryckknappar</strong> (D11, D12) med <code>INPUT_PULLUP</code> — inga externa motstånd
               behövs</li>
@@ -271,7 +271,7 @@
         </div>
 
         <div>
-          <strong class="text-gray-900">Steg 5 — LCD-display (parallell 4-bit)</strong>
+          <h3>Steg 5 — LCD-display (parallell 4-bit)</h3>
           <ul class="list-disc pl-5 space-y-1 mt-1">
             <li>LCD 16×2 kopplas <strong>direkt till Arduino</strong> — RS→D5, E→D6, DB4–DB7→D10,D9,D8,D7</li>
             <li><code>LiquidCrystal</code>-biblioteket sköter all kommunikation — vi behöver bara tala om vilka pinnar
@@ -283,7 +283,7 @@
         </div>
 
         <div>
-          <strong class="text-gray-900">Steg 6 — Första egna 6502-programmet</strong>
+          <h3>Steg 6 — första egna 6502-programmet</h3>
           <ul class="list-disc pl-5 space-y-1 mt-1">
             <li>NOP ersätts med ett <strong>riktigt maskinkodsprogram</strong> på 9 bytes</li>
             <li><code>LDX #$00 · INX · STX $0200 · JMP $8002</code> — öka X-registret, spara, loopa</li>
@@ -295,7 +295,7 @@
         </div>
 
         <div>
-          <strong class="text-gray-900">Steg 7 — W65C22 VIA + 74HC00 adressavkodning</strong>
+          <h3>Steg 7 — W65C22 VIA + 74HC00 adressavkodning</h3>
           <ul class="list-disc pl-5 space-y-1 mt-1">
             <li><strong>W65C22 VIA</strong> (Versatile Interface Adapter) ger CPU:n 20 I/O-pinnar — två 8-bitarsportar +
               4 kontrollsignaler</li>
@@ -310,7 +310,7 @@
         </div>
 
         <div>
-          <strong class="text-gray-900">Steg 8 — Assembler-bygge med ca65</strong>
+          <h3>Steg 8 — assembler-bygge med ca65</h3>
           <ul class="list-disc pl-5 space-y-1 mt-1">
             <li>6502-programmet flyttas från hårdkodade hex-bytes till en <strong>riktig assembler-fil</strong>
               (<code>program.asm</code>)</li>
@@ -324,7 +324,7 @@
         </div>
 
         <div>
-          <strong class="text-gray-900">Steg 9 — Riktigt RAM (62256 SRAM)</strong>
+          <h3>Steg 9 — riktigt RAM (62256 SRAM)</h3>
           <ul class="list-disc pl-5 space-y-1 mt-1">
             <li><strong>62256 SRAM</strong> (32KB, DIP-28) — ett riktigt statiskt RAM-chip ersätter Arduinons
               mjukvaruemulering</li>
