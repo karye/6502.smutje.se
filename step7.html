@@ -330,7 +330,7 @@
   <section class="mb-8">
     <h2>6502-program — två rader via VIA</h2>
     <p>Programmet ligger på <code>$8000</code>: </p>
-    <ol class="list-decimal pl-5 space-y-1 text-gray-700 text-sm mb-3">
+    <ol class="list-decimal pl-5 space-y-1">
       <li>sätter VIA-portar som utgångar,</li>
       <li>initierar LCD i 8-bitarsläge,</li>
       <li>skriver två rader text,</li>
@@ -351,7 +351,7 @@
     </div>
 
     <h3>Att skriva ett tecken till LCD</h3>
-    <ol>
+    <ol class="list-decimal pl-5 space-y-1">
       <li><strong>Sätt data:</strong> <code>STA $4000</code> — skicka ASCII-tecknet till PORTB (LCD DB0–DB7)</li>
       <li><strong>Sätt RS=1, E=1:</strong> <code>LDA #$05; STA $4001</code> — PA0=RS=1 (data), PA2=E=1</li>
       <li><strong>Sätt E=0:</strong> <code>LDA #$01; STA $4001</code> — PA2=E=0 (fallande flank → LCD läser)</li>
