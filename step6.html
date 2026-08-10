@@ -43,72 +43,7 @@
     </div>
   </section>
 
-      <!-- Minneskarta -->
-  <section class="mb-8">
-    <h2>Minneskarta ($0000–$FFFF)</h2>
-    <p>6502-processorns 64 KB adressrymd, uppdelad i fyra områden:</p>
-    <ul class="list-disc pl-5 space-y-1 mb-3">
-      <li><strong>Lila</strong> ($FFFA–$FFFF): vektorer — processorn läser här efter reset för att veta var programmet börjar</li>
-      <li><strong>Blå</strong> ($8000–$87FF): vårt 6502-program — 9 bytes maskinkod som Arduino laddar in från <code>setup()</code></li>
-      <li><strong>Grön</strong> ($0000–$03FF): arbetsminne — zero page ($0000–$00FF, snabbast åtkomst), stack ($0100–$01FF, JSR/RTS/PHA/PLA), och ledigt RAM ($0200–$03FF). Här kan CPU:n läsa och skriva fritt</li>
-      <li><strong>Grå</strong>: oanvänt — Arduino returnerar $EA (NOP) så CPU:n hoppar bara vidare</li>
-    </ul>
-    <p>Blockens höjd är proportionell mot deras storlek.</p>
-    <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
-      <div class="flex items-stretch border-b border-gray-300" style="min-height:8px">
-        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
-          <span class="text-gray-500">$FFFF</span>
-          <span class="text-gray-400">$FFFA</span>
-        </div>
-        <div class="flex-1 bg-purple-100 border-l border-r border-purple-300 px-2 flex items-center" style="min-height:8px">vectors[6] — NMI, RESET, IRQ</div>
-        <div class="w-14 text-right text-gray-500 pr-2">6 B</div>
-      </div>
-      <div class="flex items-stretch border-b border-gray-300" style="height:239px">
-        <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$FFF9</div>
-        <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt (returnerar $EA = NOP)</div>
-        <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~30 KB</div>
-      </div>
-      <div class="flex items-stretch border-b border-gray-300" style="min-height:16px">
-        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:16px">
-          <span class="text-gray-500">$8800</span>
-          <span class="text-gray-400">$8000</span>
-        </div>
-        <div class="flex-1 bg-blue-100 border-l border-r border-blue-300 px-2 flex items-center">program[2048] — 6502-program</div>
-        <div class="w-14 text-right text-gray-500 pr-2">2 KB</div>
-      </div>
-      <div class="flex items-stretch border-b border-gray-300" style="height:128px">
-        <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$7FFF</div>
-        <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt</div>
-        <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~16 KB</div>
-      </div>
-      <div class="flex items-stretch border-b border-gray-300" style="min-height:8px">
-        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
-          <span class="text-gray-500">$0400</span>
-          <span class="text-gray-400">$0200</span>
-        </div>
-        <div class="flex-1 bg-green-100 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">ram[1024] — ledigt RAM</div>
-        <div class="w-14 text-right text-gray-500 pr-2">512 B</div>
-      </div>
-      <div class="flex items-stretch border-b border-gray-300" style="min-height:8px">
-        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
-          <span class="text-gray-500">$0200</span>
-          <span class="text-gray-400">$0100</span>
-        </div>
-        <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">Stack (JSR/RTS, PHA/PLA)</div>
-        <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
-      </div>
-      <div class="flex items-stretch" style="min-height:8px">
-        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
-          <span class="text-gray-500">$0100</span>
-          <span class="text-gray-400">$0000</span>
-        </div>
-        <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">Zero page (snabbast)</div>
-        <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
-      </div>
-    </div>
-    <p><strong>0xEA = NOP</strong> — ofarlig fallback. CPU:n hoppar över oanvända adresser.</p>
-  </section>
-
+      
 
 <!-- Kretstabell -->
   <section class="mb-8">
@@ -182,6 +117,73 @@
       <img src="schematics/steg-6.png" alt="Steg 6 — LCD kopplad till Arduino" class="w-full">
     </div>
   </section>
+
+  <!-- Minneskarta -->
+  <section class="mb-8">
+    <h2>Minneskarta ($0000–$FFFF)</h2>
+    <p>6502-processorns 64 KB adressrymd, uppdelad i fyra områden:</p>
+    <ul class="list-disc pl-5 space-y-1 mb-3">
+      <li><strong>Lila</strong> ($FFFA–$FFFF): vektorer — processorn läser här efter reset för att veta var programmet börjar</li>
+      <li><strong>Blå</strong> ($8000–$87FF): vårt 6502-program — 9 bytes maskinkod som Arduino laddar in från <code>setup()</code></li>
+      <li><strong>Grön</strong> ($0000–$03FF): arbetsminne — zero page ($0000–$00FF, snabbast åtkomst), stack ($0100–$01FF, JSR/RTS/PHA/PLA), och ledigt RAM ($0200–$03FF). Här kan CPU:n läsa och skriva fritt</li>
+      <li><strong>Grå</strong>: oanvänt — Arduino returnerar $EA (NOP) så CPU:n hoppar bara vidare</li>
+    </ul>
+    <p>Blockens höjd är proportionell mot deras storlek.</p>
+    <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
+      <div class="flex items-stretch border-b border-gray-300" style="min-height:8px">
+        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
+          <span class="text-gray-500">$FFFF</span>
+          <span class="text-gray-400">$FFFA</span>
+        </div>
+        <div class="flex-1 bg-purple-100 border-l border-r border-purple-300 px-2 flex items-center" style="min-height:8px">vectors[6] — NMI, RESET, IRQ</div>
+        <div class="w-14 text-right text-gray-500 pr-2">6 B</div>
+      </div>
+      <div class="flex items-stretch border-b border-gray-300" style="height:239px">
+        <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$FFF9</div>
+        <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt (returnerar $EA = NOP)</div>
+        <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~30 KB</div>
+      </div>
+      <div class="flex items-stretch border-b border-gray-300" style="min-height:16px">
+        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:16px">
+          <span class="text-gray-500">$8800</span>
+          <span class="text-gray-400">$8000</span>
+        </div>
+        <div class="flex-1 bg-blue-100 border-l border-r border-blue-300 px-2 flex items-center">program[2048] — 6502-program</div>
+        <div class="w-14 text-right text-gray-500 pr-2">2 KB</div>
+      </div>
+      <div class="flex items-stretch border-b border-gray-300" style="height:128px">
+        <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$7FFF</div>
+        <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt</div>
+        <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~16 KB</div>
+      </div>
+      <div class="flex items-stretch border-b border-gray-300" style="min-height:8px">
+        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
+          <span class="text-gray-500">$0400</span>
+          <span class="text-gray-400">$0200</span>
+        </div>
+        <div class="flex-1 bg-green-100 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">ram[1024] — ledigt RAM</div>
+        <div class="w-14 text-right text-gray-500 pr-2">512 B</div>
+      </div>
+      <div class="flex items-stretch border-b border-gray-300" style="min-height:8px">
+        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
+          <span class="text-gray-500">$0200</span>
+          <span class="text-gray-400">$0100</span>
+        </div>
+        <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">Stack (JSR/RTS, PHA/PLA)</div>
+        <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
+      </div>
+      <div class="flex items-stretch" style="min-height:8px">
+        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
+          <span class="text-gray-500">$0100</span>
+          <span class="text-gray-400">$0000</span>
+        </div>
+        <div class="flex-1 bg-green-50 border-l border-r border-green-300 px-2 flex items-center" style="min-height:8px">Zero page (snabbast)</div>
+        <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
+      </div>
+    </div>
+    <p><strong>0xEA = NOP</strong> — ofarlig fallback. CPU:n hoppar över oanvända adresser.</p>
+  </section>
+
 
   <!-- Kod -->
   <section class="mb-8">
