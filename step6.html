@@ -46,7 +46,14 @@
       <!-- Minneskarta -->
   <section class="mb-8">
     <h2>Minneskarta ($0000–$FFFF)</h2>
-    <p>Arduinon emulerar minne med <code>ram[1024]</code> ($0000–$03FF), program på $8000, och vektorer på $FFFA.</p>
+    <p>6502-processorns 64 KB adressrymd, uppdelad i fyra områden:</p>
+    <ul class="list-disc pl-5 space-y-1 mb-3">
+      <li><strong>Lila</strong> ($FFFA–$FFFF): vektorer — processorn läser här efter reset för att veta var programmet börjar</li>
+      <li><strong>Blå</strong> ($8000–$87FF): vårt 6502-program — 9 bytes maskinkod som Arduino laddar in från <code>setup()</code></li>
+      <li><strong>Grön</strong> ($0000–$03FF): arbetsminne — zero page, stack och ledigt RAM. Här kan CPU:n läsa och skriva fritt</li>
+      <li><strong>Grå</strong>: oanvänt — Arduino returnerar $EA (NOP) så CPU:n hoppar bara vidare</li>
+    </ul>
+    <p>Blockens höjd är proportionell mot deras storlek.</p>
     <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
       <div class="flex items-stretch border-b border-gray-300" style="min-height:8px">
         <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
