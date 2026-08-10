@@ -36,17 +36,17 @@
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Mål</h2>
     <div class="text-gray-700 space-y-3">
-      <p class="mb-2">I steg 3 körde CPU:n fritt i en NOP-loop — kul att se, men svårt att felsöka. Nu kopplar vi in <strong>två tryckknappar</strong> och <strong>SYNC-signalen</strong> för att kunna styra exekveringen manuellt. Det här är en av de stora fördelarna med W65C02S: eftersom den är statisk CMOS kan klockan stoppas hur länge som helst.</p>
-      <p class="mb-2"><strong>Knapp 1 (klocksteg):</strong> varje tryckning ger en enda klockcykel. Perfekt för att se vad som händer på bussen i ultrarapid.</p>
-      <p class="mb-2"><strong>Knapp 2 (instruktionssteg):</strong> kör klockan tills CPU:n signalerar att en ny instruktion har hämtats. SYNC-pinnen (pin 7) går HÖG vid varje opcode fetch. Vi pulserar klockan tills SYNC går hög — då vet vi att CPU:n är i början av nästa instruktion.</p>
-      <p class="mb-2">Kodmässigt byter vi ut den automatiska <code>loop()</code> mot knappläsning med debounce (50 ms). Arduinons <code>INPUT_PULLUP</code> gör att vi slipper externa pull-up-motstånd — knappen kopplas direkt mellan pinne och GND.</p>
+      <p class="mt-2 mb-2">I steg 3 körde CPU:n fritt i en NOP-loop — kul att se, men svårt att felsöka. Nu kopplar vi in <strong>två tryckknappar</strong> och <strong>SYNC-signalen</strong> för att kunna styra exekveringen manuellt. Det här är en av de stora fördelarna med W65C02S: eftersom den är statisk CMOS kan klockan stoppas hur länge som helst.</p>
+      <p class="mt-2 mb-2"><strong>Knapp 1 (klocksteg):</strong> varje tryckning ger en enda klockcykel. Perfekt för att se vad som händer på bussen i ultrarapid.</p>
+      <p class="mt-2 mb-2"><strong>Knapp 2 (instruktionssteg):</strong> kör klockan tills CPU:n signalerar att en ny instruktion har hämtats. SYNC-pinnen (pin 7) går HÖG vid varje opcode fetch. Vi pulserar klockan tills SYNC går hög — då vet vi att CPU:n är i början av nästa instruktion.</p>
+      <p class="mt-2 mb-2">Kodmässigt byter vi ut den automatiska <code>loop()</code> mot knappläsning med debounce (50 ms). Arduinons <code>INPUT_PULLUP</code> gör att vi slipper externa pull-up-motstånd — knappen kopplas direkt mellan pinne och GND.</p>
     </div>
   </section>
 
   <!-- Nya komponenter -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Nya komponenter</h2>
-    <p class="mb-2">Plocka fram dessa ur komponentlådan. Inga överraskningar — bara det som tillkommer i detta steg.</p>
+    <p class="mt-2 mb-2">Plocka fram dessa ur komponentlådan. Inga överraskningar — bara det som tillkommer i detta steg.</p>
     <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
       <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr></thead>
       <tbody class="divide-y">
@@ -59,7 +59,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
-    <p class="mb-2">Här ser du hela kopplingen på en bild — alla komponenter och ledningar precis som de ska sitta på kopplingsdäcket.</p>
+    <p class="mt-2 mb-2">Här ser du hela kopplingen på en bild — alla komponenter och ledningar precis som de ska sitta på kopplingsdäcket.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-4.png" alt="Steg 4 — Manuell stegning" class="w-full">
     </div>
@@ -68,7 +68,7 @@
     <!-- Kretstabell -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Kopplingar</h2>
-    <p class="mb-2">Alla kopplingar för detta steg — från strömmatning till signaler. Varje pinne, vart den går, och <strong>varför</strong>.</p>
+    <p class="mt-2 mb-2">Alla kopplingar för detta steg — från strömmatning till signaler. Varje pinne, vart den går, och <strong>varför</strong>.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -99,7 +99,7 @@
   <!-- Minneskarta -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Minneskarta ($0000–$FFFF)</h2>
-    <p class="mb-2">Arduinon emulerar minne med <code>ram[1024]</code> ($0000–$03FF), program på $8000, och vektorer på $FFFA. Blockens höjd är proportionell (1 px per 128 bytes, minst 8 px).</p>
+    <p class="mt-2 mb-2">Arduinon emulerar minne med <code>ram[1024]</code> ($0000–$03FF), program på $8000, och vektorer på $FFFA. Blockens höjd är proportionell (1 px per 128 bytes, minst 8 px).</p>
     <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
       <div class="flex items-center border-b border-gray-300" style="min-height:8px">
         <div class="w-20 text-right pr-3 text-gray-500">$FFFF</div>
@@ -143,7 +143,7 @@
   <!-- Kod -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Arduino-kod — loop()</h2>
-    <p class="mb-2">Endast <code>loop()</code> och pin-definitionerna ändras från steg 3. <code>pulse()</code> och <code>setup()</code> är oförändrade.</p>
+    <p class="mt-2 mb-2">Endast <code>loop()</code> och pin-definitionerna ändras från steg 3. <code>pulse()</code> och <code>setup()</code> är oförändrade.</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 4 — Manuell stegning med knappar

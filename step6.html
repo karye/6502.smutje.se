@@ -36,17 +36,17 @@
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Mål</h2>
     <div class="text-gray-700 space-y-3">
-      <p class="mb-2">Datorn är nu komplett — CPU, minne, LCD, knappar. Men den kör bara NOP:ar. Dags att skriva vårt <strong>första egna 6502-program!</strong></p>
-      <p class="mb-2">Vi skriver en enkel räknare: öka X-registret från 0 till 255, spara värdet på adress <code>$0200</code>, och loopa. Programmet är bara 9 bytes stort — men det innehåller allt ett riktigt program behöver: initiering, beräkning, minnesskrivning och loop.</p>
-      <p class="mb-2">6502-program skrivs i <strong>maskinkod</strong> — varje instruktion är 1–3 bytes. LDX #$00 är två bytes (<code>$A2 $00</code>), INX är en byte (<code>$E8</code>), STX $0200 är tre bytes (<code>$8E $00 $02</code>). Vi skriver in dessa bytes direkt i Arduinons minnesarray, och CPU:n exekverar dem som ett riktigt program.</p>
-      <p class="mb-2">Ingen ny hårdvara — samma koppling som steg 5. Allt nytt finns i mjukvaran.</p>
+      <p class="mt-2 mb-2">Datorn är nu komplett — CPU, minne, LCD, knappar. Men den kör bara NOP:ar. Dags att skriva vårt <strong>första egna 6502-program!</strong></p>
+      <p class="mt-2 mb-2">Vi skriver en enkel räknare: öka X-registret från 0 till 255, spara värdet på adress <code>$0200</code>, och loopa. Programmet är bara 9 bytes stort — men det innehåller allt ett riktigt program behöver: initiering, beräkning, minnesskrivning och loop.</p>
+      <p class="mt-2 mb-2">6502-program skrivs i <strong>maskinkod</strong> — varje instruktion är 1–3 bytes. LDX #$00 är två bytes (<code>$A2 $00</code>), INX är en byte (<code>$E8</code>), STX $0200 är tre bytes (<code>$8E $00 $02</code>). Vi skriver in dessa bytes direkt i Arduinons minnesarray, och CPU:n exekverar dem som ett riktigt program.</p>
+      <p class="mt-2 mb-2">Ingen ny hårdvara — samma koppling som steg 5. Allt nytt finns i mjukvaran.</p>
     </div>
   </section>
 
   <!-- Minneskarta -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Minneskarta ($0000–$FFFF)</h2>
-    <p class="mb-2">Arduinon emulerar minne med <code>ram[1024]</code> ($0000–$03FF), program på $8000, och vektorer på $FFFA. Blockens höjd är proportionell (1 px per 128 bytes, minst 8 px).</p>
+    <p class="mt-2 mb-2">Arduinon emulerar minne med <code>ram[1024]</code> ($0000–$03FF), program på $8000, och vektorer på $FFFA. Blockens höjd är proportionell (1 px per 128 bytes, minst 8 px).</p>
     <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
       <div class="flex items-center border-b border-gray-300" style="min-height:8px">
         <div class="w-20 text-right pr-3 text-gray-500">$FFFF</div>
@@ -90,7 +90,7 @@
   <!-- Kretstabell -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Kopplingar</h2>
-    <p class="mb-2">Alla kopplingar för detta steg — från strömmatning till LCD. Varje pinne, vart den går, och <strong>varför</strong>.</p>
+    <p class="mt-2 mb-2">Alla kopplingar för detta steg — från strömmatning till LCD. Varje pinne, vart den går, och <strong>varför</strong>.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -137,7 +137,7 @@
   <!-- Programmet -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">6502-programmet — räknare</h2>
-    <p class="mb-2">Här är programmet som processorn ska köra. Varje rad är en instruktion i 6502:ans språk — maskinkod som CPU:n förstår direkt.</p>
+    <p class="mt-2 mb-2">Här är programmet som processorn ska köra. Varje rad är en instruktion i 6502:ans språk — maskinkod som CPU:n förstår direkt.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Adress</th><th class="p-2 text-left">Bytes</th><th class="p-2 text-left">Assembler</th><th class="p-2 text-left">Vad händer</th></tr></thead>
@@ -154,7 +154,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
-    <p class="mb-2">Samma hårdvara som steg 5. LCD:n kopplas direkt till Arduino — RS→D5, E→D6, DB4–DB7→D10,D9,D8,D7 (omvänd ordning).</p>
+    <p class="mt-2 mb-2">Samma hårdvara som steg 5. LCD:n kopplas direkt till Arduino — RS→D5, E→D6, DB4–DB7→D10,D9,D8,D7 (omvänd ordning).</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-6.png" alt="Steg 6 — LCD kopplad till Arduino" class="w-full">
     </div>
@@ -163,7 +163,7 @@
   <!-- Kod -->
   <section class="mb-8">
     <h2 class="text-lg font-bold mb-2">Arduino-kod — setup()</h2>
-    <p class="mb-2">Endast programladdningen i <code>setup()</code> ändras från steg 5. <code>pulse()</code>, <code>loop()</code> och LCD-koden är oförändrade.</p>
+    <p class="mt-2 mb-2">Endast programladdningen i <code>setup()</code> ändras från steg 5. <code>pulse()</code>, <code>loop()</code> och LCD-koden är oförändrade.</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 6 — Första egna 6502-programmet (räknare)
