@@ -35,25 +35,25 @@
     <section class="mb-8">
       <h2 class="text-lg font-bold mb-2">Mål</h2>
       <div class="text-gray-700 space-y-3">
-        <p>Alla datorer behöver en puls — en hjärtslag som får processorn att ta ett steg i taget. I det här första
+        <p class="mb-2">Alla datorer behöver en puls — en hjärtslag som får processorn att ta ett steg i taget. I det här första
           steget kopplar vi in <strong>ström och klocka</strong> till W65C02S-processorn. Processorn kommer inte att
           <em>göra</em> något ännu (vi har varken minne eller program), men vi kan verifiera att den lever.
         </p>
-        <p>W65C02S är en <strong>statisk CMOS-krets</strong>. Det betyder att klockan kan vara hur långsam som helst —
+        <p class="mb-2">W65C02S är en <strong>statisk CMOS-krets</strong>. Det betyder att klockan kan vara hur långsam som helst —
           till och med stoppas helt — utan att processorn tappar sitt interna tillstånd. Vi utnyttjar detta genom att
           generera en långsam klockpuls från Arduino och visualisera den med en lysdiod.</p>
-        <p>En lysdiod och ett motstånd kopplas till klocklinjen. När dioden blinkar vet vi att klockpulsen når fram. Med
+        <p class="mb-2">En lysdiod och ett motstånd kopplas till klocklinjen. När dioden blinkar vet vi att klockpulsen når fram. Med
           en multimeter mäter vi också att CPU:n får 5V mellan VDD och VSS.</p>
-        <p>Det här steget är grunden för allt som kommer — utan ström och klocka gör processorn ingenting.</p>
+        <p class="mb-2">Det här steget är grunden för allt som kommer — utan ström och klocka gör processorn ingenting.</p>
       </div>
     </section>
 
     <!-- Komponenter -->
     <section class="mb-8">
       <h2 class="text-lg font-bold mb-2">Komponenter för detta steg</h2>
-      <p>Plocka fram dessa ur komponentlådan innan du börjar koppla. Inga
+      <p class="mb-2">Plocka fram dessa ur komponentlådan innan du börjar koppla. Inga
         överraskningar — bara det som krävs.</p>
-      <p>Här är allt du behöver plocka fram ur komponentlådan innan du börjar koppla.
+      <p class="mb-2">Här är allt du behöver plocka fram ur komponentlådan innan du börjar koppla.
         Inga överraskningar — bara det som krävs för att få liv i CPU:n.</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
@@ -103,7 +103,7 @@
     <!-- W65C02S pinout -->
     <section class="mb-8">
       <h2 class="text-lg font-bold mb-2">W65C02S — pinout</h2>
-      <p>DIP-40-kapsel. 16 adresslinjer, 8 datalinjer, 12 kontroll/ström. Notch/pin
+      <p class="mb-2">DIP-40-kapsel. 16 adresslinjer, 8 datalinjer, 12 kontroll/ström. Notch/pin
         1-markering uppåt.</p>
       <div class="flex justify-center">
         <div
@@ -245,7 +245,7 @@
           </div>
         </div>
       </div>
-      <p><span class="text-blue-300">■</span> Adressbuss &nbsp; <span
+      <p class="mb-2"><span class="text-blue-300">■</span> Adressbuss &nbsp; <span
           class="text-green-300">■</span> Databuss &nbsp; <span class="text-purple-300">■</span> Kontroll &nbsp; <span
           class="text-red-300">■</span> Ström. Notch/pin 1-markering: uppåt.</p>
     </section>
@@ -253,7 +253,7 @@
     <!-- Arduino Mega pinout -->
     <section class="mb-8">
       <h2 class="text-lg font-bold mb-2">Arduino Mega 2560 — anslutningar</h2>
-      <p>Endast de pinnar vi använder i projektet. Grupperade efter funktion —
+      <p class="mb-2">Endast de pinnar vi använder i projektet. Grupperade efter funktion —
         adressbuss, databuss, kontroll och ström.</p>
       <div class="flex justify-center">
         <div class="p-2 bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-xs leading-snug">
@@ -484,7 +484,7 @@
     <!-- Kopplingsschema -->
     <section class="mb-8">
       <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
-      <p>Här ser du hela kopplingen på en bild. Alla komponenter, alla ledningar —
+      <p class="mb-2">Här ser du hela kopplingen på en bild. Alla komponenter, alla ledningar —
         precis som det ska se ut på kopplingsdäcket.</p>
       <div class="schematic bg-white rounded-lg shadow p-4">
         <img src="schematics/steg-1.png" alt="Steg 1 — Ström och klocka" class="w-full">
@@ -494,7 +494,7 @@
     <!-- Kretstabell -->
     <section class="mb-8">
       <h2 class="text-lg font-bold mb-2">Kopplingar</h2>
-      <p>Alla kopplingar för detta steg — från strömmatning till klocka. Varje pinne,
+      <p class="mb-2">Alla kopplingar för detta steg — från strömmatning till klocka. Varje pinne,
         vart den går, och <strong>varför</strong>.</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
@@ -576,8 +576,8 @@
     <!-- Kod -->
     <section class="mb-8">
       <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
-      <p>Koden som laddas upp till Arduino Mega.</p>
-      <p>Koden är enkel: sätt pinne D2 som utgång och växla mellan HÖG och LÅG med 500 ms fördröjning. Resultatet blir en symmetrisk fyrkantsvåg på 1 Hz — perfekt för att se lysdioden blinka.</p>
+      <p class="mb-2">Koden som laddas upp till Arduino Mega.</p>
+      <p class="mb-2">Koden är enkel: sätt pinne D2 som utgång och växla mellan HÖG och LÅG med 500 ms fördröjning. Resultatet blir en symmetrisk fyrkantsvåg på 1 Hz — perfekt för att se lysdioden blinka.</p>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 1 — Strömmatning och klocka

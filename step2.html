@@ -36,16 +36,16 @@
     <section class="mb-8">
       <h2 class="text-lg font-bold mb-2">Mål</h2>
       <div class="text-gray-700 space-y-3">
-        <p>I steg 1 gav vi processorn ström och klocka. Nu ska vi ge den kontroll över <strong>adressbussen</strong> —
+        <p class="mb-2">I steg 1 gav vi processorn ström och klocka. Nu ska vi ge den kontroll över <strong>adressbussen</strong> —
           16 ledningar som talar om <em>var</em> i minnet CPU:n vill läsa eller skriva.</p>
-        <p>Alla 6502-processorer startar på samma sätt: efter reset läser de adress <code>$FFFC</code> och
+        <p class="mb-2">Alla 6502-processorer startar på samma sätt: efter reset läser de adress <code>$FFFC</code> och
           <code>$FFFD</code> för att få reda på var programmet börjar. Det är inbyggt i kisel — ingen mjukvara, ingen
           konfiguration. Genom att koppla in adressbussen och en reset-signal kan vi se detta hända i serieövervakaren.
         </p>
-        <p>Vi kopplar också in <strong>/RESET</strong> (pin 40) till Arduino D4. När vi håller RESB låg i minst 2
+        <p class="mb-2">Vi kopplar också in <strong>/RESET</strong> (pin 40) till Arduino D4. När vi håller RESB låg i minst 2
           klockcykler nollställs CPU:ns interna register. När vi sedan släpper den (HÖG) börjar CPU:n köra från
           reset-vektorn.</p>
-        <p>Adressbussen läser vi via Arduinons analoga portar — <strong>PORTF</strong> (A0–A7) och
+        <p class="mb-2">Adressbussen läser vi via Arduinons analoga portar — <strong>PORTF</strong> (A0–A7) och
           <strong>PORTK</strong> (A8–A15). Det ger oss 16 bitar i två registerläsningar.</p>
       </div>
     </section>
@@ -53,7 +53,7 @@
     <!-- Nya komponenter -->
     <section class="mb-8">
       <h2 class="text-lg font-bold mb-2">Nya komponenter</h2>
-      <p>Plocka fram dessa ur komponentlådan. Inga överraskningar — bara det som
+      <p class="mb-2">Plocka fram dessa ur komponentlådan. Inga överraskningar — bara det som
         tillkommer i detta steg.</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
@@ -76,7 +76,7 @@
     <!-- Kopplingsschema -->
     <section class="mb-8">
       <h2 class="text-lg font-bold mb-2">Kopplingsschema</h2>
-      <p>Här ser du hela kopplingen på en bild — alla komponenter och ledningar
+      <p class="mb-2">Här ser du hela kopplingen på en bild — alla komponenter och ledningar
         precis som de ska sitta på kopplingsdäcket.</p>
       <div class="schematic bg-white rounded-lg shadow p-4">
         <img src="schematics/steg-2.png" alt="Steg 2 — Adressbuss och reset" class="w-full">
@@ -86,7 +86,7 @@
     <!-- Kretstabell -->
     <section class="mb-8">
       <h2 class="text-lg font-bold mb-2">Kopplingar</h2>
-      <p>Alla kopplingar för detta steg — från strömmatning till signaler. Varje
+      <p class="mb-2">Alla kopplingar för detta steg — från strömmatning till signaler. Varje
         pinne, vart den går, och <strong>varför</strong>.</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
@@ -173,9 +173,9 @@
     <!-- Kod -->
     <section class="mb-8">
       <h2 class="text-lg font-bold mb-2">Arduino-kod</h2>
-      <p>Koden som laddas upp till Arduino Mega. Varje rad är kommenterad så du
+      <p class="mb-2">Koden som laddas upp till Arduino Mega. Varje rad är kommenterad så du
         förstår vad som händer — kopiera, klistra in, ladda upp.</p>
-      <p>Koden gör tre saker: (1) håller CPU:n i reset i 5 klockcykler, (2) släpper
+      <p class="mb-2">Koden gör tre saker: (1) håller CPU:n i reset i 5 klockcykler, (2) släpper
         reset så CPU:n startar, (3) läser och skriver ut adressbussen i varje cykel. Första utskrifterna ska vara
         <code>$FFFC</code> och <code>$FFFD</code> — reset-vektorn.</p>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
