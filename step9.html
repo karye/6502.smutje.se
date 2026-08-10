@@ -140,7 +140,7 @@
         </div>
       </div>
     </div>
-    <p class="text-gray-700 mt-3 text-sm"><span class="text-blue-300">■</span> Adressbuss &nbsp; <span class="text-green-300">■</span> Databuss &nbsp; <span class="text-purple-300">■</span> Kontroll &nbsp; <span class="text-red-300">■</span> Ström. Notch/pin 1-markering: uppåt. <strong>/OE</strong> = GND (alltid läs ut). <strong>/CE</strong> = U4D pin 11 (aktiv vid $0000–$3FFF).</p>
+    <p><span class="text-blue-300">■</span> Adressbuss &nbsp; <span class="text-green-300">■</span> Databuss &nbsp; <span class="text-purple-300">■</span> Kontroll &nbsp; <span class="text-red-300">■</span> Ström. Notch/pin 1-markering: uppåt. <strong>/OE</strong> = GND (alltid läs ut). <strong>/CE</strong> = U4D pin 11 (aktiv vid $0000–$3FFF).</p>
   </section>
 
   <!-- 74HC00 pinout -->
@@ -182,7 +182,7 @@
         </div>
       </div>
     </div>
-    <p class="text-gray-700 mt-3 text-sm"><span class="text-blue-300">■</span> U4A (NOT A15 → SRAM /CE) &nbsp; <span class="text-green-300">■</span> U4B (A15 NAND A14 → VIA /CS2) &nbsp; <span class="text-yellow-300">■</span> U4D (NAND) &nbsp; <span class="text-pink-300">■</span> U4C (NAND).</p>
+    <p><span class="text-blue-300">■</span> U4A (NOT A15 → SRAM /CE) &nbsp; <span class="text-green-300">■</span> U4B (A15 NAND A14 → VIA /CS2) &nbsp; <span class="text-yellow-300">■</span> U4D (NAND) &nbsp; <span class="text-pink-300">■</span> U4C (NAND).</p>
   </section>
 
   <!-- Kopplingsschema -->
@@ -238,7 +238,7 @@
         </tbody>
       </table>
     </div>
-    <p class="text-gray-700 mt-2 text-sm"><strong>Logik:</strong> U4A inverterar A15, U4C inverterar A14. U4D gör (NOT A14) NAND (NOT A15) → LÅG <strong>endast</strong> när A14=0 OCH A15=0. SRAM aktiveras alltså vid <strong>$0000–$3FFF</strong> och ingen annanstans. VIAn (U4B) aktiveras vid $4000–$7FFF. Inga krockar.</p>
+    <p><strong>Logik:</strong> U4A inverterar A15, U4C inverterar A14. U4D gör (NOT A14) NAND (NOT A15) → LÅG <strong>endast</strong> när A14=0 OCH A15=0. SRAM aktiveras alltså vid <strong>$0000–$3FFF</strong> och ingen annanstans. VIAn (U4B) aktiveras vid $4000–$7FFF. Inga krockar.</p>
 
     <h3 class="font-bold mt-6 mb-2">CPU, VIA och LCD</h3>
     <p>CPU, VIA och LCD är oförändrade från steg 7. Här är den kompletta kopplingslistan.</p>
@@ -323,7 +323,7 @@
         <div class="w-14 text-right text-gray-500 pr-2"></div>
       </div>
     </div>
-    <p class="text-gray-700 mt-3 text-sm"><strong>Grön heldragen ram</strong> = 62256 SRAM. <strong>Gul</strong> = VIA. <strong>Blå/lila</strong> = Arduino. Tre enheter, en buss — adressavkodningen avgör vem som svarar.</p>
+    <p><strong>Grön heldragen ram</strong> = 62256 SRAM. <strong>Gul</strong> = VIA. <strong>Blå/lila</strong> = Arduino. Tre enheter, en buss — adressavkodningen avgör vem som svarar.</p>
   </section>
 
   <!-- Arduino-kod -->
@@ -876,7 +876,7 @@ txt_fib:
     .word $0000       ; NMI   — oanvänd
     .word reset       ; RESET — pekar på $8000
     .word $0000       ; IRQ   — oanvänd</code></pre>
-    <p class="text-gray-700 mt-3 text-sm">Komplett assembler-kod: <code>Mega_2560_6502/asm/program_fib.asm</code>. Byggs med <code>ca65 + ld65 → program_fib.h → inkluderas av step9.inc</code>.</p>
+    <p>Komplett assembler-kod: <code>Mega_2560_6502/asm/program_fib.asm</code>. Byggs med <code>ca65 + ld65 → program_fib.h → inkluderas av step9.inc</code>.</p>
   </section>
 
   <!-- Testning -->

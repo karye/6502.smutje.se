@@ -125,7 +125,7 @@
       </div>
       <div class="text-right text-gray-500 pr-2">$0000</div>
     </div>
-    <p class="text-gray-700 mt-3 text-sm"><strong>0xEA = NOP</strong> — ofarlig fallback. CPU:n hoppar över oanvända adresser. <strong>Gul markering</strong> = Arduino rör inte dessa adresser, den fysiska VIA-kretsen svarar.</p>
+    <p><strong>0xEA = NOP</strong> — ofarlig fallback. CPU:n hoppar över oanvända adresser. <strong>Gul markering</strong> = Arduino rör inte dessa adresser, den fysiska VIA-kretsen svarar.</p>
   </section>
 
   <!-- Byggskript -->
@@ -416,7 +416,7 @@ line4: .byte "smutje.se 2026", 0
     .word $0000       ; NMI   — används inte
     .word reset       ; RESET — här börjar programmet ($8000)
     .word $0000       ; IRQ   — används inte</code></pre>
-    <p class="text-gray-700 mt-3 text-sm">Komplett assembler-kod: <code>Mega_2560_6502/asm/program_hello.asm</code>.</p>
+    <p>Komplett assembler-kod: <code>Mega_2560_6502/asm/program_hello.asm</code>.</p>
   </section>
 
   <!-- Arduino-kod -->
