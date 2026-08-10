@@ -42,7 +42,7 @@
         </p>
         <p class="mt-3 mb-3">
           Den drömmen har funnits där länge. Men att bränna EPROM, löda fast minneskretsar och
-          bygga en hel dator på veroboard — det är ett <strong>jätteprojekt</strong>. Man vill ju
+          bygga en hel dator på breadboard — det är ett <strong>jätteprojekt</strong>. Man vill ju
           testa, experimentera, göra om.
         </p>
         <p class="mt-3 mb-3">
@@ -51,9 +51,9 @@
           Atari 2600 och BBC Micro — maskiner som tillsammans sålde i över 100 miljoner exemplar.
         </p>
         <p class="mt-3 mb-3">
-          Och <strong>Arduino Mega 2560</strong> — en mikrokontroller med tillräckligt många
-          I/O-pinnar för att emulera hela minnet. Plötsligt gick det att <strong>bygga en riktig
-          6502-dator utan ett enda löddon</strong>. Allt på kopplingsdäck. Allt går att ändra på
+          Med en <strong>Arduino Mega 2560</strong> — en mikrokontroller med tillräckligt många
+          I/O-pinnar kan vi emulera hela minnet. Plötsligt gick det att <strong>bygga en riktig
+          6502-dator</strong>. Allt på kopplingsdäck. Allt går att ändra på
           sekunder. Kombinationen av 50-årig processordesign och modern mikrokontroller ger en
           unik möjlighet: en dator som är precis så långsam och begriplig att du kan följa med i
           varje klockcykel.
@@ -71,11 +71,6 @@
     <section class="mb-8">
       <h2 class="text-lg font-bold mb-2">Hur fungerar en 6502-processor?</h2>
       <div class="text-gray-700 space-y-3">
-
-        <p class="mt-3 mb-3">Tänk dig en dirigent som står framför en orkester. Dirigenten har ett partitur — ett program — och
-          taktpinnen är <strong>klockan</strong>. För varje taktslag händer exakt en sak:
-          dirigenten pekar på nästa not, läser vad som står, och utför den. En 6502-processor fungerar
-          precis likadant, fast med elektriska signaler istället för noter.</p>
 
         <h3 class="font-bold mt-4 mb-2">Två bussar — adress och data</h3>
         <p class="mt-3 mb-3">Processorn har två uppsättningar ledningar ut till världen. Den första är
@@ -180,7 +175,7 @@
           inte Arduino. Arduino går ur vägen genom att tri-stata databussen.
         </p>
 
-        <h3 class="font-bold mt-4 mb-2">Varför Arduino istället för riktiga minneskretsar?</h3>
+        <h3 class="font-bold mt-4 mb-2">Arduino emulerar ROM?</h3>
         <p class="mt-3 mb-3">
           En 6502-dator från 1970-talet hade ROM och RAM som fysiska chips. Varje gång du ville
           testa ett nytt program fick du bränna ett nytt EPROM under UV-ljus — en process som tog
