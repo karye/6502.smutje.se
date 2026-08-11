@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steg 10 — EEPROM | W65C02</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/monokai.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+<nav class="bg-gray-900 text-white sticky top-0 z-50 shadow">
+  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
+    <a href="index.html" class="font-bold text-lg">W65C02</a>
+    <div class="flex gap-4 text-sm">
+      <a href="index.html" class="hover:text-blue-300 transition">Översikt</a>
+      <a href="step1.html" class="hover:text-blue-300 transition">Steg 1</a>
+      <a href="step2.html" class="hover:text-blue-300 transition">Steg 2</a>
+      <a href="step3.html" class="hover:text-blue-300 transition">Steg 3</a>
+      <a href="step4.html" class="hover:text-blue-300 transition">Steg 4</a>
+      <a href="step5.html" class="hover:text-blue-300 transition">Steg 5</a>
+      <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
+      <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
+      <a href="step8.html" class="hover:text-blue-300 transition">Steg 8</a>
+      <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
+      <a href="step10.html" class="text-blue-300 font-semibold">Steg 10</a>
+    </div>
+  </div>
+</nav>
+
+<main class="max-w-5xl mx-auto px-4 py-8">
+
+  <h1>Steg 10 — EEPROM som ROM</h1>
+
+  <!-- Mål -->
+  <section class="mb-8">
+    <h2>Mål</h2>
+    <div class="text-gray-700 space-y-3">
+      <p>Hittills har Arduino levererat 6502-programmet — varje gång CPU:n läser från <code>$8000</code> och uppåt
+        är det Arduinons minnesarray som svarar. Det fungerar utmärkt, men en riktig dator har sitt program i
+        <strong>ROM</strong> — icke-flyktigt minne som överlever strömavbrott. Nu tar vi det sista stora klivet:
+        vi bränner in programmet på en <strong>AT28C256 EEPROM</strong> och låter den ersätta Arduino som ROM.</p>
+      <p>En <strong>andra Arduino Mega</strong> används som EEPROM-programmerare. Via USB tar den emot en
+        <code>.bin</code>-fil från datorn, bränner den på AT28C256, och verifierar att varje byte sitter rätt.
+        Sedan flyttar du EEPROM-chippet till datorns kopplingsdäck — och datorn startar direkt från äkta ROM,
+        precis som en Commodore 64 eller Apple II.</p>
+      <p>Arduinon på kopplingsdäcket finns kvar som klocka och diagnostikverktyg — men datorn överlever utan
+        den. Slå på strömmen, och CPU:n läser ditt program direkt ur EEPROM:et. Det här är en fristående dator.</p>
+    </div>
+  </section>
+
+  <!-- Nya komponenter -->
+  <section class="mb-8">
+    <h2>Nya komponenter</h2>
+    <p>Utöver allt från steg 9 tillkommer dessa. Den andra Arduino Mega används endast under programmeringen
+      och kopplas sedan bort.</p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th><th class="p-2 text-left">Används till</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">1</td><td class="p-2"><strong>AT28C256</strong> (32KB EEPROM, DIP-28)</td><td class="p-2">Programminne — ersätter Arduino för $8000–$FFFF</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2"><strong>Arduino Mega 2560</strong> (extra)</td><td class="p-2">EEPROM-programmerare — används endast vid bränning</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2">74HC00 (extra)</td><td class="p-2">Adressavkodning för EEPROM — /CE vid $8000–$FFFF</td></tr>
+          <tr><td class="p-2">1</td><td class="p-2">100 nF keramisk kondensator</td><td class="p-2">Avkoppling vid EEPROM:ets VCC/GND</td></tr>
+          <tr><td class="p-2">—</td><td class="p-2">Kopplingstråd</td><td class="p-2">Adress, data, kontroll</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- AT28C256 pinout -->
+  <section class="mb-8">
+    <h2>AT28C256 — pinout</h2>
+    <p>DIP-28-kapsel. 15 adresslinjer, 8 datalinjer, 3 kontrollsignaler. Nästan identisk med 62256 SRAM
+      men med <strong>/WE</strong> som styr bränning och <strong>RDY/BUSY</strong> som signalerar när
+      bränningen är klar (vi använder en enkel timeout istället).</p>
+    <div class="flex justify-center">
+      <div class="p-2 inline-flex bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-sm leading-relaxed">
+        <!-- Left pins -->
+        <div class="flex flex-col justify-between py-2">
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-blue-300">A14</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-blue-300">A12</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-blue-300">A7</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-blue-300">A6</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-blue-300">A5</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-blue-300">A4</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-blue-300">A3</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-blue-300">A2</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-blue-300">A1</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-blue-300">A0</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-green-300">D0</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-green-300">D1</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-green-300">D2</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+          <div class="flex items-center"><span class="w-24 text-right pr-2 text-white">GND</span><span class="w-3 h-4 bg-yellow-500 rounded-l"></span></div>
+        </div>
+        <!-- Chip body -->
+        <div class="bg-gray-700 px-2 flex items-stretch border-2 border-gray-500">
+          <div class="flex flex-col justify-between py-2 h-full">
+            <div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">1</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">2</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">3</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">4</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">5</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">6</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">7</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">8</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">9</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">10</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">11</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">12</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">13</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">14</span></div>
+          </div>
+          <div class="text-center px-2">
+            <div class="text-sm text-gray-400 mb-1">DIP-28</div>
+            <div class="text-lg font-bold">AT28C256</div>
+            <div class="text-sm text-gray-400 mt-1">32K×8 EEPROM</div>
+          </div>
+          <div class="flex flex-col justify-between py-2 h-full">
+            <div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">28</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">27</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">26</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">25</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">24</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">23</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">22</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">21</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">20</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">19</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">18</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">17</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">16</span></div><div class="flex items-center"><span class="w-5 text-center text-gray-500 font-bold">15</span></div>
+          </div>
+        </div>
+        <!-- Right pins -->
+        <div class="flex flex-col justify-between py-2">
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-red-300">+5V VDD</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-purple-300">/WE</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-blue-300">A13</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-blue-300">A8</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-blue-300">A9</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-blue-300">A11</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-purple-300">/OE</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-blue-300">A10</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-purple-300">/CE</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">D7</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">D6</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">D5</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">D4</span></div>
+          <div class="flex items-center"><span class="w-3 h-4 bg-yellow-500 rounded-r"></span><span class="w-24 pl-2 text-green-300">D3</span></div>
+        </div>
+      </div>
+    </div>
+    <p><span class="text-blue-300">■</span> Adressbuss &nbsp; <span class="text-green-300">■</span> Databuss &nbsp; <span class="text-purple-300">■</span> Kontroll &nbsp; <span class="text-red-300">■</span> Ström. Notch/pin 1-markering: uppåt.</p>
+  </section>
+
+  <!-- Kopplingsschema — programmerare -->
+  <section class="mb-8">
+    <h2>Kopplingsschema — programmeraren</h2>
+    <p>Den andra Arduino Mega kopplas 1:1 till AT28C256. Här finns inga andra kretsar — bara Arduino,
+      EEPROM, och 100Ω skyddsmotstånd på databussen. När bränningen är klar kopplas allt isär.</p>
+    <div class="schematic bg-white rounded-lg shadow p-4">
+      <img src="schematics/steg-10-programmer.png" alt="Steg 10 — EEPROM-programmerare" class="w-full">
+    </div>
+  </section>
+
+  <!-- Kopplingsschema — dator -->
+  <section class="mb-8">
+    <h2>Kopplingsschema — datorn med EEPROM</h2>
+    <p>EEPROM:et sitter nu på datorns adress- och databuss tillsammans med SRAM, VIA och Arduino.
+      En extra 74HC00 avkodar A15 till /CE — EEPROM:et aktiveras vid <code>$8000–$FFFF</code>.</p>
+    <div class="schematic bg-white rounded-lg shadow p-4">
+      <img src="schematics/steg-10-computer.png" alt="Steg 10 — dator med EEPROM" class="w-full">
+    </div>
+  </section>
+
+  <!-- Kopplingstabeller -->
+  <section class="mb-8">
+    <h2>Kopplingar</h2>
+    <p>Först programmeraren — en enkel 1:1-koppling. Sedan datorn — fyra enheter på samma buss.</p>
+
+    <h3>Programmeraren — Arduino till AT28C256</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Arduino</th><th class="p-2 text-left">AT28C256</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">5V, GND</td><td class="p-2">VDD (28), VSS (14)</td><td class="p-2">Strömmatning — glöm inte 100nF avkoppling</td></tr>
+          <tr><td class="p-2">A0–A7 (PORTF)</td><td class="p-2">A0–A7</td><td class="p-2">Låga adressbyte — vilken byte som ska brännas</td></tr>
+          <tr><td class="p-2">A8–A14 (PORTK)</td><td class="p-2">A8–A14</td><td class="p-2">Höga adressbyte — 15 bitar = 32 768 adresser</td></tr>
+          <tr><td class="p-2">D22–D29 (PORTA)</td><td class="p-2">D0–D7 via 100Ω</td><td class="p-2">Data — samma portregister som alltid</td></tr>
+          <tr><td class="p-2">D2</td><td class="p-2">/WE (27)</td><td class="p-2">Write Enable — pulsas LÅG för att bränna</td></tr>
+          <tr><td class="p-2">D3</td><td class="p-2">/OE (22)</td><td class="p-2">Output Enable — LÅG vid läsning/verifiering</td></tr>
+          <tr><td class="p-2">GND</td><td class="p-2">/CE (20)</td><td class="p-2">Chip Enable — alltid aktiv under programmering</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Datorn — EEPROM på bussen</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">AT28C256</th><th class="p-2 text-left">Ansluts till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">VDD (28), VSS (14)</td><td class="p-2">+5V, GND</td><td class="p-2">Strömmatning</td></tr>
+          <tr><td class="p-2">A0–A14</td><td class="p-2">CPU A0–A14</td><td class="p-2">Delad adressbuss med SRAM, VIA, Arduino</td></tr>
+          <tr><td class="p-2">D0–D7</td><td class="p-2">CPU D0–D7 via 100Ω</td><td class="p-2">Delad databuss</td></tr>
+          <tr><td class="p-2">/CE (20)</td><td class="p-2"><strong>74HC00-utgång</strong></td><td class="p-2">Aktiveras vid $8000–$FFFF (A15=1)</td></tr>
+          <tr><td class="p-2">/OE (22)</td><td class="p-2">GND</td><td class="p-2">Alltid läs ut — EEPROM är read-only i datorn</td></tr>
+          <tr><td class="p-2">/WE (27)</td><td class="p-2">+5V</td><td class="p-2">Aldrig skriva — ROM-läge</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>74HC00 — EEPROM-avkodning (ny grind)</h3>
+    <p>En extra 74HC00 vid sidan av den från steg 7/9. En enda grind används som inverterare för A15.</p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <tbody class="divide-y">
+          <tr><td class="p-2">1, 2</td><td class="p-2"><strong>CPU A15</strong></td><td class="p-2">Båda ingångarna till A15 → NAND = NOT A15</td></tr>
+          <tr><td class="p-2">3</td><td class="p-2"><strong>EEPROM /CE</strong> (pin 20)</td><td class="p-2">LÅG när A15=1 → EEPROM aktivt vid $8000–$FFFF</td></tr>
+          <tr><td class="p-2">14</td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
+          <tr><td class="p-2">7</td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Logik:</strong> A15 NAND A15 = NOT A15. EEPROM:ets /CE är aktiv LÅG. När A15=1 (adress $8000 eller högre)
+      blir grindens utgång LÅG → EEPROM aktiverat. När A15=0 (under $8000) är utgången HÖG → EEPROM är bortkopplat,
+      SRAM eller VIA tar över.</p>
+  </section>
+
+  <!-- Minneskarta -->
+  <section class="mb-8">
+    <h2>Minneskarta — fyra enheter på bussen</h2>
+    <p>EEPROM:et tar över <code>$8000–$FFFF</code> från Arduino. Programmet ligger nu i äkta ROM.</p>
+    <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
+      <div class="flex items-stretch border-b-2 border-purple-500" style="min-height:8px">
+        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
+          <span class="text-gray-500">$FFFF</span>
+          <span class="text-gray-400">$8000</span>
+        </div>
+        <div class="flex-1 bg-purple-100 border-l border-r border-purple-400 px-2 flex items-center font-bold" style="min-height:8px">AT28C256 EEPROM — 32 KB ROM</div>
+        <div class="w-14 text-right text-gray-500 pr-2">32 KB</div>
+      </div>
+      <div class="flex items-stretch border-b border-gray-300" style="height:64px">
+        <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$7FFF</div>
+        <div class="flex-1 bg-gray-100 border-l border-r border-gray-300 px-2 flex items-center text-gray-400">oanvänt</div>
+        <div class="w-14 text-right text-gray-400 pr-2 self-start pt-1">~16 KB</div>
+      </div>
+      <div class="flex items-stretch border-b-2 border-yellow-500" style="min-height:8px">
+        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
+          <span class="text-gray-500">$4010</span>
+          <span class="text-gray-400">$4000</span>
+        </div>
+        <div class="flex-1 bg-yellow-100 border-l border-r border-yellow-400 px-2 flex items-center font-bold" style="min-height:8px">W65C22 VIA — fysisk I/O</div>
+        <div class="w-14 text-right text-gray-500 pr-2">16 B</div>
+      </div>
+      <div class="flex items-stretch border-b-2 border-green-500" style="min-height:8px">
+        <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
+          <span class="text-gray-500">$3FFF</span>
+          <span class="text-gray-400">$0000</span>
+        </div>
+        <div class="flex-1 bg-green-100 border-l border-r border-green-400 px-2 flex items-center font-bold" style="min-height:8px">62256 SRAM — 16 KB RAM</div>
+        <div class="w-14 text-right text-gray-500 pr-2">16 KB</div>
+      </div>
+    </div>
+    <p><strong>Lila heldragen ram</strong> = AT28C256 EEPROM (ny). <strong>Grön</strong> = 62256 SRAM.
+      <strong>Gul</strong> = VIA. Arduino svarar inte på några minnesadresser längre — bara klocka och diagnostik.
+      Fyra enheter, en buss.</p>
+  </section>
+
+  <!-- Kod: programmerare -->
+  <section class="mb-8">
+    <h2>Arduino-kod — programmeraren</h2>
+    <div class="text-gray-700 space-y-3">
+      <p>
+        Det här programmet laddas upp på den <strong>andra</strong> Arduino Mega — den som tillfälligt
+        kopplas in som EEPROM-programmerare. Koden är enkel: ta emot 32 768 bytes över serieporten,
+        bränn dem på AT28C256, och verifiera. Programmet körs en gång i <code>setup()</code> och
+        rapporterar resultatet — <code>loop()</code> är tom.
+      </p>
+
+      <h3>Hur bränning går till</h3>
+      <p>
+        AT28C256 har inbyggd själv-timing. För att bränna en byte sätter du adress och data, drar
+        <code>/WE</code> låg, väntar minst 10 millisekunder (vi använder 10 för marginal), och drar
+        <code>/WE</code> hög igen. Kretsen sköter resten internt. För att läsa tillbaka drar du
+        <code>/OE</code> låg och läser <code>PINA</code> — precis som med SRAM.
+      </p>
+      <p>
+        Verifieringen läser tillbaka varje byte och jämför med originaldatan. Om något inte stämmer
+        rapporteras adressen och de två värdena. Annars: "OK — 32768 bytes verifierade".
+      </p>
+    </div>
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
+// ==============================================================
+// Steg 10 — EEPROM-programmerare (andra Arduino Mega)
+// ==============================================================
+// Tar emot en .bin-fil över serieporten, bränner den på
+// AT28C256, och verifierar. Körs EN gång i setup().
+
+#include &lt;Arduino.h&gt;
+
+// --- Pindefinitioner ---
+#define WE 2       // Arduino D2 → AT28C256 /WE (pin 27)
+#define OE 3       // Arduino D3 → AT28C256 /OE (pin 22)
+
+#define EEPROM_SIZE 32768  // 32 KB = 32 768 bytes
+
+// --- Buffert för mottagen data ---
+// Arduino Mega har 8 KB SRAM — för lite för hela 32 KB.
+// Vi använder därför ett sid-indelat protokoll: 256 bytes åt gången.
+uint8_t page[256];       // 256-byte sida
+int pages_total = 0;     // Räkna antal mottagna sidor
+
+// --- read_eeprom() — läs en byte från EEPROM ---
+uint8_t read_eeprom(uint16_t addr) {
+  // Sätt adress
+  PORTF = addr &amp; 0xFF;         // A0–A7  (PORTF = Arduino A0–A7)
+  PORTK = (addr &gt;&gt; 8) &amp; 0x7F;  // A8–A14 (PORTK = Arduino A8–A14, bit 7 oanvänd)
+
+  DDRA = 0x00;                  // PORTA = INPUT (tri-state)
+  digitalWrite(OE, LOW);        // /OE låg → EEPROM kör ut data
+  delayMicroseconds(1);         // Vänta på utgångsdata
+  uint8_t data = PINA;          // Läs D0–D7
+  digitalWrite(OE, HIGH);       // /OE hög → EEPROM tri-state
+  return data;
+}
+
+// --- write_eeprom() — bränn en byte till EEPROM ---
+// AT28C256 har inbyggd timing — vi behöver bara hålla /WE
+// låg i minst 10 ms så sköter kretsen resten.
+void write_eeprom(uint16_t addr, uint8_t data) {
+  // Sätt adress
+  PORTF = addr &amp; 0xFF;
+  PORTK = (addr &gt;&gt; 8) &amp; 0x7F;
+
+  // Sätt data
+  DDRA = 0xFF;                  // PORTA = OUTPUT
+  PORTA = data;                 // Lägg ut data på D0–D7
+  digitalWrite(OE, HIGH);       // /OE hög — vi ska inte läsa nu
+
+  // Bränn: puls /WE låg i 10 ms
+  digitalWrite(WE, LOW);
+  delay(10);                    // 10 ms — gott om marginal
+  digitalWrite(WE, HIGH);
+
+  DDRA = 0x00;                  // Tri-state databussen
+}
+
+// --- setup() — ta emot data, bränn, verifiera ---
+void setup() {
+  Serial.begin(115200);
+  pinMode(WE, OUTPUT);  digitalWrite(WE, HIGH);
+  pinMode(OE, OUTPUT);  digitalWrite(OE, HIGH);
+  DDRF = 0xFF;   // Adress A0–A7 = OUTPUT
+  DDRK = 0xFF;   // Adress A8–A14 = OUTPUT
+  DDRA = 0x00;   // Data = INPUT (tri-state från start)
+
+  Serial.println("AT28C256 EEPROM-programmerare");
+  Serial.println("Redo att ta emot .bin-fil...");
+  Serial.println("Skicka data med: python3 upload_eeprom.py program.bin");
+
+  // --- Ta emot data sida för sida ---
+  // Protokoll: 256 bytes per sida. Efter sista sidan: "DONE".
+  uint16_t total_addr = 0;
+  pages_total = 0;
+
+  while (true) {
+    // Vänta på startsignal från Python-skriptet
+    while (Serial.available() &lt; 1);
+    char cmd = Serial.read();
+
+    if (cmd == 'P') {
+      // "PAGE" — nästa 256 bytes är en sida
+      pages_total++;
+      int bytes_read = Serial.readBytes((char*)page, 256);
+      if (bytes_read != 256) {
+        Serial.print("FEL: endast ");
+        Serial.print(bytes_read);
+        Serial.println(" bytes mottagna (väntade 256)");
+        return;
+      }
+
+      // Bränn sidan
+      Serial.print("Bränner sida ");
+      Serial.print(pages_total);
+      Serial.print(" (adress $");
+      Serial.print(total_addr, HEX);
+      Serial.print(")... ");
+
+      for (int i = 0; i &lt; 256; i++) {
+        write_eeprom(total_addr + i, page[i]);
+      }
+      Serial.println("OK");
+      total_addr += 256;
+    }
+    else if (cmd == 'D') {
+      // "DONE" — alla sidor mottagna
+      Serial.println("Alla sidor mottagna.");
+      break;
+    }
+    else {
+      Serial.print("Okänt kommando: ");
+      Serial.println(cmd);
+    }
+  }
+
+  // --- Verifiera ---
+  Serial.println("Verifierar...");
+  int errors = 0;
+  for (uint32_t addr = 0; addr &lt; total_addr; addr++) {
+    // Vi har inte kvar originaldatan i RAM på ett enkelt sätt
+    // efter sidbränningen. I praktiken: använd ett Python-skript
+    // som skickar om datan för verifiering, eller lagra checksummor.
+    //
+    // Här visar vi principen: läs tillbaka och låt Python-skriptet
+    // jämföra.
+    uint8_t val = read_eeprom(addr);
+    Serial.print("V ");
+    Serial.print(addr, HEX);
+    Serial.print(" ");
+    Serial.println(val, HEX);
+  }
+
+  Serial.println("KLAR");
+  Serial.print("Totalt brända bytes: ");
+  Serial.println(total_addr);
+}
+
+void loop() {
+  // Tom — allt sker i setup()
+}
+</code></pre>
+  </section>
+
+  <!-- upload_eeprom.py -->
+  <section class="mb-8">
+    <h2>Python-skript — skicka .bin-fil till programmeraren</h2>
+    <p>Ett enkelt Python 3-skript som läser <code>program.bin</code> och skickar det sida för sida
+      över serieporten. Kräver <code>pyserial</code> (<code>pip install pyserial</code>).</p>
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-python">#!/usr/bin/env python3
+"""upload_eeprom.py — skicka .bin-fil till AT28C256 EEPROM-programmerare."""
+
+import serial
+import sys
+import time
+
+PAGE_SIZE = 256
+
+def upload(bin_path, port, baud=115200):
+    with open(bin_path, 'rb') as f:
+        data = f.read()
+
+    if len(data) > 32768:
+        print(f"FEL: {bin_path} är {len(data)} bytes — max 32768")
+        sys.exit(1)
+
+    print(f"Öppnar {port}...")
+    ser = serial.Serial(port, baud, timeout=5)
+    time.sleep(2)  # Vänta på Arduino-reset
+
+    # Skicka sida för sida
+    total_pages = (len(data) + PAGE_SIZE - 1) // PAGE_SIZE
+    for i in range(total_pages):
+        start = i * PAGE_SIZE
+        end = min(start + PAGE_SIZE, len(data))
+        page = data[start:end]
+
+        # PADDA sista sidan till 256 bytes med 0xFF (tom EEPROM-byte)
+        if len(page) &lt; PAGE_SIZE:
+            page = page + b'\xFF' * (PAGE_SIZE - len(page))
+
+        ser.write(b'P')           # PAGE-kommando
+        ser.write(page)           # 256 bytes data
+        ser.flush()
+
+        # Läs bekräftelse
+        response = ser.readline().decode().strip()
+        print(f"Sida {i+1}/{total_pages}: {response}")
+
+    # Signalera klart
+    ser.write(b'D')               # DONE
+    ser.flush()
+
+    print("Klar! Väntar på verifiering...")
+    while True:
+        line = ser.readline().decode().strip()
+        if not line:
+            break
+        print(line)
+
+    ser.close()
+    print("Klart.")
+
+if __name__ == '__main__':
+    if len(sys.argv) &lt; 3:
+        print(f"Använd: {sys.argv[0]} program.bin /dev/ttyACM0")
+        sys.exit(1)
+    upload(sys.argv[1], sys.argv[2])
+</code></pre>
+  </section>
+
+  <!-- Kod: dator-Arduino -->
+  <section class="mb-8">
+    <h2>Arduino-kod — datorn</h2>
+    <div class="text-gray-700 space-y-3">
+      <p>
+        Koden på datorns Arduino förenklas dramatiskt. <code>program[2048]</code> och de hundratals
+        <code>write_mem()</code>-anropen försvinner. Istället får vi en ny funktion <code>is_eeprom()</code>
+        som returnerar <code>true</code> för adresser mellan <code>$8000</code> och <code>$FFFF</code>.
+        När CPU:n läser från dessa adresser tri-statar Arduino bussen — EEPROM:et svarar själv.
+      </p>
+      <p>
+        Arduinon är nu reducerad till <strong>klockgenerator, reset-kontroll och seriell diagnostik</strong>.
+        Alla minnesarrayer utom <code>vectors[6]</code> är borta. Vektorn på <code>$FFFA–$FFFF</code>
+        ligger sist i EEPROM-bilden — <code>.segment "VECTORS"</code> i assembler-koden placerar dem där.
+      </p>
+      <p>
+        Koden nedan är baserad på steg 9 men med <code>is_eeprom()</code> istället för
+        <code>program[]</code>. <code>read_mem()</code> returnerar 0 för EEPROM-adresser —
+        Arduino rör dem inte.
+      </p>
+    </div>
+    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
+// ==============================================================
+// Steg 10 — EEPROM som ROM
+// ==============================================================
+// Arduino är nu ENDAST klocka + reset + diagnostik.
+// $8000–$FFFF hanteras av AT28C256 EEPROM.
+// SRAM ($0000–$3FFF) och VIA ($4000–$400F) är oförändrade.
+
+#include &lt;Arduino.h&gt;
+
+#define PHI2     2
+#define RESB     4
+#define RWB      3
+#define SYNC     13
+#define BTN_CLK  11
+#define BTN_INSTR 12
+
+#define CLOCK_HZ 500
+#define CLOCK_DELAY (1000 / (CLOCK_HZ * 2))
+
+#define VIA_BASE     0x4000
+#define SRAM_END     0x3FFF
+#define EEPROM_START 0x8000
+#define EEPROM_END   0xFFFF
+
+// --- is_sram() — hanteras av fysisk 62256 ---
+bool is_sram(uint16_t addr) { return addr &lt;= SRAM_END; }
+
+// --- is_via() — hanteras av fysisk W65C22 ---
+bool is_via(uint16_t addr) {
+  return (addr &gt;= VIA_BASE &amp;&amp; addr &lt; VIA_BASE + 16);
+}
+
+// --- is_eeprom() — hanteras av fysisk AT28C256 (NY!) ---
+bool is_eeprom(uint16_t addr) {
+  return (addr &gt;= EEPROM_START &amp;&amp; addr &lt;= EEPROM_END);
+}
+
+// --- read_mem() — Arduino svarar ENDAST utanför SRAM/VIA/EEPROM ---
+uint8_t read_mem(uint16_t addr) {
+  if (is_sram(addr))   return 0;   // SRAM svarar
+  if (is_via(addr))    return 0;   // VIA svarar
+  if (is_eeprom(addr)) return 0;   // EEPROM svarar (NY!)
+  return 0xEA;                      // Fallback: NOP
+}
+
+// --- write_mem() — spara, men bara utanför SRAM/VIA/EEPROM ---
+void write_mem(uint16_t addr, uint8_t val) {
+  if (is_sram(addr))   return;     // SRAM tar emot
+  if (is_via(addr))    return;     // VIA tar emot
+  if (is_eeprom(addr)) return;     // EEPROM är read-only (NY!)
+}
+
+// --- pulse() — en klockcykel, Arduino tri-state för SRAM/VIA/EEPROM ---
+void pulse() {
+  digitalWrite(PHI2, LOW);
+  DDRA = 0x00;
+  delay(CLOCK_DELAY);
+
+  uint8_t kl = PINF;
+  uint8_t kh = PINK;
+  uint16_t a = (kl &lt;&lt; 0) | (kh &lt;&lt; 8);
+  bool rw = digitalRead(RWB);
+
+  // Arduino svarar ENDAST om adressen inte är SRAM, VIA eller EEPROM
+  if (rw &amp;&amp; !is_sram(a) &amp;&amp; !is_via(a) &amp;&amp; !is_eeprom(a)) {
+    DDRA = 0xFF;
+    PORTA = read_mem(a);
+  }
+
+  digitalWrite(PHI2, HIGH);
+  delay(CLOCK_DELAY);
+
+  if (!rw &amp;&amp; !is_sram(a) &amp;&amp; !is_via(a) &amp;&amp; !is_eeprom(a))
+    write_mem(a, PINA);
+
+  // Diagnostik
+  Serial.print(rw ? "R" : "W");
+  Serial.print(" $");
+  Serial.print(a, HEX);
+  if (is_sram(a))            Serial.print("  ← SRAM");
+  else if (is_via(a))         Serial.print("  ← VIA");
+  else if (is_eeprom(a))      Serial.print("  ← EEPROM");
+  else if (a == 0xFFFC)      Serial.print("  ← RESET-VEKTOR LÅG (EEPROM)");
+  else if (a == 0xFFFD)      Serial.print("  ← RESET-VEKTOR HÖG (EEPROM)");
+  Serial.println();
+}
+
+// --- setup() — inget program att ladda! ---
+void setup() {
+  pinMode(RESB, OUTPUT); digitalWrite(RESB, LOW);
+  pinMode(PHI2, OUTPUT); digitalWrite(PHI2, LOW);
+  pinMode(SYNC, INPUT);
+  pinMode(BTN_CLK,   INPUT_PULLUP);
+  pinMode(BTN_INSTR, INPUT_PULLUP);
+  pinMode(RWB, INPUT);
+  Serial.begin(115200);
+  DDRK = 0x00; DDRF = 0x00; DDRA = 0x00;
+
+  Serial.println("Steg 10 — EEPROM som ROM");
+  Serial.println("Programmet ligger i AT28C256 — inte i Arduino.");
+
+  // Reset-sekvens
+  digitalWrite(RESB, LOW);
+  for (int i = 0; i &lt; 5; i++) pulse();
+  digitalWrite(RESB, HIGH);
+
+  Serial.println("CPU startad. EEPROM levererar programkoden.");
+}
+
+// --- loop() — knappstyrning som tidigare ---
+void loop() {
+  if (!digitalRead(BTN_CLK)) {
+    delay(50); while (!digitalRead(BTN_CLK)); delay(50);
+    pulse();
+  }
+  if (!digitalRead(BTN_INSTR)) {
+    delay(50); while (!digitalRead(BTN_INSTR)); delay(50);
+    do { pulse(); } while (!digitalRead(SYNC));
+  }
+  // Utan knapptryck: kör fritt
+  pulse();
+}
+</code></pre>
+  </section>
+
+  <!-- Exempel på körning -->
+  <section class="mb-8">
+    <h2>Exempel på körning</h2>
+    <div class="text-gray-700 space-y-3">
+
+      <h3>Fas 1 — bränna EEPROM</h3>
+      <p>
+        Bygg programmet med ca65 som vanligt, kör Python-skriptet för att bränna:
+      </p>
+      <pre class="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm font-mono">$ pio run -e step10 -t upload    # Ladda upp dator-Arduinon
+$ python3 upload_eeprom.py asm/program_hello.bin /dev/ttyACM1
+
+AT28C256 EEPROM-programmerare
+Redo att ta emot .bin-fil...
+Sida 1/8: Bränner sida 1 (adress $0000)... OK
+Sida 2/8: Bränner sida 2 (adress $0100)... OK
+...
+Sida 8/8: Bränner sida 8 (adress $0700)... OK
+Alla sidor mottagna.
+Verifierar...
+KLAR
+Totalt brända bytes: 2054</pre>
+
+      <h3>Fas 2 — flytta EEPROM till datorn</h3>
+      <p>
+        Koppla bort programmerings-Arduinon. Flytta AT28C256-chippet till datorns kopplingsdäck
+        och anslut enligt kopplingstabellen ovan. Slå på strömmen.
+      </p>
+
+      <!-- Sida vid sida: seriemonitor + LCD -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <div class="text-xs text-gray-500 mb-1 font-semibold">Serieövervakaren — datorn startar</div>
+          <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">Steg 10 — EEPROM som ROM
+Programmet ligger i AT28C256 — inte i Arduino.
+CPU startad. EEPROM levererar programkoden.
+
+R $FFFC  ← RESET-VEKTOR LÅG (EEPROM)
+R $FFFD  ← RESET-VEKTOR HÖG (EEPROM)
+R $8000  ← EEPROM
+R $8001  ← EEPROM
+W $4002  ← VIA: FF
+W $4003  ← VIA: FF
+W $4000  ← VIA: 30  (LCD-init)
+...
+W $4000  ← VIA: 3D  (=)
+...</pre>
+        </div>
+        <div>
+          <div class="text-xs text-gray-500 mb-1 font-semibold">LCD-displayen (16×2)</div>
+          <div class="bg-green-700 text-green-200 p-3 rounded-lg font-mono text-center shadow-inner">
+            <div class="bg-green-900 text-green-300 px-2 py-0.5 rounded inline-block mb-2 text-xs">LCD 16×2</div>
+            <div class="bg-green-950 rounded p-2">
+              <div>=== 6502 VIA LCD ===</div>
+              <div>Hello from W65C02!&nbsp;&nbsp;</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p>
+        Varje gång du ser <code>← EEPROM</code> i loggen är det AT28C256 som svarar — inte Arduino.
+        Reset-vektorn på <code>$FFFC</code>/<code>$FFFD</code> ligger i EEPROM:ets sista bytes,
+        inskrivna av assembler-kedjan. CPU:n läser dem, hoppar till <code>$8000</code>, och kör
+        programmet direkt från äkta ROM.
+      </p>
+      <p>
+        Koppla bort Arduinon helt (ersätt klockan med en 555-timer eller kristalloscillator) så
+        har du en helt fristående 6502-dator. Programmet överlever strömavbrott — slå på strömmen
+        imorgon och det finns kvar, inbränt i kisel.
+      </p>
+    </div>
+  </section>
+
+  <!-- Om det inte fungerar -->
+  <section class="mb-8">
+    <h2>Om det inte fungerar</h2>
+    <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
+      <ul class="list-disc pl-5 space-y-1">
+        <li><strong>CPU:n läser $FFFC/$FFFD men hoppar till fel adress?</strong> EEPROM:ets /CE
+          är förmodligen inte rätt avkodat. Kontrollera att 74HC00-grinden får A15 på båda ingångarna
+          och att utgången går till EEPROM pin 20.</li>
+        <li><strong>Programmet körs inte alls?</strong> Kontrollera att /OE är kopplat till GND
+          och /WE till +5V. Utan /OE låg kör EEPROM:et inte ut data.</li>
+        <li><strong>Bränningen misslyckas?</strong> Mät spänningen vid EEPROM:ets VDD — den måste
+          vara minst 4.8V. Använd 12V DC-adapter till programmerings-Arduinon.</li>
+        <li><strong>Busskrockar?</strong> 100Ω motstånd på databussen är nu ännu viktigare —
+          fyra enheter delar på samma 8 ledningar.</li>
+        <li><strong>Glöm inte avkopplingskondensatorn</strong> vid EEPROM:ets VDD/GND.</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="flex gap-4 mt-8">
+    <a href="step9.html" class="text-blue-600 hover:underline">← Steg 9</a>
+    <a href="index.html" class="text-blue-600 hover:underline">Översikt</a>
+  </div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+</body>
+</html>

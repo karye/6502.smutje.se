@@ -23,6 +23,7 @@
         <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
         <a href="step8.html" class="hover:text-blue-300 transition">Steg 8</a>
         <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
+        <a href="step10.html" class="hover:text-blue-300 transition">Steg 10</a>
       </div>
     </div>
   </nav>
@@ -171,6 +172,11 @@
         <div>
           <h3>Steg 9 — riktigt RAM (62256 SRAM)</h3>
           <p>Ett 62256 SRAM-chip ersätter Arduinons mjukvaruemulerade RAM. Zero page, stack och variabler lagras nu i äkta kisel. Tre enheter delar på bussen: SRAM, VIA och Arduino. Datorn har tagit steget från emulering till riktig hårdvara.</p>
+        </div>
+
+        <div>
+          <h3>Steg 10 — EEPROM som ROM (AT28C256)</h3>
+          <p>Programmet bränns in på en AT28C256 EEPROM med hjälp av en andra Arduino som programmerare. Datorn startar direkt från äkta ROM — ingen Arduino behövs för att leverera programkoden längre. Fyra enheter på bussen. Datorn är helt fristående.</p>
         </div>
 
       </div>
