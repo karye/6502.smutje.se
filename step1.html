@@ -573,8 +573,56 @@
     <!-- Kod -->
     <section class="mb-8">
       <h2>Arduino-kod</h2>
-      <p>Koden som laddas upp till Arduino Mega.</p>
-      <p>Koden är enkel: sätt pinne D2 som utgång och växla mellan HÖG och LÅG med 500 ms fördröjning. Resultatet blir en symmetrisk fyrkantsvåg på 1 Hz — perfekt för att se lysdioden blinka.</p>
+      <div class="text-gray-700 space-y-3">
+        <p>
+          Nu ska vi skriva koden som väcker processorn till liv. Det här är första gången vi laddar upp något till
+          Arduino — och det är ett perfekt tillfälle att förstå hur ett Arduino-program är uppbyggt.
+        </p>
+
+        <h3>Så fungerar ett Arduino-program</h3>
+        <p>
+          Varje Arduino-program består av två funktioner som plattformen anropar automatiskt:
+        </p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong><code>setup()</code></strong> — körs <em>en enda gång</em> när Arduino startar (eller efter reset). Här
+            konfigurerar du pinnar, startar seriekommunikation och initierar allt som behöver vara klart innan programmet
+            börjar loopa.</li>
+          <li><strong><code>loop()</code></strong> — körs <em>om och om igen i all oändlighet</em>. När Arduinon nått slutet
+            av <code>loop()</code> börjar den om från början — tusentals gånger i sekunden om du inte saktar ner den.
+            Varje varv i loopen är en chans att läsa sensorer, uppdatera utgångar eller — som i vårt fall — generera
+            en klockpuls.</li>
+        </ul>
+        <p>
+          Den här strukturen är genialiskt enkel: <code>setup()</code> förbereder, <code>loop()</code> gör jobbet.
+          Tillsammans räcker de för allt från en blinkande lysdiod till en fullständig minnesemulator.
+        </p>
+
+        <h3>Kodens arkitektur i detta steg</h3>
+        <p>
+          Koden är uppdelad i tre lager:
+        </p>
+        <ol class="list-decimal pl-5 space-y-1">
+          <li><strong>Definitioner och konstanter</strong> — längst upp definierar vi pinnar (<code>PHI2</code>,
+            <code>RESB</code>) och räknar ut klockfrekvensen. Genom att använda namngivna konstanter istället för
+            magiska siffror blir koden läsbar och lätt att ändra — vill du testa en snabbare klocka ändrar du bara
+            <code>CLOCK_HZ</code>.</li>
+          <li><strong><code>pulse()</code> — en hjälpfunktion</strong> som genererar en enda komplett klockcykel.
+            Funktionen drar PHI2 HÖG i 500 ms (lysdioden lyser), sedan LÅG i 500 ms (lysdioden släcks). Resultatet
+            är en symmetrisk fyrkantsvåg på 1 Hz — tillräckligt långsamt för att du ska kunna följa med i vad som
+            händer. W65C02S är en statisk CMOS-krets, vilket betyder att den inte har någon minsta klockfrekvens —
+            du kan göra pulserna hur långsamma du vill utan att processorn tappar sitt interna tillstånd.</li>
+          <li><strong><code>setup()</code> och <code>loop()</code></strong> — i <code>setup()</code> konfigurerar vi
+            pinnar, håller CPU:n i reset och startar seriekommunikation. I <code>loop()</code> anropar vi bara
+            <code>pulse()</code> — en klockcykel per varv, för alltid.</li>
+        </ol>
+
+        <h3>Vad du ser när koden kör</h3>
+        <p>
+          När du laddat upp koden och öppnar serieövervakaren (115200 baud) ser du texten "Steg 1 — Klocka och ström".
+          Lysdioden på klocklinjen blinkar en gång per sekund — den är tänd när PHI2 är hög (CPU:n arbetar) och släckt
+          när PHI2 är låg. Du har just gett processorn dess första hjärtslag.
+        </p>
+      </div>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 1 — strömmatning och klocka
@@ -622,21 +670,34 @@ void loop() {
 </code></pre>
     </section>
 
-    <!-- Testning -->
+    <!-- Exempel på körning -->
     <section class="mb-8">
-      <h2>Testning och felsökning</h2>
-      <ol class="list-decimal pl-5 space-y-1 text-gray-700">
-        <li>Ladda upp koden till Arduino</li>
-        <li>Lysdioden ska blinka en gång per sekund</li>
-        <li>Mät mellan pin 8 (VDD) och pin 21 (VSS): du ska ha <strong>minst 4.8V</strong></li>
-      </ol>
-      <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
-        <span class="font-bold text-green-800">✅ Förväntat:</span>
-        <span class="text-green-700">Lysdiod blinkar stadigt. CPU:n är spänningssatt och klockad — redo för steg
-          2.</span>
+      <h2>Exempel på körning</h2>
+      <div class="text-gray-700 space-y-3">
+        <p>
+          När du öppnar serieövervakaren i Arduino IDE eller PlatformIO (115200 baud) ser du detta:
+        </p>
+        <pre class="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm font-mono">Steg 1 — Klocka och ström
+Lysdioden på PHI2 ska blinka 1 Hz</pre>
+        <p>
+          Det är allt! Programmet har inget mer att rapportera — det bara loopar. Men titta på kopplingsdäcket:
+          lysdioden blinkar i precis den takt som <code>pulse()</code> bestämmer. Varje gång dioden tänds är PHI2
+          hög och processorn tar ett steg framåt. Varje gång den släcks förbereder processorn nästa steg.
+        </p>
+        <p>
+          Prova att ändra <code>CLOCK_HZ</code> från <code>1</code> till <code>10</code> och ladda upp igen.
+          Dioden blinkar nu tio gånger per sekund — för snabbt för att urskilja enskilda pulser, men du ser att
+          den lyser svagare eftersom den är släckt halva tiden. Det här är samma princip som senare steg använder
+          när klockan körs i 500 Hz — då syns inte blinkandet alls, men processorn jobbar för fullt.
+        </p>
       </div>
-      <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
-        <h3>Om det inte fungerar</h3>
+    </section>
+
+    <!-- Testning och felsökning -->
+    <section class="mb-8">
+      <h2>Om det inte fungerar</h2>
+      <div class="text-gray-700 space-y-3">
+        <p>Här är några saker att kontrollera:</p>
         <ul class="list-disc pl-5 space-y-1">
           <li><strong>Dioden blinkar inte?</strong> Kontrollera att du har rätt pinne (D2), att dioden är rättvänd
             (långa benet till D2 via motstånd, korta till GND), och att motståndet är 220Ω.</li>

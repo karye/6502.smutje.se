@@ -105,7 +105,58 @@
 <!-- Kod -->
   <section class="mb-8">
     <h2>Arduino-kod</h2>
-    <p>Koden som laddas upp till Arduino Mega. Koden bygger vidare på steg 2. Den stora nyheten är <code>pulse()</code> som nu emulerar ett minne: läser adress + R/W, och antingen skickar data (<code>DDRA=0xFF, PORTA=…</code>) eller tar emot (<code>DDRA=0x00</code>).</p>
+    <div class="text-gray-700 space-y-3">
+      <p>
+        Det här är det största kodsteget hittills — och det viktigaste. Arduino går från att vara en passiv
+        observatör till att bli en <strong>fullvärdig minnesemulator</strong>. CPU:n kommer att ställa frågor
+        via adressbussen, och Arduino måste svara med rätt byte på databussen — allt inom loppet av en enda
+        klockcykel. När det fungerar har vi en dator som faktiskt kör ett program.
+      </p>
+
+      <h3>Databussen — 8 ledningar som bär information</h3>
+      <p>
+        Adressbussen (steg 2) talar om <em>var</em> CPU:n vill läsa. Databussen bär <em>vad</em> som ska
+        läsas eller skrivas. Det är 8 ledningar — D0 till D7 — och de är <strong>dubbelriktade</strong>.
+        Ibland driver CPU:n dem (vid skrivning), ibland Arduino (vid läsning). Det är därför de 100Ω
+        seriemotstånden är livsviktiga: om båda kretsarna råkar driva samma ledning samtidigt begränsar
+        motstånden strömmen och förhindrar att något går sönder.
+      </p>
+
+      <h3>R/W-signalen — vem som pratar</h3>
+      <p>
+        CPU:ns pin 34 (RWB) är trafikljuset på bussen. När R/W är <strong>HÖG</strong> vill CPU:n läsa —
+        Arduino ska då sätta <code>DDRA = 0xFF</code> (alla pinnar som utgångar) och lägga ut rätt byte på
+        <code>PORTA</code>. När R/W är <strong>LÅG</strong> vill CPU:n skriva — Arduino måste omedelbart
+        sätta <code>DDRA = 0x00</code> (tri-state, hög impedans) så att CPU:n kan driva ledningarna utan
+        motstånd. Det här skiftet sker i <em>varje klockcykel</em>, mitt i <code>pulse()</code>.
+      </p>
+
+      <h3>Kodens fyra lager</h3>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li><strong><code>read_mem()</code> och <code>write_mem()</code></strong> — två enkla funktioner som
+          slår upp eller sparar en byte i rätt array. Vektorer hamnar i <code>vectors[6]</code>, arbetsminne i
+          <code>ram[1024]</code>. Allt annat returnerar <code>$EA</code> (NOP) — en ofarlig fallback som gör
+          att CPU:n bara hoppar vidare om den läser från en oanvänd adress.</li>
+        <li><strong><code>pulse()</code> — datorns hjärta</strong> — samma struktur som tidigare men nu med ett
+          avgörande tillägg: efter att ha läst adress och R/W bestämmer den om Arduino ska driva databussen
+          (<code>DDRA = 0xFF</code>) eller gå ur vägen (<code>DDRA = 0x00</code>). Allt detta sker medan PHI2
+          är låg. När PHI2 sedan går hög läser CPU:n av databussen — eller skriver till den.</li>
+        <li><strong><code>setup()</code> — ladda programmet</strong> — här skrivs reset-vektorn (<code>$8000</code>)
+          och en enda NOP-instruktion (<code>$EA</code>) in i minnet. Det är vårt första 6502-program: CPU:n
+          startar på <code>$8000</code>, läser <code>$EA</code>, gör ingenting, går till <code>$8001</code>,
+          läser <code>$EA</code> (minnet returnerar NOP överallt), och loopar för evigt.</li>
+        <li><strong><code>loop()</code></strong> — anropar bara <code>pulse()</code>. En klockcykel per varv,
+          med fullständig loggning i serieövervakaren.</li>
+      </ol>
+
+      <h3>Vad som är nytt jämfört med steg 2</h3>
+      <p>
+        Tre stora nyheter: <strong>R/W-signalen</strong> kopplas in på D3, <strong>databussen</strong> på
+        D22–D29 via 100Ω, och <strong>minnesarrayerna</strong> <code>ram[]</code> och <code>vectors[]</code>
+        gör att Arduino kan svara med olika data på olika adresser. <code>pulse()</code> är nu en fullständig
+        buss-emulator — det är den här funktionen som kommer att följa med oss genom resten av projektet.
+      </p>
+    </div>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 3 — databuss och minnesemulering
@@ -223,27 +274,50 @@ void loop() {
 </code></pre>
   </section>
 
+  <!-- Exempel på körning -->
+  <section class="mb-8">
+    <h2>Exempel på körning</h2>
+    <div class="text-gray-700 space-y-3">
+      <p>
+        När du öppnar serieövervakaren (115200 baud) ser du CPU:n läsa reset-vektorn och sedan loopa på NOP:
+      </p>
+      <pre class="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm font-mono">Steg 3 — databuss och minnesemulering
+R $FFFC
+R $FFFD
+R $8000
+R $8001
+R $8002
+R $8003
+R $8004
+...</pre>
+      <p>
+        Alla rader börjar med <code>R</code> — CPU:n gör inget annat än att läsa, eftersom NOP varken skriver
+        till minnet eller ändrar några register. Adresserna räknas uppåt: <code>$8000</code>, <code>$8001</code>,
+        <code>$8002</code>… och eftersom minnet returnerar <code>$EA</code> (NOP) på alla adresser utanför
+        programmet, kommer CPU:n att vandra genom hela adressrymden — upp till <code>$FFFF</code>, sedan börja
+        om från <code>$0000</code> — i en oändlig loop.
+      </p>
+      <p>
+        Det ser kanske händelselöst ut, men varje rad i loggen är ett mirakel: Arduino har läst adressbussen,
+        kollat R/W, slagit upp rätt byte i minnet, och lagt ut den på databussen — allt innan CPU:n hann märka
+        någon fördröjning. Du tittar på en <strong>fungerande dator</strong> vars program är att göra ingenting.
+      </p>
+    </div>
+  </section>
+
   <!-- Testning -->
   <section class="mb-8">
-    <h2>Testning och felsökning</h2>
-    <ol class="list-decimal pl-5 space-y-1 text-gray-700">
-      <li>Öppna serieövervakaren (115200 baud)</li>
-      <li>Du ska se: <code>R $FFFC</code>, <code>R $FFFD</code>, <code>R $8000</code>, <code>R $8001</code>…</li>
-      <li>CPU:n loopar på NOP — perfekt för att verifiera att allt fungerar</li>
-    </ol>
-    <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
-      <span class="font-bold text-green-800">✅ Förväntat:</span>
-      <span class="text-green-700">CPU:n läser reset-vektor, hoppar till $8000, exekverar NOP i loop.</span>
-    </div>
-    <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
-      <h3>Om det inte fungerar</h3>
-      <ul class="list-disc pl-5 space-y-1">
+    <h2>Om det inte fungerar</h2>
+      <div class="text-gray-700 space-y-3">
+        <p>Här är några saker att kontrollera:</p>
+        <ul class="list-disc pl-5 space-y-1">
         <li><strong>Ser du <code>W $0</code> eller <code>W $1</code>?</strong> CPU:n driver inte bussarna. Kontrollera BE (måste vara HÖG) och att PHI2 når CPU:n.</li>
         <li><strong>Ser du <code>R $FFFC</code> men inget mer?</strong> Databussen är felaktig. Kontrollera D22–D29 och att 100Ω-motstånden sitter på alla 8 ledningar.</li>
         <li><strong>CPU:n hoppar till konstig adress?</strong> Reset-vektorn är fel. Dubbelkolla <code>write_mem(0xFFFC, 0x00)</code> och <code>write_mem(0xFFFD, 0x80)</code>.</li>
         <li><strong>Glöm inte 100Ω!</strong> Utan seriemotstånd kan en enda felaktig <code>DDRA</code>-inställning förstöra CPU:n eller Arduino.</li>
       </ul>
     </div>
+      </div>
   </section>
 
   <div class="flex gap-4 mt-8">

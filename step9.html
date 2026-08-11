@@ -336,7 +336,63 @@
   <!-- Arduino-kod -->
   <section class="mb-8">
     <h2>Arduino-kod</h2>
-    <p>Den stora förändringen: <code>is_sram()</code> kollar om adressen är under $4000. I så fall rör inte Arduino databussen — SRAM-chippet sköter allt.</p>
+    <div class="text-gray-700 space-y-3">
+      <p>
+        Det här är slutsteget — och den mest genomgripande förändringen av minnesemulatorn sedan steg 3.
+        Vi kopplar in ett <strong>62256 SRAM-chip</strong> (32 KB statiskt RAM) som tar över adresserna
+        <code>$0000–$3FFF</code>. Arduino måste nu <strong>tri-stata databussen</strong> för alla
+        SRAM- och VIA-adresser — tre enheter delar på samma 8 datalinjer, och bara en får prata i taget.
+      </p>
+
+      <h3>Tre enheter, en buss</h3>
+      <p>
+        Databussen (D0–D7) är nu ansluten till tre kretsar samtidigt: CPU, Arduino, SRAM och VIA.
+        Adressavkodningen (74HC00) avgör vem som svarar:
+      </p>
+      <ul class="list-disc pl-5 space-y-1">
+        <li><strong>$0000–$3FFF</strong> → <code>is_sram()</code> returnerar <code>true</code>. Arduino
+          rör inte bussen. SRAM-chippet läser och skriver helt på egen hand.</li>
+        <li><strong>$4000–$400F</strong> → <code>is_via()</code> returnerar <code>true</code>. Arduino
+          rör inte bussen. VIA-kretsen hanterar I/O.</li>
+        <li><strong>$8000–$FFFF</strong> → Arduino svarar med programkod och vektorer. SRAM och VIA
+          är inaktiva (deras /CE- och /CS2-signaler är höga).</li>
+      </ul>
+      <p>
+        Det här är en <strong>riktig datorarkitektur</strong>: flera enheter på en delad buss, styrda av
+        adressavkodningslogik. Exakt så här fungerar modernare datorer också — bara med fler kretsar och
+        högre hastigheter.
+      </p>
+
+      <h3>is_sram() — den nya gränsen</h3>
+      <p>
+        <code>is_sram()</code> är lika enkel som <code>is_via()</code>: returnerar <code>true</code> om
+        adressen är högst <code>$3FFF</code>. I <code>read_mem()</code> och <code>write_mem()</code>
+        kontrolleras SRAM före allt annat — om adressen är under <code>$4000</code> gör Arduino
+        ingenting. <code>pulse()</code> har nu tre villkor: <code>!is_sram(a) && !is_via(a)</code>
+        — Arduino driver bussen endast när varken SRAM eller VIA gör det.
+      </p>
+
+      <h3>Två programfaser</h3>
+      <p>
+        Koden är uppdelad i två faser som demonstrerar att SRAM fungerar:
+      </p>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li><strong>Fas 1 — VIA/LCD-text:</strong> samma 4-radersprogram som tidigare. Visar att VIA
+          och LCD fungerar med SRAM inkopplat. Programmet väntar sedan på ett knapptryck.</li>
+        <li><strong>Fas 2 — Fibonacci:</strong> ett 6502-program som beräknar Fibonacci-sekvensen
+          (0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233) och visar varje tal på LCD:n.
+          Programmet använder zero page (<code>$00–$02</code>) för att lagra variabler — minnesadresser
+          som nu ligger i det fysiska SRAM-chippet, inte i Arduinons array.</li>
+      </ol>
+
+      <h3>Vad som är nytt jämfört med steg 7–8</h3>
+      <p>
+        62256 SRAM-chip, utökad 74HC00-avkodning (U4C+U4D för SRAM). I koden: <code>is_sram()</code>,
+        utökade villkor i <code>pulse()</code>/<code>read_mem()</code>/<code>write_mem()</code>, tvåfasigt
+        programflöde i <code>setup()</code>, och Fibonacci-programmet byggt med ca65. <code>ram[1024]</code>
+        från tidigare steg är borta — den har ersatts av äkta kisel.
+      </p>
+    </div>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // Steg 9 — Riktigt RAM (62256 32KB SRAM)
 // Baserat på steg 7: först visa 4-raders text via VIA/LCD,
@@ -886,27 +942,102 @@ txt_fib:
     <p>Komplett assembler-kod: <code>Mega_2560_6502/asm/program_fib.asm</code>. Byggs med <code>ca65 + ld65 → program_fib.h → inkluderas av step9.inc</code>.</p>
   </section>
 
-  <!-- Testning -->
+  <!-- Exempel på körning -->
   <section class="mb-8">
-    <h2>Testning och felsökning</h2>
-    <ol class="list-decimal pl-5 space-y-1 text-gray-700">
-      <li>Ladda upp med <pre><code class="apache">pio run -e step9 -t upload -t monitor</code></pre></li>
-      <li>I serieövervakaren: adresser under $4000 ska markeras med <code>&lt;- SRAM</code></li>
-      <li>Tryck på instruktionssteg — följ programflödet. STX $0200 ska visa <code>W $0200 &lt;- SRAM</code></li>
-    </ol>
-    <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
-      <span class="font-bold text-green-800">✅ Förväntat:</span>
-      <span class="text-green-700">CPU:n läser/skriver till SRAM för adresser under $4000. Arduino är helt ur vägen — SRAM-chippet svarar på egen hand.</span>
+    <h2>Exempel på körning</h2>
+    <div class="text-gray-700 space-y-3">
+      <p>
+        När du laddat upp koden körs två faser efter varandra. Först VIA/LCD-programmet, sedan — efter
+        ett knapptryck — Fibonacci-programmet som använder det fysiska SRAM-chippet.
+      </p>
+
+      <!-- Fas 1: sida vid sida -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <div class="text-xs text-gray-500 mb-1 font-semibold">Serieövervakaren — fas 1</div>
+          <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">Steg 9 — 62256 SRAM
+Fas 1: Laddar 4-raders VIA/LCD-program...
+Kor 1000 cykler (tyst)...
+Fas 1 klar — vantar pa knapptryck...</pre>
+        </div>
+        <div>
+          <div class="text-xs text-gray-500 mb-1 font-semibold">LCD-displayen — fas 1</div>
+          <div class="bg-green-700 text-green-200 p-3 rounded-lg font-mono text-center shadow-inner">
+            <div class="bg-green-900 text-green-300 px-2 py-0.5 rounded inline-block mb-2 text-xs">LCD 16×2</div>
+            <div class="bg-green-950 rounded p-2">
+              <div>=== Steg 9 SRAM ===&nbsp;</div>
+              <div>Tryck pa knapp...&nbsp;&nbsp;</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p>
+        Tryck på valfri knapp för att gå vidare till Fibonacci:
+      </p>
+
+      <!-- Fas 2: sida vid sida -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <div class="text-xs text-gray-500 mb-1 font-semibold">Serieövervakaren — fas 2</div>
+          <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">>>> Knapp 1 tryckt! <<<
+Laddar Fibonacci-program...
+Fibonacci-program kört.
+R $FFFC
+R $FFFD
+R $8000  ← OPCODE
+...
+R $0000  ← SRAM (F(n-2))
+R $0001  ← SRAM (F(n-1))
+W $0002  ← SRAM (F(n))
+W $4000  ← VIA: 31  (siffran 1)
+W $4000  ← VIA: 34  (siffran 4)
+W $4000  ← VIA: 34  (siffran 4)</pre>
+        </div>
+        <div>
+          <div class="text-xs text-gray-500 mb-1 font-semibold">LCD-displayen — mitt i Fibonacci</div>
+          <div class="bg-green-700 text-green-200 p-3 rounded-lg font-mono text-center shadow-inner">
+            <div class="bg-green-900 text-green-300 px-2 py-0.5 rounded inline-block mb-2 text-xs">LCD 16×2</div>
+            <div class="bg-green-950 rounded p-2">
+              <div>Fib:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+              <div>144&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 mt-2"><code>144</code> är det tolfte Fibonacci-talet.
+            Strax därefter kommer <code>233</code> — det sista som ryms i 8 bitar — sedan wrappar det.</p>
+        </div>
+      </div>
+
+      <p>
+        Varje nytt Fibonacci-tal dyker upp med en kort paus. När talet når 233 (det sista som ryms i
+        en 8-bitars byte) wrappar det tillbaka till 0 och sekvensen börjar om. Under tiden använder
+        6502-programmet zero page-adresser (<code>$00</code>, <code>$01</code>, <code>$02</code>) för
+        att lagra F(n-2), F(n-1) och F(n) — adresser som nu ligger i det fysiska SRAM-chippet, inte
+        i Arduinons mjukvaruemulerade RAM. I serieövervakaren syns dessa som <code>R $0000</code> och
+        <code>W $0002</code> med <code>← SRAM</code>-markering.
+      </p>
+      <p>
+        Du har byggt en dator med tre kretsar som delar på samma buss, äkta SRAM för arbetsminne,
+        en VIA för I/O, och en 6502-processor som kör dina egna assembler-program. Från en blinkande
+        lysdiod till Fibonacci på LCD — hela resan på nio steg.
+      </p>
     </div>
-    <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
-      <h3>Om det inte fungerar</h3>
-      <ul class="list-disc pl-5 space-y-1">
+  </section>
+
+  
+<!-- Testning -->
+  <section class="mb-8">
+    <h2>Om det inte fungerar</h2>
+      <div class="text-gray-700 space-y-3">
+        <p>Här är några saker att kontrollera:</p>
+        <ul class="list-disc pl-5 space-y-1">
         <li><strong>CPU:n läser $0000 vid reset?</strong> SRAM-chipets /OE är inte GND. Utan /OE=LÅG driver SRAM inte ut data vid läsning.</li>
         <li><strong>Databuss-krockar?</strong> Arduino får INTE sätta DDRA=0xFF vid SRAM-adresser. Kontrollera att <code>is_sram()</code> returnerar rätt.</li>
         <li><strong>SRAM skriver inte?</strong> /WE måste gå till R/W (pin 34). /CE måste vara avkodad korrekt via 74HC00.</li>
         <li><strong>Glitchar på bussen?</strong> 62256 är snabbare än Arduino. Se till att /CE och /WE är stabila innan databussen läses.</li>
       </ul>
     </div>
+      </div>
   </section>
 
   <div class="flex gap-4 mt-8">

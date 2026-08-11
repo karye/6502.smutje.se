@@ -173,12 +173,56 @@
     <!-- Kod -->
     <section class="mb-8">
       <h2>Arduino-kod</h2>
-      <p>Koden som laddas upp till Arduino Mega. Koden gör tre saker: </p>
-      <ol>
-        <li>(1) håller CPU:n i reset i 5 klockcykler,</li>
-        <li>(2) släpper reset så CPU:n startar,</li>
-        <li>(3) läser och skriver ut adressbussen i varje cykel. Första utskrifterna ska vara <code>$FFFC</code> och <code>$FFFD</code> — reset-vektorn.</li>
-      </ol>
+      <div class="text-gray-700 space-y-3">
+        <p>
+          I steg 1 gav vi processorn liv. Nu ska vi lyssna på vad den säger. Koden i detta steg gör något
+          fundamentalt: den <strong>läser av processorns adressbuss</strong> — 16 ledningar som tillsammans
+          talar om var i minnet CPU:n vill läsa — och skriver ut adressen i serieövervakaren. Det är som att
+          koppla in en logikanalysator, fast gratis.
+        </p>
+
+        <h3>Portregister — att läsa 8 pinnar på en gång</h3>
+        <p>
+          Arduino Mega har 54 digitala pinnar, men att läsa dem en och en med <code>digitalRead()</code> är
+          alldeles för långsamt. Varje anrop tar flera mikrosekunder — och med 16 adresslinjer skulle vi tappa
+          synkroniseringen med processorn direkt. Lösningen är <strong>portregister</strong> — specialregister
+          som läser eller skriver 8 pinnar samtidigt i en enda maskininstruktion:
+        </p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong><code>DDRF = 0x00</code></strong> — sätt alla 8 pinnar på PORTF som ingångar. Motsvarar
+            8 × <code>pinMode()</code> men går på några nanosekunder.</li>
+          <li><strong><code>PINF</code></strong> — läs alla 8 pinnar på en gång. Varje bit i byten motsvarar
+            en pinne. Här är det CPU:ns A0–A7.</li>
+          <li><strong><code>PINK</code></strong> — läser CPU:ns A8–A15 på samma sätt.</li>
+        </ul>
+        <p>
+          För att få ihop en 16-bitars adress skiftar vi ihop de två byten: <code>(PINK &lt;&lt; 0) | (PINF &lt;&lt; 8)</code>.
+          Resultatet är ett tal mellan 0 och 65 535 — processor ns fullständiga adressrymd.
+        </p>
+
+        <h3>Reset-sekvensen — vad som händer när CPU:n vaknar</h3>
+        <p>
+          Koden gör tre saker i <code>setup()</code>:
+        </p>
+        <ol class="list-decimal pl-5 space-y-1">
+          <li><strong>Håller CPU:n i reset</strong> — <code>RESB = LOW</code> i minst 2 klockcykler (vi kör 5 för
+            säkerhets skull). Under denna tid är CPU:ns interna register nollställda och bussarna är tri-state.</li>
+          <li><strong>Släpper reset</strong> — <code>RESB = HIGH</code>. Detta är ögonblicket CPU:n vaknar. Den gör
+            inget val, fattar inget beslut — den läser helt enkelt adress <code>$FFFC</code> och <code>$FFFD</code>.
+            Det är inbyggt i kisel. Adressen den hittar där blir programmets startpunkt.</li>
+          <li><strong>Läser och loggar</strong> — i <code>loop()</code> läser vi adressbussen i varje klockcykel
+            och skriver ut den. Första två raderna kommer alltid att vara <code>$FFFC</code> och <code>$FFFD</code> —
+            reset-vektorn. Det är processorns sätt att fråga "var ska jag börja?".</li>
+        </ol>
+
+        <h3>Vad som är nytt jämfört med steg 1</h3>
+        <p>
+          Klockan har höjts från 1 Hz till 500 Hz — för snabbt för att se med ögat, men lagom för att läsa
+          adressbussen i serieövervakaren. <code>pulse()</code> har förenklats (ingen lysdiod denna gång) och
+          <code>loop()</code> gör nu det tunga jobbet: läsa portregister, skifta ihop adressen, skriva ut.
+          <code>setup()</code> har fått en reset-sekvens — den viktigaste nyheten i detta steg.
+        </p>
+      </div>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 2 — adressbuss och reset-sekvens
@@ -250,19 +294,45 @@ void loop() {
 </code></pre>
     </section>
 
-    <!-- Testning -->
+    <!-- Exempel på körning -->
     <section class="mb-8">
-      <h2>Testning och felsökning</h2>
-      <ol class="list-decimal pl-5 space-y-1 text-gray-700">
-        <li>Öppna serieövervakaren (115200 baud)</li>
-        <li>Första raderna ska vara <code>FFFC</code>, <code>FFFD</code>, följt av en adress</li>
-      </ol>
-      <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
-        <span class="font-bold text-green-800">✅ Förväntat:</span>
-        <span class="text-green-700">CPU:n läser reset-vektorn. Adresserna $FFFC, $FFFD syns först.</span>
+      <h2>Exempel på körning</h2>
+      <div class="text-gray-700 space-y-3">
+        <p>
+          När du öppnar serieövervakaren (115200 baud) efter uppladdning ser du ungefär detta:
+        </p>
+        <pre class="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm font-mono">Steg 2 — adressbuss och reset
+R $FFFC
+R $FFFD
+R $8000
+R $8001
+R $8002
+R $8003
+Klar — nu loopar vi:
+R $8004
+R $8005
+R $8006
+...</pre>
+        <p>
+          Varje rad börjar med <code>R</code> (Read — CPU:n läser) följt av <code>$</code> och en hexadecimal adress.
+          De två första raderna är alltid <code>$FFFC</code> och <code>$FFFD</code> — reset-vektorn. Processorn frågar
+          "var ska jag börja?" och svaret (som just nu är skräp eftersom databussen inte är inkopplad) leder den
+          till någon adress — ofta <code>$8000</code> eller <code>$0000</code> beroende på vad som ligger på de
+          flytande datalinjerna.
+        </p>
+        <p>
+          Lägg märke till att <code>$FFFC</code> och <code>$FFFD</code> bara dyker upp en gång — efter reset.
+          Sedan räknar adresserna uppåt när CPU:n hämtar instruktioner. Utan databuss (steg 3) kan CPU:n inte
+          hämta riktiga opcodes, men adressbussen fungerar redan — och det är precis vad vi ville bevisa.
+        </p>
       </div>
-      <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
-        <h3>Om det inte fungerar</h3>
+    </section>
+
+    <!-- Testning och felsökning -->
+    <section class="mb-8">
+      <h2>Om det inte fungerar</h2>
+      <div class="text-gray-700 space-y-3">
+        <p>Här är några saker att kontrollera:</p>
         <ul class="list-disc pl-5 space-y-1">
           <li><strong>Ser du bara <code>0</code> eller <code>1</code>?</strong> CPU:n är fortfarande i reset eller BE är
             LÅG. Kontrollera att RESB går HÖG efter reset-sekvensen, och att BE har +5V.</li>

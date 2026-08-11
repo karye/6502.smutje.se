@@ -154,7 +154,52 @@
 <!-- Kod -->
   <section class="mb-8">
     <h2>Arduino-kod</h2>
-    <p>Koden som laddas upp till Arduino Mega. LCD-biblioteket sköter allt. Vi visar CPU:ns aktuella adress och data i realtid — uppdaterat i <code>pulse()</code>.</p>
+    <div class="text-gray-700 space-y-3">
+      <p>
+        Hittills har all feedback från datorn gått via serieövervakaren på en laptop. Det fungerar, men det
+        känns inte som en riktig dator. Nu kopplar vi in en <strong>LCD-display</strong> direkt på
+        kopplingsdäcket — och vips är datorn fristående. Ingen PC krävs för att se vad CPU:n gör.
+      </p>
+
+      <h3>LCD i 4-bitarsläge — att prata med displayen</h3>
+      <p>
+        LCD-displayer med HD44780-kontroller (standard för 16×2 och 20×4) kan köras i två lägen:
+        8-bitars (alla 8 datapinnar används) eller 4-bitars (endast DB4–DB7). Vi använder 4-bitarsläget
+        för att spara pinnar på Arduino. Arduino-biblioteket <code>LiquidCrystal</code> hanterar all
+        kommunikation — vi behöver bara tala om vilka pinnar som används:
+      </p>
+      <pre class="bg-gray-100 p-3 rounded text-sm font-mono">LiquidCrystal lcd(5, 6, 10, 9, 8, 7);
+//                    RS  E  DB4 DB5 DB6 DB7</pre>
+      <p>
+        <strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. Arduino D10 → LCD DB4,
+        D9 → DB5, D8 → DB6, D7 → DB7. Om din display har rak ordning (D7→DB4 osv.) måste du ändra
+        ordningen i konstruktorn. LCD:ns R/W-pinne (pin 5) kopplas till GND — vi skriver bara till
+        displayen, vi läser aldrig från den.
+      </p>
+
+      <h3>LCD-uppdatering inuti pulse()</h3>
+      <p>
+        Den stora kodändringen sitter i <code>pulse()</code>. Efter varje klockcykel uppdateras LCD:n:
+      </p>
+      <ul class="list-disc pl-5 space-y-1">
+        <li><strong>Rad 0:</strong> visar aktuell adress i formatet <code>A:$8000</code>. Padding med
+          mellanslag håller displayen ren när adressen växlar mellan olika längder.</li>
+        <li><strong>Rad 1:</strong> visar data på databussen i formatet <code>D:$EA</code>. Enstaka
+          hex-siffror paddas med en nolla för jämn bredd.</li>
+      </ul>
+      <p>
+        <code>setup()</code> initierar LCD:n med <code>lcd.begin(16, 2)</code> och skriver en
+        välkomsttext. <code>loop()</code> är oförändrad från steg 4 — knapparna fungerar precis
+        som tidigare, men nu ser du resultatet både i serieövervakaren och på displayen.
+      </p>
+
+      <h3>Vad som är nytt jämfört med steg 4</h3>
+      <p>
+        LCD-display, 10kΩ-potentiometer för kontrast, och 220Ω för bakgrundsbelysningen. I koden:
+        <code>#include &lt;LiquidCrystal.h&gt;</code>, LCD-objektet, och <code>lcd.print()</code>-anropen
+        i <code>pulse()</code>. Det är allt — resten är samma beprövade minnesemulator som tidigare.
+      </p>
+    </div>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 5 — LCD-display (parallell 4-bit till Arduino)
@@ -278,26 +323,86 @@ void loop() {
 </code></pre>
   </section>
 
+  <!-- Exempel på körning -->
+  <section class="mb-8">
+    <h2>Exempel på körning</h2>
+    <div class="text-gray-700 space-y-3">
+      <p>
+        Direkt efter uppladdning visar både serieövervakaren och LCD-displayen att allt är redo:
+      </p>
+
+      <!-- Sida vid sida: seriemonitor + LCD vid uppstart -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <div class="text-xs text-gray-500 mb-1 font-semibold">Serieövervakaren (115200 baud)</div>
+          <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">Steg 5 — LCD-display</pre>
+        </div>
+        <div>
+          <div class="text-xs text-gray-500 mb-1 font-semibold">LCD-displayen</div>
+          <div class="bg-green-700 text-green-200 p-3 rounded-lg font-mono text-center shadow-inner">
+            <div class="bg-green-900 text-green-300 px-2 py-0.5 rounded inline-block mb-2 text-xs">LCD 16×2</div>
+            <div class="bg-green-950 rounded p-2">
+              <div>W65C02S Steg 5&nbsp;&nbsp;&nbsp;</div>
+              <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p>
+        När du trycker på <strong>Knapp 1</strong> (klocksteg) uppdateras båda vyerna samtidigt.
+        Serieövervakaren loggar varje minnesaccess, LCD:n visar adress och data i realtid:
+      </p>
+
+      <!-- Sida vid sida: seriemonitor + LCD vid stegning -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <div class="text-xs text-gray-500 mb-1 font-semibold">Serieövervakaren — efter 4 tryck på Knapp 1</div>
+          <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">Steg 5 — LCD-display
+R $FFFC
+R $FFFD
+R $8000
+R $8001</pre>
+        </div>
+        <div>
+          <div class="text-xs text-gray-500 mb-1 font-semibold">LCD-displayen — efter 4 tryck</div>
+          <div class="bg-green-700 text-green-200 p-3 rounded-lg font-mono text-center shadow-inner">
+            <div class="bg-green-900 text-green-300 px-2 py-0.5 rounded inline-block mb-2 text-xs">LCD 16×2</div>
+            <div class="bg-green-950 rounded p-2">
+              <div>A:$8001&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+              <div>D:$EA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p>
+        Samma information på båda ställena — adress (<code>$8001</code>) och data (<code>$EA</code>, NOP).
+        Skillnaden är att LCD:n visar <em>just nu</em> medan serieövervakaren bygger en historik.
+        Med Knapp 2 (instruktionssteg) ser du flera rader i serieövervakaren per tryck medan LCD:n
+        uppdateras för varje klockcykel — ett snabbt flimmer av adresser tills SYNC går hög.
+      </p>
+      <p>
+        Datorn har blivit fristående. Du kan koppla bort USB-kabeln (om Arduino drivs via DC-adaptern)
+        och fortfarande stega genom programmet och se allt på LCD:n. Serieövervakaren är praktisk för
+        att logga och felsöka, men displayen på kopplingsdäcket gör datorn till en egen, komplett enhet.
+      </p>
+    </div>
+  </section>
+
   <!-- Testning -->
   <section class="mb-8">
-    <h2>Testning och felsökning</h2>
-    <ol class="list-decimal pl-5 space-y-1 text-gray-700">
-      <li>LCD:n ska visa "W65C02S Ready" vid uppstart</li>
-      <li>Tryck på Knapp 1 — LCD:n uppdateras med aktuell adress och data</li>
-    </ol>
-    <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
-      <span class="font-bold text-green-800">✅ Förväntat:</span>
-      <span class="text-green-700">LCD:n visar adress och data i realtid.</span>
-    </div>
-    <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
-      <h3>Om det inte fungerar</h3>
-      <ul class="list-disc pl-5 space-y-1">
+    <h2>Om det inte fungerar</h2>
+      <div class="text-gray-700 space-y-3">
+        <p>Här är några saker att kontrollera:</p>
+        <ul class="list-disc pl-5 space-y-1">
         <li><strong>Helt tom skärm?</strong> Justera kontrasten med potentiometern. Testa båda ytterlägena.</li>
         <li><strong>Svarta rutor på första raden?</strong> LCD:n är i 8-bitarsläge men får ingen data. Kontrollera att <code>lcd.begin(16,2)</code> körs.</li>
         <li><strong>Förvrängda tecken?</strong> Datapinnarna är i fel ordning. Prova <code>LiquidCrystal lcd(5, 6, 7, 8, 9, 10)</code> om din display har rak ordning.</li>
         <li><strong>Ingen bakgrundsbelysning?</strong> Kontrollera 220Ω till A (pin 15) och GND till K (pin 16).</li>
       </ul>
     </div>
+      </div>
   </section>
 
   <div class="flex gap-4 mt-8">

@@ -161,7 +161,6 @@
     <p><strong>0xEA = NOP</strong> — ofarlig fallback. CPU:n hoppar över oanvända adresser. <strong>Gul markering</strong> = Arduino rör inte dessa adresser, den fysiska VIA-kretsen svarar.</p>
   </section>
 
-
 <!-- Byggskript -->
     <section class="mb-8">
       <h2>PlatformIO-byggskript</h2>
@@ -461,9 +460,69 @@ line4: .byte "smutje.se 2026", 0
 
     <!-- Arduino-kod -->
     <section class="mb-8">
-      <h2>Arduino-kod — setup()</h2>
-      <p>Enda skillnaden från steg 7: programmet laddas från <code>PROGRAM[]</code> istället för hårdkodade
-        <code>write_mem()</code>.
+      <h2>Arduino-kod</h2>
+      <div class="text-gray-700 space-y-3">
+        <p>
+          Steg 7:s största svaghet var att 6502-programmet byggdes som hundratals <code>write_mem()</code>-anrop
+          i C++-koden. Det fungerar — men det är plågsamt att redigera, svårt att läsa, och omöjligt att
+          felsöka. Steg 8 löser detta med en <strong>professionell assembler-kedja</strong>: du skriver
+          läsbar 6502-kod i en <code>.asm</code>-fil, och PlatformIO bygger om den automatiskt vid varje
+          uppladdning.
+        </p>
+
+        <h3>Från assembler till header — byggkedjan i detalj</h3>
+        <p>
+          När du kör <code>pio run</code> händer tre saker innan C++-koden kompileras:
+        </p>
+        <ol class="list-decimal pl-5 space-y-1">
+          <li><strong>ca65</strong> — assemblerar <code>program_hello.asm</code> till en objektfil
+            (<code>.o</code>). Översätter mnemonics som <code>LDA #$FF</code> till maskinkod
+            (<code>A9 FF</code>) och löser lokala labels.</li>
+          <li><strong>ld65</strong> — länkaren placerar koden på rätt adresser enligt
+            <code>program.cfg</code>. Koden läggs på <code>$8000</code>, vektorerna på
+            <code>$FFFA</code>. Resultatet är en binärfil på exakt 2054 bytes (2048 kod + 6 vektorer).</li>
+          <li><strong>bin2h.py</strong> — konverterar binärfilen till en C-header med en
+            <code>PROGMEM</code>-array. Arduinons flash-minne är begränsat — <code>PROGMEM</code> gör att
+            programmet ligger kvar i flash och inte kopieras till RAM.</li>
+        </ol>
+        <p>
+          Hela kedjan styrs av <code>scripts/build_asm.py</code>, en pre-build hook som PlatformIO
+          anropar automatiskt. Ändrar du <code>.asm</code>-filen byggs allt om.
+        </p>
+
+        <h3>Arduino-koden — bara setup() ändras</h3>
+        <p>
+          <code>pulse()</code>, <code>loop()</code> och hela minnesemulatorn är oförändrade från steg 7.
+          Skillnaden sitter i <code>setup()</code>: istället för hundratals <code>write_mem()</code> loopar
+          vi nu igenom <code>PROGRAM[]</code> och kopierar:
+        </p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>Kod:</strong> <code>PROGRAM_SIZE - 6</code> bytes kopieras till <code>$8000</code>
+            och uppåt. <code>pgm_read_byte()</code> läser från PROGMEM (flash).</li>
+          <li><strong>Vektorer:</strong> de sista 6 byten kopieras till <code>$FFFA</code>–<code>$FFFF</code>.
+            Där finns reset-vektorn som talar om att programmet börjar på <code>$8000</code>.</li>
+        </ul>
+
+        <h3>6502-programmet — läsbar assembler</h3>
+        <p>
+          <code>program_hello.asm</code> är samma 4-radersprogram som steg 7, men nu med labels
+          (<code>reset:</code>, <code>hello:</code>), subrutiner (<code>lcd_command:</code>,
+          <code>lcd_data:</code>), och nollterminerade strängar (<code>.byte "...", 0</code>).
+          <code>JSR</code> (Jump to Subroutine) och <code>RTS</code> (Return from Subroutine) använder
+          stacken för att hålla reda på återhoppsadressen — precis som funktionsanrop i högnivåspråk.
+          Att läsa assemblerkoden är som att läsa en receptbok: varje rad är ett steg, och tillsammans
+          berättar de exakt vad processorn ska göra.
+        </p>
+
+        <h3>Vad som är nytt jämfört med steg 7</h3>
+        <p>
+          Ingen ny hårdvara. I koden: <code>#include "program_hello.h"</code>, <code>PROGRAM[]</code>,
+          <code>PROGRAM_SIZE</code>, och <code>pgm_read_byte()</code>. I byggkedjan: <code>ca65</code>,
+          <code>ld65</code>, <code>bin2h.py</code>, <code>build_asm.py</code>. Det här är samma verktyg
+          som användes för att bygga spel till NES och program till Apple II — professionella verktyg
+          för en hobbyprocessor.
+        </p>
+      </div>
       </p>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
@@ -609,23 +668,66 @@ void loop() {
       <code>program_hello.asm</code> byggs allt om.
     </p>
 
+    <!-- Exempel på körning -->
+    <section class="mb-8">
+      <h2>Exempel på körning</h2>
+      <div class="text-gray-700 space-y-3">
+        <p>
+          När du bygger och laddar upp (<code>pio run -e step8 -t upload -t monitor</code>) ser du
+          byggkedjan arbeta i terminalen:
+        </p>
+        <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">[build_asm] Assemblerar .../asm/program_hello.asm …
+[build_asm] OK — 2054 bytes → .../program_hello.h
+Processing step8 (platform: ...)
+...
+Steg 8 — assembler-bygge med ca65
+Programstorlek: 2054 bytes
+Program + vektorer laddat.</pre>
+
+        <!-- Sida vid sida: seriemonitor + LCD -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <div class="text-xs text-gray-500 mb-1 font-semibold">Serieövervakaren — VIA-aktivitet</div>
+            <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">W $4002  ← VIA: FF  (DDRB)
+W $4003  ← VIA: FF  (DDRA)
+...
+W $4000  ← VIA: 3D  (=)
+W $4000  ← VIA: 3D  (=)
+...</pre>
+          </div>
+          <div>
+            <div class="text-xs text-gray-500 mb-1 font-semibold">LCD-displayen — fyra rader text</div>
+            <div class="bg-green-700 text-green-200 p-3 rounded-lg font-mono text-center shadow-inner">
+              <div class="bg-green-900 text-green-300 px-2 py-0.5 rounded inline-block mb-2 text-xs">LCD 20×4</div>
+              <div class="bg-green-950 rounded p-2">
+                <div>=== 6502 VIA LCD ===&nbsp;</div>
+                <div>Hello from W65C02!&nbsp;&nbsp;</div>
+                <div>Arduino = RAM + CLK&nbsp;</div>
+                <div>smutje.se 2026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          Serieövervakaren visar samma VIA- och LCD-aktivitet som i steg 7 — men med en avgörande
+          skillnad: du har inte skrivit en enda <code>write_mem()</code>. Programmet kommer från
+          <code>program_hello.asm</code>, en ren assembler-fil med labels, subrutiner och kommentarer.
+        </p>
+        <p>
+          Gör ett test: ändra texten i <code>line1:</code> från "=== 6502 VIA LCD ===" till "Hej varlden!"
+          och kör <code>pio run -t upload -t monitor</code> igen. Hela kedjan körs om — ca65, ld65, bin2h,
+          kompilering, uppladdning — och LCD:n visar din nya text. Iterationstiden är sekunder, inte
+          minuter. Det här är arbetsflödet som gör resten av projektet njutbart.
+        </p>
+      </div>
+    </section>
+
     <!-- Testning -->
     <section class="mb-8">
-      <h2>Testning och felsökning</h2>
-      <ol class="list-decimal pl-5 space-y-1 text-gray-700">
-        <li>Öppna terminal och kör
-          <pre><code class="apache">pio run -e step8 -t upload -t monitor</code></pre>
-        </li>
-        <li>Du ska se "Programstorlek: 2054 bytes" i serieövervakaren</li>
-        <li>LCD:n visar samma fyra rader som steg 7</li>
-      </ol>
-      <div class="mt-4 bg-green-50 border border-green-300 rounded-lg p-4">
-        <span class="font-bold text-green-800">✅ Förväntat:</span>
-        <span class="text-green-700">Samma resultat som steg 7, men programmet är nu byggt från en .asm-fil med
-          ca65.</span>
-      </div>
-      <div class="mt-4 bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
-        <h3>Om det inte fungerar</h3>
+      <h2>Om det inte fungerar</h2>
+      <div class="text-gray-700 space-y-3">
+        <p>Här är några saker att kontrollera:</p>
         <ul class="list-disc pl-5 space-y-1">
           <li><strong>ca65: command not found?</strong> Installera cc65:
             <pre><code class="apache">sudo apt install cc65</code></pre>
@@ -637,6 +739,7 @@ void loop() {
             <code>PROGRAM[]</code> till <code>program[]</code>. Logga med <code>Serial.print()</code>.
           </li>
         </ul>
+      </div>
       </div>
     </section>
 
