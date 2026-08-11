@@ -271,8 +271,42 @@ if __name__ == '__main__':
     <!-- 6502-programmet -->
     <section class="mb-8">
       <h2>6502-programmet i assembler</h2>
-      <p>Fil: <code>asm/program_hello.asm</code>. Samma 4-radersprogram som steg 7 — men nu som läsbar assembler med
-        labels, subrutiner och nollterminerade strängar.</p>
+      <div class="text-gray-700 space-y-3">
+        <p>
+          Det här programmet körs på 6502-processorn — inte på Arduino. Det är skrivet i ren assembler för
+          W65C02 och pratar direkt med VIA-kretsen som i sin tur styr LCD-displayen. När processorn startar
+          efter reset hoppar den till <code>reset</code>-labeln, initierar VIA:ns portar som utgångar, skickar
+          en standardsekvens av kommandon för att väcka LCD:n i 8-bitarsläge, och går sedan in i huvudloopen
+          <code>hello</code>. Där skrivs två rader text ut — "=== 6502 VIA LCD ===" och "Hello from W65C02!"
+          — displayen rensas, och allt börjar om. En oändlig loop av text, rensa, text, rensa.
+        </p>
+        <p>
+          Programmet är uppbyggt i lager. Överst definieras fyra konstanter — <code>VIA_ORB</code>,
+          <code>VIA_ORA</code>, <code>VIA_DDRB</code> och <code>VIA_DDRA</code> — som ger mänskliga namn åt
+          VIA-kretsens registeradresser. Sedan följer själva koden i segmentet <code>CODE</code> som placeras
+          från adress <code>$8000</code>. Där finns <code>reset</code> (startpunkten), <code>hello</code>
+          (huvudloopen), och två subrutiner: <code>lcd_command</code> och <code>lcd_data</code>. Efter koden
+          ligger strängdatan — två rader text, var och en avslutad med en nolla som signalerar att strängen
+          är slut. Sist kommer vektorsegmentet där <code>.word reset</code> på adress <code>$FFFC</code>
+          talar om för processorn var programmet börjar.
+        </p>
+        <p>
+          De två subrutinerna är programmets verkliga arbetshästar. <code>lcd_command</code> skickar ett
+          kommando till LCD:n: den lägger kommandobyten på PORTB, sätter RS=0 och E=1, och drar sedan E till
+          0 — den fallande flanken får LCD:n att läsa. <code>lcd_data</code> gör exakt samma sak, men med
+          RS=1 för att signalera att byten är ett tecken, inte ett kommando. Båda anropas med <code>JSR</code>
+          (Jump to Subroutine) och återvänder med <code>RTS</code> — 6502:ans motsvarighet till funktionsanrop.
+          Strängarna skrivs ut tecken för tecken i en loop: X-registret räknar genom strängen, <code>LDA line1,x</code>
+          hämtar nästa tecken, och när en nolla dyker upp vet programmet att strängen är slut.
+        </p>
+        <p>
+          Det fina med att ha programmet i en separat <code>.asm</code>-fil är att du kan ändra och
+          experimentera utan att röra Arduino-koden. Byt ut texten i <code>line1</code> mot ditt eget namn,
+          kör <code>pio run -t upload</code>, och inom sekunder visar LCD:n din nya text. Assemblerkoden är
+          kommenterad på svenska så att varje instruktion förklarar sig själv — läs den som en receptbok,
+          rad för rad, så förstår du exakt vad processorn gör i varje ögonblick.
+        </p>
+      </div>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-x86asm">; ================================================================
 ; 6502-program för steg 8 — VIA LCD
 ; ================================================================
@@ -337,7 +371,7 @@ reset:
     jsr lcd_command
 
 ; ================================================================
-; HUVUDLOOP — skriv 4 rader text, rensa, börja om
+; HUVUDLOOP — skriv 2 rader text, rensa, börja om
 ; ================================================================
 hello:
     ; --- Rad 1: "=== 6502 VIA LCD ===" ---
@@ -367,34 +401,6 @@ hello:
     inx
     jmp @l2
 @l2_done:
-
-    ; --- Rad 3: "Arduino = RAM + CLK" (20×4 display) ---
-    lda #$94          ; DDRAM-adress $14 → rad 3, position 0
-    jsr lcd_command
-    lda #$01
-    sta VIA_ORA
-    ldx #0
-@l3:
-    lda line3,x
-    beq @l3_done
-    jsr lcd_data
-    inx
-    jmp @l3
-@l3_done:
-
-    ; --- Rad 4: "smutje.se 2026" (20×4 display) ---
-    lda #$D4          ; DDRAM-adress $54 → rad 4, position 0
-    jsr lcd_command
-    lda #$01
-    sta VIA_ORA
-    ldx #0
-@l4:
-    lda line4,x
-    beq @l4_done
-    jsr lcd_data
-    inx
-    jmp @l4
-@l4_done:
 
     ; --- Rensa skärmen och börja om ---
     lda #$01          ; Clear display
@@ -441,8 +447,6 @@ lcd_data:
 ; att strängen är slut när den hittar en nolla.
 line1: .byte "=== 6502 VIA LCD ===", 0
 line2: .byte "Hello from W65C02!", 0
-line3: .byte "Arduino = RAM + CLK", 0
-line4: .byte "smutje.se 2026", 0
 
 ; ================================================================
 ; RESET-VEKTOR — processorns startadress
@@ -505,7 +509,7 @@ line4: .byte "smutje.se 2026", 0
 
         <h3>6502-programmet — läsbar assembler</h3>
         <p>
-          <code>program_hello.asm</code> är samma 4-radersprogram som steg 7, men nu med labels
+          <code>program_hello.asm</code> är samma 2-radersprogram som steg 7, men nu med labels
           (<code>reset:</code>, <code>hello:</code>), subrutiner (<code>lcd_command:</code>,
           <code>lcd_data:</code>), och nollterminerade strängar (<code>.byte "...", 0</code>).
           <code>JSR</code> (Jump to Subroutine) och <code>RTS</code> (Return from Subroutine) använder
@@ -696,14 +700,12 @@ W $4000  ← VIA: 3D  (=)
 ...</pre>
           </div>
           <div>
-            <div class="text-xs text-gray-500 mb-1 font-semibold">LCD-displayen — fyra rader text</div>
+            <div class="text-xs text-gray-500 mb-1 font-semibold">LCD-displayen — två rader text</div>
             <div class="bg-green-700 text-green-200 p-3 rounded-lg font-mono text-center shadow-inner">
-              <div class="bg-green-900 text-green-300 px-2 py-0.5 rounded inline-block mb-2 text-xs">LCD 20×4</div>
+              <div class="bg-green-900 text-green-300 px-2 py-0.5 rounded inline-block mb-2 text-xs">LCD 16×2</div>
               <div class="bg-green-950 rounded p-2">
-                <div>=== 6502 VIA LCD ===&nbsp;</div>
+                <div>=== 6502 VIA LCD ===</div>
                 <div>Hello from W65C02!&nbsp;&nbsp;</div>
-                <div>Arduino = RAM + CLK&nbsp;</div>
-                <div>smutje.se 2026&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
               </div>
             </div>
           </div>
