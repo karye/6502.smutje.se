@@ -107,7 +107,7 @@
     <!-- W65C02S pinout -->
     <section class="mb-8">
       <h2>W65C02S — pinout</h2>
-      <p>DIP-40-kapsel. 16 adresslinjer, 8 datalinjer, 12 kontroll/ström. Notch/pin 1-markering uppåt.</p>
+      <p>DIP-40-kapsel. 16 adresslinjer, 8 datalinjer, 12 kontroll/ström.</p>
       <div class="flex justify-center">
         <div
           class="p-2 inline-flex bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-sm leading-relaxed">
@@ -256,7 +256,7 @@
     <!-- Arduino Mega pinout -->
     <section class="mb-8">
       <h2>Arduino Mega 2560 — anslutningar</h2>
-      <p>Endast de pinnar vi använder i projektet. Grupperade efter funktion — adressbuss, databuss, kontroll och ström.</p>
+      <p>Här ser vi alla pinnar på Arduino Mega 2560: A0-A15 och D0-D53</p>
       <div class="flex justify-center">
         <div class="p-2 bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-xs leading-snug">
           <div class="inline-flex">
@@ -486,7 +486,7 @@
     <!-- Kopplingsschema -->
     <section class="mb-8">
       <h2>Kopplingsschema</h2>
-      <p>Så här ser den kompletta kopplingen ut när allt ligger på kopplingsdäcket: processorn i mitten, Arduino till vänster, lysdiod och pull-up-motstånd på sina platser. Följ strömmen från +5V genom CPU:n till GND, och klockan från Arduino D2 till PHI2.</p>
+      <p>Så här ser den kompletta kopplingen ut när allt ligger på kopplingsdäcket: processorn till vänster, Arduino till höger, lysdiod och pull-up-motstånd på sina platser. Följ strömmen från +5V genom CPU:n till GND, och klockan från Arduino D2 till PHI2.</p>
       <div class="schematic bg-white rounded-lg shadow p-4">
         <img src="schematics/steg-1.png" alt="Steg 1 — Ström och klocka" class="w-full">
       </div>
@@ -495,7 +495,7 @@
     <!-- Kretstabell -->
     <section class="mb-8">
       <h2>Kopplingar</h2>
-      <p>Här är varenda koppling i steg 1, pinne för pinne. Kolumnen <strong>Varför</strong> är viktigast — den förklarar vilken signal som färdas längs varje ledning och vad som händer om den saknas. Avkopplingskondensatorn är markerad separat längst ner.</p>
+      <p>Här är varenda koppling i steg 1, pinne för pinne. Kolumnen <strong>Varför</strong> förklarar vilken signal som färdas längs varje ledning och vad som händer om den saknas. Avkopplingskondensatorn är markerad separat längst ner.</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white">
@@ -561,7 +561,7 @@
               <td class="p-2"><strong>Arduino D4</strong> (senare steg)</td>
               <td class="p-2">Lämnas flytande tills vidare — CPU:n startar själv</td>
             </tr>
-            <tr class="bg-yellow-50">
+            <tr class="bg-red-50">
               <td class="p-2">—</td>
               <td class="p-2">100nF</td>
               <td class="p-2">Mellan VDD (pin 8) och VSS (pin 21)</td>
@@ -599,7 +599,7 @@
             <code>RESB</code>) och räknar ut klockfrekvensen. Genom att använda namngivna konstanter istället för
             magiska siffror blir koden läsbar och lätt att ändra — vill du testa en snabbare klocka ändrar du bara
             <code>CLOCK_HZ</code>.</li>
-          <li><strong><code>pulse()</code> — en hjälpfunktion</strong> som genererar en enda komplett klockcykel.
+          <li><strong>Hjälpfunktionen <code>pulse()</code></strong> som genererar en komplett klockcykel.
             Funktionen drar PHI2 HÖG i 500 ms (lysdioden lyser), sedan LÅG i 500 ms (lysdioden släcks). Resultatet
             är en symmetrisk fyrkantsvåg på 1 Hz — tillräckligt långsamt för att du ska kunna följa med i vad som
             händer. W65C02S är en statisk CMOS-krets, vilket betyder att den inte har någon minsta klockfrekvens —
