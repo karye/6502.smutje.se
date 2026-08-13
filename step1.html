@@ -631,12 +631,12 @@
 
 // --- pulse() — generera en komplett klockcykel ---
 // W65C02S är statisk CMOS — klockan kan vara hur långsam som helst.
-// Här: 500 ms hög + 500 ms låg = 1 Hz, perfekt för att se lysdioden blinka.
+// Här: CLOCK_DELAY ms hög + CLOCK_DELAY ms låg = CLOCK_HZ Hz, perfekt för att se lysdioden blinka.
 void pulse() {
   digitalWrite(PHI2, HIGH);   // Stigande flank — CPU:n arbetar (lysdiod lyser)
-  delay(500);                 // 500 ms med lysdiod tänd
+  delay(CLOCK_DELAY);         // Halva klockperioden med lysdiod tänd
   digitalWrite(PHI2, LOW);    // Fallande flank — nästa cykel (lysdiod släckt)
-  delay(500);                 // 500 ms med lysdiod släckt
+  delay(CLOCK_DELAY);         // Halva klockperioden med lysdiod släckt
 }
 
 // --- setup() — konfigurera pinnar, körs en gång vid start ---
