@@ -67,7 +67,7 @@
         <section class="mb-8 text-gray-700 space-y-3">
           <h2>Nya komponenter</h2>
           <p>Databussen är den första känsliga kretskopplingen i projektet: åtta 100Ω-motstånd som skyddar mot
-            busskollisioner mellan CPU och Arduino, plus en kopplingstråd för <span class="signal">R/W</span>-signalen som talar om vem som skickar
+            busskollisioner mellan CPU och <strong>Arduino</strong>, plus en kopplingstråd för <span class="signal">R/W</span>-signalen som talar om vem som skickar
             data åt vilket håll.</p>
           <div class="overflow-x-auto">
             <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
@@ -99,8 +99,8 @@
         <!-- Kopplingsschema -->
         <section class="mb-8">
           <h2>Kopplingsschema</h2>
-          <p>Nu är datorn komplett i grunden: adressbuss från steg 2, databuss <span class="signal">D0–D7</span> via 100Ω-skydd till Arduino
-            <span class="signal">D22–D29</span>, och <span class="signal">R/W</span>-signalen från CPU pin 34 till Arduino <span class="signal">D3</span>. Lägg märke till att databussens motstånd sitter i
+          <p>Nu är datorn komplett i grunden: adressbuss från steg 2, databuss <span class="signal">D0–D7</span> via 100Ω-skydd till <strong>Arduino</strong>
+            <span class="signal">D22–D29</span>, och <span class="signal">R/W</span>-signalen från CPU pin 34 till <strong>Arduino</strong> <span class="signal">D3</span>. Lägg märke till att databussens motstånd sitter i
             serie — en ledning per bit.</p>
           <div class="schematic bg-white rounded-lg shadow p-4">
             <img src="schematics/steg-3.png" alt="Steg 3 — databuss och minne" class="w-full">
@@ -255,26 +255,26 @@
         <section class="mb-8">
           <h2>Arduino-kod</h2>
 
-          <p>Det här är det största kodsteget hittills och det viktigaste. Arduino går från att vara en passiv observatör till att bli en <strong>fullvärdig minnesemulator</strong>. CPU:n kommer att ställa frågor via adressbussen, och Arduino måste svara med rätt byte på databussen — allt inom loppet av en enda klockcykel. När det fungerar har vi en dator som faktiskt kör ett program.</p>
+          <p>Det här är det största kodsteget hittills och det viktigaste. <strong>Arduino</strong> går från att vara en passiv observatör till att bli en <strong>fullvärdig minnesemulator</strong>. CPU:n kommer att ställa frågor via adressbussen, och <strong>Arduino</strong> måste svara med rätt byte på databussen — allt inom loppet av en enda klockcykel. När det fungerar har vi en dator som faktiskt kör ett program.</p>
 
           <h3>Databussen — 8 ledningar som bär information</h3>
-          <p>Adressbussen (steg 2) talar om <em>var</em> CPU:n vill läsa. Databussen bär <em>vad</em> som ska läsas eller skrivas. Det är 8 ledningar — <span class="signal">D0</span> till <span class="signal">D7</span> — och de är <strong>dubbelriktade</strong>. Ibland driver CPU:n dem (vid skrivning), ibland Arduino (vid läsning). Det är därför de 100Ω seriemotstånden är livsviktiga: om båda kretsarna råkar driva samma ledning samtidigt begränsar motstånden strömmen och förhindrar att något går sönder.</p>
+          <p>Adressbussen (steg 2) talar om <em>var</em> CPU:n vill läsa. Databussen bär <em>vad</em> som ska läsas eller skrivas. Det är 8 ledningar — <span class="signal">D0</span> till <span class="signal">D7</span> — och de är <strong>dubbelriktade</strong>. Ibland driver CPU:n dem (vid skrivning), ibland <strong>Arduino</strong> (vid läsning). Det är därför de 100Ω seriemotstånden är livsviktiga: om båda kretsarna råkar driva samma ledning samtidigt begränsar motstånden strömmen och förhindrar att något går sönder.</p>
 
           <h3><span class="signal">R/W</span>-signalen — vem som pratar</h3>
-          <p>CPU:ns pin 34 (<strong><span class="signal">R/W</span></strong>) är trafikljuset på bussen. När <strong><span class="signal">R/W</span></strong> är <strong>HÖG</strong> vill CPU:n läsa — Arduino ska då sätta <code>DDRA = 0xFF</code> (alla pinnar som utgångar) och lägga ut rätt byte på <span class="signal">PORTA</span>. När <strong><span class="signal">R/W</span></strong> är <strong>LÅG</strong> vill CPU:n skriva — Arduino måste omedelbart sätta <code>DDRA = 0x00</code> (tri-state, hög impedans) så att CPU:n kan driva ledningarna utan motstånd. Det här skiftet sker i <em>varje klockcykel</em>, mitt i <code>pulse()</code>.</p>
+          <p>CPU:ns pin 34 (<strong><span class="signal">R/W</span></strong>) är trafikljuset på bussen. När <strong><span class="signal">R/W</span></strong> är <strong>HÖG</strong> vill CPU:n läsa — <strong>Arduino</strong> ska då sätta <code>DDRA = 0xFF</code> (alla pinnar som utgångar) och lägga ut rätt byte på <span class="signal">PORTA</span>. När <strong><span class="signal">R/W</span></strong> är <strong>LÅG</strong> vill CPU:n skriva — <strong>Arduino</strong> måste omedelbart sätta <code>DDRA = 0x00</code> (tri-state, hög impedans) så att CPU:n kan driva ledningarna utan motstånd. Det här skiftet sker i <em>varje klockcykel</em>, mitt i <code>pulse()</code>.</p>
 
           <h3>Kodens fyra lager</h3>
           <ol class="list-decimal pl-5 space-y-1">
             <li><strong><code>read_mem()</code> och <code>write_mem()</code></strong> — två enkla funktioner som slår upp eller sparar en byte i rätt array. Vektorer hamnar i <code>vectors[6]</code>, arbetsminne i <code>ram[1024]</code>. Allt annat returnerar <code>$EA</code> (<code>NOP</code>) — en ofarlig fallback som gör att CPU:n bara hoppar vidare om den läser från en oanvänd adress.
             </li>
-            <li><strong><code>pulse()</code> — datorns hjärta</strong> — samma struktur som tidigare men nu med ett avgörande tillägg: efter att ha läst adress och <span class="signal">R/W</span> bestämmer den om Arduino ska driva databussen (<code>DDRA = 0xFF</code>) eller gå ur vägen (<code>DDRA = 0x00</code>). Allt detta sker medan <strong><span class="signal">PHI2</span></strong> är låg. När <strong><span class="signal">PHI2</span></strong> sedan går hög läser CPU:n av databussen — eller skriver till den.</li>
+            <li><strong><code>pulse()</code> — datorns hjärta</strong> — samma struktur som tidigare men nu med ett avgörande tillägg: efter att ha läst adress och <span class="signal">R/W</span> bestämmer den om <strong>Arduino</strong> ska driva databussen (<code>DDRA = 0xFF</code>) eller gå ur vägen (<code>DDRA = 0x00</code>). Allt detta sker medan <strong><span class="signal">PHI2</span></strong> är låg. När <strong><span class="signal">PHI2</span></strong> sedan går hög läser CPU:n av databussen — eller skriver till den.</li>
             <li><strong><code>setup()</code> — ladda programmet</strong> — här skrivs reset-vektorn (<code>$8000</code>) och en enda <code>NOP</code>-instruktion (<code>$EA</code>) in i minnet. Det är vårt första 6502-program: CPU:n startar på <code>$8000</code>, läser <code>$EA</code>, gör ingenting, går till <code>$8001</code>, läser <code>$EA</code> (minnet returnerar <code>NOP</code> överallt), och loopar för evigt.</li>
             <li><strong><code>loop()</code></strong> — anropar bara <code>pulse()</code>. En klockcykel per varv, med fullständig loggning i seriemonitor.</li>
           </ol>
 
           <h3>Vad som är nytt jämfört med steg 2</h3>
           <p>Tre stora nyheter: <strong><span class="signal">R/W</span>-signalen</strong> kopplas in på <span class="signal">D3</span>, <strong>databussen</strong> på <span class="signal">D22–D29</span>
-            via 100Ω, och <strong>minnesarrayerna</strong> <code>ram[]</code> och <code>vectors[]</code> gör att Arduino
+            via 100Ω, och <strong>minnesarrayerna</strong> <code>ram[]</code> och <code>vectors[]</code> gör att <strong>Arduino</strong>
             kan svara med olika data på olika adresser. <code>pulse()</code> är nu en fullständig buss-emulator — det är
             den här funktionen som kommer att följa med oss genom resten av projektet.</p>
 
@@ -417,7 +417,7 @@ R $8004
             <code>$8002</code>… och eftersom minnet returnerar <code>$EA</code> (<code>NOP</code>) på alla adresser utanför
             programmet, kommer CPU:n att vandra genom hela adressrymden — upp till <code>$FFFF</code>, sedan börja om
             från <code>$0000</code> — i en oändlig loop.</p>
-          <p>Det ser kanske händelselöst ut, men varje rad i loggen är ett mirakel: Arduino har läst adressbussen,
+          <p>Det ser kanske händelselöst ut, men varje rad i loggen är ett mirakel: <strong>Arduino</strong> har läst adressbussen,
             kollat <span class="signal">R/W</span>, slagit upp rätt byte i minnet, och lagt ut den på databussen — allt innan CPU:n hann märka någon
             fördröjning. Du tittar på en <strong>fungerande dator</strong> vars program är att göra ingenting.</p>
 
@@ -436,7 +436,7 @@ R $8004
             <li><strong>CPU:n hoppar till konstig adress?</strong> Reset-vektorn är fel. Dubbelkolla
               <code>write_mem(0xFFFC, 0x00)</code> och <code>write_mem(0xFFFD, 0x80)</code>.</li>
             <li><strong>Glöm inte 100Ω!</strong> Utan seriemotstånd kan en enda felaktig <span class="signal">DDRA</span>-inställning
-              förstöra CPU:n eller Arduino.</li>
+              förstöra CPU:n eller <strong>Arduino</strong>.</li>
           </ul>
 
 
@@ -452,7 +452,7 @@ R $8004
   </div>
 
   <footer class="border-t bg-white py-6 text-center text-sm text-gray-500">
-    <p>W65C02 8-bitarsdator · <a href="https://github.com/karye/6502.smutje.se"
+    <p><strong>W65C02</strong> 8-bitarsdator · <a href="https://github.com/karye/6502.smutje.se"
         class="underline hover:text-gray-700">GitHub</a></p>
   </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>

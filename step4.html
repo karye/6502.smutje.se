@@ -50,7 +50,7 @@
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Mål</h2>
     
-      <p>I steg 3 körde CPU:n fritt i en <code>NOP</code>-loop — kul att se, men svårt att felsöka. Nu kopplar vi in <strong>två tryckknappar</strong> och <strong><span class="signal">SYNC</span>-signalen</strong> för att kunna styra exekveringen manuellt. Det här är en av de stora fördelarna med W65C02S: eftersom den är statisk CMOS kan klockan stoppas hur länge som helst.</p>
+      <p>I steg 3 körde CPU:n fritt i en <code>NOP</code>-loop — kul att se, men svårt att felsöka. Nu kopplar vi in <strong>två tryckknappar</strong> och <strong><span class="signal">SYNC</span>-signalen</strong> för att kunna styra exekveringen manuellt. Det här är en av de stora fördelarna med <strong>W65C02S</strong>: eftersom den är statisk CMOS kan klockan stoppas hur länge som helst.</p>
       <p><strong>Knapp 1 (klocksteg):</strong> varje tryckning ger en enda klockcykel. Perfekt för att se vad som händer på bussen i ultrarapid.</p>
       <p><strong>Knapp 2 (instruktionssteg):</strong> kör klockan tills CPU:n signalerar att en ny instruktion har hämtats. <span class="signal">SYNC</span>-pinnen (pin 7) går HÖG vid varje opcode fetch. Vi pulserar klockan tills <span class="signal">SYNC</span> går hög — då vet vi att CPU:n är i början av nästa instruktion.</p>
       <p>Kodmässigt byter vi ut den automatiska <code>loop()</code> mot knappläsning med debounce (50 ms). Arduinons <code>INPUT_PULLUP</code> gör att vi slipper externa pull-up-motstånd — knappen kopplas direkt mellan pinne och <span class="signal">GND</span>.</p>
@@ -60,7 +60,7 @@
   <!-- Nya komponenter -->
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Nya komponenter</h2>
-    <p>Två tryckknappar och en kopplingstråd för <span class="signal">SYNC</span> — det är allt. Men knapparna är de första komponenterna som ger dig direkt kontroll över exekveringen: en klockcykel eller en hel instruktion per tryck, tack vare att W65C02S är statisk CMOS.</p>
+    <p>Två tryckknappar och en kopplingstråd för <span class="signal">SYNC</span> — det är allt. Men knapparna är de första komponenterna som ger dig direkt kontroll över exekveringen: en klockcykel eller en hel instruktion per tryck, tack vare att <strong>W65C02S</strong> är statisk CMOS.</p>
     <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
       <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr></thead>
       <tbody class="divide-y">
@@ -73,7 +73,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2>Kopplingsschema</h2>
-    <p>Schemat visar de två tryckknapparna: en mellan Arduino <span class="signal">D11</span> och <span class="signal">GND</span> för klocksteg, en mellan <span class="signal">D12</span> och <span class="signal">GND</span> för instruktionssteg. Dessutom löper <span class="signal">SYNC</span>-signalen från CPU pin 7 till Arduino <span class="signal">D13</span>. Allt annat är oförändrat från steg 3.</p>
+    <p>Schemat visar de två tryckknapparna: en mellan <strong>Arduino</strong> <span class="signal">D11</span> och <span class="signal">GND</span> för klocksteg, en mellan <span class="signal">D12</span> och <span class="signal">GND</span> för instruktionssteg. Dessutom löper <span class="signal">SYNC</span>-signalen från CPU pin 7 till <strong>Arduino</strong> <span class="signal">D13</span>. Allt annat är oförändrat från steg 3.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-4.png" alt="Steg 4 — manuell stegning" class="w-full">
     </div>
@@ -116,7 +116,7 @@
   <section class="mb-8">
     <h2>Arduino-kod</h2>
     
-      <p>I steg 3 körde CPU:n fritt i en loop — spännande men omöjligt att felsöka. Nu ger vi oss själva <strong>full kontroll över exekveringen</strong> med två fysiska knappar. Det här är en av de stora fördelarna med W65C02S: eftersom kretsen är statisk CMOS kan klockan stoppas hur länge som helst — minuter, timmar, dagar — utan att processorn tappar sitt interna tillstånd. Vi kan stega genom programmet i vår egen takt.</p>
+      <p>I steg 3 körde CPU:n fritt i en loop — spännande men omöjligt att felsöka. Nu ger vi oss själva <strong>full kontroll över exekveringen</strong> med två fysiska knappar. Det här är en av de stora fördelarna med <strong>W65C02S</strong>: eftersom kretsen är statisk CMOS kan klockan stoppas hur länge som helst — minuter, timmar, dagar — utan att processorn tappar sitt interna tillstånd. Vi kan stega genom programmet i vår egen takt.</p>
 
       <h3><span class="signal">SYNC</span> — processorns "nu börjar jag"-signal</h3>
       <p>CPU:ns pin 7 (<span class="signal">SYNC</span>) är en av de mest användbara signalerna på hela kretsen. Den går <strong>HÖG</strong> under den klockcykel då processorn hämtar första byten av en ny instruktion (opcode fetch). Varje gång du ser <span class="signal">SYNC</span> tändas vet du att CPU:n precis har påbörjat nästa instruktion — oavsett om det är en enkel <code>NOP</code> eller en komplex adresseringsmod. <span class="signal">SYNC</span> är hemligheten bakom instruktionsstegningen.</p>
@@ -302,7 +302,7 @@ R $8004</pre>
   </div>
 
   <footer class="border-t bg-white py-6 text-center text-sm text-gray-500">
-    <p>W65C02 8-bitarsdator · <a href="https://github.com/karye/6502.smutje.se"
+    <p><strong>W65C02</strong> 8-bitarsdator · <a href="https://github.com/karye/6502.smutje.se"
         class="underline hover:text-gray-700">GitHub</a></p>
   </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>

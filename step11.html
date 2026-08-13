@@ -49,8 +49,8 @@
     <section class="mb-8 text-gray-700 space-y-3">
       <h2>Mål</h2>
       
-        <p>I steg 10 fick vi en fristående dator — men adressrymden var inte vacker. VIA:ns 16 bytes på <code>$4000</code> klippte av SRAM-minnet mitt i, och den övre halvan av 62256-chippet (<code>$4000</code>–<code>$7FFF</code>) låg helt oanvänd. Det kändes slarvigt.</p>
-        <p>Nu städar vi upp. <strong>SRAM utökas till hela 32 KB</strong> (<code>$0000</code>–<code>$7FFF</code>) genom att ansluta <span class="signal">A14</span> — hela 62256-chippet används äntligen. <strong>VIA:n flyttas till <code>$A000</code>–<code>$A00F</code></strong>, ett rent I/O-fönster i ROM:ens övre del, precis som I/O-portar sitter på riktiga 6502-datorer (Apple II hade I/O på <code>$C000</code>, C64 på <code>$D000</code>).</p>
+        <p>I steg 10 fick vi en fristående dator — men adressrymden var inte vacker. VIA:ns 16 bytes på <code>$4000</code> klippte av SRAM-minnet mitt i, och den övre halvan av <strong>62256</strong>-chippet (<code>$4000</code>–<code>$7FFF</code>) låg helt oanvänd. Det kändes slarvigt.</p>
+        <p>Nu städar vi upp. <strong>SRAM utökas till hela 32 KB</strong> (<code>$0000</code>–<code>$7FFF</code>) genom att ansluta <span class="signal">A14</span> — hela <strong>62256</strong>-chippet används äntligen. <strong>VIA:n flyttas till <code>$A000</code>–<code>$A00F</code></strong>, ett rent I/O-fönster i ROM:ens övre del, precis som I/O-portar sitter på riktiga 6502-datorer (Apple II hade I/O på <code>$C000</code>, C64 på <code>$D000</code>).</p>
         <p>Resultatet är en adressrymd utan dött utrymme: RAM längst ner, ROM i mitten och I/O i ett fönster högst upp. Det här är den klassiska 6502-layouten — nu har vi byggt den själva.</p>
       
     </section>
@@ -58,7 +58,7 @@
     <!-- Nya komponenter -->
     <section class="mb-8 text-gray-700 space-y-3">
       <h2>Nya komponenter</h2>
-      <p>Inga nya kretsar! Det här steget handlar om att <strong>omkoppla det vi redan har</strong>. Du behöver bara en andra 74HC00 för den nya adressavkodningen (du har sex stycken) och en extra kopplingstråd för SRAM:ns <span class="signal">A14</span>.</p>
+      <p>Inga nya kretsar! Det här steget handlar om att <strong>omkoppla det vi redan har</strong>. Du behöver bara en andra <strong>74HC00</strong> för den nya adressavkodningen (du har sex stycken) och en extra kopplingstråd för SRAM:ns <span class="signal">A14</span>.</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th><th class="p-2 text-left">Används till</th></tr></thead>
@@ -83,11 +83,11 @@
     <!-- Avkodning -->
     <section class="mb-8">
       <h2>Adressavkodning</h2>
-      <p>Allt handlar om vilken enhet som får prata på bussen. Tre enheter, tre chip select-signaler — och nu med två 74HC00-chips räcker grindarna till.</p>
+      <p>Allt handlar om vilken enhet som får prata på bussen. Tre enheter, tre chip select-signaler — och nu med två <strong>74HC00</strong>-chips räcker grindarna till.</p>
 
       <h3>Gamla kartan (steg 10) — problemen</h3>
       <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-gray-700 space-y-2">
-        <p><strong>✗ SRAM bara 16 KB:</strong> 62256 är ett 32 KB-chip, men <span class="signal">A14</span> var inte ansluten. Den övre halvan låg död.</p>
+        <p><strong>✗ SRAM bara 16 KB:</strong> <strong>62256</strong> är ett 32 KB-chip, men <span class="signal">A14</span> var inte ansluten. Den övre halvan låg död.</p>
         <p><strong>✗ VIA klippte av minnet:</strong> 16 bytes på <code>$4000</code> mitt i adressrymden delade RAM:et i två — <code>$0000</code>–<code>$3FFF</code> använt, <code>$4000</code>–<code>$7FFF</code> dött.</p>
         <p><strong>✗ EEPROM-avkodning enkel:</strong> bara NOT <span class="signal">A15</span> — fungerade, men kunde inte samexistera med VIA på samma sida.</p>
       </div>
@@ -153,8 +153,8 @@
         </table>
       </div>
 
-      <h3>74HC00 #2 — nya grindar</h3>
-      <p>Den andra 74HC00:an (låt oss kalla den U5) sköter den nya avkodningen. Fyra grindar, fyra signaler:</p>
+      <h3><strong>74HC00</strong> #2 — nya grindar</h3>
+      <p>Den andra <strong>74HC00</strong>:an (låt oss kalla den U5) sköter den nya avkodningen. Fyra grindar, fyra signaler:</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Grind</th><th class="p-2 text-left">Ingångar</th><th class="p-2 text-left">Utgång</th><th class="p-2 text-left">Signalen</th></tr></thead>
@@ -430,7 +430,7 @@ W $A000  ← VIA: 3D         (tecknet "=")
   </div>
 
   <footer class="border-t bg-white py-6 text-center text-sm text-gray-500">
-    <p>W65C02 8-bitarsdator · <a href="https://github.com/karye/6502.smutje.se"
+    <p><strong>W65C02</strong> 8-bitarsdator · <a href="https://github.com/karye/6502.smutje.se"
         class="underline hover:text-gray-700">GitHub</a></p>
   </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>

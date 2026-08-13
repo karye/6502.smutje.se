@@ -56,7 +56,7 @@
             <code>$FFFC</code> och <code>$FFFD</code> för att få reda på var programmet börjar. Det är inbyggt i kisel —
             ingen mjukvara, ingen konfiguration. Genom att koppla in adressbussen och en reset-signal kan vi se detta
             hända i seriemonitor.</p>
-          <p>Vi kopplar också in <strong><span class="signal">/RESET</span></strong> (pin 40) till Arduino <span class="signal">D4</span>. När vi håller <strong><span class="signal">RESB</span></strong>
+          <p>Vi kopplar också in <strong><span class="signal">/RESET</span></strong> (pin 40) till <strong>Arduino</strong> <span class="signal">D4</span>. När vi håller <strong><span class="signal">RESB</span></strong>
             låg i minst 2 klockcykler nollställs CPU:ns interna register. När vi sedan släpper den (HÖG) börjar CPU:n
             köra från reset-vektorn.</p>
           <p>Adressbussen läser vi via Arduinons analoga portar — <strong><span class="signal">PORTF</span></strong> (<span class="signal">A0–A7</span>) och
@@ -104,7 +104,7 @@
           <h2>Kopplingar</h2>
           <p>Tabellen visar alla kopplingar från steg 1 plus de nya: adressbussens 16 linjer och reset-signalen.
             Adresslinjerna är grupperade i två byte — <span class="signal">A0–A7</span> till <span class="signal">PORTF</span> och <span class="signal">A8–A15</span> till <strong><span class="signal">PORTK</span></strong> — eftersom
-            Arduino läser dem som två 8-bitars register.</p>
+            <strong>Arduino</strong> läser dem som två 8-bitars register.</p>
           <div class="overflow-x-auto">
             <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
               <thead class="bg-gray-900 text-white">
@@ -197,7 +197,7 @@
             logikanalysator, fast gratis.</p>
 
           <h3>Portregister — att läsa 8 pinnar på en gång</h3>
-          <p>Arduino Mega 2560 har 54 digitala pinnar, men att läsa dem en och en med <code>digitalRead()</code> är alldeles för långsamt. Varje anrop tar flera mikrosekunder — och med 16 adresslinjer skulle vi tappa synkroniseringen med processorn direkt. Lösningen är <strong>portregister</strong> — specialregister som läser eller skriver 8 pinnar samtidigt i en enda maskininstruktion:</p>
+          <p><strong>Arduino Mega 2560</strong> har 54 digitala pinnar, men att läsa dem en och en med <code>digitalRead()</code> är alldeles för långsamt. Varje anrop tar flera mikrosekunder — och med 16 adresslinjer skulle vi tappa synkroniseringen med processorn direkt. Lösningen är <strong>portregister</strong> — specialregister som läser eller skriver 8 pinnar samtidigt i en enda maskininstruktion:</p>
           <ul class="list-disc pl-5 space-y-1">
             <li><strong><code>DDRF = 0x00</code></strong> — sätt alla 8 pinnar på <span class="signal">PORTF</span> som ingångar. Motsvarar
               8 × <code>pinMode()</code> men går på några nanosekunder.</li>
@@ -352,7 +352,7 @@ R $8006
   </div>
 
   <footer class="border-t bg-white py-6 text-center text-sm text-gray-500">
-    <p>W65C02 8-bitarsdator · <a href="https://github.com/karye/6502.smutje.se"
+    <p><strong>W65C02</strong> 8-bitarsdator · <a href="https://github.com/karye/6502.smutje.se"
         class="underline hover:text-gray-700">GitHub</a></p>
   </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
