@@ -125,8 +125,8 @@
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
           <tbody class="divide-y">
-            <tr><td class="p-2">1</td><td class="p-2">A14</td><td class="p-2"><strong>CPU A14</strong> (NY!)</td><td class="p-2">Öppnar den andra halvan av 62256 — SRAM blir 32 KB</td></tr>
-            <tr><td class="p-2">20</td><td class="p-2">/CE</td><td class="p-2"><strong>U4A-utgång</strong> (NOT A15)</td><td class="p-2">Aktivt vid $0000–$7FFF — hela nedre halvan</td></tr>
+            <tr><td class="p-2">1</td><td class="p-2"><span class="pin">A14</span></td><td class="p-2"><strong>CPU A14</strong> (NY!)</td><td class="p-2">Öppnar den andra halvan av 62256 — SRAM blir 32 KB</td></tr>
+            <tr><td class="p-2">20</td><td class="p-2"><span class="pin">/CE</span></td><td class="p-2"><strong>U4A-utgång</strong> (NOT A15)</td><td class="p-2">Aktivt vid $0000–$7FFF — hela nedre halvan</td></tr>
           </tbody>
         </table>
       </div>
@@ -136,9 +136,9 @@
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
           <tbody class="divide-y">
-            <tr><td class="p-2">23</td><td class="p-2">/CS2</td><td class="p-2"><strong>U4B-utgång</strong> (ny avkodning)</td><td class="p-2">LÅG endast vid $A000–$A00F — VIA:ns nya hem</td></tr>
-            <tr><td class="p-2">24</td><td class="p-2">CS1</td><td class="p-2">+5V (oförändrad)</td><td class="p-2">Chip Select 1 — alltid aktiv</td></tr>
-            <tr><td class="p-2">38–35</td><td class="p-2">RS0–RS3</td><td class="p-2"><strong>CPU A0–A3</strong> (oförändrad)</td><td class="p-2">Väljer register inom VIA:ns 16 bytes</td></tr>
+            <tr><td class="p-2">23</td><td class="p-2"><span class="pin">/CS2</span></td><td class="p-2"><strong>U4B-utgång</strong> (ny avkodning)</td><td class="p-2">LÅG endast vid $A000–$A00F — VIA:ns nya hem</td></tr>
+            <tr><td class="p-2">24</td><td class="p-2"><span class="pin">CS1</span></td><td class="p-2">+5V (oförändrad)</td><td class="p-2">Chip Select 1 — alltid aktiv</td></tr>
+            <tr><td class="p-2">38–35</td><td class="p-2"><span class="pin">RS0</span>–<span class="pin">RS3</span></td><td class="p-2"><strong>CPU A0–A3</strong> (oförändrad)</td><td class="p-2">Väljer register inom VIA:ns 16 bytes</td></tr>
           </tbody>
         </table>
       </div>
@@ -148,7 +148,7 @@
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
           <tbody class="divide-y">
-            <tr><td class="p-2">20</td><td class="p-2">/CE</td><td class="p-2"><strong>U4D-utgång</strong> (ny)</td><td class="p-2">Aktivt vid $8000–$FFFF utom $A000–$A00F</td></tr>
+            <tr><td class="p-2">20</td><td class="p-2"><span class="pin">/CE</span></td><td class="p-2"><strong>U4D-utgång</strong> (ny)</td><td class="p-2">Aktivt vid $8000–$FFFF utom $A000–$A00F</td></tr>
           </tbody>
         </table>
       </div>
