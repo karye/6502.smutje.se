@@ -88,6 +88,12 @@
             <marker id="arrowPurple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M 0 0 L 10 5 L 0 10 z" fill="#d8b4fe"/>
             </marker>
+            <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6"/>
+            </marker>
+            <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#22c55e"/>
+            </marker>
             <style>
               .c {
                 font-family: ui-monospace, monospace;
@@ -124,7 +130,7 @@
 
           <!-- ==== ARDUINO (startmotor, streckad — pratar också på bussen) ==== -->
           <line class="onramp" x1="105" y1="130" x2="105" y2="106" stroke="#3b82f6"/>
-          <line class="onramp" x1="105" y1="220" x2="105" y2="250" stroke="#22c55e"/>
+          <line class="onramp" x1="105" y1="220" x2="105" y2="250" stroke="#22c55e" marker-start="url(#arrowGreen)" marker-end="url(#arrowGreen)"/>
           <rect class="dev" x="40" y="130" width="130" height="90" stroke="#3b82f6" stroke-dasharray="6 4"/>
           <text class="c" x="105" y="170" text-anchor="middle" fill="#93c5fd" font-size="13" font-weight="bold">Arduino</text>
           <text class="c" x="105" y="188" text-anchor="middle" fill="#9ca3af" font-size="10">Mega 2560</text>
@@ -134,8 +140,8 @@
           <text class="c" x="178" y="160" text-anchor="middle" fill="#d8b4fe" font-size="9">klocka · R/W · SYNC</text>
 
           <!-- ==== W65C02S CPU ==== -->
-          <line class="onramp" x1="265" y1="130" x2="265" y2="106" stroke="#3b82f6"/>
-          <line class="onramp" x1="265" y1="220" x2="265" y2="250" stroke="#22c55e"/>
+          <line class="onramp" x1="265" y1="130" x2="265" y2="106" stroke="#3b82f6" marker-end="url(#arrowBlue)"/>
+          <line class="onramp" x1="265" y1="220" x2="265" y2="250" stroke="#22c55e" marker-start="url(#arrowGreen)" marker-end="url(#arrowGreen)"/>
           <rect class="chip" x="190" y="130" width="150" height="90"/>
           <text class="c" x="265" y="172" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="bold">W65C02S</text>
           <text class="c" x="265" y="190" text-anchor="middle" fill="#9ca3af" font-size="11">8-bit CPU</text>
@@ -152,7 +158,7 @@
 
           <!-- ==== VIA ==== -->
           <line class="onramp" x1="435" y1="130" x2="435" y2="106" stroke="#3b82f6"/>
-          <line class="onramp" x1="435" y1="220" x2="435" y2="250" stroke="#22c55e"/>
+          <line class="onramp" x1="435" y1="220" x2="435" y2="250" stroke="#22c55e" marker-end="url(#arrowGreen)"/>
           <rect class="dev" x="360" y="130" width="150" height="90" stroke="#facc15"/>
           <text class="c" x="435" y="172" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="bold">VIA</text>
           <text class="c" x="435" y="190" text-anchor="middle" fill="#facc15" font-size="11">W65C22 · I/O</text>
@@ -162,14 +168,14 @@
 
           <!-- ==== SRAM ==== -->
           <line class="onramp" x1="605" y1="130" x2="605" y2="106" stroke="#3b82f6"/>
-          <line class="onramp" x1="605" y1="220" x2="605" y2="250" stroke="#22c55e"/>
+          <line class="onramp" x1="605" y1="220" x2="605" y2="250" stroke="#22c55e" marker-start="url(#arrowGreen)" marker-end="url(#arrowGreen)"/>
           <rect class="dev" x="530" y="130" width="150" height="90" stroke="#4ade80"/>
           <text class="c" x="605" y="172" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="bold">SRAM</text>
           <text class="c" x="605" y="190" text-anchor="middle" fill="#4ade80" font-size="11">62256 · RAM</text>
 
           <!-- ==== EEPROM ==== -->
           <line class="onramp" x1="775" y1="130" x2="775" y2="106" stroke="#3b82f6"/>
-          <line class="onramp" x1="775" y1="220" x2="775" y2="250" stroke="#22c55e"/>
+          <line class="onramp" x1="775" y1="220" x2="775" y2="250" stroke="#22c55e" marker-start="url(#arrowGreen)" marker-end="url(#arrowGreen)"/>
           <rect class="dev" x="700" y="130" width="150" height="90" stroke="#c084fc"/>
           <text class="c" x="775" y="172" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="bold">EEPROM</text>
           <text class="c" x="775" y="190" text-anchor="middle" fill="#c084fc" font-size="11">AT28C256 · ROM</text>
