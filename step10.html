@@ -159,15 +159,15 @@
     <h3>Programmeraren — Arduino till AT28C256</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Arduino</th><th class="p-2 text-left">AT28C256</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Arduino</th><th class="p-2 text-left">AT28C256</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
-          <tr><td class="p-2">5V, GND</td><td class="p-2">VDD (28), VSS (14)</td><td class="p-2">Strömmatning — glöm inte 100nF avkoppling</td></tr>
-          <tr><td class="p-2">A0–A7 (PORTF)</td><td class="p-2">A0–A7</td><td class="p-2">Låga adressbyte — vilken byte som ska brännas</td></tr>
-          <tr><td class="p-2">A8–A14 (PORTK)</td><td class="p-2">A8–A14</td><td class="p-2">Höga adressbyte — 15 bitar = 32 768 adresser</td></tr>
-          <tr><td class="p-2">D22–D29 (PORTA)</td><td class="p-2">D0–D7 via 100Ω</td><td class="p-2">Data — samma portregister som alltid</td></tr>
-          <tr><td class="p-2">D2</td><td class="p-2">/WE (27)</td><td class="p-2">Write Enable — pulsas LÅG för att bränna</td></tr>
-          <tr><td class="p-2">D3</td><td class="p-2">/OE (22)</td><td class="p-2">Output Enable — LÅG vid läsning/verifiering</td></tr>
-          <tr><td class="p-2">GND</td><td class="p-2">/CE (20)</td><td class="p-2">Chip Enable — alltid aktiv under programmering</td></tr>
+          <tr><td class="p-2"><span class="pin">VDD</span>, <span class="pin">VSS</span></td><td class="p-2">5V, GND</td><td class="p-2"><span class="pin">VDD</span> (28), <span class="pin">VSS</span> (14)</td><td class="p-2">Strömmatning — glöm inte 100nF avkoppling</td></tr>
+          <tr><td class="p-2"><span class="pin">A0–A7</span></td><td class="p-2">A0–A7 (PORTF)</td><td class="p-2"><span class="pin">A0–A7</span></td><td class="p-2">Låga adressbyte — vilken byte som ska brännas</td></tr>
+          <tr><td class="p-2"><span class="pin">A8–A14</span></td><td class="p-2">A8–A14 (PORTK)</td><td class="p-2"><span class="pin">A8–A14</span></td><td class="p-2">Höga adressbyte — 15 bitar = 32 768 adresser</td></tr>
+          <tr><td class="p-2"><span class="pin">D0–D7</span></td><td class="p-2">D22–D29 (PORTA)</td><td class="p-2"><span class="pin">D0–D7</span> via 100Ω</td><td class="p-2">Data — samma portregister som alltid</td></tr>
+          <tr><td class="p-2"><span class="pin">/WE</span></td><td class="p-2">D2</td><td class="p-2"><span class="pin">/WE</span> (27)</td><td class="p-2">Write Enable — pulsas LÅG för att bränna</td></tr>
+          <tr><td class="p-2"><span class="pin">/OE</span></td><td class="p-2">D3</td><td class="p-2"><span class="pin">/OE</span> (22)</td><td class="p-2">Output Enable — LÅG vid läsning/verifiering</td></tr>
+          <tr><td class="p-2"><span class="pin">/CE</span></td><td class="p-2">GND</td><td class="p-2"><span class="pin">/CE</span> (20)</td><td class="p-2">Chip Enable — alltid aktiv under programmering</td></tr>
         </tbody>
       </table>
     </div>
@@ -175,14 +175,14 @@
     <h3>Datorn — EEPROM på bussen</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">AT28C256</th><th class="p-2 text-left">Ansluts till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Ansluts till</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
-          <tr><td class="p-2">VDD (28), VSS (14)</td><td class="p-2">+5V, GND</td><td class="p-2">Strömmatning</td></tr>
-          <tr><td class="p-2">A0–A14</td><td class="p-2">CPU A0–A14</td><td class="p-2">Delad adressbuss med SRAM, VIA, Arduino</td></tr>
-          <tr><td class="p-2">D0–D7</td><td class="p-2">CPU D0–D7 via 100Ω</td><td class="p-2">Delad databuss</td></tr>
-          <tr><td class="p-2">/CE (20)</td><td class="p-2"><strong>74HC00-utgång</strong></td><td class="p-2">Aktiveras vid $8000–$FFFF (A15=1)</td></tr>
-          <tr><td class="p-2">/OE (22)</td><td class="p-2">GND</td><td class="p-2">Alltid läs ut — EEPROM är read-only i datorn</td></tr>
-          <tr><td class="p-2">/WE (27)</td><td class="p-2">+5V</td><td class="p-2">Aldrig skriva — ROM-läge</td></tr>
+          <tr><td class="p-2">28, 14</td><td class="p-2"><span class="pin">VDD</span>, <span class="pin">VSS</span></td><td class="p-2">+5V, GND</td><td class="p-2">Strömmatning</td></tr>
+          <tr><td class="p-2">1–10, 21–26</td><td class="p-2"><span class="pin">A0–A14</span></td><td class="p-2">CPU <span class="pin">A0–A14</span></td><td class="p-2">Delad adressbuss med SRAM, VIA, Arduino</td></tr>
+          <tr><td class="p-2">11–13, 15–19</td><td class="p-2"><span class="pin">D0–D7</span></td><td class="p-2">CPU <span class="pin">D0–D7</span> via 100Ω</td><td class="p-2">Delad databuss</td></tr>
+          <tr><td class="p-2">20</td><td class="p-2"><span class="pin">/CE</span></td><td class="p-2"><strong>74HC00-utgång</strong></td><td class="p-2">Aktiveras vid $8000–$FFFF (A15=1)</td></tr>
+          <tr><td class="p-2">22</td><td class="p-2"><span class="pin">/OE</span></td><td class="p-2">GND</td><td class="p-2">Alltid läs ut — EEPROM är read-only i datorn</td></tr>
+          <tr><td class="p-2">27</td><td class="p-2"><span class="pin">/WE</span></td><td class="p-2">+5V</td><td class="p-2">Aldrig skriva — ROM-läge</td></tr>
         </tbody>
       </table>
     </div>
@@ -191,12 +191,12 @@
     <p>En extra 74HC00 vid sidan av den från steg 7/9. En enda grind används som inverterare för <span class="pin">A15</span>.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
-          <tr><td class="p-2">1, 2</td><td class="p-2"><strong>CPU A15</strong></td><td class="p-2">Båda ingångarna till A15 → NAND = NOT A15</td></tr>
-          <tr><td class="p-2">3</td><td class="p-2"><strong>EEPROM /CE</strong> (pin 20)</td><td class="p-2">LÅG när A15=1 → EEPROM aktivt vid $8000–$FFFF</td></tr>
-          <tr><td class="p-2">14</td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
-          <tr><td class="p-2">7</td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
+          <tr><td class="p-2">1, 2</td><td class="p-2"><span class="pin">A15</span> (in)</td><td class="p-2"><strong>CPU <span class="pin">A15</span></strong></td><td class="p-2">Båda ingångarna till A15 → NAND = NOT A15</td></tr>
+          <tr><td class="p-2">3</td><td class="p-2">NOT <span class="pin">A15</span> (ut)</td><td class="p-2"><strong>EEPROM <span class="pin">/CE</span></strong> (pin 20)</td><td class="p-2">LÅG när A15=1 → EEPROM aktivt vid $8000–$FFFF</td></tr>
+          <tr><td class="p-2">14</td><td class="p-2"><span class="pin">VCC</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
+          <tr><td class="p-2">7</td><td class="p-2"><span class="pin">GND</span></td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
         </tbody>
       </table>
     </div>

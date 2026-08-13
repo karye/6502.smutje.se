@@ -251,15 +251,15 @@
     <h3>74HC00 (adressavkodning)</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Grind</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Grind</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
-          <tr><td class="p-2">1, 2</td><td class="p-2"><strong>U4A</strong> in</td><td class="p-2"><strong>CPU A15</strong></td><td class="p-2">Båda ingångarna till A15 → ut = NOT A15 (inverterare)</td></tr>
-          <tr><td class="p-2">3</td><td class="p-2"><strong>U4A</strong> ut</td><td class="p-2"><strong>U4B</strong> pin 4</td><td class="p-2">NOT A15 → grind B ingång 1</td></tr>
-          <tr><td class="p-2">4</td><td class="p-2"><strong>U4B</strong> in</td><td class="p-2"><strong>U4A</strong> pin 3</td><td class="p-2">NOT A15</td></tr>
-          <tr><td class="p-2">5</td><td class="p-2"><strong>U4B</strong> in</td><td class="p-2"><strong>CPU A14</strong></td><td class="p-2">(NOT A15) NAND A14 → LÅG när A15=0, A14=1</td></tr>
-          <tr><td class="p-2">6</td><td class="p-2"><strong>U4B</strong> ut</td><td class="p-2">VIA /CS2 (pin 23)</td><td class="p-2">LÅG vid $4000–$7FFF → VIA aktiverad</td></tr>
-          <tr><td class="p-2">14</td><td class="p-2">VCC</td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
-          <tr><td class="p-2">7</td><td class="p-2">GND</td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
+          <tr><td class="p-2">1, 2</td><td class="p-2"><strong>U4A</strong> in</td><td class="p-2"><span class="pin">A15</span> (in)</td><td class="p-2"><strong>CPU <span class="pin">A15</span></strong></td><td class="p-2">Båda ingångarna till A15 → ut = NOT A15 (inverterare)</td></tr>
+          <tr><td class="p-2">3</td><td class="p-2"><strong>U4A</strong> ut</td><td class="p-2">NOT <span class="pin">A15</span> (ut)</td><td class="p-2"><strong>U4B</strong> pin 4</td><td class="p-2">NOT A15 → grind B ingång 1</td></tr>
+          <tr><td class="p-2">4</td><td class="p-2"><strong>U4B</strong> in</td><td class="p-2">NOT <span class="pin">A15</span></td><td class="p-2"><strong>U4A</strong> pin 3</td><td class="p-2">NOT A15</td></tr>
+          <tr><td class="p-2">5</td><td class="p-2"><strong>U4B</strong> in</td><td class="p-2"><span class="pin">A14</span> (in)</td><td class="p-2"><strong>CPU <span class="pin">A14</span></strong></td><td class="p-2">(NOT A15) NAND A14 → LÅG när A15=0, A14=1</td></tr>
+          <tr><td class="p-2">6</td><td class="p-2"><strong>U4B</strong> ut</td><td class="p-2">VIA <span class="pin">/CS2</span> (ut)</td><td class="p-2">VIA <span class="pin">/CS2</span> (pin 23)</td><td class="p-2">LÅG vid $4000–$7FFF → VIA aktiverad</td></tr>
+          <tr><td class="p-2">14</td><td class="p-2">VCC</td><td class="p-2"><span class="pin">VCC</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
+          <tr><td class="p-2">7</td><td class="p-2">GND</td><td class="p-2"><span class="pin">GND</span></td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
         </tbody>
       </table>
     </div>
