@@ -661,8 +661,8 @@ W $4000  ← VIA: 3D  (=)
         <li><strong>CPU:n läser $FFFC/$FFFD men hoppar till fel adress?</strong> EEPROM:ets <span class="pin">/CE</span>
           är förmodligen inte rätt avkodat. Kontrollera att 74HC00-grinden får <span class="pin">A15</span> på båda ingångarna
           och att utgången går till EEPROM pin 20.</li>
-        <li><strong>Programmet körs inte alls?</strong> Kontrollera att <span class="pin">/OE</span> är kopplat till GND
-          och <span class="pin">/WE</span> till +5V. Utan <span class="pin">/OE</span> låg kör EEPROM:et inte ut data.</li>
+        <li><strong>Programmet körs inte alls?</strong> Kontrollera att <span class="pin">/OE</span> är kopplat till <span class="pin">GND</span>
+          och <span class="pin">/WE</span> till +<span class="pin">5V</span>. Utan <span class="pin">/OE</span> låg kör EEPROM:et inte ut data.</li>
         <li><strong>Bränningen misslyckas?</strong> Mät spänningen vid EEPROM:ets <span class="pin">VDD</span> — den måste
           vara minst 4.8V. Använd 12V DC-adapter till programmerings-Arduinon.</li>
         <li><strong>Busskrockar?</strong> 100Ω motstånd på databussen är nu ännu viktigare —

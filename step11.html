@@ -138,7 +138,7 @@
           <tbody class="divide-y">
             <tr><td class="p-2">23</td><td class="p-2"><span class="pin">/CS2</span></td><td class="p-2"><strong>U4B-utgång</strong> (ny avkodning)</td><td class="p-2">LÅG endast vid $A000–$A00F — VIA:ns nya hem</td></tr>
             <tr><td class="p-2">24</td><td class="p-2"><span class="pin">CS1</span></td><td class="p-2">+5V (oförändrad)</td><td class="p-2">Chip Select 1 — alltid aktiv</td></tr>
-            <tr><td class="p-2">38–35</td><td class="p-2"><span class="pin">RS0</span>–<span class="pin">RS3</span></td><td class="p-2"><strong>CPU A0–A3</strong> (oförändrad)</td><td class="p-2">Väljer register inom VIA:ns 16 bytes</td></tr>
+            <tr><td class="p-2">38–35</td><td class="p-2"><span class="pin">RS0–RS3</span></td><td class="p-2"><strong>CPU A0–A3</strong> (oförändrad)</td><td class="p-2">Väljer register inom VIA:ns 16 bytes</td></tr>
           </tbody>
         </table>
       </div>
@@ -412,7 +412,7 @@ W $A000  ← VIA: 3D         (tecknet "=")
       <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
         <ul class="list-disc pl-5 space-y-1">
           <li><strong>CPU:n läser $FFFC/$FFFD men hoppar till fel adress?</strong> EEPROM:ets <span class="pin">/CE</span> är förmodligen inte rätt avkodat. Kontrollera U5D — den måste vara LÅG när <span class="pin">A15</span>=1 OCH inte VIA.</li>
-          <li><strong>VIA:n svarar inte på $A000?</strong> Kontrollera U5A–U5C-avkodningen. <span class="pin">A15</span>=1, <span class="pin">A14</span>=0, <span class="pin">A13</span>=1, <span class="pin">A12</span>=0 måste ge LÅG på <span class="pin">/CS2</span>. Dubbelkolla att <span class="pin">RS0</span>–<span class="pin">RS3</span> fortfarande går till <span class="pin">A0–A3</span>.</li>
+          <li><strong>VIA:n svarar inte på $A000?</strong> Kontrollera U5A–U5C-avkodningen. <span class="pin">A15</span>=1, <span class="pin">A14</span>=0, <span class="pin">A13</span>=1, <span class="pin">A12</span>=0 måste ge LÅG på <span class="pin">/CS2</span>. Dubbelkolla att <span class="pin">RS0–RS3</span> fortfarande går till <span class="pin">A0–A3</span>.</li>
           <li><strong>SRAM fortfarande bara 16 KB?</strong> <span class="pin">A14</span> (SRAM pin 1) är inte ansluten. Utan den kan processorn inte nå $4000–$7FFF.</li>
           <li><strong>Busskrockar?</strong> Två enheter kan svara samtidigt om avkodningen är fel. Mät <span class="pin">/CE</span> och <span class="pin">/CS2</span> medan CPU:n läser — exakt en ska vara LÅG.</li>
           <li><strong>Programmet kraschar vid $A000?</strong> Länkskriptet placerade kod i VIA-fönstret. Kontrollera <code>program.cfg</code> — ROM-segmentet får inte inkludera $A000–$A00F.</li>

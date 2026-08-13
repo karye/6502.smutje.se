@@ -100,7 +100,7 @@
         <section class="mb-8">
           <h2>Kopplingsschema</h2>
           <p>Nu är datorn komplett i grunden: adressbuss från steg 2, databuss <span class="pin">D0–D7</span> via 100Ω-skydd till Arduino
-            D22–D29, och <span class="pin">R/W</span>-signalen från CPU pin 34 till Arduino <span class="pin">D3</span>. Lägg märke till att databussens motstånd sitter i
+            <span class="pin">D22–D29</span>, och <span class="pin">R/W</span>-signalen från CPU pin 34 till Arduino <span class="pin">D3</span>. Lägg märke till att databussens motstånd sitter i
             serie — en ledning per bit.</p>
           <div class="schematic bg-white rounded-lg shadow p-4">
             <img src="schematics/steg-3.png" alt="Steg 3 — databuss och minne" class="w-full">
@@ -273,7 +273,7 @@
           </ol>
 
           <h3>Vad som är nytt jämfört med steg 2</h3>
-          <p>Tre stora nyheter: <strong><span class="pin">R/W</span>-signalen</strong> kopplas in på <span class="pin">D3</span>, <strong>databussen</strong> på D22–D29
+          <p>Tre stora nyheter: <strong><span class="pin">R/W</span>-signalen</strong> kopplas in på <span class="pin">D3</span>, <strong>databussen</strong> på <span class="pin">D22–D29</span>
             via 100Ω, och <strong>minnesarrayerna</strong> <code>ram[]</code> och <code>vectors[]</code> gör att Arduino
             kan svara med olika data på olika adresser. <code>pulse()</code> är nu en fullständig buss-emulator — det är
             den här funktionen som kommer att följa med oss genom resten av projektet.</p>
@@ -431,7 +431,7 @@ R $8004
           <ul class="list-disc pl-5 space-y-1">
             <li><strong>Ser du <code>W $0</code> eller <code>W $1</code>?</strong> CPU:n driver inte bussarna.
               Kontrollera <span class="pin">BE</span> (måste vara HÖG) och att <span class="pin">PHI2</span> når CPU:n.</li>
-            <li><strong>Ser du <code>R $FFFC</code> men inget mer?</strong> Databussen är felaktig. Kontrollera D22–D29
+            <li><strong>Ser du <code>R $FFFC</code> men inget mer?</strong> Databussen är felaktig. Kontrollera <span class="pin">D22–D29</span>
               och att 100Ω-motstånden sitter på alla 8 ledningar.</li>
             <li><strong>CPU:n hoppar till konstig adress?</strong> Reset-vektorn är fel. Dubbelkolla
               <code>write_mem(0xFFFC, 0x00)</code> och <code>write_mem(0xFFFD, 0x80)</code>.</li>

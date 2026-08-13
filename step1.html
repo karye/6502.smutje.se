@@ -49,7 +49,7 @@
       <h2>Mål</h2>
       <p>Alla datorer behöver en puls — en hjärtslag som får processorn att ta ett steg i taget. I det här första steget kopplar vi in <strong>ström och klocka</strong> till W65C02S-processorn. Processorn kommer inte att <em>göra</em> något ännu (vi har varken minne eller program), men vi kan verifiera att den lever.</p>
       <p>W65C02S är en <strong>statisk CMOS-krets</strong>. Det betyder att klockan kan vara hur långsam som helst — till och med stoppas helt — utan att processorn tappar sitt interna tillstånd. Vi utnyttjar detta genom att generera en långsam klockpuls från Arduino och visualisera den med en lysdiod.</p>
-      <p>En lysdiod och ett motstånd kopplas till klocklinjen. När dioden blinkar vet vi att klockpulsen når fram. Med en multimeter mäter vi också att CPU:n får 5V mellan <span class="pin">VDD</span> och <span class="pin">VSS</span>.</p>
+      <p>En lysdiod och ett motstånd kopplas till klocklinjen. När dioden blinkar vet vi att klockpulsen når fram. Med en multimeter mäter vi också att CPU:n får <span class="pin">5V</span> mellan <span class="pin">VDD</span> och <span class="pin">VSS</span>.</p>
       <p>Det här steget är grunden för allt som kommer — utan ström och klocka gör processorn ingenting.</p>
     </section>
 
@@ -484,7 +484,7 @@
     <!-- Kopplingsschema -->
     <section class="mb-8">
       <h2>Kopplingsschema</h2>
-      <p>Så här ser den kompletta kopplingen ut när allt ligger på kopplingsdäcket: processorn till vänster, Arduino till höger, lysdiod och pull-up-motstånd på sina platser. Följ strömmen från +5V genom CPU:n till GND, och klockan från Arduino <span class="pin">D2</span> till <span class="pin">PHI2</span>.</p>
+      <p>Så här ser den kompletta kopplingen ut när allt ligger på kopplingsdäcket: processorn till vänster, Arduino till höger, lysdiod och pull-up-motstånd på sina platser. Följ strömmen från +<span class="pin">5V</span> genom CPU:n till <span class="pin">GND</span>, och klockan från Arduino <span class="pin">D2</span> till <span class="pin">PHI2</span>.</p>
       <div class="schematic bg-white rounded-lg shadow p-4">
         <img src="schematics/steg-1.png" alt="Steg 1 — Ström och klocka" class="w-full">
       </div>
@@ -674,7 +674,7 @@ Lysdioden på PHI2 ska blinka 1 Hz</pre>
       <p>Här är några saker att kontrollera:</p>
         <ul class="list-disc pl-5 space-y-1">
           <li><strong>Dioden blinkar inte?</strong> Kontrollera att du har rätt pinne (<span class="pin">D2</span>), att dioden är rättvänd
-            (långa benet till <span class="pin">D2</span> via motstånd, korta till GND), och att motståndet är 220Ω.</li>
+            (långa benet till <span class="pin">D2</span> via motstånd, korta till <span class="pin">GND</span>), och att motståndet är 220Ω.</li>
           <li><strong>Dioden lyser konstant?</strong> Du har förmodligen glömt <code>delay()</code> eller har en
             kortslutning.</li>
           <li><strong>Spänningen under 4.8V?</strong> Använd en 12V DC-adapter i Arduinons barrel-jack. USB-portar ger

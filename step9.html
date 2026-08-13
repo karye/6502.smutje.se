@@ -154,7 +154,7 @@
         </div>
       </div>
     </div>
-    <p><span class="text-blue-300">■</span> Adressbuss &nbsp; <span class="text-green-300">■</span> Databuss &nbsp; <span class="text-purple-300">■</span> Kontroll &nbsp; <span class="text-red-300">■</span> Ström. Notch/pin 1-markering: uppåt. <strong><span class="pin">/OE</span></strong> = GND (alltid läs ut). <strong><span class="pin">/CE</span></strong> = U4D pin 11 (aktiv vid $0000–$3FFF).</p>
+    <p><span class="text-blue-300">■</span> Adressbuss &nbsp; <span class="text-green-300">■</span> Databuss &nbsp; <span class="text-purple-300">■</span> Kontroll &nbsp; <span class="text-red-300">■</span> Ström. Notch/pin 1-markering: uppåt. <strong><span class="pin">/OE</span></strong> = <span class="pin">GND</span> (alltid läs ut). <strong><span class="pin">/CE</span></strong> = U4D pin 11 (aktiv vid $0000–$3FFF).</p>
   </section>
 
   <!-- 74HC00 pinout -->
@@ -1008,7 +1008,7 @@ W $4000  ← VIA: 34  (siffran 4)</pre>
       
         <p>Här är några saker att kontrollera:</p>
         <ul class="list-disc pl-5 space-y-1">
-        <li><strong>CPU:n läser $0000 vid reset?</strong> SRAM-chipets <span class="pin">/OE</span> är inte GND. Utan <span class="pin">/OE</span>=LÅG driver SRAM inte ut data vid läsning.</li>
+        <li><strong>CPU:n läser $0000 vid reset?</strong> SRAM-chipets <span class="pin">/OE</span> är inte <span class="pin">GND</span>. Utan <span class="pin">/OE</span>=LÅG driver SRAM inte ut data vid läsning.</li>
         <li><strong>Databuss-krockar?</strong> Arduino får INTE sätta <span class="pin">DDRA</span>=0xFF vid SRAM-adresser. Kontrollera att <code>is_sram()</code> returnerar rätt.</li>
         <li><strong>SRAM skriver inte?</strong> <span class="pin">/WE</span> måste gå till <span class="pin">R/W</span> (pin 34). <span class="pin">/CE</span> måste vara avkodad korrekt via 74HC00.</li>
         <li><strong>Glitchar på bussen?</strong> 62256 är snabbare än Arduino. Se till att <span class="pin">/CE</span> och <span class="pin">/WE</span> är stabila innan databussen läses.</li>

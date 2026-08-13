@@ -91,7 +91,7 @@
   <!-- W65C22 pinout -->
   <section class="mb-8">
     <h2>W65C22 VIA — pinout</h2>
-    <p>DIP-40-kapsel. Två 8-bitars I/O-portar (PA, PB), 4 kontrollpinnar (<span class="pin">CA1</span>–<span class="pin">CB2</span>), bussanslutning. Samma kapsel som CPU:n — var noga med orienteringen.</p>
+    <p>DIP-40-kapsel. Två 8-bitars I/O-portar (PA, PB), 4 kontrollpinnar (<span class="pin">CA1–CB2</span>), bussanslutning. Samma kapsel som CPU:n — var noga med orienteringen.</p>
     <div class="flex justify-center">
       <div class="p-2 inline-flex bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-sm leading-relaxed">
         <div class="flex flex-col justify-between py-2">
@@ -237,7 +237,7 @@
           <tr><td class="p-2">22</td><td class="p-2"><span class="pin">R/W</span></td><td class="p-2">CPU R/W (pin 34)</td><td class="p-2">VIAn behöver veta om CPU:n läser eller skriver</td></tr>
           <tr><td class="p-2">34</td><td class="p-2"><span class="pin">/RESET</span></td><td class="p-2">CPU /RESET (pin 40)</td><td class="p-2">VIAns interna register nollställs vid reset</td></tr>
           <tr><td class="p-2">26–33</td><td class="p-2"><span class="pin">D0–D7</span></td><td class="p-2">CPU D0–D7</td><td class="p-2">Databuss — VIAn läser/skriver data här</td></tr>
-          <tr><td class="p-2">38–35</td><td class="p-2"><span class="pin">RS0</span>–<span class="pin">RS3</span></td><td class="p-2"><strong>CPU A0–A3</strong></td><td class="p-2">Registerväljare — vilket av VIAns 16 register som adresseras</td></tr>
+          <tr><td class="p-2">38–35</td><td class="p-2"><span class="pin">RS0–RS3</span></td><td class="p-2"><strong>CPU A0–A3</strong></td><td class="p-2">Registerväljare — vilket av VIAns 16 register som adresseras</td></tr>
           <tr><td class="p-2">24</td><td class="p-2"><span class="pin">CS1</span></td><td class="p-2">+5V</td><td class="p-2">Chip Select 1 — aktiv HÖG. Permanent aktiverad</td></tr>
           <tr><td class="p-2">23</td><td class="p-2"><span class="pin">/CS2</span></td><td class="p-2">74HC00 pin 6 (utgång)</td><td class="p-2">Chip Select 2 — aktiv LÅG. 74HC00 drar denna LÅG när A15=0, A14=1</td></tr>
           <tr><td class="p-2">2</td><td class="p-2"><span class="pin">PA0</span></td><td class="p-2">LCD RS (pin 4)</td><td class="p-2">Register Select: LÅG = kommando, HÖG = data</td></tr>
@@ -263,7 +263,7 @@
         </tbody>
       </table>
     </div>
-    <p><strong>Logik:</strong> <span class="pin">A15</span> inverteras av U4A. U4B gör (NOT <span class="pin">A15</span>) NAND <span class="pin">A14</span> → LÅG när <span class="pin">A15</span>=0 och <span class="pin">A14</span>=1. VIAn aktiveras alltså vid adress <code>$4000–$7FFF</code>. CPU:ns <span class="pin">A0–A3</span> går till VIAns <span class="pin">RS0</span>–<span class="pin">RS3</span> vilket ger 16 register på <code>$4000–$400F</code>.</p>
+    <p><strong>Logik:</strong> <span class="pin">A15</span> inverteras av U4A. U4B gör (NOT <span class="pin">A15</span>) NAND <span class="pin">A14</span> → LÅG när <span class="pin">A15</span>=0 och <span class="pin">A14</span>=1. VIAn aktiveras alltså vid adress <code>$4000–$7FFF</code>. CPU:ns <span class="pin">A0–A3</span> går till VIAns <span class="pin">RS0–RS3</span> vilket ger 16 register på <code>$4000–$400F</code>.</p>
 
     <!-- LCD -->
     <h3>LCD 16×2 (parallell)</h3>
@@ -792,17 +792,17 @@ W $4000  ← VIA: 3D  (=)
         <p><strong>2. Ser inga $4xxx-adresser?</strong> Dubbelkolla 74HC00-kopplingen och att VIA:ns bussanslutningar sitter rätt.</p>
         <p><strong>3. Mät med multimeter:</strong></p>
         <ul class="list-disc pl-5 space-y-1">
-          <li><span class="pin">PHI2</span> (CPU pin 37): ~2.5V medel (20 Hz fyrkant)</li>
+          <li><span class="pin">PHI2</span> (CPU pin 37): ~2.<span class="pin">5V</span> medel (20 Hz fyrkant)</li>
           <li><span class="pin">BE</span> (CPU pin 36): >4.8V</li>
           <li>VIA <span class="pin">/CS2</span> (pin 23): ska gå LÅG vid $4000–$7FFF</li>
           <li>VIA <span class="pin">VDD</span> (pin 20): >4.8V</li>
           <li>74HC00 VCC (pin 14): >4.8V</li>
         </ul>
-        <p><strong>4. Arduino som logikanalysator:</strong> koppla D8 till en mätpunkt och lägg till i <code>pulse()</code>:</p>
+        <p><strong>4. Arduino som logikanalysator:</strong> koppla <span class="pin">D8</span> till en mätpunkt och lägg till i <code>pulse()</code>:</p>
         <pre><code>Serial.print(" D8="); Serial.print(digitalRead(8));</code></pre>
         <p><strong>5. Vanliga missar:</strong></p>
         <ul class="list-disc pl-5 space-y-1">
-          <li><span class="pin">CS1</span> (VIA pin 24) flytande — måste ha +5V</li>
+          <li><span class="pin">CS1</span> (VIA pin 24) flytande — måste ha +<span class="pin">5V</span></li>
           <li>74HC00 VCC/GND glömt</li>
           <li>Arduino driver databussen vid VIA-adresser — koden måste sätta <span class="pin">DDRA</span>=0x00</li>
           <li>Spänningsfall — mät <span class="pin">VDD</span> vid CPU, VIA och 74HC00 (alla >4.8V)</li>

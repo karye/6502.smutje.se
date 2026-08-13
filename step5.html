@@ -51,9 +51,9 @@
     <h2>Mål</h2>
     
       <p>Datorn fungerar — men all feedback går via seriemonitorn på en laptopen. Nu kopplar vi in en <strong>LCD-display (16×2 tecken)</strong> som visar vad CPU:n gör direkt på kopplingsdäcket. Ingen datorskärm behövs längre.</p>
-      <p>LCD:n kopplas i <strong>4-bitars parallellt läge</strong> till Arduino. Det innebär att vi skickar data 4 bitar i taget via pinnar <span class="pin">D7</span>–D10. Arduino-biblioteket <code>LiquidCrystal</code> sköter all kommunikation — vi behöver bara tala om vilka pinnar som används.</p>
-      <p><strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. Arduino D10 går till LCD <span class="pin">DB4</span>, D9 till <span class="pin">DB5</span>, D8 till <span class="pin">DB6</span>, <span class="pin">D7</span> till <span class="pin">DB7</span>. Koden måste spegla detta: <code>LiquidCrystal lcd(5, 6, 10, 9, 8, 7)</code>.</p>
-      <p>LCD:ns <span class="pin">R/W</span>-pinne kopplas till GND — vi ska bara skriva till displayen, aldrig läsa.</p>
+      <p>LCD:n kopplas i <strong>4-bitars parallellt läge</strong> till Arduino. Det innebär att vi skickar data 4 bitar i taget via pinnar <span class="pin">D7–D10</span>. Arduino-biblioteket <code>LiquidCrystal</code> sköter all kommunikation — vi behöver bara tala om vilka pinnar som används.</p>
+      <p><strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. Arduino <span class="pin">D10</span> går till LCD <span class="pin">DB4</span>, <span class="pin">D9</span> till <span class="pin">DB5</span>, <span class="pin">D8</span> till <span class="pin">DB6</span>, <span class="pin">D7</span> till <span class="pin">DB7</span>. Koden måste spegla detta: <code>LiquidCrystal lcd(5, 6, 10, 9, 8, 7)</code>.</p>
+      <p>LCD:ns <span class="pin">R/W</span>-pinne kopplas till <span class="pin">GND</span> — vi ska bara skriva till displayen, aldrig läsa.</p>
     
   </section>
 
@@ -74,7 +74,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2>Kopplingsschema</h2>
-    <p>Schemat visar LCD-displayen ansluten i 4-bitarsläge: <span class="pin">RS</span> till <span class="pin">D5</span>, E till <span class="pin">D6</span>, och datapinnarna <span class="pin">DB4–DB7</span> till D10, D9, D8, <span class="pin">D7</span> i omvänd ordning. Potentiometern sitter på <span class="pin">VO</span> för kontrast och 220Ω-motståndet matar bakgrundsbelysningen. Resten av datorn är oförändrad.</p>
+    <p>Schemat visar LCD-displayen ansluten i 4-bitarsläge: <span class="pin">RS</span> till <span class="pin">D5</span>, E till <span class="pin">D6</span>, och datapinnarna <span class="pin">DB4–DB7</span> till <span class="pin">D10</span>, <span class="pin">D9</span>, <span class="pin">D8</span>, <span class="pin">D7</span> i omvänd ordning. Potentiometern sitter på <span class="pin">VO</span> för kontrast och 220Ω-motståndet matar bakgrundsbelysningen. Resten av datorn är oförändrad.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-5.png" alt="Steg 5 — LCD-display" class="w-full">
     </div>
@@ -123,7 +123,7 @@
   <!-- Kretstabell -->
   <section class="mb-8">
     <h2>Kopplingar</h2>
-    <p>Här är hela kopplingen inklusive LCD:ns 16 pinnar, markerade med egen radgrupp i tabellen. Datapinnarna <span class="pin">DB4–DB7</span> går i omvänd ordning (D10→<span class="pin">DB4</span>, D9→<span class="pin">DB5</span>…) — en klassisk fallgrop när du kopplar, så dubbelkolla varje ledning mot tabellen.</p>
+    <p>Här är hela kopplingen inklusive LCD:ns 16 pinnar, markerade med egen radgrupp i tabellen. Datapinnarna <span class="pin">DB4–DB7</span> går i omvänd ordning (<span class="pin">D10</span>→<span class="pin">DB4</span>, <span class="pin">D9</span>→<span class="pin">DB5</span>…) — en klassisk fallgrop när du kopplar, så dubbelkolla varje ledning mot tabellen.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -175,7 +175,7 @@
       <p>LCD-displayer med HD44780-kontroller (standard för 16×2 och 20×4) kan köras i två lägen: 8-bitars (alla 8 datapinnar används) eller 4-bitars (endast <span class="pin">DB4–DB7</span>). Vi använder 4-bitarsläget för att spara pinnar på Arduino. Arduino-biblioteket <code>LiquidCrystal</code> hanterar all kommunikation — vi behöver bara tala om vilka pinnar som används:</p>
       <pre class="bg-gray-100 p-3 rounded text-sm font-mono">LiquidCrystal lcd(5, 6, 10, 9, 8, 7);
 //                    RS  E  DB4 DB5 DB6 DB7</pre>
-      <p><strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. Arduino D10 → LCD <span class="pin">DB4</span>, D9 → <span class="pin">DB5</span>, D8 → <span class="pin">DB6</span>, <span class="pin">D7</span> → <span class="pin">DB7</span>. Om din display har rak ordning (<span class="pin">D7</span>→<span class="pin">DB4</span> osv.) måste du ändra ordningen i konstruktorn. LCD:ns <span class="pin">R/W</span>-pinne (pin 5) kopplas till GND — vi skriver bara till displayen, vi läser aldrig från den.</p>
+      <p><strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. Arduino <span class="pin">D10</span> → LCD <span class="pin">DB4</span>, <span class="pin">D9</span> → <span class="pin">DB5</span>, <span class="pin">D8</span> → <span class="pin">DB6</span>, <span class="pin">D7</span> → <span class="pin">DB7</span>. Om din display har rak ordning (<span class="pin">D7</span>→<span class="pin">DB4</span> osv.) måste du ändra ordningen i konstruktorn. LCD:ns <span class="pin">R/W</span>-pinne (pin 5) kopplas till <span class="pin">GND</span> — vi skriver bara till displayen, vi läser aldrig från den.</p>
 
       <h3>LCD-uppdatering inuti pulse()</h3>
       <p>Den stora kodändringen sitter i <code>pulse()</code>. Efter varje klockcykel uppdateras LCD:n:</p>
@@ -375,7 +375,7 @@ R $8001</pre>
         <li><strong>Helt tom skärm?</strong> Justera kontrasten med potentiometern. Testa båda ytterlägena.</li>
         <li><strong>Svarta rutor på första raden?</strong> LCD:n är i 8-bitarsläge men får ingen data. Kontrollera att <code>lcd.begin(16,2)</code> körs.</li>
         <li><strong>Förvrängda tecken?</strong> Datapinnarna är i fel ordning. Prova <code>LiquidCrystal lcd(5, 6, 7, 8, 9, 10)</code> om din display har rak ordning.</li>
-        <li><strong>Ingen bakgrundsbelysning?</strong> Kontrollera 220Ω till A (pin 15) och GND till K (pin 16).</li>
+        <li><strong>Ingen bakgrundsbelysning?</strong> Kontrollera 220Ω till A (pin 15) och <span class="pin">GND</span> till K (pin 16).</li>
       </ul>
     
 
