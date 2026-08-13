@@ -49,7 +49,7 @@
       <h2>Mål</h2>
       <p>Alla datorer behöver en puls — en hjärtslag som får processorn att ta ett steg i taget. I det här första steget kopplar vi in <strong>ström och klocka</strong> till W65C02S-processorn. Processorn kommer inte att <em>göra</em> något ännu (vi har varken minne eller program), men vi kan verifiera att den lever.</p>
       <p>W65C02S är en <strong>statisk CMOS-krets</strong>. Det betyder att klockan kan vara hur långsam som helst — till och med stoppas helt — utan att processorn tappar sitt interna tillstånd. Vi utnyttjar detta genom att generera en långsam klockpuls från Arduino och visualisera den med en lysdiod.</p>
-      <p>En lysdiod och ett motstånd kopplas till klocklinjen. När dioden blinkar vet vi att klockpulsen når fram. Med en multimeter mäter vi också att CPU:n får 5V mellan VDD och VSS.</p>
+      <p>En lysdiod och ett motstånd kopplas till klocklinjen. När dioden blinkar vet vi att klockpulsen når fram. Med en multimeter mäter vi också att CPU:n får 5V mellan <span class="pin">VDD</span> och <span class="pin">VSS</span>.</p>
       <p>Det här steget är grunden för allt som kommer — utan ström och klocka gör processorn ingenting.</p>
     </section>
 

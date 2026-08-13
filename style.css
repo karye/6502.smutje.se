@@ -44,3 +44,11 @@ main p {
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
 }
+span.pin {
+  font-family: monospace;
+  font-weight: 600;
+  background: #ffd83d;
+  border: 1px solid #bda43d;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}
