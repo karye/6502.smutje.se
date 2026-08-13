@@ -46,17 +46,17 @@
     <h1>Städad adressrymd</h1>
 
     <!-- Mål -->
-    <section class="mb-8">
+    <section class="mb-8 text-gray-700 space-y-3">
       <h2>Mål</h2>
-      <div class="text-gray-700 space-y-3">
+      
         <p>I steg 10 fick vi en fristående dator — men adressrymden var inte vacker. VIA:ns 16 bytes på $4000 klippte av SRAM-minnet mitt i, och den övre halvan av 62256-chippet ($4000–$7FFF) låg helt oanvänd. Det kändes slarvigt.</p>
         <p>Nu städar vi upp. <strong>SRAM utökas till hela 32 KB</strong> ($0000–$7FFF) genom att ansluta A14 — hela 62256-chippet används äntligen. <strong>VIA:n flyttas till $A000–$A00F</strong>, ett rent I/O-fönster i ROM:ens övre del, precis som I/O-portar sitter på riktiga 6502-datorer (Apple II hade I/O på $C000, C64 på $D000).</p>
         <p>Resultatet är en adressrymd utan dött utrymme: RAM längst ner, ROM i mitten och I/O i ett fönster högst upp. Det här är den klassiska 6502-layouten — nu har vi byggt den själva.</p>
-      </div>
+      
     </section>
 
     <!-- Nya komponenter -->
-    <section class="mb-8">
+    <section class="mb-8 text-gray-700 space-y-3">
       <h2>Nya komponenter</h2>
       <p>Inga nya kretsar! Det här steget handlar om att <strong>omkoppla det vi redan har</strong>. Du behöver bara en andra 74HC00 för den nya adressavkodningen (du har sex stycken) och en extra kopplingstråd för SRAM:ns A14.</p>
       <div class="overflow-x-auto">
@@ -210,9 +210,9 @@
     <!-- Arduino-kod -->
     <section class="mb-8">
       <h2>Arduino-kod</h2>
-      <div class="text-gray-700 space-y-3">
+      
         <p>Ändringarna i Arduinon är minimala — bara tre konstanter och en villkorsändring i <code>is_eeprom()</code>. Koden vet nu att SRAM täcker $0000–$7FFF och att VIA bor på $A000. Allt annat är tri-state för fysiska kretsar.</p>
-      </div>
+      
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 11 — städad adressrymd
@@ -339,11 +339,11 @@ void loop() {
     </section>
 
     <!-- Assembler-kod -->
-    <section class="mb-8">
+    <section class="mb-8 text-gray-700 space-y-3">
       <h2>Assembler-kod — program.cfg</h2>
-      <div class="text-gray-700 space-y-3">
+      
         <p>Länkskriptet måste veta att $A000–$A00F är reserverat för VIA:n. Programmet placeras i ROM:en men hoppar över I/O-fönstret.</p>
-      </div>
+      
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-asm">; program.cfg — steg 11
 ; Kod placeras i $8000–$9FFF och $A010–$FFFF,
 ; men hoppar över VIA-fönstret $A000–$A00F.
@@ -366,9 +366,9 @@ SEGMENTS {
     </section>
 
     <!-- Exempel på körning -->
-    <section class="mb-8">
+    <section class="mb-8 text-gray-700 space-y-3">
       <h2>Exempel på körning</h2>
-      <div class="text-gray-700 space-y-3">
+      
         <p>När du laddat upp koden och startat datorn ser du i seriemonitorn att enheterna svarar på sina nya adresser:</p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -403,7 +403,7 @@ W $A000  ← VIA: 3D         (tecknet "=")
         </div>
 
         <p>Lägg märke till skillnaden mot steg 10: SRAM-skrivningar kan nu ske var som helst i $0000–$7FFF, och VIA:n svarar på $A000. Bussloggen visar tydligt vilken enhet som pratar.</p>
-      </div>
+      
     </section>
 
     <!-- Om det inte fungerar -->

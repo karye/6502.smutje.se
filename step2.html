@@ -47,18 +47,18 @@
     <h1>Adressbuss och reset</h1>
 
     <!-- Mål -->
-    <section class="mb-8">
+    <section class="mb-8 text-gray-700 space-y-3">
       <h2>Mål</h2>
-      <div class="text-gray-700 space-y-3">
+      
         <p>I steg 1 gav vi processorn ström och klocka. Nu ska vi ge den kontroll över <strong>adressbussen</strong> — 16 ledningar som talar om <em>var</em> i minnet CPU:n vill läsa eller skriva.</p>
         <p>Alla 6502-processorer startar på samma sätt: efter reset läser de adress <code>$FFFC</code> och <code>$FFFD</code> för att få reda på var programmet börjar. Det är inbyggt i kisel — ingen mjukvara, ingen konfiguration. Genom att koppla in adressbussen och en reset-signal kan vi se detta hända i seriemonitor.</p>
         <p>Vi kopplar också in <strong>/RESET</strong> (pin 40) till Arduino D4. När vi håller RESB låg i minst 2 klockcykler nollställs CPU:ns interna register. När vi sedan släpper den (HÖG) börjar CPU:n köra från reset-vektorn.</p>
         <p>Adressbussen läser vi via Arduinons analoga portar — <strong>PORTF</strong> (A0–A7) och <strong>PORTK</strong> (A8–A15). Det ger oss 16 bitar i två registerläsningar.</p>
-      </div>
+      
     </section>
 
     <!-- Nya komponenter -->
-    <section class="mb-8">
+    <section class="mb-8 text-gray-700 space-y-3">
       <h2>Nya komponenter</h2>
       <p>Det här steget kräver inga nya elektroniska komponenter — bara kopplingstrådar. Sexton för adresslinjerna A0–A15 och en extra för reset-signalen, eftersom vi nu tar kontroll över CPU:ns uppstart via /RESET.</p>
       <div class="overflow-x-auto">
@@ -177,7 +177,7 @@
     <!-- Kod -->
     <section class="mb-8">
       <h2>Arduino-kod</h2>
-      <div class="text-gray-700 space-y-3">
+      
         <p>I steg 1 gav vi processorn liv. Nu ska vi lyssna på vad den säger. Koden i detta steg gör något fundamentalt: den <strong>läser av processorns adressbuss</strong> — 16 ledningar som tillsammans talar om var i minnet CPU:n vill läsa — och skriver ut adressen i seriemonitor. Det är som att koppla in en logikanalysator, fast gratis.</p>
 
         <h3>Portregister — att läsa 8 pinnar på en gång</h3>
@@ -206,7 +206,7 @@
 
         <h3>Vad som är nytt jämfört med steg 1</h3>
         <p>Klockan har höjts från 1 Hz till 500 Hz — för snabbt för att se med ögat, men lagom för att läsa adressbussen i seriemonitor. <code>pulse()</code> har förenklats (ingen lysdiod denna gång) och <code>loop()</code> gör nu det tunga jobbet: läsa portregister, skifta ihop adressen, skriva ut. <code>setup()</code> har fått en reset-sekvens — den viktigaste nyheten i detta steg.</p>
-      </div>
+      
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 2 — adressbuss och reset-sekvens
@@ -279,9 +279,9 @@ void loop() {
     </section>
 
     <!-- Exempel på körning -->
-    <section class="mb-8">
+    <section class="mb-8 text-gray-700 space-y-3">
       <h2>Exempel på körning</h2>
-      <div class="text-gray-700 space-y-3">
+      
         <p>När du öppnar seriemonitor (115200 baud) efter uppladdning ser du ungefär detta:</p>
         <div>
 <p class="text-xs text-gray-500 mb-1 font-semibold">Seriemonitor (115200 baud)</p>
@@ -300,13 +300,13 @@ R $8006
         </div>
         <p>Varje rad börjar med <code>R</code> (Read — CPU:n läser) följt av <code>$</code> och en hexadecimal adress. De två första raderna är alltid <code>$FFFC</code> och <code>$FFFD</code> — reset-vektorn. Processorn frågar "var ska jag börja?" och svaret (som just nu är skräp eftersom databussen inte är inkopplad) leder den till någon adress — ofta <code>$8000</code> eller <code>$0000</code> beroende på vad som ligger på de flytande datalinjerna.</p>
         <p>Lägg märke till att <code>$FFFC</code> och <code>$FFFD</code> bara dyker upp en gång — efter reset. Sedan räknar adresserna uppåt när CPU:n hämtar instruktioner. Utan databuss (steg 3) kan CPU:n inte hämta riktiga opcodes, men adressbussen fungerar redan — och det är precis vad vi ville bevisa.</p>
-      </div>
+      
     </section>
 
     <!-- Testning och felsökning -->
-    <section class="mb-8">
+    <section class="mb-8 text-gray-700 space-y-3">
       <h2>Om det inte fungerar</h2>
-      <div class="text-gray-700 space-y-3">
+      
         <p>Här är några saker att kontrollera:</p>
         <ul class="list-disc pl-5 space-y-1">
           <li><strong>Ser du bara <code>0</code> eller <code>1</code>?</strong> CPU:n är fortfarande i reset eller BE är
@@ -316,7 +316,7 @@ R $8006
           <li><strong>Skräptecken i seriemonitor?</strong> Baud rate måste vara 115200. Kontrollera
             <code>platformio.ini</code> om du använder PlatformIO.</li>
         </ul>
-      </div>
+      
     </section>
 
     <div class="flex gap-4 mt-8">

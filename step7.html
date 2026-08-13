@@ -47,9 +47,9 @@
   <h1>VIA + LCD, styrd av 6502</h1>
 
   <!-- Mål -->
-  <section class="mb-8">
+  <section class="mb-8 text-gray-700 space-y-3">
     <h2>Mål</h2>
-    <div class="text-gray-700 space-y-3">
+    
       <p>I steg 6 styrde Arduino LCD-displayen direkt. Nu tar vi nästa stora kliv: vi kopplar in en <strong>W65C22 VIA</strong> (Versatile Interface Adapter) — en I/O-krets som ger 6502-processorn 20 egna pinnar att styra. VIAn sitter på CPU:ns adress- och databuss, precis som ett RAM-minne, men istället för att lagra data styr den fysiska pinnar.</p>
       <p>En <strong>74HC00</strong> (två NAND-grindar) avkodar adressbussen så att VIA:n hamnar på adress <code>$4000–$400F</code>. U4A inverterar A15, U4B NAND:ar med A14 — resultat: VIA aktiveras när A14=1 och A15=0.</p>
       <p>6502-programmet på <code>$8000</code> gör följande:</p>
@@ -59,11 +59,11 @@
         <li>Skriver två rader text genom att lägga ASCII-värden på port B och pulsa enable-signalen på port A — sedan <strong>clear display</strong> och loopa om från början</li>
       </ol>
       <p>När allt fungerar har vi en dator där <strong>CPU:n själv styr I/O</strong> via minnesmappade adresser. Arduino är nu bara minnesemulator och klocka — all logik för LCD:n körs på 6502.</p>
-    </div>
+    
   </section>
 
   <!-- Nya komponenter -->
-  <section class="mb-8">
+  <section class="mb-8 text-gray-700 space-y-3">
     <h2>Nya komponenter</h2>
     <p>De här kretsarna är starten på en riktig datorarkitektur. En W65C22 VIA ger CPU:n 20 egna I/O-pinnar, en 74HC00 avkodar adressbussen så att VIA:n hamnar på $4000, och en 100 nF-kondensator håller VIA:ns strömmatning ren.</p>
     <div class="overflow-x-auto">
@@ -735,7 +735,7 @@ void loop() {
   <!-- Exempel på körning -->
   <section class="mb-8">
     <h2>Exempel på körning</h2>
-    <div class="text-gray-700 space-y-3">
+    
       <p>När du laddat upp koden och öppnar seriemonitor ser du programmet genomlöpa alla faser. Samtidigt vaknar LCD-displayen till liv — styrd helt av 6502-processorn via VIA-kretsen:</p>
 
       <!-- Sida vid sida: seriemonitor + LCD -->
@@ -780,13 +780,13 @@ W $4000  ← VIA: 3D  (=)
 
       <p>Varje <code>W $4000</code> eller <code>W $4001</code> är CPU:n som skriver till VIA:ns register — Arduino gör ingenting, den fysiska VIA-kretsen fångar upp skrivningen och styr LCD:n. Texten rullar fram på displayen, tecken för tecken, styrd helt av 6502-processorn.</p>
       <p>När programmet når slutet hoppar det tillbaka till början och skriver om alltihop. Clear display, skriv text, clear display — i en oändlig loop. Datorn är nu självförsörjande: CPU:n styr I/O, Arduino levererar bara programkoden och klockan.</p>
-    </div>
+    
   </section>
 
   <!-- Testning och diagnostik -->
-  <section class="mb-8">
+  <section class="mb-8 text-gray-700 space-y-3">
     <h2>Om det inte fungerar</h2>
-      <div class="text-gray-700 space-y-3">
+      
         <p>Här är några saker att kontrollera:</p>
         <p><strong>1. CPU:n startar inte?</strong> Ser du <code>W $0</code> eller <code>W $1</code>? Kontrollera BE (HÖG), PHI2 (pulser), RESB (HÖG efter reset).</p>
         <p><strong>2. Ser inga $4xxx-adresser?</strong> Dubbelkolla 74HC00-kopplingen och att VIA:ns bussanslutningar sitter rätt.</p>
@@ -807,7 +807,7 @@ W $4000  ← VIA: 3D  (=)
           <li>Arduino driver databussen vid VIA-adresser — koden måste sätta DDRA=0x00</li>
           <li>Spänningsfall — mät VDD vid CPU, VIA och 74HC00 (alla >4.8V)</li>
         </ul>
-      </div>
+      
     </section>
 
   <div class="flex gap-4 mt-8">

@@ -47,18 +47,18 @@
   <h1>LCD-display</h1>
 
   <!-- Mål -->
-  <section class="mb-8">
+  <section class="mb-8 text-gray-700 space-y-3">
     <h2>Mål</h2>
-    <div class="text-gray-700 space-y-3">
+    
       <p>Datorn fungerar — men all feedback går via seriemonitorn på en laptopen. Nu kopplar vi in en <strong>LCD-display (16×2 tecken)</strong> som visar vad CPU:n gör direkt på kopplingsdäcket. Ingen datorskärm behövs längre.</p>
       <p>LCD:n kopplas i <strong>4-bitars parallellt läge</strong> till Arduino. Det innebär att vi skickar data 4 bitar i taget via pinnar D7–D10. Arduino-biblioteket <code>LiquidCrystal</code> sköter all kommunikation — vi behöver bara tala om vilka pinnar som används.</p>
       <p><strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. Arduino D10 går till LCD DB4, D9 till DB5, D8 till DB6, D7 till DB7. Koden måste spegla detta: <code>LiquidCrystal lcd(5, 6, 10, 9, 8, 7)</code>.</p>
       <p>LCD:ns R/W-pinne kopplas till GND — vi ska bara skriva till displayen, aldrig läsa.</p>
-    </div>
+    
   </section>
 
   <!-- Nya komponenter -->
-  <section class="mb-8">
+  <section class="mb-8 text-gray-700 space-y-3">
     <h2>Nya komponenter</h2>
     <p>En 16×2 LCD-display, en 10 kΩ-potentiometer för kontrast och ett 220Ω-motstånd för bakgrundsbelysningen. Med dessa ser du vad CPU:n gör direkt på kopplingsdäcket — datorn blir fristående från datorskärmen.</p>
     <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
@@ -168,7 +168,7 @@
 <!-- Kod -->
   <section class="mb-8">
     <h2>Arduino-kod</h2>
-    <div class="text-gray-700 space-y-3">
+    
       <p>Hittills har all feedback från datorn gått via seriemonitor på en laptop. Det fungerar, men det känns inte som en riktig dator. Nu kopplar vi in en <strong>LCD-display</strong> direkt på kopplingsdäcket — och vips är datorn fristående. Ingen PC krävs för att se vad CPU:n gör.</p>
 
       <h3>LCD i 4-bitarsläge — att prata med displayen</h3>
@@ -189,7 +189,7 @@
 
       <h3>Vad som är nytt jämfört med steg 4</h3>
       <p>LCD-display, 10kΩ-potentiometer för kontrast, och 220Ω för bakgrundsbelysningen. I koden: <code>#include &lt;LiquidCrystal.h&gt;</code>, LCD-objektet, och <code>lcd.print()</code>-anropen i <code>pulse()</code>. Det är allt — resten är samma beprövade minnesemulator som tidigare.</p>
-    </div>
+    
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 5 — LCD-display (parallell 4-bit till Arduino)
@@ -314,9 +314,9 @@ void loop() {
   </section>
 
   <!-- Exempel på körning -->
-  <section class="mb-8">
+  <section class="mb-8 text-gray-700 space-y-3">
     <h2>Exempel på körning</h2>
-    <div class="text-gray-700 space-y-3">
+    
       <p>Direkt efter uppladdning visar både seriemonitor och LCD-displayen att allt är redo:</p>
 
       <!-- Sida vid sida: seriemonitor + LCD vid uppstart -->
@@ -363,13 +363,13 @@ R $8001</pre>
 
       <p>Samma information på båda ställena — adress (<code>$8001</code>) och data (<code>$EA</code>, NOP). Skillnaden är att LCD:n visar <em>just nu</em> medan seriemonitor bygger en historik. Med Knapp 2 (instruktionssteg) ser du flera rader i seriemonitor per tryck medan LCD:n uppdateras för varje klockcykel — ett snabbt flimmer av adresser tills SYNC går hög.</p>
       <p>Datorn har blivit fristående. Du kan koppla bort USB-kabeln (om Arduino drivs via DC-adaptern) och fortfarande stega genom programmet och se allt på LCD:n. Seriemonitor är praktisk för att logga och felsöka, men displayen på kopplingsdäcket gör datorn till en egen, komplett enhet.</p>
-    </div>
+    
   </section>
 
   <!-- Testning -->
-  <section class="mb-8">
+  <section class="mb-8 text-gray-700 space-y-3">
     <h2>Om det inte fungerar</h2>
-      <div class="text-gray-700 space-y-3">
+      
         <p>Här är några saker att kontrollera:</p>
         <ul class="list-disc pl-5 space-y-1">
         <li><strong>Helt tom skärm?</strong> Justera kontrasten med potentiometern. Testa båda ytterlägena.</li>
@@ -377,7 +377,7 @@ R $8001</pre>
         <li><strong>Förvrängda tecken?</strong> Datapinnarna är i fel ordning. Prova <code>LiquidCrystal lcd(5, 6, 7, 8, 9, 10)</code> om din display har rak ordning.</li>
         <li><strong>Ingen bakgrundsbelysning?</strong> Kontrollera 220Ω till A (pin 15) och GND till K (pin 16).</li>
       </ul>
-    </div>
+    
 
   </section>
 

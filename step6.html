@@ -47,20 +47,20 @@
   <h1>Eget 6502-program</h1>
 
   <!-- Mål -->
-  <section class="mb-8">
+  <section class="mb-8 text-gray-700 space-y-3">
     <h2>Mål</h2>
-    <div class="text-gray-700 space-y-3">
+    
       <p>Datorn är nu komplett — CPU, minne, LCD, knappar. Men den kör bara NOP:ar. Dags att skriva vårt <strong>första egna 6502-program!</strong></p>
       <p>Vi skriver en enkel räknare: öka X-registret från 0 till 255, spara värdet på adress <code>$0200</code>, och loopa. Programmet är bara 9 bytes stort — men det innehåller allt ett riktigt program behöver: initiering, beräkning, minnesskrivning och loop.</p>
       <p>6502-program skrivs i <strong>maskinkod</strong> — varje instruktion är 1–3 bytes. LDX #$00 är två bytes (<code>$A2 $00</code>), INX är en byte (<code>$E8</code>), STX $0200 är tre bytes (<code>$8E $00 $02</code>). Vi skriver in dessa bytes direkt i Arduinons minnesarray, och CPU:n exekverar dem som ett riktigt program.</p>
       <p>Ingen ny hårdvara — samma koppling som steg 5. Allt nytt finns i mjukvaran.</p>
-    </div>
+    
   </section>
 
       
 
 <!-- Kretstabell -->
-  <section class="mb-8">
+  <section class="mb-8 text-gray-700 space-y-3">
     <h2>Kopplingar</h2>
     <p>Samma fysiska koppling som steg 5 — ingenting har flyttats. Tabellen är med för fullständighet så att du kan följa varje signal, men det enda som ändras i detta steg är programmet i <code>setup()</code>.</p>
     <div class="overflow-x-auto">
@@ -201,7 +201,7 @@
   <!-- Kod -->
   <section class="mb-8">
     <h2>Arduino-kod</h2>
-    <div class="text-gray-700 space-y-3">
+    
       <p>Datorn fungerar — men den har hittills bara kört NOP:ar. Nu skriver vi vårt <strong>första egna 6502-program</strong>. Det är bara 9 bytes stort, men det innehåller allt ett riktigt program behöver: initiering, beräkning, minnesskrivning och en loop. CPU:n kommer att räkna från 0 till 255 i en oändlig loop — och du kommer att kunna följa varje steg.</p>
 
       <h3>6502-maskinkod — så här ser ett program ut</h3>
@@ -223,7 +223,7 @@
 
       <h3>Vad du ser på LCD:n</h3>
       <p>När programmet körs kan du med Knapp 2 (instruktionssteg) följa programflödet: <code>$8000</code> (LDX) → <code>$8002</code> (INX) → <code>$8003</code> (STX) → <code>$8006</code> (JMP) → <code>$8002</code> (INX igen). Varje varv genom loopen ökar värdet på adress <code>$0200</code> — och du kan se det på LCD:ns rad 1 som <code>D:$01</code>, <code>D:$02</code>, <code>D:$03</code>… hela vägen upp till <code>D:$FF</code> (255). Sedan wrappar X-registret till 0 och loopen börjar om.</p>
-    </div>
+    
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 6 — Första egna 6502-programmet (räknare)
@@ -359,9 +359,9 @@ void loop() {
   </section>
 
   <!-- Exempel på körning -->
-  <section class="mb-8">
+  <section class="mb-8 text-gray-700 space-y-3">
     <h2>Exempel på körning</h2>
-    <div class="text-gray-700 space-y-3">
+    
       <p>När du laddat upp koden och trycker på <strong>Knapp 2</strong> (instruktionssteg) ser du programmet rulla genom adresserna — både i seriemonitor och på LCD-displayen:</p>
 
       <!-- Sida vid sida: seriemonitor + LCD -->
@@ -401,20 +401,20 @@ R $8002  ← tillbaka till INX
 
       <p>För första gången ser du ett <strong>W</strong> i loggen! CPU:n <em>skriver</em> till adress <code>$0200</code> — det är <code>STX $0200</code> som sparar X-registrets värde. På LCD:ns rad 1 ser du <code>D:$01</code>, <code>D:$02</code>, <code>D:$03</code>… räknaren ökar för varje varv. När den når <code>D:$FF</code> (255) wrappar den till <code>D:$00</code> — X-registret är bara 8 bitar brett.</p>
       <p>Programmet är ynka 9 bytes, men det innehåller redan alla mönster du behöver för att skriva större program: initiering (LDX), beräkning (INX), lagring (STX) och kontrollflöde (JMP). Du har just skrivit ditt första 6502-program!</p>
-    </div>
+    
   </section>
 
   <!-- Testning -->
-  <section class="mb-8">
+  <section class="mb-8 text-gray-700 space-y-3">
     <h2>Om det inte fungerar</h2>
-      <div class="text-gray-700 space-y-3">
+      
         <p>Här är några saker att kontrollera:</p>
         <ul class="list-disc pl-5 space-y-1">
         <li><strong>CPU:n kör NOP istället?</strong> Du har glömt att ladda det nya programmet. Kontrollera <code>write_mem()</code>-anropen i <code>setup()</code>.</li>
         <li><strong>CPU:n hoppar till fel adress?</strong> JMP-adressen är fel. <code>$8002</code> är <code>$02 $80</code> (låg byte först!).</li>
         <li><strong>Programmet stannar?</strong> Du kanske har en BRK-instruktion (0x00) någonstans. Dubbelkolla att alla bytes är korrekta.</li>
       </ul>
-    </div>
+    
 
   </section>
 

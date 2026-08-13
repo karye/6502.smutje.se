@@ -47,17 +47,17 @@
   <h1>EEPROM som ROM</h1>
 
   <!-- Mål -->
-  <section class="mb-8">
+  <section class="mb-8 text-gray-700 space-y-3">
     <h2>Mål</h2>
-    <div class="text-gray-700 space-y-3">
+    
       <p>Hittills har Arduino levererat 6502-programmet — varje gång CPU:n läser från <code>$8000</code> och uppåt är det Arduinons minnesarray som svarar. Det fungerar utmärkt, men en riktig dator har sitt program i <strong>ROM</strong> — icke-flyktigt minne som överlever strömavbrott. Nu tar vi det sista stora klivet: vi bränner in programmet på en <strong>AT28C256 EEPROM</strong> och låter den ersätta Arduino som ROM.</p>
       <p>En <strong>andra Arduino Mega</strong> används som EEPROM-programmerare. Via USB tar den emot en <code>.bin</code>-fil från datorn, bränner den på AT28C256, och verifierar att varje byte sitter rätt. Sedan flyttar du EEPROM-chippet till datorns kopplingsdäck — och datorn startar direkt från äkta ROM, precis som en Commodore 64 eller Apple II.</p>
       <p>Arduinon på kopplingsdäcket finns kvar som klocka och diagnostikverktyg — men datorn överlever utan den. Slå på strömmen, och CPU:n läser ditt program direkt ur EEPROM:et. Det här är en fristående dator.</p>
-    </div>
+    
   </section>
 
   <!-- Nya komponenter -->
-  <section class="mb-8">
+  <section class="mb-8 text-gray-700 space-y-3">
     <h2>Nya komponenter</h2>
     <p>En AT28C256 EEPROM på 32 KB blir datorns ROM, en extra Arduino Mega agerar programmerare som bränner programmet, en extra 74HC00 avkodar $8000–$FFFF för EEPROM:et, och en kondensator avkopplar strömmen. Efter detta steg kan datorn starta helt utan Arduino.</p>
     <div class="overflow-x-auto">
@@ -244,13 +244,13 @@
   <!-- Kod: programmerare -->
   <section class="mb-8">
     <h2>Arduino-kod — programmeraren</h2>
-    <div class="text-gray-700 space-y-3">
+    
       <p>Det här programmet laddas upp på den <strong>andra</strong> Arduino Mega — den som tillfälligt kopplas in som EEPROM-programmerare. Koden är enkel: ta emot 32 768 bytes över serieporten, bränn dem på AT28C256, och verifiera. Programmet körs en gång i <code>setup()</code> och rapporterar resultatet — <code>loop()</code> är tom.</p>
 
       <h3>Hur bränning går till</h3>
       <p>AT28C256 har inbyggd själv-timing. För att bränna en byte sätter du adress och data, drar <code>/WE</code> låg, väntar minst 10 millisekunder (vi använder 10 för marginal), och drar <code>/WE</code> hög igen. Kretsen sköter resten internt. För att läsa tillbaka drar du <code>/OE</code> låg och läser <code>PINA</code> — precis som med SRAM.</p>
       <p>Verifieringen läser tillbaka varje byte och jämför med originaldatan. Om något inte stämmer rapporteras adressen och de två värdena. Annars: "OK — 32768 bytes verifierade".</p>
-    </div>
+    
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 10 — EEPROM-programmerare (andra Arduino Mega)
@@ -394,7 +394,7 @@ void loop() {
   </section>
 
   <!-- upload_eeprom.py -->
-  <section class="mb-8">
+  <section class="mb-8 text-gray-700 space-y-3">
     <h2>Python-skript — skicka .bin-fil till programmeraren</h2>
     <p>Ett enkelt Python 3-skript som läser <code>program.bin</code> och skickar det sida för sida över serieporten. Kräver <code>pyserial</code> (<code>pip install pyserial</code>).</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-python">#!/usr/bin/env python3
@@ -462,11 +462,11 @@ if __name__ == '__main__':
   <!-- Kod: dator-Arduino -->
   <section class="mb-8">
     <h2>Arduino-kod — datorn</h2>
-    <div class="text-gray-700 space-y-3">
+    
       <p>Koden på datorns Arduino förenklas dramatiskt. <code>program[2048]</code> och de hundratals <code>write_mem()</code>-anropen försvinner. Istället får vi en ny funktion <code>is_eeprom()</code> som returnerar <code>true</code> för adresser mellan <code>$8000</code> och <code>$FFFF</code>. När CPU:n läser från dessa adresser tri-statar Arduino bussen — EEPROM:et svarar själv.</p>
       <p>Arduinon är nu reducerad till <strong>klockgenerator, reset-kontroll och seriell diagnostik</strong>. Alla minnesarrayer utom <code>vectors[6]</code> är borta. Vektorn på <code>$FFFA–$FFFF</code> ligger sist i EEPROM-bilden — <code>.segment "VECTORS"</code> i assembler-koden placerar dem där.</p>
       <p>Koden nedan är baserad på steg 9 men med <code>is_eeprom()</code> istället för <code>program[]</code>. <code>read_mem()</code> returnerar 0 för EEPROM-adresser — Arduino rör dem inte.</p>
-    </div>
+    
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 10 — EEPROM som ROM
@@ -594,9 +594,9 @@ void loop() {
   </section>
 
   <!-- Exempel på körning -->
-  <section class="mb-8">
+  <section class="mb-8 text-gray-700 space-y-3">
     <h2>Exempel på körning</h2>
-    <div class="text-gray-700 space-y-3">
+    
 
       <h3>Fas 1 — bränna EEPROM</h3>
       <p>Bygg programmet med ca65 som vanligt, kör Python-skriptet för att bränna:</p>
@@ -650,7 +650,7 @@ W $4000  ← VIA: 3D  (=)
 
       <p>Varje gång du ser <code>← EEPROM</code> i loggen är det AT28C256 som svarar — inte Arduino. Reset-vektorn på <code>$FFFC</code>/<code>$FFFD</code> ligger i EEPROM:ets sista bytes, inskrivna av assembler-kedjan. CPU:n läser dem, hoppar till <code>$8000</code>, och kör programmet direkt från äkta ROM.</p>
       <p>Koppla bort Arduinon helt (ersätt klockan med en 555-timer eller kristalloscillator) så har du en helt fristående 6502-dator. Programmet överlever strömavbrott — slå på strömmen imorgon och det finns kvar, inbränt i kisel.</p>
-    </div>
+    
   </section>
 
   <!-- Om det inte fungerar -->
