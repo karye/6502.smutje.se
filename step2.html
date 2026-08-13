@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="sv" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -302,7 +302,8 @@ void loop() {
         <p>
           När du öppnar seriemonitor (115200 baud) efter uppladdning ser du ungefär detta:
         </p>
-        <p class="text-xs text-gray-500 mb-1 font-semibold">Seriemonitor (115200 baud)</p>
+        <div>
+<p class="text-xs text-gray-500 mb-1 font-semibold">Seriemonitor (115200 baud)</p>
         <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">Steg 2 — adressbuss och reset
 R $FFFC
 R $FFFD
@@ -315,7 +316,7 @@ R $8004
 R $8005
 R $8006
 ...</pre>
-        <p>
+        </div><p>
           Varje rad börjar med <code>R</code> (Read — CPU:n läser) följt av <code>$</code> och en hexadecimal adress.
           De två första raderna är alltid <code>$FFFC</code> och <code>$FFFD</code> — reset-vektorn. Processorn frågar
           "var ska jag börja?" och svaret (som just nu är skräp eftersom databussen inte är inkopplad) leder den
@@ -353,5 +354,6 @@ R $8006
   </main>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
   <script>hljs.highlightAll();</script>
+  <script src="toc.js"></script>
 </body>
 </html>

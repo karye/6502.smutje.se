@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="sv" class="scroll-smooth">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -271,7 +271,8 @@ void loop() {
         Efter uppladdning händer ingenting förrän du trycker på en knapp. CPU:n har precis lämnat reset
         och står stilla — klockan genereras bara när du ber om det. Här är vad du ser vid olika tryck:
       </p>
-      <p class="text-xs text-gray-500 mb-1 font-semibold">Seriemonitor (115200 baud)</p>
+      <div>
+<p class="text-xs text-gray-500 mb-1 font-semibold">Seriemonitor (115200 baud)</p>
       <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">Steg 4 — Knappstegning
 Knapp 1 = klocksteg, Knapp 2 = instruktionssteg
 
@@ -286,7 +287,7 @@ R $8001
 R $8002
 R $8003
 R $8004</pre>
-      <p>
+      </div><p>
         Med <strong>Knapp 1</strong> får du en rad per tryck. Du kan se reset-vektorn hämtas —
         <code>$FFFC</code>, <code>$FFFD</code> — och sedan följa CPU:n när den läser NOP-instruktioner.
         Med <strong>Knapp 2</strong> körs flera rader samtidigt tills SYNC går hög, vilket för en NOP
@@ -321,5 +322,6 @@ R $8004</pre>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
 <script>hljs.highlightAll();</script>
+  <script src="toc.js"></script>
 </body>
 </html>
