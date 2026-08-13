@@ -223,7 +223,7 @@
         <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
       </div>
     </div>
-    <p><strong>0xEA = NOP</strong> — ofarlig fallback. CPU:n hoppar över oanvända adresser. <strong>Gul markering</strong> = Arduino rör inte dessa adresser, den fysiska VIA-kretsen svarar.</p>
+    <p><strong><code>0xEA</code> = <code>NOP</code></strong> — ofarlig fallback. CPU:n hoppar över oanvända adresser. <strong>Gul markering</strong> = Arduino rör inte dessa adresser, den fysiska VIA-kretsen svarar.</p>
   </section>
 
 <!-- Byggskript -->
@@ -513,7 +513,7 @@ line2: .byte "Hello from W65C02!", 0
         </ol>
         <p>Hela kedjan styrs av <code>scripts/build_asm.py</code>, en pre-build hook som PlatformIO anropar automatiskt. Ändrar du <code>.asm</code>-filen byggs allt om.</p>
 
-        <h3>Arduino-koden — bara setup() ändras</h3>
+        <h3>Arduino-koden — bara <code>setup()</code> ändras</h3>
         <p><code>pulse()</code>, <code>loop()</code> och hela minnesemulatorn är oförändrade från steg 7. Skillnaden sitter i <code>setup()</code>: istället för hundratals <code>write_mem()</code> loopar vi nu igenom <code>PROGRAM[]</code> och kopierar:</p>
         <ul class="list-disc pl-5 space-y-1">
           <li><strong>Kod:</strong> <code>PROGRAM_SIZE - 6</code> bytes kopieras till <code>$8000</code>

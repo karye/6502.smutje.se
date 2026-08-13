@@ -177,7 +177,7 @@
 //                    RS  E  DB4 DB5 DB6 DB7</pre>
       <p><strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. Arduino <span class="pin">D10</span> → LCD <span class="pin">DB4</span>, <span class="pin">D9</span> → <span class="pin">DB5</span>, <span class="pin">D8</span> → <span class="pin">DB6</span>, <span class="pin">D7</span> → <span class="pin">DB7</span>. Om din display har rak ordning (<span class="pin">D7</span>→<span class="pin">DB4</span> osv.) måste du ändra ordningen i konstruktorn. LCD:ns <span class="pin">R/W</span>-pinne (pin 5) kopplas till <span class="pin">GND</span> — vi skriver bara till displayen, vi läser aldrig från den.</p>
 
-      <h3>LCD-uppdatering inuti pulse()</h3>
+      <h3>LCD-uppdatering inuti <code>pulse()</code></h3>
       <p>Den stora kodändringen sitter i <code>pulse()</code>. Efter varje klockcykel uppdateras LCD:n:</p>
       <ul class="list-disc pl-5 space-y-1">
         <li><strong>Rad 0:</strong> visar aktuell adress i formatet <code>A:$8000</code>. Padding med
@@ -361,7 +361,7 @@ R $8001</pre>
         </div>
       </div>
 
-      <p>Samma information på båda ställena — adress (<code>$8001</code>) och data (<code>$EA</code>, NOP). Skillnaden är att LCD:n visar <em>just nu</em> medan seriemonitor bygger en historik. Med Knapp 2 (instruktionssteg) ser du flera rader i seriemonitor per tryck medan LCD:n uppdateras för varje klockcykel — ett snabbt flimmer av adresser tills <span class="pin">SYNC</span> går hög.</p>
+      <p>Samma information på båda ställena — adress (<code>$8001</code>) och data (<code>$EA</code>, <code>NOP</code>). Skillnaden är att LCD:n visar <em>just nu</em> medan seriemonitor bygger en historik. Med Knapp 2 (instruktionssteg) ser du flera rader i seriemonitor per tryck medan LCD:n uppdateras för varje klockcykel — ett snabbt flimmer av adresser tills <span class="pin">SYNC</span> går hög.</p>
       <p>Datorn har blivit fristående. Du kan koppla bort USB-kabeln (om Arduino drivs via DC-adaptern) och fortfarande stega genom programmet och se allt på LCD:n. Seriemonitor är praktisk för att logga och felsöka, men displayen på kopplingsdäcket gör datorn till en egen, komplett enhet.</p>
     
   </section>

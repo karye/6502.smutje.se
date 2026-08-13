@@ -50,7 +50,7 @@
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Mål</h2>
     
-      <p>I steg 3 körde CPU:n fritt i en NOP-loop — kul att se, men svårt att felsöka. Nu kopplar vi in <strong>två tryckknappar</strong> och <strong><span class="pin">SYNC</span>-signalen</strong> för att kunna styra exekveringen manuellt. Det här är en av de stora fördelarna med W65C02S: eftersom den är statisk CMOS kan klockan stoppas hur länge som helst.</p>
+      <p>I steg 3 körde CPU:n fritt i en <code>NOP</code>-loop — kul att se, men svårt att felsöka. Nu kopplar vi in <strong>två tryckknappar</strong> och <strong><span class="pin">SYNC</span>-signalen</strong> för att kunna styra exekveringen manuellt. Det här är en av de stora fördelarna med W65C02S: eftersom den är statisk CMOS kan klockan stoppas hur länge som helst.</p>
       <p><strong>Knapp 1 (klocksteg):</strong> varje tryckning ger en enda klockcykel. Perfekt för att se vad som händer på bussen i ultrarapid.</p>
       <p><strong>Knapp 2 (instruktionssteg):</strong> kör klockan tills CPU:n signalerar att en ny instruktion har hämtats. <span class="pin">SYNC</span>-pinnen (pin 7) går HÖG vid varje opcode fetch. Vi pulserar klockan tills <span class="pin">SYNC</span> går hög — då vet vi att CPU:n är i början av nästa instruktion.</p>
       <p>Kodmässigt byter vi ut den automatiska <code>loop()</code> mot knappläsning med debounce (50 ms). Arduinons <code>INPUT_PULLUP</code> gör att vi slipper externa pull-up-motstånd — knappen kopplas direkt mellan pinne och <span class="pin">GND</span>.</p>
@@ -119,7 +119,7 @@
       <p>I steg 3 körde CPU:n fritt i en loop — spännande men omöjligt att felsöka. Nu ger vi oss själva <strong>full kontroll över exekveringen</strong> med två fysiska knappar. Det här är en av de stora fördelarna med W65C02S: eftersom kretsen är statisk CMOS kan klockan stoppas hur länge som helst — minuter, timmar, dagar — utan att processorn tappar sitt interna tillstånd. Vi kan stega genom programmet i vår egen takt.</p>
 
       <h3><span class="pin">SYNC</span> — processorns "nu börjar jag"-signal</h3>
-      <p>CPU:ns pin 7 (<span class="pin">SYNC</span>) är en av de mest användbara signalerna på hela kretsen. Den går <strong>HÖG</strong> under den klockcykel då processorn hämtar första byten av en ny instruktion (opcode fetch). Varje gång du ser <span class="pin">SYNC</span> tändas vet du att CPU:n precis har påbörjat nästa instruktion — oavsett om det är en enkel NOP eller en komplex adresseringsmod. <span class="pin">SYNC</span> är hemligheten bakom instruktionsstegningen.</p>
+      <p>CPU:ns pin 7 (<span class="pin">SYNC</span>) är en av de mest användbara signalerna på hela kretsen. Den går <strong>HÖG</strong> under den klockcykel då processorn hämtar första byten av en ny instruktion (opcode fetch). Varje gång du ser <span class="pin">SYNC</span> tändas vet du att CPU:n precis har påbörjat nästa instruktion — oavsett om det är en enkel <code>NOP</code> eller en komplex adresseringsmod. <span class="pin">SYNC</span> är hemligheten bakom instruktionsstegningen.</p>
 
       <h3>Två knappar, två olika beteenden</h3>
       <p>Koden ändrar bara <code>loop()</code> och lägger till några nya pinkonstanter — allt annat är oförändrat från steg 3. Så här fungerar knapparna:</p>
@@ -128,7 +128,7 @@
           ny rad i seriemonitor för varje tryck. Perfekt för att inspektera bussen i ultrarapid.</li>
         <li><strong>Knapp 2 (<span class="pin">D12</span>) — instruktionssteg:</strong> pulserar klockan tills <span class="pin">SYNC</span> går hög. Då
           vet vi att CPU:n är i början av nästa instruktion. En enda tryckning kan generera flera
-          klockcykler (t.ex. 4 cykler för en NOP), men stannar alltid på en instruktionsgräns.</li>
+          klockcykler (t.ex. 4 cykler för en <code>NOP</code>), men stannar alltid på en instruktionsgräns.</li>
       </ul>
 
       <h3>Debounce — att hantera kontaktstudsar</h3>
@@ -273,7 +273,7 @@ R $8002
 R $8003
 R $8004</pre>
       </div>
-        <p>Med <strong>Knapp 1</strong> får du en rad per tryck. Du kan se reset-vektorn hämtas — <code>$FFFC</code>, <code>$FFFD</code> — och sedan följa CPU:n när den läser NOP-instruktioner. Med <strong>Knapp 2</strong> körs flera rader samtidigt tills <span class="pin">SYNC</span> går hög, vilket för en NOP (<code>$EA</code>) betyder 2 klockcykler.</p>
+        <p>Med <strong>Knapp 1</strong> får du en rad per tryck. Du kan se reset-vektorn hämtas — <code>$FFFC</code>, <code>$FFFD</code> — och sedan följa CPU:n när den läser <code>NOP</code>-instruktioner. Med <strong>Knapp 2</strong> körs flera rader samtidigt tills <span class="pin">SYNC</span> går hög, vilket för en <code>NOP</code> (<code>$EA</code>) betyder 2 klockcykler.</p>
       <p>Känslan av att trycka på en knapp och se CPU:n ta ett enda steg är svår att beskriva. Du har full kontroll. Du kan stanna hur länge du vill, mäta spänningar, fundera på vad som händer — och sedan trycka igen.</p>
     
   </section>

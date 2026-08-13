@@ -57,8 +57,8 @@
           <p>Arduinon blir nu en <strong>minnesemulator</strong>: en array <code>ram[1024]</code> lagrar data, och i
             varje klockcykel kollar Arduinon adressen och <strong><span class="pin">R/W</span></strong> — om CPU:n läser, lägger den ut rätt byte
             på databussen via <span class="pin">PORTA</span>. Om CPU:n skriver, läser Arduinon av vad som skrevs.</p>
-          <p>Vi laddar ett minimalt 6502-program på <code>$8000</code>: en enda <strong>NOP</strong>-instruktion
-            (<code>$EA</code>) som gör ingenting och går vidare till nästa adress — vilket också är NOP. Resultat: CPU:n
+          <p>Vi laddar ett minimalt 6502-program på <code>$8000</code>: en enda <strong><code>NOP</code></strong>-instruktion
+            (<code>$EA</code>) som gör ingenting och går vidare till nästa adress — vilket också är <code>NOP</code>. Resultat: CPU:n
             loopar för evigt, och vi kan följa varje steg i seriemonitor.</p>
 
         </section>
@@ -265,10 +265,10 @@
 
           <h3>Kodens fyra lager</h3>
           <ol class="list-decimal pl-5 space-y-1">
-            <li><strong><code>read_mem()</code> och <code>write_mem()</code></strong> — två enkla funktioner som slår upp eller sparar en byte i rätt array. Vektorer hamnar i <code>vectors[6]</code>, arbetsminne i <code>ram[1024]</code>. Allt annat returnerar <code>$EA</code> (NOP) — en ofarlig fallback som gör att CPU:n bara hoppar vidare om den läser från en oanvänd adress.
+            <li><strong><code>read_mem()</code> och <code>write_mem()</code></strong> — två enkla funktioner som slår upp eller sparar en byte i rätt array. Vektorer hamnar i <code>vectors[6]</code>, arbetsminne i <code>ram[1024]</code>. Allt annat returnerar <code>$EA</code> (<code>NOP</code>) — en ofarlig fallback som gör att CPU:n bara hoppar vidare om den läser från en oanvänd adress.
             </li>
             <li><strong><code>pulse()</code> — datorns hjärta</strong> — samma struktur som tidigare men nu med ett avgörande tillägg: efter att ha läst adress och <span class="pin">R/W</span> bestämmer den om Arduino ska driva databussen (<code>DDRA = 0xFF</code>) eller gå ur vägen (<code>DDRA = 0x00</code>). Allt detta sker medan <strong><span class="pin">PHI2</span></strong> är låg. När <strong><span class="pin">PHI2</span></strong> sedan går hög läser CPU:n av databussen — eller skriver till den.</li>
-            <li><strong><code>setup()</code> — ladda programmet</strong> — här skrivs reset-vektorn (<code>$8000</code>) och en enda NOP-instruktion (<code>$EA</code>) in i minnet. Det är vårt första 6502-program: CPU:n startar på <code>$8000</code>, läser <code>$EA</code>, gör ingenting, går till <code>$8001</code>, läser <code>$EA</code> (minnet returnerar NOP överallt), och loopar för evigt.</li>
+            <li><strong><code>setup()</code> — ladda programmet</strong> — här skrivs reset-vektorn (<code>$8000</code>) och en enda <code>NOP</code>-instruktion (<code>$EA</code>) in i minnet. Det är vårt första 6502-program: CPU:n startar på <code>$8000</code>, läser <code>$EA</code>, gör ingenting, går till <code>$8001</code>, läser <code>$EA</code> (minnet returnerar <code>NOP</code> överallt), och loopar för evigt.</li>
             <li><strong><code>loop()</code></strong> — anropar bara <code>pulse()</code>. En klockcykel per varv, med fullständig loggning i seriemonitor.</li>
           </ol>
 
@@ -399,7 +399,7 @@ void loop() {
         <section class="mb-8 text-gray-700 space-y-3">
           <h2>Exempel på körning</h2>
 
-          <p>När du öppnar seriemonitor (115200 baud) ser du CPU:n läsa reset-vektorn och sedan loopa på NOP:</p>
+          <p>När du öppnar seriemonitor (115200 baud) ser du CPU:n läsa reset-vektorn och sedan loopa på <code>NOP</code>:</p>
           <div>
             <p class="text-xs text-gray-500 mb-1 font-semibold">Seriemonitor (115200 baud)</p>
             <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">Steg 3 — databuss och minnesemulering
@@ -412,9 +412,9 @@ R $8003
 R $8004
 ...</pre>
           </div>
-          <p>Alla rader börjar med <code>R</code> — CPU:n gör inget annat än att läsa, eftersom NOP varken skriver till
+          <p>Alla rader börjar med <code>R</code> — CPU:n gör inget annat än att läsa, eftersom <code>NOP</code> varken skriver till
             minnet eller ändrar några register. Adresserna räknas uppåt: <code>$8000</code>, <code>$8001</code>,
-            <code>$8002</code>… och eftersom minnet returnerar <code>$EA</code> (NOP) på alla adresser utanför
+            <code>$8002</code>… och eftersom minnet returnerar <code>$EA</code> (<code>NOP</code>) på alla adresser utanför
             programmet, kommer CPU:n att vandra genom hela adressrymden — upp till <code>$FFFF</code>, sedan börja om
             från <code>$0000</code> — i en oändlig loop.</p>
           <p>Det ser kanske händelselöst ut, men varje rad i loggen är ett mirakel: Arduino har läst adressbussen,

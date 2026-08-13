@@ -59,7 +59,7 @@
   <!-- Nya komponenter -->
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Nya komponenter</h2>
-    <p>En AT28C256 EEPROM på 32 KB blir datorns ROM, en extra Arduino Mega agerar programmerare som bränner programmet, en extra 74HC00 avkodar $8000–$FFFF för EEPROM:et, och en kondensator avkopplar strömmen. Efter detta steg kan datorn starta helt utan Arduino.</p>
+    <p>En AT28C256 EEPROM på 32 KB blir datorns ROM, en extra Arduino Mega agerar programmerare som bränner programmet, en extra 74HC00 avkodar <code>$8000</code>–<code>$FFFF</code> för EEPROM:et, och en kondensator avkopplar strömmen. Efter detta steg kan datorn starta helt utan Arduino.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th><th class="p-2 text-left">Används till</th></tr></thead>
@@ -200,7 +200,7 @@
         </tbody>
       </table>
     </div>
-    <p><strong>Logik:</strong> <span class="pin">A15</span> NAND <span class="pin">A15</span> = NOT <span class="pin">A15</span>. EEPROM:ets <span class="pin">/CE</span> är aktiv LÅG. När <span class="pin">A15</span>=1 (adress $8000 eller högre) blir grindens utgång LÅG → EEPROM aktiverat. När <span class="pin">A15</span>=0 (under $8000) är utgången HÖG → EEPROM är bortkopplat, SRAM eller VIA tar över.</p>
+    <p><strong>Logik:</strong> <span class="pin">A15</span> NAND <span class="pin">A15</span> = NOT <span class="pin">A15</span>. EEPROM:ets <span class="pin">/CE</span> är aktiv LÅG. När <span class="pin">A15</span>=1 (adress <code>$8000</code> eller högre) blir grindens utgång LÅG → EEPROM aktiverat. När <span class="pin">A15</span>=0 (under <code>$8000</code>) är utgången HÖG → EEPROM är bortkopplat, SRAM eller VIA tar över.</p>
   </section>
 
   <!-- Minneskarta -->
@@ -658,7 +658,7 @@ W $4000  ← VIA: 3D  (=)
     <h2>Om det inte fungerar</h2>
     <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
       <ul class="list-disc pl-5 space-y-1">
-        <li><strong>CPU:n läser $FFFC/$FFFD men hoppar till fel adress?</strong> EEPROM:ets <span class="pin">/CE</span>
+        <li><strong>CPU:n läser <code>$FFFC</code>/<code>$FFFD</code> men hoppar till fel adress?</strong> EEPROM:ets <span class="pin">/CE</span>
           är förmodligen inte rätt avkodat. Kontrollera att 74HC00-grinden får <span class="pin">A15</span> på båda ingångarna
           och att utgången går till EEPROM pin 20.</li>
         <li><strong>Programmet körs inte alls?</strong> Kontrollera att <span class="pin">/OE</span> är kopplat till <span class="pin">GND</span>

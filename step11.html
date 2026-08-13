@@ -49,8 +49,8 @@
     <section class="mb-8 text-gray-700 space-y-3">
       <h2>Mål</h2>
       
-        <p>I steg 10 fick vi en fristående dator — men adressrymden var inte vacker. VIA:ns 16 bytes på $4000 klippte av SRAM-minnet mitt i, och den övre halvan av 62256-chippet ($4000–$7FFF) låg helt oanvänd. Det kändes slarvigt.</p>
-        <p>Nu städar vi upp. <strong>SRAM utökas till hela 32 KB</strong> ($0000–$7FFF) genom att ansluta <span class="pin">A14</span> — hela 62256-chippet används äntligen. <strong>VIA:n flyttas till $A000–$A00F</strong>, ett rent I/O-fönster i ROM:ens övre del, precis som I/O-portar sitter på riktiga 6502-datorer (Apple II hade I/O på $C000, C64 på $D000).</p>
+        <p>I steg 10 fick vi en fristående dator — men adressrymden var inte vacker. VIA:ns 16 bytes på <code>$4000</code> klippte av SRAM-minnet mitt i, och den övre halvan av 62256-chippet (<code>$4000</code>–<code>$7FFF</code>) låg helt oanvänd. Det kändes slarvigt.</p>
+        <p>Nu städar vi upp. <strong>SRAM utökas till hela 32 KB</strong> (<code>$0000</code>–<code>$7FFF</code>) genom att ansluta <span class="pin">A14</span> — hela 62256-chippet används äntligen. <strong>VIA:n flyttas till <code>$A000</code>–<code>$A00F</code></strong>, ett rent I/O-fönster i ROM:ens övre del, precis som I/O-portar sitter på riktiga 6502-datorer (Apple II hade I/O på <code>$C000</code>, C64 på <code>$D000</code>).</p>
         <p>Resultatet är en adressrymd utan dött utrymme: RAM längst ner, ROM i mitten och I/O i ett fönster högst upp. Det här är den klassiska 6502-layouten — nu har vi byggt den själva.</p>
       
     </section>
@@ -74,7 +74,7 @@
     <!-- Kopplingsschema -->
     <section class="mb-8">
       <h2>Kopplingsschema</h2>
-      <p>Schemat visar den städade bussen: SRAM täcker nu hela nedre halvan, VIA sitter i ett fönster på $A000, och EEPROM täcker $8000–$FFFF med ett 16-byte-hål där VIA:n bor.</p>
+      <p>Schemat visar den städade bussen: SRAM täcker nu hela nedre halvan, VIA sitter i ett fönster på <code>$A000</code>, och EEPROM täcker <code>$8000</code>–<code>$FFFF</code> med ett 16-byte-hål där VIA:n bor.</p>
       <div class="schematic bg-white rounded-lg shadow p-4">
         <p class="text-gray-500 italic text-sm">Schema kommer snart — se avkodningstabellerna nedan så länge.</p>
       </div>
@@ -88,15 +88,15 @@
       <h3>Gamla kartan (steg 10) — problemen</h3>
       <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-gray-700 space-y-2">
         <p><strong>✗ SRAM bara 16 KB:</strong> 62256 är ett 32 KB-chip, men <span class="pin">A14</span> var inte ansluten. Den övre halvan låg död.</p>
-        <p><strong>✗ VIA klippte av minnet:</strong> 16 bytes på $4000 mitt i adressrymden delade RAM:et i två — $0000–$3FFF använt, $4000–$7FFF dött.</p>
+        <p><strong>✗ VIA klippte av minnet:</strong> 16 bytes på <code>$4000</code> mitt i adressrymden delade RAM:et i två — <code>$0000</code>–<code>$3FFF</code> använt, <code>$4000</code>–<code>$7FFF</code> dött.</p>
         <p><strong>✗ EEPROM-avkodning enkel:</strong> bara NOT <span class="pin">A15</span> — fungerade, men kunde inte samexistera med VIA på samma sida.</p>
       </div>
 
       <h3>Nya kartan (steg 11)</h3>
       <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-sm text-gray-700 space-y-2">
-        <p><strong>✓ SRAM 32 KB ($0000–$7FFF):</strong> <span class="pin">A14</span> ansluts, <span class="pin">/CE</span> = NOT <span class="pin">A15</span> — hela chippet aktivt när <span class="pin">A15</span>=0.</p>
-        <p><strong>✓ VIA på $A000–$A00F:</strong> <span class="pin">/CS2</span> = <span class="pin">A15</span>·¬<span class="pin">A14</span>·<span class="pin">A13</span>·¬<span class="pin">A12</span> — bara 16 bytes, inget mer.</p>
-        <p><strong>✓ EEPROM på $8000–$FFFF:</strong> <span class="pin">/CE</span> = <span class="pin">A15</span>·¬(VIA) — aktivt överallt utom just VIA-fönstret.</p>
+        <p><strong>✓ SRAM 32 KB (<code>$0000</code>–<code>$7FFF</code>):</strong> <span class="pin">A14</span> ansluts, <span class="pin">/CE</span> = NOT <span class="pin">A15</span> — hela chippet aktivt när <span class="pin">A15</span>=0.</p>
+        <p><strong>✓ VIA på <code>$A000</code>–<code>$A00F</code>:</strong> <span class="pin">/CS2</span> = <span class="pin">A15</span>·¬<span class="pin">A14</span>·<span class="pin">A13</span>·¬<span class="pin">A12</span> — bara 16 bytes, inget mer.</p>
+        <p><strong>✓ EEPROM på <code>$8000</code>–<code>$FFFF</code>:</strong> <span class="pin">/CE</span> = <span class="pin">A15</span>·¬(VIA) — aktivt överallt utom just VIA-fönstret.</p>
       </div>
 
       <h3>Sanningstabell — vem svarar på vilken adress?</h3>
@@ -112,7 +112,7 @@
           </tbody>
         </table>
       </div>
-      <p>Lägg märke till att $A000–$A00F är <strong>det enda hålet</strong> — VIA stjäl 16 bytes av EEPROM:et. Allt annat utrymme används.</p>
+      <p>Lägg märke till att <code>$A000</code>–<code>$A00F</code> är <strong>det enda hålet</strong> — VIA stjäl 16 bytes av EEPROM:et. Allt annat utrymme används.</p>
     </section>
 
     <!-- Kopplingar -->
@@ -131,7 +131,7 @@
         </table>
       </div>
 
-      <h3>VIA — flyttad till $A000</h3>
+      <h3>VIA — flyttad till <code>$A000</code></h3>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -166,7 +166,7 @@
           </tbody>
         </table>
       </div>
-      <p><strong>Logik i ord:</strong> VIA får prata när <span class="pin">A15</span>=1 (övre halvan), <span class="pin">A14</span>=0, <span class="pin">A13</span>=1 och <span class="pin">A12</span>=0 — det vill säga exakt $A000–$A00F. EEPROM:et får prata när <span class="pin">A15</span>=1 och VIA inte gör det. SRAM får prata när <span class="pin">A15</span>=0. Ingen krock, inget dött utrymme.</p>
+      <p><strong>Logik i ord:</strong> VIA får prata när <span class="pin">A15</span>=1 (övre halvan), <span class="pin">A14</span>=0, <span class="pin">A13</span>=1 och <span class="pin">A12</span>=0 — det vill säga exakt <code>$A000</code>–<code>$A00F</code>. EEPROM:et får prata när <span class="pin">A15</span>=1 och VIA inte gör det. SRAM får prata när <span class="pin">A15</span>=0. Ingen krock, inget dött utrymme.</p>
     </section>
 
     <!-- Minneskarta -->
@@ -211,7 +211,7 @@
     <section class="mb-8">
       <h2>Arduino-kod</h2>
       
-        <p>Ändringarna i Arduinon är minimala — bara tre konstanter och en villkorsändring i <code>is_eeprom()</code>. Koden vet nu att SRAM täcker $0000–$7FFF och att VIA bor på $A000. Allt annat är tri-state för fysiska kretsar.</p>
+        <p>Ändringarna i Arduinon är minimala — bara tre konstanter och en villkorsändring i <code>is_eeprom()</code>. Koden vet nu att SRAM täcker <code>$0000</code>–<code>$7FFF</code> och att VIA bor på <code>$A000</code>. Allt annat är tri-state för fysiska kretsar.</p>
       
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
@@ -342,7 +342,7 @@ void loop() {
     <section class="mb-8 text-gray-700 space-y-3">
       <h2>Assembler-kod — program.cfg</h2>
       
-        <p>Länkskriptet måste veta att $A000–$A00F är reserverat för VIA:n. Programmet placeras i ROM:en men hoppar över I/O-fönstret.</p>
+        <p>Länkskriptet måste veta att <code>$A000</code>–<code>$A00F</code> är reserverat för VIA:n. Programmet placeras i ROM:en men hoppar över I/O-fönstret.</p>
       
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-asm">; program.cfg — steg 11
 ; Kod placeras i $8000–$9FFF och $A010–$FFFF,
@@ -362,7 +362,7 @@ SEGMENTS {
     VECTORS:  load = ROM2, start = $FFFA, type = ro;
 }
 </code></pre>
-      <p>Programmet läggs i <code>$8000–$9FFF</code> (8 KB räcker gott). Reset-vektorn ligger i <code>ROM2</code> på $FFFA–$FFFF — precis som alltid.</p>
+      <p>Programmet läggs i <code>$8000–$9FFF</code> (8 KB räcker gott). Reset-vektorn ligger i <code>ROM2</code> på <code>$FFFA</code>–<code>$FFFF</code> — precis som alltid.</p>
     </section>
 
     <!-- Exempel på körning -->
@@ -398,11 +398,11 @@ W $A000  ← VIA: 3D         (tecknet "=")
                 <div>Hello from W65C02!&nbsp;&nbsp;</div>
               </div>
             </div>
-            <p class="text-xs text-gray-500 mt-2">Samma program som steg 8–10, men VIA:n adresseras nu på $A000 istället för $4000.</p>
+            <p class="text-xs text-gray-500 mt-2">Samma program som steg 8–10, men VIA:n adresseras nu på <code>$A000</code> istället för <code>$4000</code>.</p>
           </div>
         </div>
 
-        <p>Lägg märke till skillnaden mot steg 10: SRAM-skrivningar kan nu ske var som helst i $0000–$7FFF, och VIA:n svarar på $A000. Bussloggen visar tydligt vilken enhet som pratar.</p>
+        <p>Lägg märke till skillnaden mot steg 10: SRAM-skrivningar kan nu ske var som helst i <code>$0000</code>–<code>$7FFF</code>, och VIA:n svarar på <code>$A000</code>. Bussloggen visar tydligt vilken enhet som pratar.</p>
       
     </section>
 
@@ -411,11 +411,11 @@ W $A000  ← VIA: 3D         (tecknet "=")
       <h2>Om det inte fungerar</h2>
       <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
         <ul class="list-disc pl-5 space-y-1">
-          <li><strong>CPU:n läser $FFFC/$FFFD men hoppar till fel adress?</strong> EEPROM:ets <span class="pin">/CE</span> är förmodligen inte rätt avkodat. Kontrollera U5D — den måste vara LÅG när <span class="pin">A15</span>=1 OCH inte VIA.</li>
-          <li><strong>VIA:n svarar inte på $A000?</strong> Kontrollera U5A–U5C-avkodningen. <span class="pin">A15</span>=1, <span class="pin">A14</span>=0, <span class="pin">A13</span>=1, <span class="pin">A12</span>=0 måste ge LÅG på <span class="pin">/CS2</span>. Dubbelkolla att <span class="pin">RS0–RS3</span> fortfarande går till <span class="pin">A0–A3</span>.</li>
-          <li><strong>SRAM fortfarande bara 16 KB?</strong> <span class="pin">A14</span> (SRAM pin 1) är inte ansluten. Utan den kan processorn inte nå $4000–$7FFF.</li>
+          <li><strong>CPU:n läser <code>$FFFC</code>/<code>$FFFD</code> men hoppar till fel adress?</strong> EEPROM:ets <span class="pin">/CE</span> är förmodligen inte rätt avkodat. Kontrollera U5D — den måste vara LÅG när <span class="pin">A15</span>=1 OCH inte VIA.</li>
+          <li><strong>VIA:n svarar inte på <code>$A000</code>?</strong> Kontrollera U5A–U5C-avkodningen. <span class="pin">A15</span>=1, <span class="pin">A14</span>=0, <span class="pin">A13</span>=1, <span class="pin">A12</span>=0 måste ge LÅG på <span class="pin">/CS2</span>. Dubbelkolla att <span class="pin">RS0–RS3</span> fortfarande går till <span class="pin">A0–A3</span>.</li>
+          <li><strong>SRAM fortfarande bara 16 KB?</strong> <span class="pin">A14</span> (SRAM pin 1) är inte ansluten. Utan den kan processorn inte nå <code>$4000</code>–<code>$7FFF</code>.</li>
           <li><strong>Busskrockar?</strong> Två enheter kan svara samtidigt om avkodningen är fel. Mät <span class="pin">/CE</span> och <span class="pin">/CS2</span> medan CPU:n läser — exakt en ska vara LÅG.</li>
-          <li><strong>Programmet kraschar vid $A000?</strong> Länkskriptet placerade kod i VIA-fönstret. Kontrollera <code>program.cfg</code> — ROM-segmentet får inte inkludera $A000–$A00F.</li>
+          <li><strong>Programmet kraschar vid <code>$A000</code>?</strong> Länkskriptet placerade kod i VIA-fönstret. Kontrollera <code>program.cfg</code> — ROM-segmentet får inte inkludera <code>$A000</code>–<code>$A00F</code>.</li>
         </ul>
       </div>
     </section>

@@ -50,9 +50,9 @@
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Mål</h2>
     
-      <p>Datorn är nu komplett — CPU, minne, LCD, knappar. Men den kör bara NOP:ar. Dags att skriva vårt <strong>första egna 6502-program!</strong></p>
+      <p>Datorn är nu komplett — CPU, minne, LCD, knappar. Men den kör bara <code>NOP</code>:ar. Dags att skriva vårt <strong>första egna 6502-program!</strong></p>
       <p>Vi skriver en enkel räknare: öka X-registret från 0 till 255, spara värdet på adress <code>$0200</code>, och loopa. Programmet är bara 9 bytes stort — men det innehåller allt ett riktigt program behöver: initiering, beräkning, minnesskrivning och loop.</p>
-      <p>6502-program skrivs i <strong>maskinkod</strong> — varje instruktion är 1–3 bytes. LDX #$00 är två bytes (<code>$A2 $00</code>), INX är en byte (<code>$E8</code>), STX $0200 är tre bytes (<code>$8E $00 $02</code>). Vi skriver in dessa bytes direkt i Arduinons minnesarray, och CPU:n exekverar dem som ett riktigt program.</p>
+      <p>6502-program skrivs i <strong>maskinkod</strong> — varje instruktion är 1–3 bytes. <code>LDX #$00</code> är två bytes (<code>$A2 $00</code>), <code>INX</code> är en byte (<code>$E8</code>), <code>STX $0200</code> är tre bytes (<code>$8E $00 $02</code>). Vi skriver in dessa bytes direkt i Arduinons minnesarray, och CPU:n exekverar dem som ett riktigt program.</p>
       <p>Ingen ny hårdvara — samma koppling som steg 5. Allt nytt finns i mjukvaran.</p>
     
   </section>
@@ -137,10 +137,10 @@
     <h2>Minneskarta ($0000–$FFFF)</h2>
     <p>6502-processorns 64 KB adressrymd, uppdelad i fyra områden:</p>
     <ul class="list-disc pl-5 space-y-1 mb-3">
-      <li><strong>Lila</strong> ($FFFA–$FFFF): vektorer — processorn läser här efter reset för att veta var programmet börjar</li>
-      <li><strong>Blå</strong> ($8000–$87FF): vårt 6502-program — 9 bytes maskinkod som Arduino laddar in från <code>setup()</code></li>
-      <li><strong>Grön</strong> ($0000–$03FF): arbetsminne — zero page ($0000–$00FF, snabbast åtkomst), stack ($0100–$01FF, JSR/RTS/PHA/PLA), och ledigt RAM ($0200–$03FF). Här kan CPU:n läsa och skriva fritt</li>
-      <li><strong>Grå</strong>: oanvänt — Arduino returnerar $EA (NOP) så CPU:n hoppar bara vidare</li>
+      <li><strong>Lila</strong> (<code>$FFFA</code>–<code>$FFFF</code>): vektorer — processorn läser här efter reset för att veta var programmet börjar</li>
+      <li><strong>Blå</strong> (<code>$8000</code>–<code>$87FF</code>): vårt 6502-program — 9 bytes maskinkod som Arduino laddar in från <code>setup()</code></li>
+      <li><strong>Grön</strong> (<code>$0000</code>–<code>$03FF</code>): arbetsminne — zero page (<code>$0000</code>–<code>$00FF</code>, snabbast åtkomst), stack (<code>$0100</code>–<code>$01FF</code>, <code>JSR</code>/<code>RTS</code>/<code>PHA</code>/<code>PLA</code>), och ledigt RAM (<code>$0200</code>–<code>$03FF</code>). Här kan CPU:n läsa och skriva fritt</li>
+      <li><strong>Grå</strong>: oanvänt — Arduino returnerar <code>$EA</code> (<code>NOP</code>) så CPU:n hoppar bara vidare</li>
     </ul>
     <p>Blockens höjd är proportionell mot deras storlek.</p>
     <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
@@ -195,14 +195,14 @@
         <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
       </div>
     </div>
-    <p><strong>0xEA = NOP</strong> — ofarlig fallback. CPU:n hoppar över oanvända adresser.</p>
+    <p><strong><code>0xEA</code> = <code>NOP</code></strong> — ofarlig fallback. CPU:n hoppar över oanvända adresser.</p>
   </section>
 
   <!-- Kod -->
   <section class="mb-8">
     <h2>Arduino-kod</h2>
     
-      <p>Datorn fungerar — men den har hittills bara kört NOP:ar. Nu skriver vi vårt <strong>första egna 6502-program</strong>. Det är bara 9 bytes stort, men det innehåller allt ett riktigt program behöver: initiering, beräkning, minnesskrivning och en loop. CPU:n kommer att räkna från 0 till 255 i en oändlig loop — och du kommer att kunna följa varje steg.</p>
+      <p>Datorn fungerar — men den har hittills bara kört <code>NOP</code>:ar. Nu skriver vi vårt <strong>första egna 6502-program</strong>. Det är bara 9 bytes stort, men det innehåller allt ett riktigt program behöver: initiering, beräkning, minnesskrivning och en loop. CPU:n kommer att räkna från 0 till 255 i en oändlig loop — och du kommer att kunna följa varje steg.</p>
 
       <h3>6502-maskinkod — så här ser ett program ut</h3>
       <p>En 6502-instruktion är 1–3 bytes lång. Första byten är alltid <strong>opcode</strong> — en siffra som talar om för CPU:n vad den ska göra. Resten är <strong>operander</strong> — data eller adresser som instruktionen behöver. Vårt program har fyra instruktioner:</p>
@@ -218,11 +218,11 @@
         </table>
       </div>
 
-      <h3>Arduino-koden — bara setup() ändras</h3>
+      <h3>Arduino-koden — bara <code>setup()</code> ändras</h3>
       <p><code>pulse()</code>, <code>loop()</code> och LCD-koden är helt oförändrade från steg 5. Det enda som ändras är programladdningen i <code>setup()</code>. Istället för en enda <code>write_mem(0x8000, 0xEA)</code> skriver vi nu 9 bytes — en i taget, på stigande adresser från <code>$8000</code>. Varje <code>write_mem()</code> placerar en byte i Arduinons <code>program[]</code>-array, och CPU:n kommer att läsa dem som instruktioner.</p>
 
       <h3>Vad du ser på LCD:n</h3>
-      <p>När programmet körs kan du med Knapp 2 (instruktionssteg) följa programflödet: <code>$8000</code> (LDX) → <code>$8002</code> (INX) → <code>$8003</code> (STX) → <code>$8006</code> (JMP) → <code>$8002</code> (INX igen). Varje varv genom loopen ökar värdet på adress <code>$0200</code> — och du kan se det på LCD:ns rad 1 som <code>D:$01</code>, <code>D:$02</code>, <code>D:$03</code>… hela vägen upp till <code>D:$FF</code> (255). Sedan wrappar X-registret till 0 och loopen börjar om.</p>
+      <p>När programmet körs kan du med Knapp 2 (instruktionssteg) följa programflödet: <code>$8000</code> (<code>LDX</code>) → <code>$8002</code> (<code>INX</code>) → <code>$8003</code> (<code>STX</code>) → <code>$8006</code> (<code>JMP</code>) → <code>$8002</code> (<code>INX</code> igen). Varje varv genom loopen ökar värdet på adress <code>$0200</code> — och du kan se det på LCD:ns rad 1 som <code>D:$01</code>, <code>D:$02</code>, <code>D:$03</code>… hela vägen upp till <code>D:$FF</code> (255). Sedan wrappar X-registret till 0 och loopen börjar om.</p>
     
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
@@ -400,7 +400,7 @@ R $8002  ← tillbaka till INX
       </div>
 
       <p>För första gången ser du ett <strong>W</strong> i loggen! CPU:n <em>skriver</em> till adress <code>$0200</code> — det är <code>STX $0200</code> som sparar X-registrets värde. På LCD:ns rad 1 ser du <code>D:$01</code>, <code>D:$02</code>, <code>D:$03</code>… räknaren ökar för varje varv. När den når <code>D:$FF</code> (255) wrappar den till <code>D:$00</code> — X-registret är bara 8 bitar brett.</p>
-      <p>Programmet är ynka 9 bytes, men det innehåller redan alla mönster du behöver för att skriva större program: initiering (LDX), beräkning (INX), lagring (STX) och kontrollflöde (JMP). Du har just skrivit ditt första 6502-program!</p>
+      <p>Programmet är ynka 9 bytes, men det innehåller redan alla mönster du behöver för att skriva större program: initiering (<code>LDX</code>), beräkning (<code>INX</code>), lagring (<code>STX</code>) och kontrollflöde (<code>JMP</code>). Du har just skrivit ditt första 6502-program!</p>
     
   </section>
 
@@ -410,9 +410,9 @@ R $8002  ← tillbaka till INX
       
         <p>Här är några saker att kontrollera:</p>
         <ul class="list-disc pl-5 space-y-1">
-        <li><strong>CPU:n kör NOP istället?</strong> Du har glömt att ladda det nya programmet. Kontrollera <code>write_mem()</code>-anropen i <code>setup()</code>.</li>
-        <li><strong>CPU:n hoppar till fel adress?</strong> JMP-adressen är fel. <code>$8002</code> är <code>$02 $80</code> (låg byte först!).</li>
-        <li><strong>Programmet stannar?</strong> Du kanske har en BRK-instruktion (0x00) någonstans. Dubbelkolla att alla bytes är korrekta.</li>
+        <li><strong>CPU:n kör <code>NOP</code> istället?</strong> Du har glömt att ladda det nya programmet. Kontrollera <code>write_mem()</code>-anropen i <code>setup()</code>.</li>
+        <li><strong>CPU:n hoppar till fel adress?</strong> <code>JMP</code>-adressen är fel. <code>$8002</code> är <code>$02 $80</code> (låg byte först!).</li>
+        <li><strong>Programmet stannar?</strong> Du kanske har en <code>BRK</code>-instruktion (<code>0x00</code>) någonstans. Dubbelkolla att alla bytes är korrekta.</li>
       </ul>
     
 
