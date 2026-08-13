@@ -338,28 +338,28 @@ void loop() {
 </code></pre>
     </section>
 
-    <!-- Assembler-kod -->
+    <!-- Länkskript -->
     <section class="mb-8 text-gray-700 space-y-3">
-      <h2>Assembler-kod — program.cfg</h2>
+      <h2>Länkskript — program.cfg</h2>
       
         <p>Länkskriptet måste veta att <code>$A000</code>–<code>$A00F</code> är reserverat för <strong>VIA</strong>:n. Programmet placeras i <strong>ROM</strong>:en men hoppar över I/O-fönstret.</p>
       
-      <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-asm">; program.cfg — steg 11
-; Kod placeras i $8000–$9FFF och $A010–$FFFF,
-; men hoppar över VIA-fönstret $A000–$A00F.
+      <pre class="p-4 rounded-lg overflow-x-auto text-sm font-mono" style="background:#272822;color:#f8f8f2"><code class="language-cfg"><span style="color:#75715e">; program.cfg — steg 11</span>
+<span style="color:#75715e">; Kod placeras i $8000–$9FFF och $A010–$FFFF,</span>
+<span style="color:#75715e">; men hoppar över VIA-fönstret $A000–$A00F.</span>
 
-MEMORY {
-    ZP:    start = $0000, size = $0100, type = rw;  ; zero page
-    RAM:   start = $0200, size = $7E00, type = rw;  ; ledigt RAM
-    ROM:   start = $8000, size = $2000, type = ro;  ; $8000–$9FFF
-    ROM2:  start = $A010, size = $5FF0, type = ro;  ; $A010–$FFFF
+<span style="color:#a6e22e">MEMORY</span> {
+    <span style="color:#66d9ef">ZP:</span>    <span style="color:#fd971f">start</span> = <span style="color:#f8f8f2">$0000</span>, <span style="color:#fd971f">size</span> = <span style="color:#f8f8f2">$0100</span>, <span style="color:#fd971f">type</span> = <span style="color:#f8f8f2">rw</span>;  <span style="color:#75715e">; zero page</span>
+    <span style="color:#66d9ef">RAM:</span>   <span style="color:#fd971f">start</span> = <span style="color:#f8f8f2">$0200</span>, <span style="color:#fd971f">size</span> = <span style="color:#f8f8f2">$7E00</span>, <span style="color:#fd971f">type</span> = <span style="color:#f8f8f2">rw</span>;  <span style="color:#75715e">; ledigt RAM</span>
+    <span style="color:#66d9ef">ROM:</span>   <span style="color:#fd971f">start</span> = <span style="color:#f8f8f2">$8000</span>, <span style="color:#fd971f">size</span> = <span style="color:#f8f8f2">$2000</span>, <span style="color:#fd971f">type</span> = <span style="color:#f8f8f2">ro</span>;  <span style="color:#75715e">; $8000–$9FFF</span>
+    <span style="color:#66d9ef">ROM2:</span>  <span style="color:#fd971f">start</span> = <span style="color:#f8f8f2">$A010</span>, <span style="color:#fd971f">size</span> = <span style="color:#f8f8f2">$5FF0</span>, <span style="color:#fd971f">type</span> = <span style="color:#f8f8f2">ro</span>;  <span style="color:#75715e">; $A010–$FFFF</span>
 }
 
-SEGMENTS {
-    ZEROPAGE: load = ZP,  type = zp;
-    BSS:      load = RAM, type = bss;
-    CODE:     load = ROM, type = ro;
-    VECTORS:  load = ROM2, start = $FFFA, type = ro;
+<span style="color:#a6e22e">SEGMENTS</span> {
+    <span style="color:#66d9ef">ZEROPAGE:</span> <span style="color:#fd971f">load</span> = <span style="color:#f8f8f2">ZP</span>,  <span style="color:#fd971f">type</span> = <span style="color:#f8f8f2">zp</span>;
+    <span style="color:#66d9ef">BSS:</span>      <span style="color:#fd971f">load</span> = <span style="color:#f8f8f2">RAM</span>, <span style="color:#fd971f">type</span> = <span style="color:#f8f8f2">bss</span>;
+    <span style="color:#66d9ef">CODE:</span>     <span style="color:#fd971f">load</span> = <span style="color:#f8f8f2">ROM</span>, <span style="color:#fd971f">type</span> = <span style="color:#f8f8f2">ro</span>;
+    <span style="color:#66d9ef">VECTORS:</span>  <span style="color:#fd971f">load</span> = <span style="color:#f8f8f2">ROM2</span>, <span style="color:#fd971f">start</span> = <span style="color:#f8f8f2">$FFFA</span>, <span style="color:#fd971f">type</span> = <span style="color:#f8f8f2">ro</span>;
 }
 </code></pre>
       <p>Programmet läggs i <code>$8000–$9FFF</code> (8 KB räcker gott). Reset-vektorn ligger i <code>ROM2</code> på <code>$FFFA</code>–<code>$FFFF</code> — precis som alltid.</p>
