@@ -72,7 +72,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2>Kopplingsschema</h2>
-    <p>Här ser du hela kopplingen på en bild — alla komponenter och ledningar precis som de ska sitta på kopplingsdäcket.</p>
+    <p>Schemat visar de två tryckknapparna: en mellan Arduino D11 och GND för klocksteg, en mellan D12 och GND för instruktionssteg. Dessutom löper SYNC-signalen från CPU pin 7 till Arduino D13. Allt annat är oförändrat från steg 3.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-4.png" alt="Steg 4 — manuell stegning" class="w-full">
     </div>
@@ -81,7 +81,7 @@
     <!-- Kretstabell -->
   <section class="mb-8">
     <h2>Kopplingar</h2>
-    <p>Alla kopplingar för detta steg — från strömmatning till signaler. Varje pinne, vart den går, och <strong>varför</strong>.</p>
+    <p>Tabellen kompletteras med tre nya signaler: SYNC från CPU pin 7 till D13, samt de två knapparna som kopplas mellan D11/D12 och GND. Lägg märke till att knapparna drar signalen LÅG vid tryck — Arduinons inbyggda pull-up gör resten.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>

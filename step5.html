@@ -73,7 +73,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2>Kopplingsschema</h2>
-    <p>Här ser du hela kopplingen på en bild — alla komponenter och ledningar precis som de ska sitta på kopplingsdäcket.</p>
+    <p>Schemat visar LCD-displayen ansluten i 4-bitarsläge: RS till D5, E till D6, och datapinnarna DB4–DB7 till D10, D9, D8, D7 i omvänd ordning. Potentiometern sitter på VO för kontrast och 220Ω-motståndet matar bakgrundsbelysningen. Resten av datorn är oförändrad.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-5.png" alt="Steg 5 — LCD-display" class="w-full">
     </div>
@@ -122,7 +122,7 @@
   <!-- Kretstabell -->
   <section class="mb-8">
     <h2>Kopplingar</h2>
-    <p>Alla kopplingar för detta steg — från strömmatning till signaler. Varje pinne, vart den går, och <strong>varför</strong>.</p>
+    <p>Här är hela kopplingen inklusive LCD:ns 16 pinnar, markerade med egen radgrupp i tabellen. Datapinnarna DB4–DB7 går i omvänd ordning (D10→DB4, D9→DB5…) — en klassisk fallgrop när du kopplar, så dubbelkolla varje ledning mot tabellen.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>

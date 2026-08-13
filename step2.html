@@ -88,8 +88,7 @@
     <!-- Kopplingsschema -->
     <section class="mb-8">
       <h2>Kopplingsschema</h2>
-      <p>Här ser du hela kopplingen på en bild — alla komponenter och ledningar
-        precis som de ska sitta på kopplingsdäcket.</p>
+      <p>Schemat visar den nya kopplingen: 16 adresslinjer som löper från CPU:ns A0–A15 till Arduinons analoga portar A0–A15, plus reset-signalen från D4 till /RESET. Allt annat är oförändrat från steg 1.</p>
       <div class="schematic bg-white rounded-lg shadow p-4">
         <img src="schematics/steg-2.png" alt="Steg 2 — adressbuss och reset" class="w-full">
       </div>
@@ -98,8 +97,7 @@
     <!-- Kretstabell -->
     <section class="mb-8">
       <h2>Kopplingar</h2>
-      <p>Alla kopplingar för detta steg — från strömmatning till signaler. Varje
-        pinne, vart den går, och <strong>varför</strong>.</p>
+      <p>Tabellen visar alla kopplingar från steg 1 plus de nya: adressbussens 16 linjer och reset-signalen. Adresslinjerna är grupperade i två byte — A0–A7 till PORTF och A8–A15 till PORTK — eftersom Arduino läser dem som två 8-bitars register.</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white">

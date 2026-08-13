@@ -81,7 +81,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2>Kopplingsschema</h2>
-    <p>Här ser du hela kopplingen på en bild — alla komponenter och ledningar precis som de ska sitta på kopplingsdäcket.</p>
+    <p>Schemat visar hur fyra kretsar nu delar på adress- och databussen: CPU, Arduino, VIA och 74HC00. VIAn får sin klocka, R/W och reset från CPU:n, medan 74HC00:ns utsignal till /CS2 avgör när VIAn får prata. LCD:n har flyttat från Arduino till VIA:ns portar.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-7.png" alt="Steg 7 — VIA + LCD" class="w-full">
     </div>
@@ -200,7 +200,7 @@
   <!-- Kretstabeller -->
   <section class="mb-8">
     <h2>Kopplingar — krets för krets</h2>
-    <p>Här är varenda pinne på varenda krets — vad den heter, vart den går, och varför just den kopplingen behövs. Fyra kretsar, fyra tabeller.</p>
+    <p>Kopplingarna är organiserade krets för krets, eftersom adress- och databussen nu delas av fyra enheter. För varje krets finns en egen tabell: vad varje pinne heter, vart den går, och varför. Börja med CPU:n, följ sedan VIA:n och 74HC00:ns avkodning, och avsluta med LCD:n.</p>
 
     <!-- W65C02S -->
     <h3>W65C02S CPU</h3>

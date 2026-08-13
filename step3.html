@@ -76,7 +76,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2>Kopplingsschema</h2>
-    <p>Här ser du hela kopplingen på en bild — alla komponenter och ledningar precis som de ska sitta på kopplingsdäcket.</p>
+    <p>Nu är datorn komplett i grunden: adressbuss från steg 2, databuss D0–D7 via 100Ω-skydd till Arduino D22–D29, och R/W-signalen från CPU pin 34 till Arduino D3. Lägg märke till att databussens motstånd sitter i serie — en ledning per bit.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-3.png" alt="Steg 3 — databuss och minne" class="w-full">
     </div>
@@ -85,7 +85,7 @@
     <!-- Kretstabell -->
   <section class="mb-8">
     <h2>Kopplingar</h2>
-    <p>Alla kopplingar för detta steg — från strömmatning till signaler. Varje pinne, vart den går, och <strong>varför</strong>.</p>
+    <p>Alla kopplingar från steg 2 finns kvar; tabellen lägger till databussens åtta ledningar D0–D7 och R/W-signalen. Varje dataledning går via ett 100Ω-motstånd — kolumnen <strong>Varför</strong> förklarar varför det skyddet är livsviktigt.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
