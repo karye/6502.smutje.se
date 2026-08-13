@@ -123,13 +123,20 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 
 ```
 $FFFF ┌──────────────┐
-      │  Arduino ROM  │  $8000–$FFFF (6502-program + vektorer)
+      │  EEPROM ROM   │  $A010–$FFFF (steg 11: program + vektorer)
+$A010 ├──────────────┤
+$A000 │  W65C22 VIA   │  $A000–$A00F (I/O-fönster)
+$9FFF ├──────────────┤
+      │  EEPROM ROM   │  $8000–$9FFF (steg 11)
 $8000 ├──────────────┤
       │              │
-$4000 ├──────────────┤
-      │  W65C22 VIA   │  $4000–$400F (steg 7)
+$7FFF ├──────────────┤
+      │  62256 SRAM   │  $0000–$7FFF (steg 11: 32 KB, hela chippet)
 $0000 └──────────────┘
 ```
+
+Steg 7–10 använde VIA på $4000 och SRAM på $0000–$3FFF. Från och med steg 11:
+SRAM täcker hela 32 KB, VIA sitter i ett I/O-fönster på $A000.
 
 ---
 
@@ -146,6 +153,8 @@ $0000 └──────────────┘
 | 7 | W65C22 VIA + 74HC00, LCD via VIA | VIA, 74HC00 |
 | 8 | Assembler-bygge med ca65 | — (samma hårdvara) |
 | 9 | Riktigt RAM (62256 SRAM) | 62256 SRAM |
+| 10 | EEPROM som ROM (AT28C256) | AT28C256 EEPROM |
+| 11 | Städad adressrymd | (andra 74HC00) |
 
 ---
 
