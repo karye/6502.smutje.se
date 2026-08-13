@@ -154,7 +154,7 @@
         </div>
       </div>
     </div>
-    <p><span class="text-blue-300">■</span> Adressbuss &nbsp; <span class="text-green-300">■</span> Databuss &nbsp; <span class="text-purple-300">■</span> Kontroll &nbsp; <span class="text-red-300">■</span> Ström. Notch/pin 1-markering: uppåt. <strong>/OE</strong> = GND (alltid läs ut). <strong>/CE</strong> = U4D pin 11 (aktiv vid $0000–$3FFF).</p>
+    <p><span class="text-blue-300">■</span> Adressbuss &nbsp; <span class="text-green-300">■</span> Databuss &nbsp; <span class="text-purple-300">■</span> Kontroll &nbsp; <span class="text-red-300">■</span> Ström. Notch/pin 1-markering: uppåt. <strong><span class="pin">/OE</span></strong> = GND (alltid läs ut). <strong><span class="pin">/CE</span></strong> = U4D pin 11 (aktiv vid $0000–$3FFF).</p>
   </section>
 
   <!-- 74HC00 pinout -->
@@ -196,7 +196,7 @@
         </div>
       </div>
     </div>
-    <p><span class="text-blue-300">■</span> U4A (NOT A15 → SRAM /CE) &nbsp; <span class="text-green-300">■</span> U4B (A15 NAND A14 → VIA /CS2) &nbsp; <span class="text-yellow-300">■</span> U4D (NAND) &nbsp; <span class="text-pink-300">■</span> U4C (NAND).</p>
+    <p><span class="text-blue-300">■</span> U4A (NOT <span class="pin">A15</span> → SRAM <span class="pin">/CE</span>) &nbsp; <span class="text-green-300">■</span> U4B (<span class="pin">A15</span> NAND <span class="pin">A14</span> → VIA <span class="pin">/CS2</span>) &nbsp; <span class="text-yellow-300">■</span> U4D (NAND) &nbsp; <span class="text-pink-300">■</span> U4C (NAND).</p>
   </section>
 
   <!-- Kopplingsschema -->
@@ -230,7 +230,7 @@
     </div>
 
     <h3>74HC00 — adressavkodning för SRAM</h3>
-    <p>U4A (NOT A15) och U4B (NAND för VIA) är oförändrade från steg 7. U4C blir NOT A14. U4D gör (NOT A14) NAND (NOT A15) → LÅG endast vid $0000–$3FFF.</p>
+    <p>U4A (NOT <span class="pin">A15</span>) och U4B (NAND för VIA) är oförändrade från steg 7. U4C blir NOT <span class="pin">A14</span>. U4D gör (NOT <span class="pin">A14</span>) NAND (NOT <span class="pin">A15</span>) → LÅG endast vid $0000–$3FFF.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Grind</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -252,7 +252,7 @@
         </tbody>
       </table>
     </div>
-    <p><strong>Logik:</strong> U4A inverterar A15, U4C inverterar A14. U4D gör (NOT A14) NAND (NOT A15) → LÅG <strong>endast</strong> när A14=0 OCH A15=0. SRAM aktiveras alltså vid <strong>$0000–$3FFF</strong> och ingen annanstans. VIAn (U4B) aktiveras vid $4000–$7FFF. Inga krockar.</p>
+    <p><strong>Logik:</strong> U4A inverterar <span class="pin">A15</span>, U4C inverterar <span class="pin">A14</span>. U4D gör (NOT <span class="pin">A14</span>) NAND (NOT <span class="pin">A15</span>) → LÅG <strong>endast</strong> när <span class="pin">A14</span>=0 OCH <span class="pin">A15</span>=0. SRAM aktiveras alltså vid <strong>$0000–$3FFF</strong> och ingen annanstans. VIAn (U4B) aktiveras vid $4000–$7FFF. Inga krockar.</p>
 
     <h3>CPU, VIA och LCD</h3>
     <p>CPU, VIA och LCD är oförändrade från steg 7. Här är den kompletta kopplingslistan.</p>
@@ -354,14 +354,14 @@
       <p>Det här är slutsteget — och den mest genomgripande förändringen av minnesemulatorn sedan steg 3. Vi kopplar in ett <strong>62256 SRAM-chip</strong> (32 KB statiskt RAM) som tar över adresserna <code>$0000–$3FFF</code>. Arduino måste nu <strong>tri-stata databussen</strong> för alla SRAM- och VIA-adresser — tre enheter delar på samma 8 datalinjer, och bara en får prata i taget.</p>
 
       <h3>Tre enheter, en buss</h3>
-      <p>Databussen (D0–D7) är nu ansluten till tre kretsar samtidigt: CPU, Arduino, SRAM och VIA. Adressavkodningen (74HC00) avgör vem som svarar:</p>
+      <p>Databussen (<span class="pin">D0–D7</span>) är nu ansluten till tre kretsar samtidigt: CPU, Arduino, SRAM och VIA. Adressavkodningen (74HC00) avgör vem som svarar:</p>
       <ul class="list-disc pl-5 space-y-1">
         <li><strong>$0000–$3FFF</strong> → <code>is_sram()</code> returnerar <code>true</code>. Arduino
           rör inte bussen. SRAM-chippet läser och skriver helt på egen hand.</li>
         <li><strong>$4000–$400F</strong> → <code>is_via()</code> returnerar <code>true</code>. Arduino
           rör inte bussen. VIA-kretsen hanterar I/O.</li>
         <li><strong>$8000–$FFFF</strong> → Arduino svarar med programkod och vektorer. SRAM och VIA
-          är inaktiva (deras /CE- och /CS2-signaler är höga).</li>
+          är inaktiva (deras <span class="pin">/CE</span>- och <span class="pin">/CS2</span>-signaler är höga).</li>
       </ul>
       <p>Det här är en <strong>riktig datorarkitektur</strong>: flera enheter på en delad buss, styrda av adressavkodningslogik. Exakt så här fungerar modernare datorer också — bara med fler kretsar och högre hastigheter.</p>
 
@@ -1008,10 +1008,10 @@ W $4000  ← VIA: 34  (siffran 4)</pre>
       
         <p>Här är några saker att kontrollera:</p>
         <ul class="list-disc pl-5 space-y-1">
-        <li><strong>CPU:n läser $0000 vid reset?</strong> SRAM-chipets /OE är inte GND. Utan /OE=LÅG driver SRAM inte ut data vid läsning.</li>
-        <li><strong>Databuss-krockar?</strong> Arduino får INTE sätta DDRA=0xFF vid SRAM-adresser. Kontrollera att <code>is_sram()</code> returnerar rätt.</li>
-        <li><strong>SRAM skriver inte?</strong> /WE måste gå till R/W (pin 34). /CE måste vara avkodad korrekt via 74HC00.</li>
-        <li><strong>Glitchar på bussen?</strong> 62256 är snabbare än Arduino. Se till att /CE och /WE är stabila innan databussen läses.</li>
+        <li><strong>CPU:n läser $0000 vid reset?</strong> SRAM-chipets <span class="pin">/OE</span> är inte GND. Utan <span class="pin">/OE</span>=LÅG driver SRAM inte ut data vid läsning.</li>
+        <li><strong>Databuss-krockar?</strong> Arduino får INTE sätta <span class="pin">DDRA</span>=0xFF vid SRAM-adresser. Kontrollera att <code>is_sram()</code> returnerar rätt.</li>
+        <li><strong>SRAM skriver inte?</strong> <span class="pin">/WE</span> måste gå till <span class="pin">R/W</span> (pin 34). <span class="pin">/CE</span> måste vara avkodad korrekt via 74HC00.</li>
+        <li><strong>Glitchar på bussen?</strong> 62256 är snabbare än Arduino. Se till att <span class="pin">/CE</span> och <span class="pin">/WE</span> är stabila innan databussen läses.</li>
       </ul>
     
 

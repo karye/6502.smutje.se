@@ -77,7 +77,7 @@
   <!-- AT28C256 pinout -->
   <section class="mb-8">
     <h2>AT28C256 — pinout</h2>
-    <p>DIP-28-kapsel. 15 adresslinjer, 8 datalinjer, 3 kontrollsignaler. Nästan identisk med 62256 SRAM men med <strong>/WE</strong> som styr bränning och <strong>RDY/BUSY</strong> som signalerar när bränningen är klar (vi använder en enkel timeout istället).</p>
+    <p>DIP-28-kapsel. 15 adresslinjer, 8 datalinjer, 3 kontrollsignaler. Nästan identisk med 62256 SRAM men med <strong><span class="pin">/WE</span></strong> som styr bränning och <strong>RDY/BUSY</strong> som signalerar när bränningen är klar (vi använder en enkel timeout istället).</p>
     <div class="flex justify-center">
       <div class="p-2 inline-flex bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-sm leading-relaxed">
         <!-- Left pins -->
@@ -145,7 +145,7 @@
   <!-- Kopplingsschema — dator -->
   <section class="mb-8">
     <h2>Kopplingsschema — datorn med EEPROM</h2>
-    <p>EEPROM:et sitter nu på datorns adress- och databuss tillsammans med SRAM, VIA och Arduino. En extra 74HC00 avkodar A15 till /CE — EEPROM:et aktiveras vid <code>$8000–$FFFF</code>.</p>
+    <p>EEPROM:et sitter nu på datorns adress- och databuss tillsammans med SRAM, VIA och Arduino. En extra 74HC00 avkodar <span class="pin">A15</span> till <span class="pin">/CE</span> — EEPROM:et aktiveras vid <code>$8000–$FFFF</code>.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <p class="text-gray-500 italic text-sm">Schema för datorn kommer snart — se kopplingstabellerna nedan så länge.</p>
     </div>
@@ -188,7 +188,7 @@
     </div>
 
     <h3>74HC00 — EEPROM-avkodning (ny grind)</h3>
-    <p>En extra 74HC00 vid sidan av den från steg 7/9. En enda grind används som inverterare för A15.</p>
+    <p>En extra 74HC00 vid sidan av den från steg 7/9. En enda grind används som inverterare för <span class="pin">A15</span>.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -200,7 +200,7 @@
         </tbody>
       </table>
     </div>
-    <p><strong>Logik:</strong> A15 NAND A15 = NOT A15. EEPROM:ets /CE är aktiv LÅG. När A15=1 (adress $8000 eller högre) blir grindens utgång LÅG → EEPROM aktiverat. När A15=0 (under $8000) är utgången HÖG → EEPROM är bortkopplat, SRAM eller VIA tar över.</p>
+    <p><strong>Logik:</strong> <span class="pin">A15</span> NAND <span class="pin">A15</span> = NOT <span class="pin">A15</span>. EEPROM:ets <span class="pin">/CE</span> är aktiv LÅG. När <span class="pin">A15</span>=1 (adress $8000 eller högre) blir grindens utgång LÅG → EEPROM aktiverat. När <span class="pin">A15</span>=0 (under $8000) är utgången HÖG → EEPROM är bortkopplat, SRAM eller VIA tar över.</p>
   </section>
 
   <!-- Minneskarta -->
@@ -248,7 +248,7 @@
       <p>Det här programmet laddas upp på den <strong>andra</strong> Arduino Mega — den som tillfälligt kopplas in som EEPROM-programmerare. Koden är enkel: ta emot 32 768 bytes över serieporten, bränn dem på AT28C256, och verifiera. Programmet körs en gång i <code>setup()</code> och rapporterar resultatet — <code>loop()</code> är tom.</p>
 
       <h3>Hur bränning går till</h3>
-      <p>AT28C256 har inbyggd själv-timing. För att bränna en byte sätter du adress och data, drar <code>/WE</code> låg, väntar minst 10 millisekunder (vi använder 10 för marginal), och drar <code>/WE</code> hög igen. Kretsen sköter resten internt. För att läsa tillbaka drar du <code>/OE</code> låg och läser <code>PINA</code> — precis som med SRAM.</p>
+      <p>AT28C256 har inbyggd själv-timing. För att bränna en byte sätter du adress och data, drar <span class="pin">/WE</span> låg, väntar minst 10 millisekunder (vi använder 10 för marginal), och drar <span class="pin">/WE</span> hög igen. Kretsen sköter resten internt. För att läsa tillbaka drar du <span class="pin">/OE</span> låg och läser <span class="pin">PINA</span> — precis som med SRAM.</p>
       <p>Verifieringen läser tillbaka varje byte och jämför med originaldatan. Om något inte stämmer rapporteras adressen och de två värdena. Annars: "OK — 32768 bytes verifierade".</p>
     
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
@@ -658,12 +658,12 @@ W $4000  ← VIA: 3D  (=)
     <h2>Om det inte fungerar</h2>
     <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
       <ul class="list-disc pl-5 space-y-1">
-        <li><strong>CPU:n läser $FFFC/$FFFD men hoppar till fel adress?</strong> EEPROM:ets /CE
-          är förmodligen inte rätt avkodat. Kontrollera att 74HC00-grinden får A15 på båda ingångarna
+        <li><strong>CPU:n läser $FFFC/$FFFD men hoppar till fel adress?</strong> EEPROM:ets <span class="pin">/CE</span>
+          är förmodligen inte rätt avkodat. Kontrollera att 74HC00-grinden får <span class="pin">A15</span> på båda ingångarna
           och att utgången går till EEPROM pin 20.</li>
-        <li><strong>Programmet körs inte alls?</strong> Kontrollera att /OE är kopplat till GND
-          och /WE till +5V. Utan /OE låg kör EEPROM:et inte ut data.</li>
-        <li><strong>Bränningen misslyckas?</strong> Mät spänningen vid EEPROM:ets VDD — den måste
+        <li><strong>Programmet körs inte alls?</strong> Kontrollera att <span class="pin">/OE</span> är kopplat till GND
+          och <span class="pin">/WE</span> till +5V. Utan <span class="pin">/OE</span> låg kör EEPROM:et inte ut data.</li>
+        <li><strong>Bränningen misslyckas?</strong> Mät spänningen vid EEPROM:ets <span class="pin">VDD</span> — den måste
           vara minst 4.8V. Använd 12V DC-adapter till programmerings-Arduinon.</li>
         <li><strong>Busskrockar?</strong> 100Ω motstånd på databussen är nu ännu viktigare —
           fyra enheter delar på samma 8 ledningar.</li>

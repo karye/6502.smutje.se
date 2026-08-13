@@ -51,9 +51,9 @@
     <h2>Mål</h2>
     
       <p>Datorn fungerar — men all feedback går via seriemonitorn på en laptopen. Nu kopplar vi in en <strong>LCD-display (16×2 tecken)</strong> som visar vad CPU:n gör direkt på kopplingsdäcket. Ingen datorskärm behövs längre.</p>
-      <p>LCD:n kopplas i <strong>4-bitars parallellt läge</strong> till Arduino. Det innebär att vi skickar data 4 bitar i taget via pinnar D7–D10. Arduino-biblioteket <code>LiquidCrystal</code> sköter all kommunikation — vi behöver bara tala om vilka pinnar som används.</p>
-      <p><strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. Arduino D10 går till LCD DB4, D9 till DB5, D8 till DB6, D7 till DB7. Koden måste spegla detta: <code>LiquidCrystal lcd(5, 6, 10, 9, 8, 7)</code>.</p>
-      <p>LCD:ns R/W-pinne kopplas till GND — vi ska bara skriva till displayen, aldrig läsa.</p>
+      <p>LCD:n kopplas i <strong>4-bitars parallellt läge</strong> till Arduino. Det innebär att vi skickar data 4 bitar i taget via pinnar <span class="pin">D7</span>–D10. Arduino-biblioteket <code>LiquidCrystal</code> sköter all kommunikation — vi behöver bara tala om vilka pinnar som används.</p>
+      <p><strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. Arduino D10 går till LCD <span class="pin">DB4</span>, D9 till <span class="pin">DB5</span>, D8 till <span class="pin">DB6</span>, <span class="pin">D7</span> till <span class="pin">DB7</span>. Koden måste spegla detta: <code>LiquidCrystal lcd(5, 6, 10, 9, 8, 7)</code>.</p>
+      <p>LCD:ns <span class="pin">R/W</span>-pinne kopplas till GND — vi ska bara skriva till displayen, aldrig läsa.</p>
     
   </section>
 
@@ -74,7 +74,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2>Kopplingsschema</h2>
-    <p>Schemat visar LCD-displayen ansluten i 4-bitarsläge: RS till D5, E till D6, och datapinnarna DB4–DB7 till D10, D9, D8, D7 i omvänd ordning. Potentiometern sitter på VO för kontrast och 220Ω-motståndet matar bakgrundsbelysningen. Resten av datorn är oförändrad.</p>
+    <p>Schemat visar LCD-displayen ansluten i 4-bitarsläge: <span class="pin">RS</span> till <span class="pin">D5</span>, E till <span class="pin">D6</span>, och datapinnarna <span class="pin">DB4–DB7</span> till D10, D9, D8, <span class="pin">D7</span> i omvänd ordning. Potentiometern sitter på <span class="pin">VO</span> för kontrast och 220Ω-motståndet matar bakgrundsbelysningen. Resten av datorn är oförändrad.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-5.png" alt="Steg 5 — LCD-display" class="w-full">
     </div>
@@ -83,7 +83,7 @@
     <!-- LCD pinout -->
   <section class="mb-8">
     <h2>LCD 16×2 — pinout</h2>
-    <p>16-pin SIL (single in-line). Pin 1 är närmast kanten på de flesta moduler. Justera kontrasten med potentiometern på VO (pin 3).</p>
+    <p>16-pin SIL (single in-line). Pin 1 är närmast kanten på de flesta moduler. Justera kontrasten med potentiometern på <span class="pin">VO</span> (pin 3).</p>
     <div class="flex justify-center">
       <div class="p-2 bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-sm leading-relaxed">
         <div class="text-center text-sm text-gray-400 mb-2">LCD 16×2 — SIL-16</div>
@@ -117,13 +117,13 @@
         </div>
       </div>
     </div>
-    <p><span class="text-purple-300">■</span> Kontroll &nbsp; <span class="text-green-300">■</span> Data &nbsp; <span class="text-red-300">■</span> Ström &nbsp; <span class="text-yellow-300">■</span> Kontrast. I 4-bitarsläge används endast DB4–DB7 (pin 11–14).</p>
+    <p><span class="text-purple-300">■</span> Kontroll &nbsp; <span class="text-green-300">■</span> Data &nbsp; <span class="text-red-300">■</span> Ström &nbsp; <span class="text-yellow-300">■</span> Kontrast. I 4-bitarsläge används endast <span class="pin">DB4–DB7</span> (pin 11–14).</p>
   </section>
 
   <!-- Kretstabell -->
   <section class="mb-8">
     <h2>Kopplingar</h2>
-    <p>Här är hela kopplingen inklusive LCD:ns 16 pinnar, markerade med egen radgrupp i tabellen. Datapinnarna DB4–DB7 går i omvänd ordning (D10→DB4, D9→DB5…) — en klassisk fallgrop när du kopplar, så dubbelkolla varje ledning mot tabellen.</p>
+    <p>Här är hela kopplingen inklusive LCD:ns 16 pinnar, markerade med egen radgrupp i tabellen. Datapinnarna <span class="pin">DB4–DB7</span> går i omvänd ordning (D10→<span class="pin">DB4</span>, D9→<span class="pin">DB5</span>…) — en klassisk fallgrop när du kopplar, så dubbelkolla varje ledning mot tabellen.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -172,10 +172,10 @@
       <p>Hittills har all feedback från datorn gått via seriemonitor på en laptop. Det fungerar, men det känns inte som en riktig dator. Nu kopplar vi in en <strong>LCD-display</strong> direkt på kopplingsdäcket — och vips är datorn fristående. Ingen PC krävs för att se vad CPU:n gör.</p>
 
       <h3>LCD i 4-bitarsläge — att prata med displayen</h3>
-      <p>LCD-displayer med HD44780-kontroller (standard för 16×2 och 20×4) kan köras i två lägen: 8-bitars (alla 8 datapinnar används) eller 4-bitars (endast DB4–DB7). Vi använder 4-bitarsläget för att spara pinnar på Arduino. Arduino-biblioteket <code>LiquidCrystal</code> hanterar all kommunikation — vi behöver bara tala om vilka pinnar som används:</p>
+      <p>LCD-displayer med HD44780-kontroller (standard för 16×2 och 20×4) kan köras i två lägen: 8-bitars (alla 8 datapinnar används) eller 4-bitars (endast <span class="pin">DB4–DB7</span>). Vi använder 4-bitarsläget för att spara pinnar på Arduino. Arduino-biblioteket <code>LiquidCrystal</code> hanterar all kommunikation — vi behöver bara tala om vilka pinnar som används:</p>
       <pre class="bg-gray-100 p-3 rounded text-sm font-mono">LiquidCrystal lcd(5, 6, 10, 9, 8, 7);
 //                    RS  E  DB4 DB5 DB6 DB7</pre>
-      <p><strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. Arduino D10 → LCD DB4, D9 → DB5, D8 → DB6, D7 → DB7. Om din display har rak ordning (D7→DB4 osv.) måste du ändra ordningen i konstruktorn. LCD:ns R/W-pinne (pin 5) kopplas till GND — vi skriver bara till displayen, vi läser aldrig från den.</p>
+      <p><strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. Arduino D10 → LCD <span class="pin">DB4</span>, D9 → <span class="pin">DB5</span>, D8 → <span class="pin">DB6</span>, <span class="pin">D7</span> → <span class="pin">DB7</span>. Om din display har rak ordning (<span class="pin">D7</span>→<span class="pin">DB4</span> osv.) måste du ändra ordningen i konstruktorn. LCD:ns <span class="pin">R/W</span>-pinne (pin 5) kopplas till GND — vi skriver bara till displayen, vi läser aldrig från den.</p>
 
       <h3>LCD-uppdatering inuti pulse()</h3>
       <p>Den stora kodändringen sitter i <code>pulse()</code>. Efter varje klockcykel uppdateras LCD:n:</p>
@@ -361,7 +361,7 @@ R $8001</pre>
         </div>
       </div>
 
-      <p>Samma information på båda ställena — adress (<code>$8001</code>) och data (<code>$EA</code>, NOP). Skillnaden är att LCD:n visar <em>just nu</em> medan seriemonitor bygger en historik. Med Knapp 2 (instruktionssteg) ser du flera rader i seriemonitor per tryck medan LCD:n uppdateras för varje klockcykel — ett snabbt flimmer av adresser tills SYNC går hög.</p>
+      <p>Samma information på båda ställena — adress (<code>$8001</code>) och data (<code>$EA</code>, NOP). Skillnaden är att LCD:n visar <em>just nu</em> medan seriemonitor bygger en historik. Med Knapp 2 (instruktionssteg) ser du flera rader i seriemonitor per tryck medan LCD:n uppdateras för varje klockcykel — ett snabbt flimmer av adresser tills <span class="pin">SYNC</span> går hög.</p>
       <p>Datorn har blivit fristående. Du kan koppla bort USB-kabeln (om Arduino drivs via DC-adaptern) och fortfarande stega genom programmet och se allt på LCD:n. Seriemonitor är praktisk för att logga och felsöka, men displayen på kopplingsdäcket gör datorn till en egen, komplett enhet.</p>
     
   </section>

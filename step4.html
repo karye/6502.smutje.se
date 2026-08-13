@@ -50,9 +50,9 @@
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Mål</h2>
     
-      <p>I steg 3 körde CPU:n fritt i en NOP-loop — kul att se, men svårt att felsöka. Nu kopplar vi in <strong>två tryckknappar</strong> och <strong>SYNC-signalen</strong> för att kunna styra exekveringen manuellt. Det här är en av de stora fördelarna med W65C02S: eftersom den är statisk CMOS kan klockan stoppas hur länge som helst.</p>
+      <p>I steg 3 körde CPU:n fritt i en NOP-loop — kul att se, men svårt att felsöka. Nu kopplar vi in <strong>två tryckknappar</strong> och <strong><span class="pin">SYNC</span>-signalen</strong> för att kunna styra exekveringen manuellt. Det här är en av de stora fördelarna med W65C02S: eftersom den är statisk CMOS kan klockan stoppas hur länge som helst.</p>
       <p><strong>Knapp 1 (klocksteg):</strong> varje tryckning ger en enda klockcykel. Perfekt för att se vad som händer på bussen i ultrarapid.</p>
-      <p><strong>Knapp 2 (instruktionssteg):</strong> kör klockan tills CPU:n signalerar att en ny instruktion har hämtats. SYNC-pinnen (pin 7) går HÖG vid varje opcode fetch. Vi pulserar klockan tills SYNC går hög — då vet vi att CPU:n är i början av nästa instruktion.</p>
+      <p><strong>Knapp 2 (instruktionssteg):</strong> kör klockan tills CPU:n signalerar att en ny instruktion har hämtats. <span class="pin">SYNC</span>-pinnen (pin 7) går HÖG vid varje opcode fetch. Vi pulserar klockan tills <span class="pin">SYNC</span> går hög — då vet vi att CPU:n är i början av nästa instruktion.</p>
       <p>Kodmässigt byter vi ut den automatiska <code>loop()</code> mot knappläsning med debounce (50 ms). Arduinons <code>INPUT_PULLUP</code> gör att vi slipper externa pull-up-motstånd — knappen kopplas direkt mellan pinne och GND.</p>
     
   </section>
@@ -60,7 +60,7 @@
   <!-- Nya komponenter -->
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Nya komponenter</h2>
-    <p>Två tryckknappar och en kopplingstråd för SYNC — det är allt. Men knapparna är de första komponenterna som ger dig direkt kontroll över exekveringen: en klockcykel eller en hel instruktion per tryck, tack vare att W65C02S är statisk CMOS.</p>
+    <p>Två tryckknappar och en kopplingstråd för <span class="pin">SYNC</span> — det är allt. Men knapparna är de första komponenterna som ger dig direkt kontroll över exekveringen: en klockcykel eller en hel instruktion per tryck, tack vare att W65C02S är statisk CMOS.</p>
     <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
       <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr></thead>
       <tbody class="divide-y">
@@ -73,7 +73,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2>Kopplingsschema</h2>
-    <p>Schemat visar de två tryckknapparna: en mellan Arduino D11 och GND för klocksteg, en mellan D12 och GND för instruktionssteg. Dessutom löper SYNC-signalen från CPU pin 7 till Arduino D13. Allt annat är oförändrat från steg 3.</p>
+    <p>Schemat visar de två tryckknapparna: en mellan Arduino D11 och GND för klocksteg, en mellan D12 och GND för instruktionssteg. Dessutom löper <span class="pin">SYNC</span>-signalen från CPU pin 7 till Arduino D13. Allt annat är oförändrat från steg 3.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-4.png" alt="Steg 4 — manuell stegning" class="w-full">
     </div>
@@ -82,7 +82,7 @@
     <!-- Kretstabell -->
   <section class="mb-8">
     <h2>Kopplingar</h2>
-    <p>Tabellen kompletteras med tre nya signaler: SYNC från CPU pin 7 till D13, samt de två knapparna som kopplas mellan D11/D12 och GND. Lägg märke till att knapparna drar signalen LÅG vid tryck — Arduinons inbyggda pull-up gör resten.</p>
+    <p>Tabellen kompletteras med tre nya signaler: <span class="pin">SYNC</span> från CPU pin 7 till D13, samt de två knapparna som kopplas mellan D11/D12 och GND. Lägg märke till att knapparna drar signalen LÅG vid tryck — Arduinons inbyggda pull-up gör resten.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -118,15 +118,15 @@
     
       <p>I steg 3 körde CPU:n fritt i en loop — spännande men omöjligt att felsöka. Nu ger vi oss själva <strong>full kontroll över exekveringen</strong> med två fysiska knappar. Det här är en av de stora fördelarna med W65C02S: eftersom kretsen är statisk CMOS kan klockan stoppas hur länge som helst — minuter, timmar, dagar — utan att processorn tappar sitt interna tillstånd. Vi kan stega genom programmet i vår egen takt.</p>
 
-      <h3>SYNC — processorns "nu börjar jag"-signal</h3>
-      <p>CPU:ns pin 7 (SYNC) är en av de mest användbara signalerna på hela kretsen. Den går <strong>HÖG</strong> under den klockcykel då processorn hämtar första byten av en ny instruktion (opcode fetch). Varje gång du ser SYNC tändas vet du att CPU:n precis har påbörjat nästa instruktion — oavsett om det är en enkel NOP eller en komplex adresseringsmod. SYNC är hemligheten bakom instruktionsstegningen.</p>
+      <h3><span class="pin">SYNC</span> — processorns "nu börjar jag"-signal</h3>
+      <p>CPU:ns pin 7 (<span class="pin">SYNC</span>) är en av de mest användbara signalerna på hela kretsen. Den går <strong>HÖG</strong> under den klockcykel då processorn hämtar första byten av en ny instruktion (opcode fetch). Varje gång du ser <span class="pin">SYNC</span> tändas vet du att CPU:n precis har påbörjat nästa instruktion — oavsett om det är en enkel NOP eller en komplex adresseringsmod. <span class="pin">SYNC</span> är hemligheten bakom instruktionsstegningen.</p>
 
       <h3>Två knappar, två olika beteenden</h3>
       <p>Koden ändrar bara <code>loop()</code> och lägger till några nya pinkonstanter — allt annat är oförändrat från steg 3. Så här fungerar knapparna:</p>
       <ul class="list-disc pl-5 space-y-1">
         <li><strong>Knapp 1 (D11) — klocksteg:</strong> varje tryckning ger exakt en klockcykel. Du ser en
           ny rad i seriemonitor för varje tryck. Perfekt för att inspektera bussen i ultrarapid.</li>
-        <li><strong>Knapp 2 (D12) — instruktionssteg:</strong> pulserar klockan tills SYNC går hög. Då
+        <li><strong>Knapp 2 (D12) — instruktionssteg:</strong> pulserar klockan tills <span class="pin">SYNC</span> går hög. Då
           vet vi att CPU:n är i början av nästa instruktion. En enda tryckning kan generera flera
           klockcykler (t.ex. 4 cykler för en NOP), men stannar alltid på en instruktionsgräns.</li>
       </ul>
@@ -135,7 +135,7 @@
       <p>När du trycker på en mekanisk knapp studsar metallkontakterna mikroskopiskt — en enda tryckning kan generera dussintals snabba på/av-signaler. Utan debounce skulle CPU:n ta flera steg per tryck. Lösningen är enkel: <code>delay(50)</code> efter att knappen detekterats, vänta på att den släpps, och <code>delay(50)</code> igen. <code>INPUT_PULLUP</code> gör att Arduinons inbyggda pull-up-motstånd används — knappen kopplas direkt mellan pinne och GND, inga externa motstånd behövs.</p>
 
       <h3>Vad som är nytt jämfört med steg 3</h3>
-      <p>SYNC-pinnen kopplas in på D13. <code>loop()</code> ändras från en enkel <code>pulse()</code>-loop till knappläsning med debounce. Instruktionsstegningen (<code>do { pulse(); } while (!digitalRead(SYNC))</code>) är en av de smartaste kodraderna i hela projektet — den låter dig kliva genom ditt program instruktion för instruktion, precis som en debugger, fast i hårdvara.</p>
+      <p><span class="pin">SYNC</span>-pinnen kopplas in på D13. <code>loop()</code> ändras från en enkel <code>pulse()</code>-loop till knappläsning med debounce. Instruktionsstegningen (<code>do { pulse(); } while (!digitalRead(SYNC))</code>) är en av de smartaste kodraderna i hela projektet — den låter dig kliva genom ditt program instruktion för instruktion, precis som en debugger, fast i hårdvara.</p>
     
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
@@ -273,7 +273,7 @@ R $8002
 R $8003
 R $8004</pre>
       </div>
-        <p>Med <strong>Knapp 1</strong> får du en rad per tryck. Du kan se reset-vektorn hämtas — <code>$FFFC</code>, <code>$FFFD</code> — och sedan följa CPU:n när den läser NOP-instruktioner. Med <strong>Knapp 2</strong> körs flera rader samtidigt tills SYNC går hög, vilket för en NOP (<code>$EA</code>) betyder 2 klockcykler.</p>
+        <p>Med <strong>Knapp 1</strong> får du en rad per tryck. Du kan se reset-vektorn hämtas — <code>$FFFC</code>, <code>$FFFD</code> — och sedan följa CPU:n när den läser NOP-instruktioner. Med <strong>Knapp 2</strong> körs flera rader samtidigt tills <span class="pin">SYNC</span> går hög, vilket för en NOP (<code>$EA</code>) betyder 2 klockcykler.</p>
       <p>Känslan av att trycka på en knapp och se CPU:n ta ett enda steg är svår att beskriva. Du har full kontroll. Du kan stanna hur länge du vill, mäta spänningar, fundera på vad som händer — och sedan trycka igen.</p>
     
   </section>
@@ -286,7 +286,7 @@ R $8004</pre>
         <ul class="list-disc pl-5 space-y-1">
         <li><strong>Knapparna gör inget?</strong> Kontrollera att <code>INPUT_PULLUP</code> är satt, och att knappen sitter mellan rätt pinne och GND.</li>
         <li><strong>Flera steg per tryck?</strong> Debounce-tiden (50 ms) är för kort. Öka till 100 ms.</li>
-        <li><strong>Knapp 2 stannar aldrig?</strong> SYNC är inte inkopplad eller fel pinne. Mät CPU pin 7 — ska gå HÖG periodiskt.</li>
+        <li><strong>Knapp 2 stannar aldrig?</strong> <span class="pin">SYNC</span> är inte inkopplad eller fel pinne. Mät CPU pin 7 — ska gå HÖG periodiskt.</li>
       </ul>
     
 

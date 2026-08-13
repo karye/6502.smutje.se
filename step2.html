@@ -56,11 +56,11 @@
             <code>$FFFC</code> och <code>$FFFD</code> för att få reda på var programmet börjar. Det är inbyggt i kisel —
             ingen mjukvara, ingen konfiguration. Genom att koppla in adressbussen och en reset-signal kan vi se detta
             hända i seriemonitor.</p>
-          <p>Vi kopplar också in <strong>/RESET</strong> (pin 40) till Arduino D4. När vi håller <strong>RESB</strong>
+          <p>Vi kopplar också in <strong><span class="pin">/RESET</span></strong> (pin 40) till Arduino <span class="pin">D4</span>. När vi håller <strong><span class="pin">RESB</span></strong>
             låg i minst 2 klockcykler nollställs CPU:ns interna register. När vi sedan släpper den (HÖG) börjar CPU:n
             köra från reset-vektorn.</p>
-          <p>Adressbussen läser vi via Arduinons analoga portar — <strong>PORTF</strong> (A0–A7) och
-            <strong>PORTK</strong> (A8–A15). Det ger oss 16 bitar i två registerläsningar.</p>
+          <p>Adressbussen läser vi via Arduinons analoga portar — <strong><span class="pin">PORTF</span></strong> (<span class="pin">A0–A7</span>) och
+            <strong><span class="pin">PORTK</span></strong> (<span class="pin">A8–A15</span>). Det ger oss 16 bitar i två registerläsningar.</p>
 
         </section>
 
@@ -68,8 +68,8 @@
         <section class="mb-8 text-gray-700 space-y-3">
           <h2>Nya komponenter</h2>
           <p>Det här steget kräver inga nya elektroniska komponenter — bara kopplingstrådar. Sexton för adresslinjerna
-            A0–A15 och en extra för reset-signalen, eftersom vi nu tar kontroll över CPU:ns uppstart via
-            <strong>/RESET</strong>.</p>
+            <span class="pin">A0–A15</span> och en extra för reset-signalen, eftersom vi nu tar kontroll över CPU:ns uppstart via
+            <strong><span class="pin">/RESET</span></strong>.</p>
           <div class="overflow-x-auto">
             <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
               <thead class="bg-gray-900 text-white">
@@ -91,8 +91,8 @@
         <!-- Kopplingsschema -->
         <section class="mb-8">
           <h2>Kopplingsschema</h2>
-          <p>Schemat visar den nya kopplingen: 16 adresslinjer som löper från CPU:ns A0–A15 till Arduinons analoga
-            portar A0–A15, plus reset-signalen från D4 till <strong>/RESET</strong>. Allt annat är oförändrat från steg
+          <p>Schemat visar den nya kopplingen: 16 adresslinjer som löper från CPU:ns <span class="pin">A0–A15</span> till Arduinons analoga
+            portar <span class="pin">A0–A15</span>, plus reset-signalen från <span class="pin">D4</span> till <strong><span class="pin">/RESET</span></strong>. Allt annat är oförändrat från steg
             1.</p>
           <div class="schematic bg-white rounded-lg shadow p-4">
             <img src="schematics/steg-2.png" alt="Steg 2 — adressbuss och reset" class="w-full">
@@ -103,7 +103,7 @@
         <section class="mb-8">
           <h2>Kopplingar</h2>
           <p>Tabellen visar alla kopplingar från steg 1 plus de nya: adressbussens 16 linjer och reset-signalen.
-            Adresslinjerna är grupperade i två byte — A0–A7 till PORTF och A8–A15 till <strong>PORTK</strong> — eftersom
+            Adresslinjerna är grupperade i två byte — <span class="pin">A0–A7</span> till <span class="pin">PORTF</span> och <span class="pin">A8–A15</span> till <strong><span class="pin">PORTK</span></strong> — eftersom
             Arduino läser dem som två 8-bitars register.</p>
           <div class="overflow-x-auto">
             <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
@@ -199,11 +199,11 @@
           <h3>Portregister — att läsa 8 pinnar på en gång</h3>
           <p>Arduino Mega 2560 har 54 digitala pinnar, men att läsa dem en och en med <code>digitalRead()</code> är alldeles för långsamt. Varje anrop tar flera mikrosekunder — och med 16 adresslinjer skulle vi tappa synkroniseringen med processorn direkt. Lösningen är <strong>portregister</strong> — specialregister som läser eller skriver 8 pinnar samtidigt i en enda maskininstruktion:</p>
           <ul class="list-disc pl-5 space-y-1">
-            <li><strong><code>DDRF = 0x00</code></strong> — sätt alla 8 pinnar på PORTF som ingångar. Motsvarar
+            <li><strong><code>DDRF = 0x00</code></strong> — sätt alla 8 pinnar på <span class="pin">PORTF</span> som ingångar. Motsvarar
               8 × <code>pinMode()</code> men går på några nanosekunder.</li>
-            <li><strong><code>PINF</code></strong> — läs alla 8 pinnar på en gång. Varje bit i byten motsvarar
-              en pinne. Här är det CPU:ns A0–A7.</li>
-            <li><strong><code>PINK</code></strong> — läser CPU:ns A8–A15 på samma sätt.</li>
+            <li><strong><span class="pin">PINF</span></strong> — läs alla 8 pinnar på en gång. Varje bit i byten motsvarar
+              en pinne. Här är det CPU:ns <span class="pin">A0–A7</span>.</li>
+            <li><strong><span class="pin">PINK</span></strong> — läser CPU:ns <span class="pin">A8–A15</span> på samma sätt.</li>
           </ul>
           <p>För att få ihop en 16-bitars adress skiftar vi ihop de två byten:
             <code>(PINK &lt;&lt; 0) | (PINF &lt;&lt; 8)</code>. Resultatet är ett tal mellan 0 och 65 535 — processor ns
@@ -330,11 +330,11 @@ R $8006
 
           <p>Här är några saker att kontrollera:</p>
           <ul class="list-disc pl-5 space-y-1">
-            <li><strong>Ser du bara <code>0</code> eller <code>1</code>?</strong> CPU:n är fortfarande i reset eller BE
+            <li><strong>Ser du bara <code>0</code> eller <code>1</code>?</strong> CPU:n är fortfarande i reset eller <span class="pin">BE</span>
               är
-              LÅG. Kontrollera att RESB går HÖG efter reset-sekvensen, och att BE har +5V.</li>
+              LÅG. Kontrollera att <span class="pin">RESB</span> går HÖG efter reset-sekvensen, och att <span class="pin">BE</span> har +5V.</li>
             <li><strong>Ser du <code>FFFC</code> men inte <code>FFFD</code>?</strong> Någon adresslinje är felkopplad.
-              Dubbelkolla A0–A15 en och en.</li>
+              Dubbelkolla <span class="pin">A0–A15</span> en och en.</li>
             <li><strong>Skräptecken i seriemonitor?</strong> Baud rate måste vara 115200. Kontrollera
               <code>platformio.ini</code> om du använder PlatformIO.
             </li>

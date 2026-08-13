@@ -254,7 +254,7 @@
     <!-- Arduino Mega pinout -->
     <section class="mb-8">
       <h2>Arduino Mega 2560 — anslutningar</h2>
-      <p>Här ser vi alla pinnar på Arduino Mega 2560: A0-A15 och D0-D53</p>
+      <p>Här ser vi alla pinnar på Arduino Mega 2560: <span class="pin">A0-A15</span> och <span class="pin">D0-D53</span></p>
       <div class="flex justify-center">
         <div class="p-2 bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-xs leading-snug">
           <div class="inline-flex">
@@ -484,7 +484,7 @@
     <!-- Kopplingsschema -->
     <section class="mb-8">
       <h2>Kopplingsschema</h2>
-      <p>Så här ser den kompletta kopplingen ut när allt ligger på kopplingsdäcket: processorn till vänster, Arduino till höger, lysdiod och pull-up-motstånd på sina platser. Följ strömmen från +5V genom CPU:n till GND, och klockan från Arduino D2 till PHI2.</p>
+      <p>Så här ser den kompletta kopplingen ut när allt ligger på kopplingsdäcket: processorn till vänster, Arduino till höger, lysdiod och pull-up-motstånd på sina platser. Följ strömmen från +5V genom CPU:n till GND, och klockan från Arduino <span class="pin">D2</span> till <span class="pin">PHI2</span>.</p>
       <div class="schematic bg-white rounded-lg shadow p-4">
         <img src="schematics/steg-1.png" alt="Steg 1 — Ström och klocka" class="w-full">
       </div>
@@ -592,12 +592,12 @@
         <h3>Kodens arkitektur i detta steg</h3>
         <p>Koden är uppdelad i tre lager:</p>
         <ol class="list-decimal pl-5 space-y-1">
-          <li><strong>Definitioner och konstanter</strong> — längst upp definierar vi pinnar (<code>PHI2</code>,
-            <code>RESB</code>) och räknar ut klockfrekvensen. Genom att använda namngivna konstanter istället för
+          <li><strong>Definitioner och konstanter</strong> — längst upp definierar vi pinnar (<span class="pin">PHI2</span>,
+            <span class="pin">RESB</span>) och räknar ut klockfrekvensen. Genom att använda namngivna konstanter istället för
             magiska siffror blir koden läsbar och lätt att ändra — vill du testa en snabbare klocka ändrar du bara
             <code>CLOCK_HZ</code>.</li>
           <li><strong>Hjälpfunktionen <code>pulse()</code></strong> som genererar en komplett klockcykel.
-            Funktionen drar PHI2 HÖG i 500 ms (lysdioden lyser), sedan LÅG i 500 ms (lysdioden släcks). Resultatet
+            Funktionen drar <span class="pin">PHI2</span> HÖG i 500 ms (lysdioden lyser), sedan LÅG i 500 ms (lysdioden släcks). Resultatet
             är en symmetrisk fyrkantsvåg på 1 Hz — tillräckligt långsamt för att du ska kunna följa med i vad som
             händer. W65C02S är en statisk CMOS-krets, vilket betyder att den inte har någon minsta klockfrekvens —
             du kan göra pulserna hur långsamma du vill utan att processorn tappar sitt interna tillstånd.</li>
@@ -607,7 +607,7 @@
         </ol>
 
         <h3>Vad du ser när koden kör</h3>
-        <p>När du laddat upp koden och öppnar seriemonitor (115200 baud) ser du texten "Steg 1 — Klocka och ström". Lysdioden på klocklinjen blinkar en gång per sekund — den är tänd när PHI2 är hög (CPU:n arbetar) och släckt när PHI2 är låg. Du har just gett processorn dess första hjärtslag.</p>
+        <p>När du laddat upp koden och öppnar seriemonitor (115200 baud) ser du texten "Steg 1 — Klocka och ström". Lysdioden på klocklinjen blinkar en gång per sekund — den är tänd när <span class="pin">PHI2</span> är hög (CPU:n arbetar) och släckt när <span class="pin">PHI2</span> är låg. Du har just gett processorn dess första hjärtslag.</p>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 1 — strömmatning och klocka
@@ -664,7 +664,7 @@ void loop() {
         <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">Steg 1 — Klocka och ström
 Lysdioden på PHI2 ska blinka 1 Hz</pre>
         </div>
-        <p>Det är allt! Programmet har inget mer att rapportera — det bara loopar. Men titta på kopplingsdäcket: lysdioden blinkar i precis den takt som <code>pulse()</code> bestämmer. Varje gång dioden tänds är PHI2 hög och processorn tar ett steg framåt. Varje gång den släcks förbereder processorn nästa steg.</p>
+        <p>Det är allt! Programmet har inget mer att rapportera — det bara loopar. Men titta på kopplingsdäcket: lysdioden blinkar i precis den takt som <code>pulse()</code> bestämmer. Varje gång dioden tänds är <span class="pin">PHI2</span> hög och processorn tar ett steg framåt. Varje gång den släcks förbereder processorn nästa steg.</p>
         <p>Prova att ändra <code>CLOCK_HZ</code> från <code>1</code> till <code>10</code> och ladda upp igen. Dioden blinkar nu tio gånger per sekund — för snabbt för att urskilja enskilda pulser, men du ser att den lyser svagare eftersom den är släckt halva tiden. Det här är samma princip som senare steg använder när klockan körs i 500 Hz — då syns inte blinkandet alls, men processorn jobbar för fullt.</p>
     </section>
 
@@ -673,13 +673,13 @@ Lysdioden på PHI2 ska blinka 1 Hz</pre>
       <h2>Om det inte fungerar</h2>
       <p>Här är några saker att kontrollera:</p>
         <ul class="list-disc pl-5 space-y-1">
-          <li><strong>Dioden blinkar inte?</strong> Kontrollera att du har rätt pinne (D2), att dioden är rättvänd
-            (långa benet till D2 via motstånd, korta till GND), och att motståndet är 220Ω.</li>
+          <li><strong>Dioden blinkar inte?</strong> Kontrollera att du har rätt pinne (<span class="pin">D2</span>), att dioden är rättvänd
+            (långa benet till <span class="pin">D2</span> via motstånd, korta till GND), och att motståndet är 220Ω.</li>
           <li><strong>Dioden lyser konstant?</strong> Du har förmodligen glömt <code>delay()</code> eller har en
             kortslutning.</li>
           <li><strong>Spänningen under 4.8V?</strong> Använd en 12V DC-adapter i Arduinons barrel-jack. USB-portar ger
             ofta för låg spänning.</li>
-          <li><strong>Glöm inte avkopplingskondensatorn!</strong> 100nF keramisk mellan VDD och VSS, så nära CPU:n som
+          <li><strong>Glöm inte avkopplingskondensatorn!</strong> 100nF keramisk mellan <span class="pin">VDD</span> och <span class="pin">VSS</span>, så nära CPU:n som
             möjligt. Utan den kan CPU:n bete sig oberäkneligt.</li>
         </ul>
     </section>
