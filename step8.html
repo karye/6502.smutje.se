@@ -230,7 +230,7 @@
     <section class="mb-8">
       <h2>PlatformIO-byggskript</h2>
       <p><code>scripts/build_asm.py</code> är en <strong>pre-build hook</strong> som PlatformIO kör före C++-kompileringen. Den anropar ca65, ld65 och bin2h.py i sekvens, konfigurerad i <code>platformio.ini</code>:</p>
-        <pre class="bg-gray-100 p-3 rounded text-sm font-mono">extra_scripts = pre:scripts/build_asm.py</pre>
+        <pre class="bg-gray-900 text-gray-100 p-3 rounded text-sm font-mono">extra_scripts = pre:scripts/build_asm.py</pre>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-python"># Byggscript för PlatformIO — anropas före C++-kompilering
 # Kör ca65 + ld65 för att assemblera program_hello.asm → program_hello.h
 
@@ -673,7 +673,7 @@ void loop() {
       <h2>Exempel på körning</h2>
       
         <p>När du bygger och laddar upp ser du byggkedjan arbeta i terminalen:</p>
-        <pre class="bg-gray-100 p-3 rounded text-sm font-mono">pio run -e step8 -t upload -t monitor</pre>
+        <pre class="bg-gray-900 text-gray-100 p-3 rounded text-sm font-mono">pio run -e step8 -t upload -t monitor</pre>
         <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">[build_asm] Assemblerar .../asm/program_hello.asm …
 [build_asm] OK — 2054 bytes → .../program_hello.h
 Processing step8 (platform: ...)
