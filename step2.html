@@ -52,7 +52,7 @@
 
           <p>I steg 1 gav vi processorn ström och klocka. Nu ska vi ge den kontroll över <strong>adressbussen</strong> —
             16 ledningar som talar om <em>var</em> i minnet <strong>CPU</strong>:n vill läsa eller skriva.</p>
-          <p>Alla 6502-processorer startar på samma sätt: efter reset läser de sk reset-vektorn på adress
+          <p>Alla <strong>6502</strong>-processorer startar på samma sätt: efter reset läser de sk reset-vektorn på adress
             <code>$FFFC</code> och <code>$FFFD</code> för att få reda på var programmet börjar. Det är inbyggt i kisel —
             ingen mjukvara, ingen konfiguration. Genom att koppla in adressbussen och en reset-signal kan vi se detta
             hända i seriemonitor.</p>

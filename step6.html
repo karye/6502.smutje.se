@@ -52,7 +52,7 @@
     
       <p>Datorn är nu komplett — <strong>CPU</strong>, minne, <strong>LCD</strong>, knappar. Men den kör bara <code>NOP</code>:ar. Dags att skriva vårt <strong>första egna 6502-program!</strong></p>
       <p>Vi skriver en enkel räknare: öka X-registret från 0 till 255, spara värdet på adress <code>$0200</code>, och loopa. Programmet är bara 9 bytes stort — men det innehåller allt ett riktigt program behöver: initiering, beräkning, minnesskrivning och loop.</p>
-      <p>6502-program skrivs i <strong>maskinkod</strong> — varje instruktion är 1–3 bytes. <code>LDX #$00</code> är två bytes (<code>$A2 $00</code>), <code>INX</code> är en byte (<code>$E8</code>), <code>STX $0200</code> är tre bytes (<code>$8E $00 $02</code>). Vi skriver in dessa bytes direkt i Arduinons minnesarray, och <strong>CPU</strong>:n exekverar dem som ett riktigt program.</p>
+      <p><strong>6502</strong>-program skrivs i <strong>maskinkod</strong> — varje instruktion är 1–3 bytes. <code>LDX #$00</code> är två bytes (<code>$A2 $00</code>), <code>INX</code> är en byte (<code>$E8</code>), <code>STX $0200</code> är tre bytes (<code>$8E $00 $02</code>). Vi skriver in dessa bytes direkt i Arduinons minnesarray, och <strong>CPU</strong>:n exekverar dem som ett riktigt program.</p>
       <p>Ingen ny hårdvara — samma koppling som steg 5. Allt nytt finns i mjukvaran.</p>
     
   </section>
@@ -109,7 +109,7 @@
   <!-- Programmet -->
   <section class="mb-8">
     <h2>6502-programmet — räknare</h2>
-    <p>Här är programmet som processorn ska köra. Varje rad är en instruktion i 6502:ans språk — maskinkod som <strong>CPU</strong>:n förstår direkt.</p>
+    <p>Här är programmet som processorn ska köra. Varje rad är en instruktion i <strong>6502</strong>:ans språk — maskinkod som <strong>CPU</strong>:n förstår direkt.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Adress</th><th class="p-2 text-left">Bytes</th><th class="p-2 text-left">Assembler</th><th class="p-2 text-left">Vad händer</th></tr></thead>
@@ -135,10 +135,10 @@
   <!-- Minneskarta -->
   <section class="mb-8">
     <h2>Minneskarta ($0000–$FFFF)</h2>
-    <p>6502-processorns 64 KB adressrymd, uppdelad i fyra områden:</p>
+    <p><strong>6502</strong>-processorns 64 KB adressrymd, uppdelad i fyra områden:</p>
     <ul class="list-disc pl-5 space-y-1 mb-3">
       <li><strong>Lila</strong> (<code>$FFFA</code>–<code>$FFFF</code>): vektorer — processorn läser här efter reset för att veta var programmet börjar</li>
-      <li><strong>Blå</strong> (<code>$8000</code>–<code>$87FF</code>): vårt 6502-program — 9 bytes maskinkod som <strong>Arduino</strong> laddar in från <code>setup()</code></li>
+      <li><strong>Blå</strong> (<code>$8000</code>–<code>$87FF</code>): vårt <strong>6502</strong>-program — 9 bytes maskinkod som <strong>Arduino</strong> laddar in från <code>setup()</code></li>
       <li><strong>Grön</strong> (<code>$0000</code>–<code>$03FF</code>): arbetsminne — zero page (<code>$0000</code>–<code>$00FF</code>, snabbast åtkomst), stack (<code>$0100</code>–<code>$01FF</code>, <code>JSR</code>/<code>RTS</code>/<code>PHA</code>/<code>PLA</code>), och ledigt RAM (<code>$0200</code>–<code>$03FF</code>). Här kan <strong>CPU</strong>:n läsa och skriva fritt</li>
       <li><strong>Grå</strong>: oanvänt — <strong>Arduino</strong> returnerar <code>$EA</code> (<code>NOP</code>) så <strong>CPU</strong>:n hoppar bara vidare</li>
     </ul>
@@ -204,8 +204,8 @@
     
       <p>Datorn fungerar — men den har hittills bara kört <code>NOP</code>:ar. Nu skriver vi vårt <strong>första egna 6502-program</strong>. Det är bara 9 bytes stort, men det innehåller allt ett riktigt program behöver: initiering, beräkning, minnesskrivning och en loop. <strong>CPU</strong>:n kommer att räkna från 0 till 255 i en oändlig loop — och du kommer att kunna följa varje steg.</p>
 
-      <h3>6502-maskinkod — så här ser ett program ut</h3>
-      <p>En 6502-instruktion är 1–3 bytes lång. Första byten är alltid <strong>opcode</strong> — en siffra som talar om för <strong>CPU</strong>:n vad den ska göra. Resten är <strong>operander</strong> — data eller adresser som instruktionen behöver. Vårt program har fyra instruktioner:</p>
+      <h3><strong>6502</strong>-maskinkod — så här ser ett program ut</h3>
+      <p>En <strong>6502</strong>-instruktion är 1–3 bytes lång. Första byten är alltid <strong>opcode</strong> — en siffra som talar om för <strong>CPU</strong>:n vad den ska göra. Resten är <strong>operander</strong> — data eller adresser som instruktionen behöver. Vårt program har fyra instruktioner:</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Instruktion</th><th class="p-2 text-left">Bytes</th><th class="p-2 text-left">Vad CPU:n gör</th></tr></thead>
@@ -400,7 +400,7 @@ R $8002  ← tillbaka till INX
       </div>
 
       <p>För första gången ser du ett <strong>W</strong> i loggen! <strong>CPU</strong>:n <em>skriver</em> till adress <code>$0200</code> — det är <code>STX $0200</code> som sparar X-registrets värde. På <strong>LCD</strong>:ns rad 1 ser du <code>D:$01</code>, <code>D:$02</code>, <code>D:$03</code>… räknaren ökar för varje varv. När den når <code>D:$FF</code> (255) wrappar den till <code>D:$00</code> — X-registret är bara 8 bitar brett.</p>
-      <p>Programmet är ynka 9 bytes, men det innehåller redan alla mönster du behöver för att skriva större program: initiering (<code>LDX</code>), beräkning (<code>INX</code>), lagring (<code>STX</code>) och kontrollflöde (<code>JMP</code>). Du har just skrivit ditt första 6502-program!</p>
+      <p>Programmet är ynka 9 bytes, men det innehåller redan alla mönster du behöver för att skriva större program: initiering (<code>LDX</code>), beräkning (<code>INX</code>), lagring (<code>STX</code>) och kontrollflöde (<code>JMP</code>). Du har just skrivit ditt första <strong>6502</strong>-program!</p>
     
   </section>
 

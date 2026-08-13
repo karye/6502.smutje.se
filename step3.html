@@ -57,7 +57,7 @@
           <p>Arduinon blir nu en <strong>minnesemulator</strong>: en array <code>ram[1024]</code> lagrar data, och i
             varje klockcykel kollar Arduinon adressen och <strong><span class="signal">R/W</span></strong> — om <strong>CPU</strong>:n läser, lägger den ut rätt byte
             på databussen via <span class="signal">PORTA</span>. Om <strong>CPU</strong>:n skriver, läser Arduinon av vad som skrevs.</p>
-          <p>Vi laddar ett minimalt 6502-program på <code>$8000</code>: en enda <strong><code>NOP</code></strong>-instruktion
+          <p>Vi laddar ett minimalt <strong>6502</strong>-program på <code>$8000</code>: en enda <strong><code>NOP</code></strong>-instruktion
             (<code>$EA</code>) som gör ingenting och går vidare till nästa adress — vilket också är <code>NOP</code>. Resultat: <strong>CPU</strong>:n
             loopar för evigt, och vi kan följa varje steg i seriemonitor.</p>
 
@@ -268,7 +268,7 @@
             <li><strong><code>read_mem()</code> och <code>write_mem()</code></strong> — två enkla funktioner som slår upp eller sparar en byte i rätt array. Vektorer hamnar i <code>vectors[6]</code>, arbetsminne i <code>ram[1024]</code>. Allt annat returnerar <code>$EA</code> (<code>NOP</code>) — en ofarlig fallback som gör att <strong>CPU</strong>:n bara hoppar vidare om den läser från en oanvänd adress.
             </li>
             <li><strong><code>pulse()</code> — datorns hjärta</strong> — samma struktur som tidigare men nu med ett avgörande tillägg: efter att ha läst adress och <span class="signal">R/W</span> bestämmer den om <strong>Arduino</strong> ska driva databussen (<code>DDRA = 0xFF</code>) eller gå ur vägen (<code>DDRA = 0x00</code>). Allt detta sker medan <strong><span class="signal">PHI2</span></strong> är låg. När <strong><span class="signal">PHI2</span></strong> sedan går hög läser <strong>CPU</strong>:n av databussen — eller skriver till den.</li>
-            <li><strong><code>setup()</code> — ladda programmet</strong> — här skrivs reset-vektorn (<code>$8000</code>) och en enda <code>NOP</code>-instruktion (<code>$EA</code>) in i minnet. Det är vårt första 6502-program: <strong>CPU</strong>:n startar på <code>$8000</code>, läser <code>$EA</code>, gör ingenting, går till <code>$8001</code>, läser <code>$EA</code> (minnet returnerar <code>NOP</code> överallt), och loopar för evigt.</li>
+            <li><strong><code>setup()</code> — ladda programmet</strong> — här skrivs reset-vektorn (<code>$8000</code>) och en enda <code>NOP</code>-instruktion (<code>$EA</code>) in i minnet. Det är vårt första <strong>6502</strong>-program: <strong>CPU</strong>:n startar på <code>$8000</code>, läser <code>$EA</code>, gör ingenting, går till <code>$8001</code>, läser <code>$EA</code> (minnet returnerar <code>NOP</code> överallt), och loopar för evigt.</li>
             <li><strong><code>loop()</code></strong> — anropar bara <code>pulse()</code>. En klockcykel per varv, med fullständig loggning i seriemonitor.</li>
           </ol>
 
