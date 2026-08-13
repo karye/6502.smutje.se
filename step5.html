@@ -53,8 +53,14 @@
       <p>Datorn fungerar — men all feedback går via seriemonitorn på en laptopen. Nu kopplar vi in en <strong>LCD-display (16×2 tecken)</strong> som visar vad CPU:n gör direkt på kopplingsdäcket. Ingen datorskärm behövs längre.</p>
       <p>LCD:n kopplas i <strong>4-bitars parallellt läge</strong> till Arduino. Det innebär att vi skickar data 4 bitar i taget via pinnar <span class="signal">D7–D10</span>. Arduino-biblioteket <code>LiquidCrystal</code> sköter all kommunikation — vi behöver bara tala om vilka pinnar som används.</p>
       <p><strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. Arduino <span class="signal">D10</span> går till LCD <span class="signal">DB4</span>, <span class="signal">D9</span> till <span class="signal">DB5</span>, <span class="signal">D8</span> till <span class="signal">DB6</span>, <span class="signal">D7</span> till <span class="signal">DB7</span>. Koden måste spegla detta:</p>
-      <pre class="bg-gray-100 p-3 rounded text-sm font-mono">LiquidCrystal lcd(5, 6, 10, 9, 8, 7);
-//                    RS  E  DB4 DB5 DB6 DB7</pre>
+      <pre class="bg-gray-900 text-gray-100 p-3 rounded text-sm font-mono">LiquidCrystal lcd(
+  5,  // <span class="text-green-400">RS</span>
+  6,  // <span class="text-green-400">E</span>
+  10, // <span class="text-green-400">DB4</span>
+  9,  // <span class="text-green-400">DB5</span>
+  8,  // <span class="text-green-400">DB6</span>
+  7   // <span class="text-green-400">DB7</span>
+);</pre>
       <p>LCD:ns <span class="signal">R/W</span>-pinne kopplas till <span class="signal">GND</span> — vi ska bara skriva till displayen, aldrig läsa.</p>
     
   </section>
