@@ -344,7 +344,8 @@ void loop() {
       
         <p>Länkskriptet måste veta att <code>$A000</code>–<code>$A00F</code> är reserverat för <strong>VIA</strong>:n. Programmet placeras i <strong>ROM</strong>:en men hoppar över I/O-fönstret.</p>
       
-      <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-cfg">; program.cfg — steg 11
+      <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-cfg">
+; program.cfg — steg 11
 ; Kod placeras i $8000–$9FFF och $A010–$FFFF,
 ; men hoppar över VIA-fönstret $A000–$A00F.
 
@@ -434,7 +435,22 @@ W $A000  ← VIA: 3D         (tecknet "=")
         class="underline hover:text-gray-700">GitHub</a></p>
   </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
-  <script>hljs.highlightAll();</script>
+  <script>
+  // Custom-språk för ld65-länkskriptet program.cfg (cc65)
+  hljs.registerLanguage('cfg', function (hljs) {
+    return {
+      case_insensitive: false,
+      keywords: { keyword: 'MEMORY SEGMENTS' },
+      contains: [
+        { className: 'comment', begin: ';', end: '$' },
+        { className: 'number', begin: /\$[0-9A-Fa-f]+/ },
+        { className: 'attr', begin: /\b(start|size|type|load)\b/ },
+        { className: 'title', begin: /\b[A-Z][A-Z0-9_]*:/ }
+      ]
+    };
+  });
+  hljs.highlightAll();
+  </script>
   <script src="toc.js"></script>
 </body>
 </html>
