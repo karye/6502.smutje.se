@@ -41,7 +41,7 @@
           16 ledningar som talar om <em>var</em> i minnet CPU:n vill läsa eller skriva.</p>
         <p>Alla 6502-processorer startar på samma sätt: efter reset läser de adress <code>$FFFC</code> och
           <code>$FFFD</code> för att få reda på var programmet börjar. Det är inbyggt i kisel — ingen mjukvara, ingen
-          konfiguration. Genom att koppla in adressbussen och en reset-signal kan vi se detta hända i serieövervakaren.
+          konfiguration. Genom att koppla in adressbussen och en reset-signal kan vi se detta hända i seriemonitor.
         </p>
         <p>Vi kopplar också in <strong>/RESET</strong> (pin 40) till Arduino D4. När vi håller RESB låg i minst 2
           klockcykler nollställs CPU:ns interna register. När vi sedan släpper den (HÖG) börjar CPU:n köra från
@@ -178,7 +178,7 @@
         <p>
           I steg 1 gav vi processorn liv. Nu ska vi lyssna på vad den säger. Koden i detta steg gör något
           fundamentalt: den <strong>läser av processorns adressbuss</strong> — 16 ledningar som tillsammans
-          talar om var i minnet CPU:n vill läsa — och skriver ut adressen i serieövervakaren. Det är som att
+          talar om var i minnet CPU:n vill läsa — och skriver ut adressen i seriemonitor. Det är som att
           koppla in en logikanalysator, fast gratis.
         </p>
 
@@ -219,7 +219,7 @@
         <h3>Vad som är nytt jämfört med steg 1</h3>
         <p>
           Klockan har höjts från 1 Hz till 500 Hz — för snabbt för att se med ögat, men lagom för att läsa
-          adressbussen i serieövervakaren. <code>pulse()</code> har förenklats (ingen lysdiod denna gång) och
+          adressbussen i seriemonitor. <code>pulse()</code> har förenklats (ingen lysdiod denna gång) och
           <code>loop()</code> gör nu det tunga jobbet: läsa portregister, skifta ihop adressen, skriva ut.
           <code>setup()</code> har fått en reset-sekvens — den viktigaste nyheten i detta steg.
         </p>
@@ -288,7 +288,7 @@ void loop() {
   digitalWrite(PHI2, HIGH);
   delay(CLOCK_DELAY);
 
-  // Skriv ut till serieövervakaren
+  // Skriv ut till seriemonitor
   Serial.print("R $");          // R = Read (CPU:n läser alltid i steg 2)
   Serial.println(addr, HEX);   // Adress i hexadecimalt format
 }
@@ -300,8 +300,9 @@ void loop() {
       <h2>Exempel på körning</h2>
       <div class="text-gray-700 space-y-3">
         <p>
-          När du öppnar serieövervakaren (115200 baud) efter uppladdning ser du ungefär detta:
+          När du öppnar seriemonitor (115200 baud) efter uppladdning ser du ungefär detta:
         </p>
+        <div class="text-xs text-gray-500 mb-1 font-semibold">Seriemonitor (115200 baud)</div>
         <pre class="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm font-mono">Steg 2 — adressbuss och reset
 R $FFFC
 R $FFFD
@@ -339,7 +340,7 @@ R $8006
             LÅG. Kontrollera att RESB går HÖG efter reset-sekvensen, och att BE har +5V.</li>
           <li><strong>Ser du <code>FFFC</code> men inte <code>FFFD</code>?</strong> Någon adresslinje är felkopplad.
             Dubbelkolla A0–A15 en och en.</li>
-          <li><strong>Skräptecken i serieövervakaren?</strong> Baud rate måste vara 115200. Kontrollera
+          <li><strong>Skräptecken i seriemonitor?</strong> Baud rate måste vara 115200. Kontrollera
             <code>platformio.ini</code> om du använder PlatformIO.</li>
         </ul>
       </div>

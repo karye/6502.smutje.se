@@ -763,14 +763,14 @@ void loop() {
     <h2>Exempel på körning</h2>
     <div class="text-gray-700 space-y-3">
       <p>
-        När du laddat upp koden och öppnar serieövervakaren ser du programmet genomlöpa alla faser.
+        När du laddat upp koden och öppnar seriemonitor ser du programmet genomlöpa alla faser.
         Samtidigt vaknar LCD-displayen till liv — styrd helt av 6502-processorn via VIA-kretsen:
       </p>
 
       <!-- Sida vid sida: seriemonitor + LCD -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <div class="text-xs text-gray-500 mb-1 font-semibold">Serieövervakaren (115200 baud)</div>
+          <div class="text-xs text-gray-500 mb-1 font-semibold">Seriemonitor (115200 baud)</div>
           <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">══════ RESET-SEKVENS — CPU lämnar reset ══════
 R $FFFC  ← RESET-VEKTOR LÅG
 R $FFFD  ← RESET-VEKTOR HÖG
@@ -804,7 +804,7 @@ W $4000  ← VIA: 3D  (=)
             </div>
           </div>
           <p class="text-xs text-gray-500 mt-2">CPU:n har skrivit två rader text till LCD:n
-            via VIA:ns portar. Varje tecken skickades som en <code>W $4000</code> i serieövervakaren.</p>
+            via VIA:ns portar. Varje tecken skickades som en <code>W $4000</code> i seriemonitor.</p>
         </div>
       </div>
 

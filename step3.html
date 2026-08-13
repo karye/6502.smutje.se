@@ -39,7 +39,7 @@
       <p>Hittills har CPU:n kunnat tala om <em>var</em> den vill läsa (adressbussen). Nu kopplar vi in <strong>databussen</strong> — 8 ledningar som bär den faktiska informationen mellan CPU:n och minnet. Utan databuss kan CPU:n inte hämta instruktioner och är helt blind.</p>
       <p>Vi kopplar också in <strong>R/W</strong>-signalen (pin 34). Den talar om ifall CPU:n vill läsa (HÖG) eller skriva (LÅG). Arduinon använder denna för att veta om den ska skicka data till CPU:n eller ta emot.</p>
       <p>Arduinon blir nu en <strong>minnesemulator</strong>: en array <code>ram[1024]</code> lagrar data, och i varje klockcykel kollar Arduinon adressen och R/W — om CPU:n läser, lägger den ut rätt byte på databussen via <code>PORTA</code>. Om CPU:n skriver, läser Arduinon av vad som skrevs.</p>
-      <p>Vi laddar ett minimalt 6502-program på <code>$8000</code>: en enda <strong>NOP</strong>-instruktion (<code>$EA</code>) som gör ingenting och går vidare till nästa adress — vilket också är NOP. Resultat: CPU:n loopar för evigt, och vi kan följa varje steg i serieövervakaren.</p>
+      <p>Vi laddar ett minimalt 6502-program på <code>$8000</code>: en enda <strong>NOP</strong>-instruktion (<code>$EA</code>) som gör ingenting och går vidare till nästa adress — vilket också är NOP. Resultat: CPU:n loopar för evigt, och vi kan följa varje steg i seriemonitor.</p>
     </div>
   </section>
 
@@ -147,7 +147,7 @@
           startar på <code>$8000</code>, läser <code>$EA</code>, gör ingenting, går till <code>$8001</code>,
           läser <code>$EA</code> (minnet returnerar NOP överallt), och loopar för evigt.</li>
         <li><strong><code>loop()</code></strong> — anropar bara <code>pulse()</code>. En klockcykel per varv,
-          med fullständig loggning i serieövervakaren.</li>
+          med fullständig loggning i seriemonitor.</li>
       </ol>
 
       <h3>Vad som är nytt jämfört med steg 2</h3>
@@ -164,7 +164,7 @@
 // ==============================================================
 // Arduino blir en fullständig minnesemulator. CPU:n får ett
 // NOP-program på $8000 och loopar för evigt — varje minnes-
-// access loggas i serieövervakaren.
+// access loggas i seriemonitor.
 
 #include &lt;Arduino.h&gt;
 
@@ -264,7 +264,7 @@ void setup() {
   for (int i = 0; i &lt; 5; i++) pulse();
   digitalWrite(RESB, HIGH);
 
-  // Kör 10 cykler så vi ser reset-vektorn i serieövervakaren
+  // Kör 10 cykler så vi ser reset-vektorn i seriemonitor
   for (int i = 0; i &lt; 10; i++) pulse();
 }
 
@@ -280,8 +280,9 @@ void loop() {
     <h2>Exempel på körning</h2>
     <div class="text-gray-700 space-y-3">
       <p>
-        När du öppnar serieövervakaren (115200 baud) ser du CPU:n läsa reset-vektorn och sedan loopa på NOP:
+        När du öppnar seriemonitor (115200 baud) ser du CPU:n läsa reset-vektorn och sedan loopa på NOP:
       </p>
+      <div class="text-xs text-gray-500 mb-1 font-semibold">Seriemonitor (115200 baud)</div>
       <pre class="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm font-mono">Steg 3 — databuss och minnesemulering
 R $FFFC
 R $FFFD
