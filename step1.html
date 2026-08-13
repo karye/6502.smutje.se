@@ -45,14 +45,12 @@
     <h1>Strömmatning och klocka</h1>
 
     <!-- Mål -->
-    <section class="mb-8">
+    <section class="mb-8 text-gray-700 space-y-3">
       <h2>Mål</h2>
-      <div class="text-gray-700 space-y-3">
-        <p>Alla datorer behöver en puls — en hjärtslag som får processorn att ta ett steg i taget. I det här första steget kopplar vi in <strong>ström och klocka</strong> till W65C02S-processorn. Processorn kommer inte att <em>göra</em> något ännu (vi har varken minne eller program), men vi kan verifiera att den lever.</p>
-        <p>W65C02S är en <strong>statisk CMOS-krets</strong>. Det betyder att klockan kan vara hur långsam som helst — till och med stoppas helt — utan att processorn tappar sitt interna tillstånd. Vi utnyttjar detta genom att generera en långsam klockpuls från Arduino och visualisera den med en lysdiod.</p>
-        <p>En lysdiod och ett motstånd kopplas till klocklinjen. När dioden blinkar vet vi att klockpulsen når fram. Med en multimeter mäter vi också att CPU:n får 5V mellan VDD och VSS.</p>
-        <p>Det här steget är grunden för allt som kommer — utan ström och klocka gör processorn ingenting.</p>
-      </div>
+      <p>Alla datorer behöver en puls — en hjärtslag som får processorn att ta ett steg i taget. I det här första steget kopplar vi in <strong>ström och klocka</strong> till W65C02S-processorn. Processorn kommer inte att <em>göra</em> något ännu (vi har varken minne eller program), men vi kan verifiera att den lever.</p>
+      <p>W65C02S är en <strong>statisk CMOS-krets</strong>. Det betyder att klockan kan vara hur långsam som helst — till och med stoppas helt — utan att processorn tappar sitt interna tillstånd. Vi utnyttjar detta genom att generera en långsam klockpuls från Arduino och visualisera den med en lysdiod.</p>
+      <p>En lysdiod och ett motstånd kopplas till klocklinjen. När dioden blinkar vet vi att klockpulsen når fram. Med en multimeter mäter vi också att CPU:n får 5V mellan VDD och VSS.</p>
+      <p>Det här steget är grunden för allt som kommer — utan ström och klocka gör processorn ingenting.</p>
     </section>
 
     <!-- Komponenter -->
@@ -574,10 +572,9 @@
     </section>
 
     <!-- Kod -->
-    <section class="mb-8">
+    <section class="mb-8 text-gray-700 space-y-3">
       <h2>Arduino-kod</h2>
-      <div class="text-gray-700 space-y-3">
-        <p>Nu ska vi skriva koden som väcker processorn till liv. Det här är första gången vi laddar upp något till Arduino — och det är ett perfekt tillfälle att förstå hur ett Arduino-program är uppbyggt.</p>
+      <p>Nu ska vi skriva koden som väcker processorn till liv. Det här är första gången vi laddar upp något till Arduino — och det är ett perfekt tillfälle att förstå hur ett Arduino-program är uppbyggt.</p>
 
         <h3>Så fungerar ett Arduino-program</h3>
         <p>Varje Arduino-program består av två funktioner som plattformen anropar automatiskt:</p>
@@ -611,7 +608,6 @@
 
         <h3>Vad du ser när koden kör</h3>
         <p>När du laddat upp koden och öppnar seriemonitor (115200 baud) ser du texten "Steg 1 — Klocka och ström". Lysdioden på klocklinjen blinkar en gång per sekund — den är tänd när PHI2 är hög (CPU:n arbetar) och släckt när PHI2 är låg. Du har just gett processorn dess första hjärtslag.</p>
-      </div>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 1 — strömmatning och klocka
@@ -660,10 +656,9 @@ void loop() {
     </section>
 
     <!-- Exempel på körning -->
-    <section class="mb-8">
+    <section class="mb-8 text-gray-700 space-y-3">
       <h2>Exempel på körning</h2>
-      <div class="text-gray-700 space-y-3">
-        <p>När du öppnar seriemonitor i Arduino IDE eller PlatformIO (115200 baud) ser du detta:</p>
+      <p>När du öppnar seriemonitor i Arduino IDE eller PlatformIO (115200 baud) ser du detta:</p>
         <div>
 <p class="text-xs text-gray-500 mb-1 font-semibold">Seriemonitor (115200 baud)</p>
         <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">Steg 1 — Klocka och ström
@@ -671,14 +666,12 @@ Lysdioden på PHI2 ska blinka 1 Hz</pre>
         </div>
         <p>Det är allt! Programmet har inget mer att rapportera — det bara loopar. Men titta på kopplingsdäcket: lysdioden blinkar i precis den takt som <code>pulse()</code> bestämmer. Varje gång dioden tänds är PHI2 hög och processorn tar ett steg framåt. Varje gång den släcks förbereder processorn nästa steg.</p>
         <p>Prova att ändra <code>CLOCK_HZ</code> från <code>1</code> till <code>10</code> och ladda upp igen. Dioden blinkar nu tio gånger per sekund — för snabbt för att urskilja enskilda pulser, men du ser att den lyser svagare eftersom den är släckt halva tiden. Det här är samma princip som senare steg använder när klockan körs i 500 Hz — då syns inte blinkandet alls, men processorn jobbar för fullt.</p>
-      </div>
     </section>
 
     <!-- Testning och felsökning -->
-    <section class="mb-8">
+    <section class="mb-8 text-gray-700 space-y-3">
       <h2>Om det inte fungerar</h2>
-      <div class="text-gray-700 space-y-3">
-        <p>Här är några saker att kontrollera:</p>
+      <p>Här är några saker att kontrollera:</p>
         <ul class="list-disc pl-5 space-y-1">
           <li><strong>Dioden blinkar inte?</strong> Kontrollera att du har rätt pinne (D2), att dioden är rättvänd
             (långa benet till D2 via motstånd, korta till GND), och att motståndet är 220Ω.</li>
@@ -689,7 +682,6 @@ Lysdioden på PHI2 ska blinka 1 Hz</pre>
           <li><strong>Glöm inte avkopplingskondensatorn!</strong> 100nF keramisk mellan VDD och VSS, så nära CPU:n som
             möjligt. Utan den kan CPU:n bete sig oberäkneligt.</li>
         </ul>
-      </div>
     </section>
 
     <div class="flex gap-4 mt-8">
