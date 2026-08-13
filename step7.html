@@ -56,7 +56,7 @@
       <ol class="list-decimal pl-5 space-y-1">
         <li>Sätter <strong>VIA</strong>:ns portar som utgångar</li>
         <li>Initierar <strong>LCD</strong>:n i 8-bitarsläge (8-bitars databuss, 2 rader, 5×8 font, display on, entry mode)</li>
-        <li>Skriver två rader text genom att lägga ASCII-värden på port B och pulsa enable-signalen på port A — sedan <strong>clear display</strong> och loopa om från början</li>
+        <li>Skriver två rader text genom att lägga ASCII-värden på port B och pulsa enable-signalen på port A — sedan <em>clear display</em> och loopa om från början</li>
       </ol>
       <p>När allt fungerar har vi en dator där <strong>CPU:n själv styr I/O</strong> via minnesmappade adresser. <strong>Arduino</strong> är nu bara minnesemulator och klocka — all logik för <strong>LCD</strong>:n körs på 6502.</p>
     
@@ -420,10 +420,10 @@
       </table>
     </div>
     <div class="text-gray-700 space-y-3">
-      <p>Det här är projektets mest komplexa kod — och den största milstolpen. Vi introducerar <strong>två nya kretsar</strong> (<strong>W65C22</strong> <strong>VIA</strong> och <strong>74HC00</strong>) och låter <strong>CPU</strong>:n själv styra <strong>LCD</strong>-displayen via minnesmappad I/O. <strong>Arduino</strong> reduceras till det den gör bäst: emulera <strong>ROM</strong> och generera klocka. Allt annat sköter <strong>6502</strong>-processorn.</p>
+      <p>Det här är projektets mest komplexa kod — och den största milstolpen. Vi introducerar <em>två nya kretsar</em> (<strong>W65C22</strong> <strong>VIA</strong> och <strong>74HC00</strong>) och låter <strong>CPU</strong>:n själv styra <strong>LCD</strong>-displayen via minnesmappad I/O. <strong>Arduino</strong> reduceras till det den gör bäst: emulera <strong>ROM</strong> och generera klocka. Allt annat sköter <strong>6502</strong>-processorn.</p>
 
       <h3><code>is_via()</code> — Arduinons sätt att kliva ur vägen</h3>
-      <p>Den viktigaste nya funktionen är <code>is_via()</code>. Den returnerar <code>true</code> för adresser mellan <code>$4000</code> och <code>$400F</code> — de 16 bytes som <strong>W65C22</strong> <strong>VIA</strong>-kretsen ockuperar. När <strong>CPU</strong>:n läser eller skriver till dessa adresser måste <strong>Arduino</strong> <strong>tri-stata</strong> databussen (<code>DDRA = 0x00</code>) så att den fysiska <strong>VIA</strong>-kretsen kan svara. Om <strong>Arduino</strong> skulle driva bussen samtidigt som <strong>VIA</strong>:n blir det en busskollision — dyrbar rök.</p>
+      <p>Den viktigaste nya funktionen är <code>is_via()</code>. Den returnerar <code>true</code> för adresser mellan <code>$4000</code> och <code>$400F</code> — de 16 bytes som <strong>W65C22</strong> <strong>VIA</strong>-kretsen ockuperar. När <strong>CPU</strong>:n läser eller skriver till dessa adresser måste <strong>Arduino</strong> <em>tri-stata</em> databussen (<code>DDRA = 0x00</code>) så att den fysiska <strong>VIA</strong>-kretsen kan svara. Om <strong>Arduino</strong> skulle driva bussen samtidigt som <strong>VIA</strong>:n blir det en busskollision — dyrbar rök.</p>
       <p>Samma logik gäller i <code>write_mem()</code>: om adressen är en <strong>VIA</strong>-adress gör <strong>Arduino</strong> ingenting. VIAn tar emot skrivningen direkt från <strong>CPU</strong>:n via den delade databussen. <strong>Arduino</strong> är en passiv åskådare för just dessa 16 adresser.</p>
 
       <h3><code>read_mem()</code> och <code>write_mem()</code> — nu med full adressrymd</h3>

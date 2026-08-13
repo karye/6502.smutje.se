@@ -52,7 +52,7 @@
     
       <p>Datorn är nu komplett — <strong>CPU</strong>, minne, <strong>LCD</strong>, knappar. Men den kör bara <code>NOP</code>:ar. Dags att skriva vårt <strong>första egna 6502-program!</strong></p>
       <p>Vi skriver en enkel räknare: öka X-registret från 0 till 255, spara värdet på adress <code>$0200</code>, och loopa. Programmet är bara 9 bytes stort — men det innehåller allt ett riktigt program behöver: initiering, beräkning, minnesskrivning och loop.</p>
-      <p><strong>6502</strong>-program skrivs i <strong>maskinkod</strong> — varje instruktion är 1–3 bytes. <code>LDX #$00</code> är två bytes (<code>$A2 $00</code>), <code>INX</code> är en byte (<code>$E8</code>), <code>STX $0200</code> är tre bytes (<code>$8E $00 $02</code>). Vi skriver in dessa bytes direkt i Arduinons minnesarray, och <strong>CPU</strong>:n exekverar dem som ett riktigt program.</p>
+      <p><strong>6502</strong>-program skrivs i <em>maskinkod</em> — varje instruktion är 1–3 bytes. <code>LDX #$00</code> är två bytes (<code>$A2 $00</code>), <code>INX</code> är en byte (<code>$E8</code>), <code>STX $0200</code> är tre bytes (<code>$8E $00 $02</code>). Vi skriver in dessa bytes direkt i Arduinons minnesarray, och <strong>CPU</strong>:n exekverar dem som ett riktigt program.</p>
       <p>Ingen ny hårdvara — samma koppling som steg 5. Allt nytt finns i mjukvaran.</p>
     
   </section>
@@ -205,14 +205,14 @@
       <p>Datorn fungerar — men den har hittills bara kört <code>NOP</code>:ar. Nu skriver vi vårt <strong>första egna 6502-program</strong>. Det är bara 9 bytes stort, men det innehåller allt ett riktigt program behöver: initiering, beräkning, minnesskrivning och en loop. <strong>CPU</strong>:n kommer att räkna från 0 till 255 i en oändlig loop — och du kommer att kunna följa varje steg.</p>
 
       <h3><strong>6502</strong>-maskinkod — så här ser ett program ut</h3>
-      <p>En <strong>6502</strong>-instruktion är 1–3 bytes lång. Första byten är alltid <strong>opcode</strong> — en siffra som talar om för <strong>CPU</strong>:n vad den ska göra. Resten är <strong>operander</strong> — data eller adresser som instruktionen behöver. Vårt program har fyra instruktioner:</p>
+      <p>En <strong>6502</strong>-instruktion är 1–3 bytes lång. Första byten är alltid <em>opcode</em> — en siffra som talar om för <strong>CPU</strong>:n vad den ska göra. Resten är <em>operander</em> — data eller adresser som instruktionen behöver. Vårt program har fyra instruktioner:</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Instruktion</th><th class="p-2 text-left">Bytes</th><th class="p-2 text-left">Vad CPU:n gör</th></tr></thead>
           <tbody class="divide-y">
             <tr><td class="p-2 font-mono">LDX #$00</td><td class="p-2 font-mono">A2 00</td><td class="p-2">Ladda X-registret med 0. X är vår räknare. <code>#</code> betyder "omedelbart värde" — använd siffran 0, inte en minnesadress. Den här instruktionen körs bara en gång.</td></tr>
             <tr><td class="p-2 font-mono">INX</td><td class="p-2 font-mono">E8</td><td class="p-2">Öka X med 1. En enda byte, ingen operand. Det här är loopens startpunkt — hit hoppar vi tillbaka.</td></tr>
-            <tr><td class="p-2 font-mono">STX $0200</td><td class="p-2 font-mono">8E 00 02</td><td class="p-2">Spara X-registrets värde till minnesadress $0200. Notera: låg byte ($00) kommer före hög byte ($02). 6502 är <strong>little-endian</strong>.</td></tr>
+            <tr><td class="p-2 font-mono">STX $0200</td><td class="p-2 font-mono">8E 00 02</td><td class="p-2">Spara X-registrets värde till minnesadress $0200. Notera: låg byte ($00) kommer före hög byte ($02). 6502 är <em>little-endian</em>.</td></tr>
             <tr><td class="p-2 font-mono">JMP $8002</td><td class="p-2 font-mono">4C 02 80</td><td class="p-2">Hoppa tillbaka till INX. Återigen: låg byte först ($02), hög byte sen ($80). Utan denna instruktion skulle CPU:n bara fortsätta rakt fram genom minnet.</td></tr>
           </tbody>
         </table>

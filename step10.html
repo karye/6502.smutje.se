@@ -51,7 +51,7 @@
     <h2>Mål</h2>
     
       <p>Hittills har <strong>Arduino</strong> levererat <strong>6502</strong>-programmet — varje gång <strong>CPU</strong>:n läser från <code>$8000</code> och uppåt är det Arduinons minnesarray som svarar. Det fungerar utmärkt, men en riktig dator har sitt program i <strong>ROM</strong> — icke-flyktigt minne som överlever strömavbrott. Nu tar vi det sista stora klivet: vi bränner in programmet på en <strong>AT28C256 EEPROM</strong> och låter den ersätta <strong>Arduino</strong> som <strong>ROM</strong>.</p>
-      <p>En <strong>andra Arduino Mega</strong> används som <strong>EEPROM</strong>-programmerare. Via USB tar den emot en <code>.bin</code>-fil från datorn, bränner den på <strong>AT28C256</strong>, och verifierar att varje byte sitter rätt. Sedan flyttar du <strong>EEPROM</strong>-chippet till datorns kopplingsdäck — och datorn startar direkt från äkta <strong>ROM</strong>, precis som en Commodore 64 eller Apple II.</p>
+      <p>En <em>andra Arduino Mega</em> används som <strong>EEPROM</strong>-programmerare. Via USB tar den emot en <code>.bin</code>-fil från datorn, bränner den på <strong>AT28C256</strong>, och verifierar att varje byte sitter rätt. Sedan flyttar du <strong>EEPROM</strong>-chippet till datorns kopplingsdäck — och datorn startar direkt från äkta <strong>ROM</strong>, precis som en Commodore 64 eller Apple II.</p>
       <p>Arduinon på kopplingsdäcket finns kvar som klocka och diagnostikverktyg — men datorn överlever utan den. Slå på strömmen, och <strong>CPU</strong>:n läser ditt program direkt ur <strong>EEPROM</strong>:et. Det här är en fristående dator.</p>
     
   </section>
@@ -464,7 +464,7 @@ if __name__ == '__main__':
     <h2>Arduino-kod — datorn</h2>
     
       <p>Koden på datorns <strong>Arduino</strong> förenklas dramatiskt. <code>program[2048]</code> och de hundratals <code>write_mem()</code>-anropen försvinner. Istället får vi en ny funktion <code>is_eeprom()</code> som returnerar <code>true</code> för adresser mellan <code>$8000</code> och <code>$FFFF</code>. När <strong>CPU</strong>:n läser från dessa adresser tri-statar <strong>Arduino</strong> bussen — <strong>EEPROM</strong>:et svarar själv.</p>
-      <p>Arduinon är nu reducerad till <strong>klockgenerator, reset-kontroll och seriell diagnostik</strong>. Alla minnesarrayer utom <code>vectors[6]</code> är borta. Vektorn på <code>$FFFA–$FFFF</code> ligger sist i <strong>EEPROM</strong>-bilden — <code>.segment "VECTORS"</code> i assembler-koden placerar dem där.</p>
+      <p>Arduinon är nu reducerad till <em>klockgenerator, reset-kontroll och seriell diagnostik</em>. Alla minnesarrayer utom <code>vectors[6]</code> är borta. Vektorn på <code>$FFFA–$FFFF</code> ligger sist i <strong>EEPROM</strong>-bilden — <code>.segment "VECTORS"</code> i assembler-koden placerar dem där.</p>
       <p>Koden nedan är baserad på steg 9 men med <code>is_eeprom()</code> istället för <code>program[]</code>. <code>read_mem()</code> returnerar 0 för <strong>EEPROM</strong>-adresser — <strong>Arduino</strong> rör dem inte.</p>
     
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">

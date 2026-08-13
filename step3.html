@@ -54,7 +54,7 @@
             databuss kan <strong>CPU</strong>:n inte hämta instruktioner och är helt blind.</p>
           <p>Vi kopplar också in <strong><span class="signal">R/W</span></strong>-signalen (pin 34). Den talar om ifall <strong>CPU</strong>:n vill läsa (HÖG) eller
             skriva (LÅG). Arduinon använder denna för att veta om den ska skicka data till <strong>CPU</strong>:n eller ta emot.</p>
-          <p>Arduinon blir nu en <strong>minnesemulator</strong>: en array <code>ram[1024]</code> lagrar data, och i
+          <p>Arduinon blir nu en <em>minnesemulator</em>: en array <code>ram[1024]</code> lagrar data, och i
             varje klockcykel kollar Arduinon adressen och <strong><span class="signal">R/W</span></strong> — om <strong>CPU</strong>:n läser, lägger den ut rätt byte
             på databussen via <span class="signal">PORTA</span>. Om <strong>CPU</strong>:n skriver, läser Arduinon av vad som skrevs.</p>
           <p>Vi laddar ett minimalt <strong>6502</strong>-program på <code>$8000</code>: en enda <strong><code>NOP</code></strong>-instruktion
@@ -255,10 +255,10 @@
         <section class="mb-8">
           <h2>Arduino-kod</h2>
 
-          <p>Det här är det största kodsteget hittills och det viktigaste. <strong>Arduino</strong> går från att vara en passiv observatör till att bli en <strong>fullvärdig minnesemulator</strong>. <strong>CPU</strong>:n kommer att ställa frågor via adressbussen, och <strong>Arduino</strong> måste svara med rätt byte på databussen — allt inom loppet av en enda klockcykel. När det fungerar har vi en dator som faktiskt kör ett program.</p>
+          <p>Det här är det största kodsteget hittills och det viktigaste. <strong>Arduino</strong> går från att vara en passiv observatör till att bli en <em>fullvärdig minnesemulator</em>. <strong>CPU</strong>:n kommer att ställa frågor via adressbussen, och <strong>Arduino</strong> måste svara med rätt byte på databussen — allt inom loppet av en enda klockcykel. När det fungerar har vi en dator som faktiskt kör ett program.</p>
 
           <h3>Databussen — 8 ledningar som bär information</h3>
-          <p>Adressbussen (steg 2) talar om <em>var</em> <strong>CPU</strong>:n vill läsa. Databussen bär <em>vad</em> som ska läsas eller skrivas. Det är 8 ledningar — <span class="signal">D0</span> till <span class="signal">D7</span> — och de är <strong>dubbelriktade</strong>. Ibland driver <strong>CPU</strong>:n dem (vid skrivning), ibland <strong>Arduino</strong> (vid läsning). Det är därför de 100Ω seriemotstånden är livsviktiga: om båda kretsarna råkar driva samma ledning samtidigt begränsar motstånden strömmen och förhindrar att något går sönder.</p>
+          <p>Adressbussen (steg 2) talar om <em>var</em> <strong>CPU</strong>:n vill läsa. Databussen bär <em>vad</em> som ska läsas eller skrivas. Det är 8 ledningar — <span class="signal">D0</span> till <span class="signal">D7</span> — och de är <em>dubbelriktade</em>. Ibland driver <strong>CPU</strong>:n dem (vid skrivning), ibland <strong>Arduino</strong> (vid läsning). Det är därför de 100Ω seriemotstånden är livsviktiga: om båda kretsarna råkar driva samma ledning samtidigt begränsar motstånden strömmen och förhindrar att något går sönder.</p>
 
           <h3><span class="signal">R/W</span>-signalen — vem som pratar</h3>
           <p><strong>CPU</strong>:ns pin 34 (<strong><span class="signal">R/W</span></strong>) är trafikljuset på bussen. När <strong><span class="signal">R/W</span></strong> är <strong>HÖG</strong> vill <strong>CPU</strong>:n läsa — <strong>Arduino</strong> ska då sätta <code>DDRA = 0xFF</code> (alla pinnar som utgångar) och lägga ut rätt byte på <span class="signal">PORTA</span>. När <strong><span class="signal">R/W</span></strong> är <strong>LÅG</strong> vill <strong>CPU</strong>:n skriva — <strong>Arduino</strong> måste omedelbart sätta <code>DDRA = 0x00</code> (tri-state, hög impedans) så att <strong>CPU</strong>:n kan driva ledningarna utan motstånd. Det här skiftet sker i <em>varje klockcykel</em>, mitt i <code>pulse()</code>.</p>

@@ -50,7 +50,7 @@
     <section class="mb-8 text-gray-700 space-y-3">
       <h2>Mål</h2>
       
-        <p>Hittills har vi skrivit <strong>6502</strong>-program som hårdkodade hex-bytes direkt i Arduinons <code>setup()</code>. Det fungerar — men det är inte hållbart i längden. Nu tar vi steget till <strong>riktig assembler</strong> med <strong>ca65</strong>, en professionell <strong>6502</strong>-assembler från cc65-verktygslådan.</p>
+        <p>Hittills har vi skrivit <strong>6502</strong>-program som hårdkodade hex-bytes direkt i Arduinons <code>setup()</code>. Det fungerar — men det är inte hållbart i längden. Nu tar vi steget till <em>riktig assembler</em> med <strong>ca65</strong>, en professionell <strong>6502</strong>-assembler från cc65-verktygslådan.</p>
         <p><strong>Ingen ny hårdvara.</strong> Samma kopplingar som steg 7. Allt nytt finns i byggkedjan.</p>
         <p>Arbetsflödet blir:</p>
         <ol class="list-decimal pl-5 space-y-1">
@@ -59,7 +59,7 @@
           <li>Resultatet (<code>program_hello.bin</code>) konverteras till en C-header (<code>program.h</code>)</li>
           <li><code>setup()</code> läser <code>PROGRAM[]</code> och laddar in i minnesemulatorn</li>
         </ol>
-        <p>Du redigerar en <strong>läsbar assembler-fil</strong> — inte en lång rad <code>write_mem()</code>-anrop.</p>
+        <p>Du redigerar en <em>läsbar assembler-fil</em> — inte en lång rad <code>write_mem()</code>-anrop.</p>
       
     </section>
 
@@ -229,7 +229,7 @@
 <!-- Byggskript -->
     <section class="mb-8">
       <h2>PlatformIO-byggskript</h2>
-      <p><code>scripts/build_asm.py</code> är en <strong>pre-build hook</strong> som PlatformIO kör före C++-kompileringen. Den anropar ca65, ld65 och bin2h.py i sekvens, konfigurerad i <code>platformio.ini</code>:</p>
+      <p><code>scripts/build_asm.py</code> är en <em>pre-build hook</em> som PlatformIO kör före C++-kompileringen. Den anropar ca65, ld65 och bin2h.py i sekvens, konfigurerad i <code>platformio.ini</code>:</p>
         <pre class="bg-gray-900 text-gray-100 p-3 rounded text-sm font-mono">extra_scripts = pre:scripts/build_asm.py</pre>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-python"># Byggscript för PlatformIO — anropas före C++-kompilering
 # Kör ca65 + ld65 för att assemblera program_hello.asm → program_hello.h
@@ -497,7 +497,7 @@ line2: .byte "Hello from W65C02!", 0
     <section class="mb-8 text-gray-700 space-y-3">
       <h2>Arduino-kod</h2>
       
-        <p>Steg 7:s största svaghet var att <strong>6502</strong>-programmet byggdes som hundratals <code>write_mem()</code>-anrop i C++-koden. Det fungerar — men det är plågsamt att redigera, svårt att läsa, och omöjligt att felsöka. Steg 8 löser detta med en <strong>professionell assembler-kedja</strong>: du skriver läsbar <strong>6502</strong>-kod i en <code>.asm</code>-fil, och PlatformIO bygger om den automatiskt vid varje uppladdning.</p>
+        <p>Steg 7:s största svaghet var att <strong>6502</strong>-programmet byggdes som hundratals <code>write_mem()</code>-anrop i C++-koden. Det fungerar — men det är plågsamt att redigera, svårt att läsa, och omöjligt att felsöka. Steg 8 löser detta med en <em>professionell assembler-kedja</em>: du skriver läsbar <strong>6502</strong>-kod i en <code>.asm</code>-fil, och PlatformIO bygger om den automatiskt vid varje uppladdning.</p>
 
         <h3>Från assembler till header — byggkedjan i detalj</h3>
         <p>När du kör <code>pio run</code> händer tre saker innan C++-koden kompileras:</p>
