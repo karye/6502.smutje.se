@@ -51,11 +51,11 @@
     <h2>Mål</h2>
     
       <p>Datorn fungerar — men all feedback går via seriemonitorn på en laptopen. Nu kopplar vi in en <strong>LCD-display (16×2 tecken)</strong> som visar vad CPU:n gör direkt på kopplingsdäcket. Ingen datorskärm behövs längre.</p>
-      <p>LCD:n kopplas i <strong>4-bitars parallellt läge</strong> till Arduino. Det innebär att vi skickar data 4 bitar i taget via pinnar <span class="pin">D7–D10</span>. Arduino-biblioteket <code>LiquidCrystal</code> sköter all kommunikation — vi behöver bara tala om vilka pinnar som används.</p>
-      <p><strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. Arduino <span class="pin">D10</span> går till LCD <span class="pin">DB4</span>, <span class="pin">D9</span> till <span class="pin">DB5</span>, <span class="pin">D8</span> till <span class="pin">DB6</span>, <span class="pin">D7</span> till <span class="pin">DB7</span>. Koden måste spegla detta:</p>
+      <p>LCD:n kopplas i <strong>4-bitars parallellt läge</strong> till Arduino. Det innebär att vi skickar data 4 bitar i taget via pinnar <span class="signal">D7–D10</span>. Arduino-biblioteket <code>LiquidCrystal</code> sköter all kommunikation — vi behöver bara tala om vilka pinnar som används.</p>
+      <p><strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. Arduino <span class="signal">D10</span> går till LCD <span class="signal">DB4</span>, <span class="signal">D9</span> till <span class="signal">DB5</span>, <span class="signal">D8</span> till <span class="signal">DB6</span>, <span class="signal">D7</span> till <span class="signal">DB7</span>. Koden måste spegla detta:</p>
       <pre class="bg-gray-100 p-3 rounded text-sm font-mono">LiquidCrystal lcd(5, 6, 10, 9, 8, 7);
 //                    RS  E  DB4 DB5 DB6 DB7</pre>
-      <p>LCD:ns <span class="pin">R/W</span>-pinne kopplas till <span class="pin">GND</span> — vi ska bara skriva till displayen, aldrig läsa.</p>
+      <p>LCD:ns <span class="signal">R/W</span>-pinne kopplas till <span class="signal">GND</span> — vi ska bara skriva till displayen, aldrig läsa.</p>
     
   </section>
 
@@ -76,7 +76,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2>Kopplingsschema</h2>
-    <p>Schemat visar LCD-displayen ansluten i 4-bitarsläge: <span class="pin">RS</span> till <span class="pin">D5</span>, E till <span class="pin">D6</span>, och datapinnarna <span class="pin">DB4–DB7</span> till <span class="pin">D10</span>, <span class="pin">D9</span>, <span class="pin">D8</span>, <span class="pin">D7</span> i omvänd ordning. Potentiometern sitter på <span class="pin">VO</span> för kontrast och 220Ω-motståndet matar bakgrundsbelysningen. Resten av datorn är oförändrad.</p>
+    <p>Schemat visar LCD-displayen ansluten i 4-bitarsläge: <span class="signal">RS</span> till <span class="signal">D5</span>, E till <span class="signal">D6</span>, och datapinnarna <span class="signal">DB4–DB7</span> till <span class="signal">D10</span>, <span class="signal">D9</span>, <span class="signal">D8</span>, <span class="signal">D7</span> i omvänd ordning. Potentiometern sitter på <span class="signal">VO</span> för kontrast och 220Ω-motståndet matar bakgrundsbelysningen. Resten av datorn är oförändrad.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-5.png" alt="Steg 5 — LCD-display" class="w-full">
     </div>
@@ -85,7 +85,7 @@
     <!-- LCD pinout -->
   <section class="mb-8">
     <h2>LCD 16×2 — pinout</h2>
-    <p>16-pin SIL (single in-line). Pin 1 är närmast kanten på de flesta moduler. Justera kontrasten med potentiometern på <span class="pin">VO</span> (pin 3).</p>
+    <p>16-pin SIL (single in-line). Pin 1 är närmast kanten på de flesta moduler. Justera kontrasten med potentiometern på <span class="signal">VO</span> (pin 3).</p>
     <div class="flex justify-center">
       <div class="p-2 bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-sm leading-relaxed">
         <div class="text-center text-sm text-gray-400 mb-2">LCD 16×2 — SIL-16</div>
@@ -119,47 +119,47 @@
         </div>
       </div>
     </div>
-    <p><span class="text-purple-300">■</span> Kontroll &nbsp; <span class="text-green-300">■</span> Data &nbsp; <span class="text-red-300">■</span> Ström &nbsp; <span class="text-yellow-300">■</span> Kontrast. I 4-bitarsläge används endast <span class="pin">DB4–DB7</span> (pin 11–14).</p>
+    <p><span class="text-purple-300">■</span> Kontroll &nbsp; <span class="text-green-300">■</span> Data &nbsp; <span class="text-red-300">■</span> Ström &nbsp; <span class="text-yellow-300">■</span> Kontrast. I 4-bitarsläge används endast <span class="signal">DB4–DB7</span> (pin 11–14).</p>
   </section>
 
   <!-- Kretstabell -->
   <section class="mb-8">
     <h2>Kopplingar</h2>
-    <p>Här är hela kopplingen inklusive LCD:ns 16 pinnar, markerade med egen radgrupp i tabellen. Datapinnarna <span class="pin">DB4–DB7</span> går i omvänd ordning (<span class="pin">D10</span>→<span class="pin">DB4</span>, <span class="pin">D9</span>→<span class="pin">DB5</span>…) — en klassisk fallgrop när du kopplar, så dubbelkolla varje ledning mot tabellen.</p>
+    <p>Här är hela kopplingen inklusive LCD:ns 16 pinnar, markerade med egen radgrupp i tabellen. Datapinnarna <span class="signal">DB4–DB7</span> går i omvänd ordning (<span class="signal">D10</span>→<span class="signal">DB4</span>, <span class="signal">D9</span>→<span class="signal">DB5</span>…) — en klassisk fallgrop när du kopplar, så dubbelkolla varje ledning mot tabellen.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
-          <tr><td class="p-2">8</td><td class="p-2"><span class="pin">VDD</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning — CPU:ns driftspänning</td></tr>
-          <tr><td class="p-2">21</td><td class="p-2"><span class="pin">VSS</span></td><td class="p-2">GND</td><td class="p-2">Systemjord — sluten krets</td></tr>
-          <tr><td class="p-2">37</td><td class="p-2"><span class="pin">PHI2</span></td><td class="p-2"><strong>Arduino D2</strong></td><td class="p-2">Klockingång — Arduino skickar fyrkantsvåg</td></tr>
-          <tr><td class="p-2">2</td><td class="p-2"><span class="pin">RDY</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Ready — HÖG = CPU får köra. Utan denna stannar CPU:n</td></tr>
-          <tr><td class="p-2">4</td><td class="p-2"><span class="pin">/IRQ</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Interrupt request — HÖG = inget avbrott</td></tr>
-          <tr><td class="p-2">6</td><td class="p-2"><span class="pin">/NMI</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Non-maskable interrupt — måste vara HÖG</td></tr>
-          <tr><td class="p-2">36</td><td class="p-2"><span class="pin">BE</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad!</td></tr>
-          <tr><td class="p-2">38</td><td class="p-2"><span class="pin">/SO</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Set Overflow — avaktiverad</td></tr>          <tr><td class="p-2">40</td><td class="p-2"><span class="pin">/RESET</span></td><td class="p-2"><strong>Arduino D4</strong></td><td class="p-2">Kontrollerad reset — Arduino håller CPU:n i reset tills vi är redo</td></tr>
-          <tr><td class="p-2">9–16</td><td class="p-2"><span class="pin">A0–A7</span></td><td class="p-2"><strong>Arduino A0–A7</strong></td><td class="p-2">Låga adressbyte — läses via PORTF</td></tr>
-          <tr><td class="p-2">17–20, 22–25</td><td class="p-2"><span class="pin">A8–A15</span></td><td class="p-2"><strong>Arduino A8–A15</strong></td><td class="p-2">Höga adressbyte — läses via PORTK</td></tr>          <tr><td class="p-2">34</td><td class="p-2"><span class="pin">R/W</span></td><td class="p-2"><strong>Arduino D3</strong></td><td class="p-2">HÖG = CPU läser, LÅG = CPU skriver. Arduino måste veta detta</td></tr>
-          <tr><td class="p-2">33</td><td class="p-2"><span class="pin">D0</span></td><td class="p-2"><strong>Arduino D22</strong> via 100Ω</td><td class="p-2">Databit 0 (LSB)</td></tr>
-          <tr><td class="p-2">32</td><td class="p-2"><span class="pin">D1</span></td><td class="p-2"><strong>Arduino D23</strong> via 100Ω</td><td class="p-2">Databit 1</td></tr>
-          <tr><td class="p-2">31</td><td class="p-2"><span class="pin">D2</span></td><td class="p-2"><strong>Arduino D24</strong> via 100Ω</td><td class="p-2">Databit 2</td></tr>
-          <tr><td class="p-2">30</td><td class="p-2"><span class="pin">D3</span></td><td class="p-2"><strong>Arduino D25</strong> via 100Ω</td><td class="p-2">Databit 3</td></tr>
-          <tr><td class="p-2">29</td><td class="p-2"><span class="pin">D4</span></td><td class="p-2"><strong>Arduino D26</strong> via 100Ω</td><td class="p-2">Databit 4</td></tr>
-          <tr><td class="p-2">28</td><td class="p-2"><span class="pin">D5</span></td><td class="p-2"><strong>Arduino D27</strong> via 100Ω</td><td class="p-2">Databit 5</td></tr>
-          <tr><td class="p-2">27</td><td class="p-2"><span class="pin">D6</span></td><td class="p-2"><strong>Arduino D28</strong> via 100Ω</td><td class="p-2">Databit 6</td></tr>
-          <tr><td class="p-2">26</td><td class="p-2"><span class="pin">D7</span></td><td class="p-2"><strong>Arduino D29</strong> via 100Ω</td><td class="p-2">Databit 7 (MSB)</td></tr>          <tr><td class="p-2">7</td><td class="p-2"><span class="pin">SYNC</span></td><td class="p-2"><strong>Arduino D13</strong></td><td class="p-2">HÖG = CPU:n hämtar första byten av ny instruktion</td></tr>          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">LCD 16×2 (parallell 4-bit)</td></tr>
-          <tr><td class="p-2"><strong>1</strong></td><td class="p-2"><span class="pin">VSS</span></td><td class="p-2">GND</td><td class="p-2">Jord</td></tr>
-          <tr><td class="p-2"><strong>2</strong></td><td class="p-2"><span class="pin">VDD</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
-          <tr><td class="p-2"><strong>3</strong></td><td class="p-2"><span class="pin">VO</span></td><td class="p-2">Potentiometer mittben</td><td class="p-2">Kontrast — sidoben till +5V och GND</td></tr>
-          <tr><td class="p-2"><strong>4</strong></td><td class="p-2"><span class="pin">RS</span></td><td class="p-2"><strong>Arduino D5</strong></td><td class="p-2">Register Select — 0 = kommando, 1 = data</td></tr>
-          <tr><td class="p-2"><strong>5</strong></td><td class="p-2"><span class="pin">R/W</span></td><td class="p-2">GND</td><td class="p-2">Alltid skrivläge — vi läser aldrig från LCD:n</td></tr>
-          <tr><td class="p-2"><strong>6</strong></td><td class="p-2"><span class="pin">E</span></td><td class="p-2"><strong>Arduino D6</strong></td><td class="p-2">Enable — Arduino pulserar för att skicka data</td></tr>
-          <tr><td class="p-2"><strong>11</strong></td><td class="p-2"><span class="pin">DB4</span></td><td class="p-2"><strong>Arduino D10</strong></td><td class="p-2">Data bit 4 — omvänd ordning!</td></tr>
-          <tr><td class="p-2"><strong>12</strong></td><td class="p-2"><span class="pin">DB5</span></td><td class="p-2"><strong>Arduino D9</strong></td><td class="p-2">Data bit 5</td></tr>
-          <tr><td class="p-2"><strong>13</strong></td><td class="p-2"><span class="pin">DB6</span></td><td class="p-2"><strong>Arduino D8</strong></td><td class="p-2">Data bit 6</td></tr>
-          <tr><td class="p-2"><strong>14</strong></td><td class="p-2"><span class="pin">DB7</span></td><td class="p-2"><strong>Arduino D7</strong></td><td class="p-2">Data bit 7</td></tr>
-          <tr><td class="p-2"><strong>15</strong></td><td class="p-2"><span class="pin">A</span></td><td class="p-2">+5V via 220Ω</td><td class="p-2">Bakgrundsbelysning +</td></tr>
-          <tr><td class="p-2"><strong>16</strong></td><td class="p-2"><span class="pin">K</span></td><td class="p-2">GND</td><td class="p-2">Bakgrundsbelysning −</td></tr>
+          <tr><td class="p-2">8</td><td class="p-2"><span class="signal">VDD</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning — CPU:ns driftspänning</td></tr>
+          <tr><td class="p-2">21</td><td class="p-2"><span class="signal">VSS</span></td><td class="p-2">GND</td><td class="p-2">Systemjord — sluten krets</td></tr>
+          <tr><td class="p-2">37</td><td class="p-2"><span class="signal">PHI2</span></td><td class="p-2"><strong>Arduino D2</strong></td><td class="p-2">Klockingång — Arduino skickar fyrkantsvåg</td></tr>
+          <tr><td class="p-2">2</td><td class="p-2"><span class="signal">RDY</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Ready — HÖG = CPU får köra. Utan denna stannar CPU:n</td></tr>
+          <tr><td class="p-2">4</td><td class="p-2"><span class="signal">/IRQ</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Interrupt request — HÖG = inget avbrott</td></tr>
+          <tr><td class="p-2">6</td><td class="p-2"><span class="signal">/NMI</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Non-maskable interrupt — måste vara HÖG</td></tr>
+          <tr><td class="p-2">36</td><td class="p-2"><span class="signal">BE</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad!</td></tr>
+          <tr><td class="p-2">38</td><td class="p-2"><span class="signal">/SO</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Set Overflow — avaktiverad</td></tr>          <tr><td class="p-2">40</td><td class="p-2"><span class="signal">/RESET</span></td><td class="p-2"><strong>Arduino D4</strong></td><td class="p-2">Kontrollerad reset — Arduino håller CPU:n i reset tills vi är redo</td></tr>
+          <tr><td class="p-2">9–16</td><td class="p-2"><span class="signal">A0–A7</span></td><td class="p-2"><strong>Arduino A0–A7</strong></td><td class="p-2">Låga adressbyte — läses via PORTF</td></tr>
+          <tr><td class="p-2">17–20, 22–25</td><td class="p-2"><span class="signal">A8–A15</span></td><td class="p-2"><strong>Arduino A8–A15</strong></td><td class="p-2">Höga adressbyte — läses via PORTK</td></tr>          <tr><td class="p-2">34</td><td class="p-2"><span class="signal">R/W</span></td><td class="p-2"><strong>Arduino D3</strong></td><td class="p-2">HÖG = CPU läser, LÅG = CPU skriver. Arduino måste veta detta</td></tr>
+          <tr><td class="p-2">33</td><td class="p-2"><span class="signal">D0</span></td><td class="p-2"><strong>Arduino D22</strong> via 100Ω</td><td class="p-2">Databit 0 (LSB)</td></tr>
+          <tr><td class="p-2">32</td><td class="p-2"><span class="signal">D1</span></td><td class="p-2"><strong>Arduino D23</strong> via 100Ω</td><td class="p-2">Databit 1</td></tr>
+          <tr><td class="p-2">31</td><td class="p-2"><span class="signal">D2</span></td><td class="p-2"><strong>Arduino D24</strong> via 100Ω</td><td class="p-2">Databit 2</td></tr>
+          <tr><td class="p-2">30</td><td class="p-2"><span class="signal">D3</span></td><td class="p-2"><strong>Arduino D25</strong> via 100Ω</td><td class="p-2">Databit 3</td></tr>
+          <tr><td class="p-2">29</td><td class="p-2"><span class="signal">D4</span></td><td class="p-2"><strong>Arduino D26</strong> via 100Ω</td><td class="p-2">Databit 4</td></tr>
+          <tr><td class="p-2">28</td><td class="p-2"><span class="signal">D5</span></td><td class="p-2"><strong>Arduino D27</strong> via 100Ω</td><td class="p-2">Databit 5</td></tr>
+          <tr><td class="p-2">27</td><td class="p-2"><span class="signal">D6</span></td><td class="p-2"><strong>Arduino D28</strong> via 100Ω</td><td class="p-2">Databit 6</td></tr>
+          <tr><td class="p-2">26</td><td class="p-2"><span class="signal">D7</span></td><td class="p-2"><strong>Arduino D29</strong> via 100Ω</td><td class="p-2">Databit 7 (MSB)</td></tr>          <tr><td class="p-2">7</td><td class="p-2"><span class="signal">SYNC</span></td><td class="p-2"><strong>Arduino D13</strong></td><td class="p-2">HÖG = CPU:n hämtar första byten av ny instruktion</td></tr>          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">LCD 16×2 (parallell 4-bit)</td></tr>
+          <tr><td class="p-2"><strong>1</strong></td><td class="p-2"><span class="signal">VSS</span></td><td class="p-2">GND</td><td class="p-2">Jord</td></tr>
+          <tr><td class="p-2"><strong>2</strong></td><td class="p-2"><span class="signal">VDD</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
+          <tr><td class="p-2"><strong>3</strong></td><td class="p-2"><span class="signal">VO</span></td><td class="p-2">Potentiometer mittben</td><td class="p-2">Kontrast — sidoben till +5V och GND</td></tr>
+          <tr><td class="p-2"><strong>4</strong></td><td class="p-2"><span class="signal">RS</span></td><td class="p-2"><strong>Arduino D5</strong></td><td class="p-2">Register Select — 0 = kommando, 1 = data</td></tr>
+          <tr><td class="p-2"><strong>5</strong></td><td class="p-2"><span class="signal">R/W</span></td><td class="p-2">GND</td><td class="p-2">Alltid skrivläge — vi läser aldrig från LCD:n</td></tr>
+          <tr><td class="p-2"><strong>6</strong></td><td class="p-2"><span class="signal">E</span></td><td class="p-2"><strong>Arduino D6</strong></td><td class="p-2">Enable — Arduino pulserar för att skicka data</td></tr>
+          <tr><td class="p-2"><strong>11</strong></td><td class="p-2"><span class="signal">DB4</span></td><td class="p-2"><strong>Arduino D10</strong></td><td class="p-2">Data bit 4 — omvänd ordning!</td></tr>
+          <tr><td class="p-2"><strong>12</strong></td><td class="p-2"><span class="signal">DB5</span></td><td class="p-2"><strong>Arduino D9</strong></td><td class="p-2">Data bit 5</td></tr>
+          <tr><td class="p-2"><strong>13</strong></td><td class="p-2"><span class="signal">DB6</span></td><td class="p-2"><strong>Arduino D8</strong></td><td class="p-2">Data bit 6</td></tr>
+          <tr><td class="p-2"><strong>14</strong></td><td class="p-2"><span class="signal">DB7</span></td><td class="p-2"><strong>Arduino D7</strong></td><td class="p-2">Data bit 7</td></tr>
+          <tr><td class="p-2"><strong>15</strong></td><td class="p-2"><span class="signal">A</span></td><td class="p-2">+5V via 220Ω</td><td class="p-2">Bakgrundsbelysning +</td></tr>
+          <tr><td class="p-2"><strong>16</strong></td><td class="p-2"><span class="signal">K</span></td><td class="p-2">GND</td><td class="p-2">Bakgrundsbelysning −</td></tr>
         </tbody>
       </table>
     </div>
@@ -174,8 +174,8 @@
       <p>Hittills har all feedback från datorn gått via seriemonitor på en laptop. Det fungerar, men det känns inte som en riktig dator. Nu kopplar vi in en <strong>LCD-display</strong> direkt på kopplingsdäcket — och vips är datorn fristående. Ingen PC krävs för att se vad CPU:n gör.</p>
 
       <h3>LCD i 4-bitarsläge — att prata med displayen</h3>
-      <p>LCD-displayer med HD44780-kontroller (standard för 16×2 och 20×4) kan köras i två lägen: 8-bitars (alla 8 datapinnar används) eller 4-bitars (endast <span class="pin">DB4–DB7</span>). Vi använder 4-bitarsläget för att spara pinnar på Arduino. Arduino-biblioteket <code>LiquidCrystal</code> hanterar all kommunikation — vi behöver bara tala om vilka pinnar som används, och som vi såg i Mål-avsnittet speglar konstruktorn den omvända pin-ordningen.</p>
-      <p>Om din display har rak ordning (<span class="pin">D7</span>→<span class="pin">DB4</span> osv.) måste du ändra ordningen i konstruktorn. LCD:ns <span class="pin">R/W</span>-pinne (pin 5) kopplas till <span class="pin">GND</span> — vi skriver bara till displayen, vi läser aldrig från den.</p>
+      <p>LCD-displayer med HD44780-kontroller (standard för 16×2 och 20×4) kan köras i två lägen: 8-bitars (alla 8 datapinnar används) eller 4-bitars (endast <span class="signal">DB4–DB7</span>). Vi använder 4-bitarsläget för att spara pinnar på Arduino. Arduino-biblioteket <code>LiquidCrystal</code> hanterar all kommunikation — vi behöver bara tala om vilka pinnar som används, och som vi såg i Mål-avsnittet speglar konstruktorn den omvända pin-ordningen.</p>
+      <p>Om din display har rak ordning (<span class="signal">D7</span>→<span class="signal">DB4</span> osv.) måste du ändra ordningen i konstruktorn. LCD:ns <span class="signal">R/W</span>-pinne (pin 5) kopplas till <span class="signal">GND</span> — vi skriver bara till displayen, vi läser aldrig från den.</p>
 
       <h3>LCD-uppdatering inuti <code>pulse()</code></h3>
       <p>Den stora kodändringen sitter i <code>pulse()</code>. Efter varje klockcykel uppdateras LCD:n:</p>
@@ -361,7 +361,7 @@ R $8001</pre>
         </div>
       </div>
 
-      <p>Samma information på båda ställena — adress (<code>$8001</code>) och data (<code>$EA</code>, <code>NOP</code>). Skillnaden är att LCD:n visar <em>just nu</em> medan seriemonitor bygger en historik. Med Knapp 2 (instruktionssteg) ser du flera rader i seriemonitor per tryck medan LCD:n uppdateras för varje klockcykel — ett snabbt flimmer av adresser tills <span class="pin">SYNC</span> går hög.</p>
+      <p>Samma information på båda ställena — adress (<code>$8001</code>) och data (<code>$EA</code>, <code>NOP</code>). Skillnaden är att LCD:n visar <em>just nu</em> medan seriemonitor bygger en historik. Med Knapp 2 (instruktionssteg) ser du flera rader i seriemonitor per tryck medan LCD:n uppdateras för varje klockcykel — ett snabbt flimmer av adresser tills <span class="signal">SYNC</span> går hög.</p>
       <p>Datorn har blivit fristående. Du kan koppla bort USB-kabeln (om Arduino drivs via DC-adaptern) och fortfarande stega genom programmet och se allt på LCD:n. Seriemonitor är praktisk för att logga och felsöka, men displayen på kopplingsdäcket gör datorn till en egen, komplett enhet.</p>
     
   </section>
@@ -375,7 +375,7 @@ R $8001</pre>
         <li><strong>Helt tom skärm?</strong> Justera kontrasten med potentiometern. Testa båda ytterlägena.</li>
         <li><strong>Svarta rutor på första raden?</strong> LCD:n är i 8-bitarsläge men får ingen data. Kontrollera att <code>lcd.begin(16,2)</code> körs.</li>
         <li><strong>Förvrängda tecken?</strong> Datapinnarna är i fel ordning. Prova <code>LiquidCrystal lcd(5, 6, 7, 8, 9, 10)</code> om din display har rak ordning.</li>
-        <li><strong>Ingen bakgrundsbelysning?</strong> Kontrollera 220Ω till A (pin 15) och <span class="pin">GND</span> till K (pin 16).</li>
+        <li><strong>Ingen bakgrundsbelysning?</strong> Kontrollera 220Ω till A (pin 15) och <span class="signal">GND</span> till K (pin 16).</li>
       </ul>
     
 

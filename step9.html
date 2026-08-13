@@ -154,7 +154,7 @@
         </div>
       </div>
     </div>
-    <p><span class="text-blue-300">■</span> Adressbuss &nbsp; <span class="text-green-300">■</span> Databuss &nbsp; <span class="text-purple-300">■</span> Kontroll &nbsp; <span class="text-red-300">■</span> Ström. Notch/pin 1-markering: uppåt. <strong><span class="pin">/OE</span></strong> = <span class="pin">GND</span> (alltid läs ut). <strong><span class="pin">/CE</span></strong> = U4D pin 11 (aktiv vid <code>$0000</code>–<code>$3FFF</code>).</p>
+    <p><span class="text-blue-300">■</span> Adressbuss &nbsp; <span class="text-green-300">■</span> Databuss &nbsp; <span class="text-purple-300">■</span> Kontroll &nbsp; <span class="text-red-300">■</span> Ström. Notch/pin 1-markering: uppåt. <strong><span class="signal">/OE</span></strong> = <span class="signal">GND</span> (alltid läs ut). <strong><span class="signal">/CE</span></strong> = U4D pin 11 (aktiv vid <code>$0000</code>–<code>$3FFF</code>).</p>
   </section>
 
   <!-- 74HC00 pinout -->
@@ -196,7 +196,7 @@
         </div>
       </div>
     </div>
-    <p><span class="text-blue-300">■</span> U4A (NOT <span class="pin">A15</span> → SRAM <span class="pin">/CE</span>) &nbsp; <span class="text-green-300">■</span> U4B (<span class="pin">A15</span> NAND <span class="pin">A14</span> → VIA <span class="pin">/CS2</span>) &nbsp; <span class="text-yellow-300">■</span> U4D (NAND) &nbsp; <span class="text-pink-300">■</span> U4C (NAND).</p>
+    <p><span class="text-blue-300">■</span> U4A (NOT <span class="signal">A15</span> → SRAM <span class="signal">/CE</span>) &nbsp; <span class="text-green-300">■</span> U4B (<span class="signal">A15</span> NAND <span class="signal">A14</span> → VIA <span class="signal">/CS2</span>) &nbsp; <span class="text-yellow-300">■</span> U4D (NAND) &nbsp; <span class="text-pink-300">■</span> U4C (NAND).</p>
   </section>
 
   <!-- Kopplingsschema -->
@@ -218,41 +218,41 @@
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
-          <tr><td class="p-2">28</td><td class="p-2"><span class="pin">VDD</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning — glöm inte 100nF avkoppling till GND</td></tr>
-          <tr><td class="p-2">14</td><td class="p-2"><span class="pin">VSS</span></td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
-          <tr><td class="p-2">10–3, 25, 24, 21, 23, 2, 26, 1</td><td class="p-2"><span class="pin">A0–A14</span></td><td class="p-2"><strong>A0</strong>–A14</td><td class="p-2">15 adresslinjer — SRAM behöver veta vilken byte CPU:n vill åt</td></tr>
-          <tr><td class="p-2">11–13, 15–19</td><td class="p-2"><span class="pin">D0–D7</span></td><td class="p-2"><strong>D0</strong>–D7 (databuss)</td><td class="p-2">8 datalinjer — SRAM läser/skriver data här</td></tr>
-          <tr><td class="p-2">20</td><td class="p-2"><span class="pin">/CE</span></td><td class="p-2"><strong>U4D</strong> pin 11</td><td class="p-2">Chip Enable — LÅG = SRAM aktivt. 74HC00 drar LÅG vid $0000–$3FFF</td></tr>
-          <tr><td class="p-2">22</td><td class="p-2"><span class="pin">/OE</span></td><td class="p-2">GND</td><td class="p-2">Output Enable — alltid LÅG (SRAM kör alltid ut data vid läsning)</td></tr>
-          <tr><td class="p-2">27</td><td class="p-2"><span class="pin">/WE</span></td><td class="p-2"><strong>R/W</strong> (pin 34)</td><td class="p-2">Write Enable — LÅG = skriv. CPU:ns R/W är LÅG vid skrivning</td></tr>
+          <tr><td class="p-2">28</td><td class="p-2"><span class="signal">VDD</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning — glöm inte 100nF avkoppling till GND</td></tr>
+          <tr><td class="p-2">14</td><td class="p-2"><span class="signal">VSS</span></td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
+          <tr><td class="p-2">10–3, 25, 24, 21, 23, 2, 26, 1</td><td class="p-2"><span class="signal">A0–A14</span></td><td class="p-2"><strong>A0</strong>–A14</td><td class="p-2">15 adresslinjer — SRAM behöver veta vilken byte CPU:n vill åt</td></tr>
+          <tr><td class="p-2">11–13, 15–19</td><td class="p-2"><span class="signal">D0–D7</span></td><td class="p-2"><strong>D0</strong>–D7 (databuss)</td><td class="p-2">8 datalinjer — SRAM läser/skriver data här</td></tr>
+          <tr><td class="p-2">20</td><td class="p-2"><span class="signal">/CE</span></td><td class="p-2"><strong>U4D</strong> pin 11</td><td class="p-2">Chip Enable — LÅG = SRAM aktivt. 74HC00 drar LÅG vid $0000–$3FFF</td></tr>
+          <tr><td class="p-2">22</td><td class="p-2"><span class="signal">/OE</span></td><td class="p-2">GND</td><td class="p-2">Output Enable — alltid LÅG (SRAM kör alltid ut data vid läsning)</td></tr>
+          <tr><td class="p-2">27</td><td class="p-2"><span class="signal">/WE</span></td><td class="p-2"><strong>R/W</strong> (pin 34)</td><td class="p-2">Write Enable — LÅG = skriv. CPU:ns R/W är LÅG vid skrivning</td></tr>
         </tbody>
       </table>
     </div>
 
     <h3>74HC00 — adressavkodning för SRAM</h3>
-    <p>U4A (NOT <span class="pin">A15</span>) och U4B (NAND för VIA) är oförändrade från steg 7. U4C blir NOT <span class="pin">A14</span>. U4D gör (NOT <span class="pin">A14</span>) NAND (NOT <span class="pin">A15</span>) → LÅG endast vid <code>$0000</code>–<code>$3FFF</code>.</p>
+    <p>U4A (NOT <span class="signal">A15</span>) och U4B (NAND för VIA) är oförändrade från steg 7. U4C blir NOT <span class="signal">A14</span>. U4D gör (NOT <span class="signal">A14</span>) NAND (NOT <span class="signal">A15</span>) → LÅG endast vid <code>$0000</code>–<code>$3FFF</code>.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Grind</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="5">VIA-avkodning (U4A + U4B — oförändrad från steg 7)</td></tr>
-          <tr><td class="p-2">1, 2</td><td class="p-2"><strong>U4A</strong> in</td><td class="p-2"><span class="pin">A15</span> (in)</td><td class="p-2"><strong><span class="pin">A15</span></strong></td><td class="p-2">Båda ingångarna till A15 → inverterare: ut = NOT A15</td></tr>
-          <tr><td class="p-2">3</td><td class="p-2"><strong>U4A</strong> ut</td><td class="p-2">NOT <span class="pin">A15</span> (ut)</td><td class="p-2"><strong>U4B</strong> pin 4 + <strong>U4D</strong> pin 13</td><td class="p-2">NOT A15 → till U4B och U4D</td></tr>
-          <tr><td class="p-2">4</td><td class="p-2"><strong>U4B</strong> in</td><td class="p-2">NOT <span class="pin">A15</span></td><td class="p-2"><strong>U4A</strong> pin 3 (NOT A15)</td><td class="p-2">NOT A15</td></tr>
-          <tr><td class="p-2">5</td><td class="p-2"><strong>U4B</strong> in</td><td class="p-2"><span class="pin">A14</span> (in)</td><td class="p-2"><strong><span class="pin">A14</span></strong></td><td class="p-2">(NOT A15) NAND A14 → LÅG vid $4000–$7FFF</td></tr>
-          <tr><td class="p-2">6</td><td class="p-2"><strong>U4B</strong> ut</td><td class="p-2">VIA <span class="pin">/CS2</span> (ut)</td><td class="p-2"><strong>VIA</strong> <span class="pin">/CS2</span> (pin 23)</td><td class="p-2">VIA aktiveras vid $4000–$7FFF</td></tr>
+          <tr><td class="p-2">1, 2</td><td class="p-2"><strong>U4A</strong> in</td><td class="p-2"><span class="signal">A15</span> (in)</td><td class="p-2"><strong><span class="signal">A15</span></strong></td><td class="p-2">Båda ingångarna till A15 → inverterare: ut = NOT A15</td></tr>
+          <tr><td class="p-2">3</td><td class="p-2"><strong>U4A</strong> ut</td><td class="p-2">NOT <span class="signal">A15</span> (ut)</td><td class="p-2"><strong>U4B</strong> pin 4 + <strong>U4D</strong> pin 13</td><td class="p-2">NOT A15 → till U4B och U4D</td></tr>
+          <tr><td class="p-2">4</td><td class="p-2"><strong>U4B</strong> in</td><td class="p-2">NOT <span class="signal">A15</span></td><td class="p-2"><strong>U4A</strong> pin 3 (NOT A15)</td><td class="p-2">NOT A15</td></tr>
+          <tr><td class="p-2">5</td><td class="p-2"><strong>U4B</strong> in</td><td class="p-2"><span class="signal">A14</span> (in)</td><td class="p-2"><strong><span class="signal">A14</span></strong></td><td class="p-2">(NOT A15) NAND A14 → LÅG vid $4000–$7FFF</td></tr>
+          <tr><td class="p-2">6</td><td class="p-2"><strong>U4B</strong> ut</td><td class="p-2">VIA <span class="signal">/CS2</span> (ut)</td><td class="p-2"><strong>VIA</strong> <span class="signal">/CS2</span> (pin 23)</td><td class="p-2">VIA aktiveras vid $4000–$7FFF</td></tr>
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="5">SRAM-avkodning (U4C + U4D — nytt i steg 9)</td></tr>
-          <tr><td class="p-2">9, 10</td><td class="p-2"><strong>U4C</strong> in</td><td class="p-2"><span class="pin">A14</span> (in)</td><td class="p-2"><strong><span class="pin">A14</span></strong></td><td class="p-2">Båda ingångarna till A14 → inverterare: ut = NOT A14</td></tr>
-          <tr><td class="p-2">8</td><td class="p-2"><strong>U4C</strong> ut</td><td class="p-2">NOT <span class="pin">A14</span> (ut)</td><td class="p-2"><strong>U4D</strong> pin 12</td><td class="p-2">NOT A14 → U4D ingång</td></tr>
-          <tr><td class="p-2">12</td><td class="p-2"><strong>U4D</strong> in</td><td class="p-2">NOT <span class="pin">A14</span></td><td class="p-2"><strong>U4C</strong> pin 8 (NOT A14)</td><td class="p-2">NOT A14</td></tr>
-          <tr><td class="p-2">13</td><td class="p-2"><strong>U4D</strong> in</td><td class="p-2">NOT <span class="pin">A15</span></td><td class="p-2"><strong>U4A</strong> pin 3 (NOT A15)</td><td class="p-2">(NOT A14) NAND (NOT A15) → LÅG endast vid $0000–$3FFF</td></tr>
-          <tr><td class="p-2">11</td><td class="p-2"><strong>U4D</strong> ut</td><td class="p-2">SRAM <span class="pin">/CE</span> (ut)</td><td class="p-2"><strong>SRAM</strong> <span class="pin">/CE</span> (pin 20)</td><td class="p-2">SRAM aktiveras ENDAST vid $0000–$3FFF</td></tr>
-          <tr><td class="p-2">14</td><td class="p-2">VCC</td><td class="p-2"><span class="pin">VCC</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
-          <tr><td class="p-2">7</td><td class="p-2">GND</td><td class="p-2"><span class="pin">GND</span></td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
+          <tr><td class="p-2">9, 10</td><td class="p-2"><strong>U4C</strong> in</td><td class="p-2"><span class="signal">A14</span> (in)</td><td class="p-2"><strong><span class="signal">A14</span></strong></td><td class="p-2">Båda ingångarna till A14 → inverterare: ut = NOT A14</td></tr>
+          <tr><td class="p-2">8</td><td class="p-2"><strong>U4C</strong> ut</td><td class="p-2">NOT <span class="signal">A14</span> (ut)</td><td class="p-2"><strong>U4D</strong> pin 12</td><td class="p-2">NOT A14 → U4D ingång</td></tr>
+          <tr><td class="p-2">12</td><td class="p-2"><strong>U4D</strong> in</td><td class="p-2">NOT <span class="signal">A14</span></td><td class="p-2"><strong>U4C</strong> pin 8 (NOT A14)</td><td class="p-2">NOT A14</td></tr>
+          <tr><td class="p-2">13</td><td class="p-2"><strong>U4D</strong> in</td><td class="p-2">NOT <span class="signal">A15</span></td><td class="p-2"><strong>U4A</strong> pin 3 (NOT A15)</td><td class="p-2">(NOT A14) NAND (NOT A15) → LÅG endast vid $0000–$3FFF</td></tr>
+          <tr><td class="p-2">11</td><td class="p-2"><strong>U4D</strong> ut</td><td class="p-2">SRAM <span class="signal">/CE</span> (ut)</td><td class="p-2"><strong>SRAM</strong> <span class="signal">/CE</span> (pin 20)</td><td class="p-2">SRAM aktiveras ENDAST vid $0000–$3FFF</td></tr>
+          <tr><td class="p-2">14</td><td class="p-2">VCC</td><td class="p-2"><span class="signal">VCC</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
+          <tr><td class="p-2">7</td><td class="p-2">GND</td><td class="p-2"><span class="signal">GND</span></td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
         </tbody>
       </table>
     </div>
-    <p><strong>Logik:</strong> U4A inverterar <span class="pin">A15</span>, U4C inverterar <span class="pin">A14</span>. U4D gör (NOT <span class="pin">A14</span>) NAND (NOT <span class="pin">A15</span>) → LÅG <strong>endast</strong> när <span class="pin">A14</span>=0 OCH <span class="pin">A15</span>=0. SRAM aktiveras alltså vid <strong><code>$0000</code>–<code>$3FFF</code></strong> och ingen annanstans. VIAn (U4B) aktiveras vid <code>$4000</code>–<code>$7FFF</code>. Inga krockar.</p>
+    <p><strong>Logik:</strong> U4A inverterar <span class="signal">A15</span>, U4C inverterar <span class="signal">A14</span>. U4D gör (NOT <span class="signal">A14</span>) NAND (NOT <span class="signal">A15</span>) → LÅG <strong>endast</strong> när <span class="signal">A14</span>=0 OCH <span class="signal">A15</span>=0. SRAM aktiveras alltså vid <strong><code>$0000</code>–<code>$3FFF</code></strong> och ingen annanstans. VIAn (U4B) aktiveras vid <code>$4000</code>–<code>$7FFF</code>. Inga krockar.</p>
 
     <h3>CPU, VIA och LCD</h3>
     <p>CPU, VIA och LCD är oförändrade från steg 7. Här är den kompletta kopplingslistan.</p>
@@ -261,36 +261,36 @@
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">— ström och kontroll</td></tr>
-          <tr><td class="p-2">8</td><td class="p-2"><span class="pin">VDD</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
-          <tr><td class="p-2">21</td><td class="p-2"><span class="pin">VSS</span></td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
-          <tr><td class="p-2">37</td><td class="p-2"><span class="pin">PHI2</span></td><td class="p-2"><strong>Arduino D2</strong></td><td class="p-2">Klocka — 20 Hz fyrkantsvåg</td></tr>
-          <tr><td class="p-2">34</td><td class="p-2"><span class="pin">R/W</span></td><td class="p-2"><strong>Arduino D3</strong>, <strong>VIA</strong> pin 22, SRAM /WE</td><td class="p-2">Read/Write — alla kretsar behöver veta</td></tr>
-          <tr><td class="p-2">40</td><td class="p-2"><span class="pin">/RESET</span></td><td class="p-2"><strong>Arduino D4</strong>, <strong>VIA</strong> pin 34</td><td class="p-2">Reset</td></tr>
-          <tr><td class="p-2">2</td><td class="p-2"><span class="pin">RDY</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Ready — HÖG = kör</td></tr>
-          <tr><td class="p-2">4</td><td class="p-2"><span class="pin">/IRQ</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Interrupt — avaktiverad</td></tr>
-          <tr><td class="p-2">6</td><td class="p-2"><span class="pin">/NMI</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">NMI — avaktiverad</td></tr>
-          <tr><td class="p-2">36</td><td class="p-2"><span class="pin">BE</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Bus Enable — HÖG = bussar aktiva</td></tr>
-          <tr><td class="p-2">38</td><td class="p-2"><span class="pin">/SO</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Set Overflow — avaktiverad</td></tr>
+          <tr><td class="p-2">8</td><td class="p-2"><span class="signal">VDD</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
+          <tr><td class="p-2">21</td><td class="p-2"><span class="signal">VSS</span></td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
+          <tr><td class="p-2">37</td><td class="p-2"><span class="signal">PHI2</span></td><td class="p-2"><strong>Arduino D2</strong></td><td class="p-2">Klocka — 20 Hz fyrkantsvåg</td></tr>
+          <tr><td class="p-2">34</td><td class="p-2"><span class="signal">R/W</span></td><td class="p-2"><strong>Arduino D3</strong>, <strong>VIA</strong> pin 22, SRAM /WE</td><td class="p-2">Read/Write — alla kretsar behöver veta</td></tr>
+          <tr><td class="p-2">40</td><td class="p-2"><span class="signal">/RESET</span></td><td class="p-2"><strong>Arduino D4</strong>, <strong>VIA</strong> pin 34</td><td class="p-2">Reset</td></tr>
+          <tr><td class="p-2">2</td><td class="p-2"><span class="signal">RDY</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Ready — HÖG = kör</td></tr>
+          <tr><td class="p-2">4</td><td class="p-2"><span class="signal">/IRQ</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Interrupt — avaktiverad</td></tr>
+          <tr><td class="p-2">6</td><td class="p-2"><span class="signal">/NMI</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">NMI — avaktiverad</td></tr>
+          <tr><td class="p-2">36</td><td class="p-2"><span class="signal">BE</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Bus Enable — HÖG = bussar aktiva</td></tr>
+          <tr><td class="p-2">38</td><td class="p-2"><span class="signal">/SO</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Set Overflow — avaktiverad</td></tr>
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">— adressbuss (delas med SRAM, VIA, Arduino)</td></tr>
-          <tr><td class="p-2">9–16</td><td class="p-2"><span class="pin">A0–A7</span></td><td class="p-2"><strong>Arduino A0</strong>–A7, SRAM A0–A7, VIA RS0–RS3 (A0–A3)</td><td class="p-2">Låga adressbyte</td></tr>
-          <tr><td class="p-2">17–20, 22–25</td><td class="p-2"><span class="pin">A8–A15</span></td><td class="p-2"><strong>Arduino A8</strong>–A15, SRAM A8–A14, 74HC00</td><td class="p-2">Höga adressbyte + avkodning</td></tr>
+          <tr><td class="p-2">9–16</td><td class="p-2"><span class="signal">A0–A7</span></td><td class="p-2"><strong>Arduino A0</strong>–A7, SRAM A0–A7, VIA RS0–RS3 (A0–A3)</td><td class="p-2">Låga adressbyte</td></tr>
+          <tr><td class="p-2">17–20, 22–25</td><td class="p-2"><span class="signal">A8–A15</span></td><td class="p-2"><strong>Arduino A8</strong>–A15, SRAM A8–A14, 74HC00</td><td class="p-2">Höga adressbyte + avkodning</td></tr>
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">— databuss (delas med SRAM, VIA, Arduino)</td></tr>
-          <tr><td class="p-2">26–33</td><td class="p-2"><span class="pin">D0–D7</span></td><td class="p-2"><strong>Arduino D22</strong>–D29, SRAM D0–D7, VIA D0–D7</td><td class="p-2">8-bit data — 100Ω seriemotstånd</td></tr>
+          <tr><td class="p-2">26–33</td><td class="p-2"><span class="signal">D0–D7</span></td><td class="p-2"><strong>Arduino D22</strong>–D29, SRAM D0–D7, VIA D0–D7</td><td class="p-2">8-bit data — 100Ω seriemotstånd</td></tr>
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Övrigt</td></tr>
-          <tr><td class="p-2">7</td><td class="p-2"><span class="pin">SYNC</span></td><td class="p-2"><strong>Arduino D13</strong></td><td class="p-2">Opcode fetch</td></tr>
+          <tr><td class="p-2">7</td><td class="p-2"><span class="signal">SYNC</span></td><td class="p-2"><strong>Arduino D13</strong></td><td class="p-2">Opcode fetch</td></tr>
           <tr><td class="p-2">—</td><td class="p-2">BTN1</td><td class="p-2"><strong>Arduino D11</strong> → GND</td><td class="p-2">Klocksteg</td></tr>
           <tr><td class="p-2">—</td><td class="p-2">BTN2</td><td class="p-2"><strong>Arduino D12</strong> → GND</td><td class="p-2">Instruktionssteg</td></tr>
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">VIA → LCD (oförändrat från steg 7)</td></tr>
-          <tr><td class="p-2">VIA 2</td><td class="p-2"><span class="pin">PA0</span></td><td class="p-2"><strong>4</strong> (RS)</td><td class="p-2">Register Select</td></tr>
-          <tr><td class="p-2">VIA 4</td><td class="p-2"><span class="pin">PA2</span></td><td class="p-2"><strong>6</strong> (E)</td><td class="p-2">Enable</td></tr>
-          <tr><td class="p-2">VIA 10–17</td><td class="p-2"><span class="pin">PB0–PB7</span></td><td class="p-2"><strong>7</strong>–14 (DB0–DB7)</td><td class="p-2">8-bit data</td></tr>
+          <tr><td class="p-2">VIA 2</td><td class="p-2"><span class="signal">PA0</span></td><td class="p-2"><strong>4</strong> (RS)</td><td class="p-2">Register Select</td></tr>
+          <tr><td class="p-2">VIA 4</td><td class="p-2"><span class="signal">PA2</span></td><td class="p-2"><strong>6</strong> (E)</td><td class="p-2">Enable</td></tr>
+          <tr><td class="p-2">VIA 10–17</td><td class="p-2"><span class="signal">PB0–PB7</span></td><td class="p-2"><strong>7</strong>–14 (DB0–DB7)</td><td class="p-2">8-bit data</td></tr>
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">LCD — ström och kontrast</td></tr>
-          <tr><td class="p-2"><strong>1</strong></td><td class="p-2"><span class="pin">VSS</span></td><td class="p-2">GND</td><td class="p-2">Jord</td></tr>
-          <tr><td class="p-2"><strong>2</strong></td><td class="p-2"><span class="pin">VDD</span></td><td class="p-2">+5V</td><td class="p-2">Ström</td></tr>
-          <tr><td class="p-2"><strong>3</strong></td><td class="p-2"><span class="pin">VO</span></td><td class="p-2">Potentiometer mittben</td><td class="p-2">Kontrast</td></tr>
-          <tr><td class="p-2"><strong>5</strong></td><td class="p-2"><span class="pin">R/W</span></td><td class="p-2">GND</td><td class="p-2">Write-only</td></tr>
-          <tr><td class="p-2"><strong>15</strong></td><td class="p-2"><span class="pin">A</span></td><td class="p-2">+5V via 220Ω</td><td class="p-2">Belysning +</td></tr>
-          <tr><td class="p-2"><strong>16</strong></td><td class="p-2"><span class="pin">K</span></td><td class="p-2">GND</td><td class="p-2">Belysning −</td></tr>
+          <tr><td class="p-2"><strong>1</strong></td><td class="p-2"><span class="signal">VSS</span></td><td class="p-2">GND</td><td class="p-2">Jord</td></tr>
+          <tr><td class="p-2"><strong>2</strong></td><td class="p-2"><span class="signal">VDD</span></td><td class="p-2">+5V</td><td class="p-2">Ström</td></tr>
+          <tr><td class="p-2"><strong>3</strong></td><td class="p-2"><span class="signal">VO</span></td><td class="p-2">Potentiometer mittben</td><td class="p-2">Kontrast</td></tr>
+          <tr><td class="p-2"><strong>5</strong></td><td class="p-2"><span class="signal">R/W</span></td><td class="p-2">GND</td><td class="p-2">Write-only</td></tr>
+          <tr><td class="p-2"><strong>15</strong></td><td class="p-2"><span class="signal">A</span></td><td class="p-2">+5V via 220Ω</td><td class="p-2">Belysning +</td></tr>
+          <tr><td class="p-2"><strong>16</strong></td><td class="p-2"><span class="signal">K</span></td><td class="p-2">GND</td><td class="p-2">Belysning −</td></tr>
         </tbody>
       </table>
     </div>
@@ -354,14 +354,14 @@
       <p>Det här är slutsteget — och den mest genomgripande förändringen av minnesemulatorn sedan steg 3. Vi kopplar in ett <strong>62256 SRAM-chip</strong> (32 KB statiskt RAM) som tar över adresserna <code>$0000–$3FFF</code>. Arduino måste nu <strong>tri-stata databussen</strong> för alla SRAM- och VIA-adresser — tre enheter delar på samma 8 datalinjer, och bara en får prata i taget.</p>
 
       <h3>Tre enheter, en buss</h3>
-      <p>Databussen (<span class="pin">D0–D7</span>) är nu ansluten till tre kretsar samtidigt: CPU, Arduino, SRAM och VIA. Adressavkodningen (74HC00) avgör vem som svarar:</p>
+      <p>Databussen (<span class="signal">D0–D7</span>) är nu ansluten till tre kretsar samtidigt: CPU, Arduino, SRAM och VIA. Adressavkodningen (74HC00) avgör vem som svarar:</p>
       <ul class="list-disc pl-5 space-y-1">
         <li><strong><code>$0000</code>–<code>$3FFF</code></strong> → <code>is_sram()</code> returnerar <code>true</code>. Arduino
           rör inte bussen. SRAM-chippet läser och skriver helt på egen hand.</li>
         <li><strong><code>$4000</code>–<code>$400F</code></strong> → <code>is_via()</code> returnerar <code>true</code>. Arduino
           rör inte bussen. VIA-kretsen hanterar I/O.</li>
         <li><strong><code>$8000</code>–<code>$FFFF</code></strong> → Arduino svarar med programkod och vektorer. SRAM och VIA
-          är inaktiva (deras <span class="pin">/CE</span>- och <span class="pin">/CS2</span>-signaler är höga).</li>
+          är inaktiva (deras <span class="signal">/CE</span>- och <span class="signal">/CS2</span>-signaler är höga).</li>
       </ul>
       <p>Det här är en <strong>riktig datorarkitektur</strong>: flera enheter på en delad buss, styrda av adressavkodningslogik. Exakt så här fungerar modernare datorer också — bara med fler kretsar och högre hastigheter.</p>
 
@@ -1008,10 +1008,10 @@ W $4000  ← VIA: 34  (siffran 4)</pre>
       
         <p>Här är några saker att kontrollera:</p>
         <ul class="list-disc pl-5 space-y-1">
-        <li><strong>CPU:n läser <code>$0000</code> vid reset?</strong> SRAM-chipets <span class="pin">/OE</span> är inte <span class="pin">GND</span>. Utan <span class="pin">/OE</span>=LÅG driver SRAM inte ut data vid läsning.</li>
-        <li><strong>Databuss-krockar?</strong> Arduino får INTE sätta <span class="pin">DDRA</span>=<code>0xFF</code> vid SRAM-adresser. Kontrollera att <code>is_sram()</code> returnerar rätt.</li>
-        <li><strong>SRAM skriver inte?</strong> <span class="pin">/WE</span> måste gå till <span class="pin">R/W</span> (pin 34). <span class="pin">/CE</span> måste vara avkodad korrekt via 74HC00.</li>
-        <li><strong>Glitchar på bussen?</strong> 62256 är snabbare än Arduino. Se till att <span class="pin">/CE</span> och <span class="pin">/WE</span> är stabila innan databussen läses.</li>
+        <li><strong>CPU:n läser <code>$0000</code> vid reset?</strong> SRAM-chipets <span class="signal">/OE</span> är inte <span class="signal">GND</span>. Utan <span class="signal">/OE</span>=LÅG driver SRAM inte ut data vid läsning.</li>
+        <li><strong>Databuss-krockar?</strong> Arduino får INTE sätta <span class="signal">DDRA</span>=<code>0xFF</code> vid SRAM-adresser. Kontrollera att <code>is_sram()</code> returnerar rätt.</li>
+        <li><strong>SRAM skriver inte?</strong> <span class="signal">/WE</span> måste gå till <span class="signal">R/W</span> (pin 34). <span class="signal">/CE</span> måste vara avkodad korrekt via 74HC00.</li>
+        <li><strong>Glitchar på bussen?</strong> 62256 är snabbare än Arduino. Se till att <span class="signal">/CE</span> och <span class="signal">/WE</span> är stabila innan databussen läses.</li>
       </ul>
     
 

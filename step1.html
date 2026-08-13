@@ -49,7 +49,7 @@
       <h2>Mål</h2>
       <p>Alla datorer behöver en puls — en hjärtslag som får processorn att ta ett steg i taget. I det här första steget kopplar vi in <strong>ström och klocka</strong> till W65C02S-processorn. Processorn kommer inte att <em>göra</em> något ännu (vi har varken minne eller program), men vi kan verifiera att den lever.</p>
       <p>W65C02S är en <strong>statisk CMOS-krets</strong>. Det betyder att klockan kan vara hur långsam som helst — till och med stoppas helt — utan att processorn tappar sitt interna tillstånd. Vi utnyttjar detta genom att generera en långsam klockpuls från Arduino och visualisera den med en lysdiod.</p>
-      <p>En lysdiod och ett motstånd kopplas till klocklinjen. När dioden blinkar vet vi att klockpulsen når fram. Med en multimeter mäter vi också att CPU:n får <span class="pin">5V</span> mellan <span class="pin">VDD</span> och <span class="pin">VSS</span>.</p>
+      <p>En lysdiod och ett motstånd kopplas till klocklinjen. När dioden blinkar vet vi att klockpulsen når fram. Med en multimeter mäter vi också att CPU:n får <span class="signal">5V</span> mellan <span class="signal">VDD</span> och <span class="signal">VSS</span>.</p>
       <p>Det här steget är grunden för allt som kommer — utan ström och klocka gör processorn ingenting.</p>
     </section>
 
@@ -254,7 +254,7 @@
     <!-- Arduino Mega pinout -->
     <section class="mb-8">
       <h2>Arduino Mega 2560 — anslutningar</h2>
-      <p>Här ser vi alla pinnar på Arduino Mega 2560: <span class="pin">A0-A15</span> och <span class="pin">D0-D53</span></p>
+      <p>Här ser vi alla pinnar på Arduino Mega 2560: <span class="signal">A0-A15</span> och <span class="signal">D0-D53</span></p>
       <div class="flex justify-center">
         <div class="p-2 bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-xs leading-snug">
           <div class="inline-flex">
@@ -484,7 +484,7 @@
     <!-- Kopplingsschema -->
     <section class="mb-8">
       <h2>Kopplingsschema</h2>
-      <p>Så här ser den kompletta kopplingen ut när allt ligger på kopplingsdäcket: processorn till vänster, Arduino till höger, lysdiod och pull-up-motstånd på sina platser. Följ strömmen från +<span class="pin">5V</span> genom CPU:n till <span class="pin">GND</span>, och klockan från Arduino <span class="pin">D2</span> till <span class="pin">PHI2</span>.</p>
+      <p>Så här ser den kompletta kopplingen ut när allt ligger på kopplingsdäcket: processorn till vänster, Arduino till höger, lysdiod och pull-up-motstånd på sina platser. Följ strömmen från +<span class="signal">5V</span> genom CPU:n till <span class="signal">GND</span>, och klockan från Arduino <span class="signal">D2</span> till <span class="signal">PHI2</span>.</p>
       <div class="schematic bg-white rounded-lg shadow p-4">
         <img src="schematics/steg-1.png" alt="Steg 1 — Ström och klocka" class="w-full">
       </div>
@@ -507,55 +507,55 @@
           <tbody class="divide-y">
             <tr>
               <td class="p-2">8</td>
-              <td class="p-2"><span class="pin">VDD</span></td>
+              <td class="p-2"><span class="signal">VDD</span></td>
               <td class="p-2">+5V</td>
               <td class="p-2">Strömmatning — CPU:ns driftspänning</td>
             </tr>
             <tr>
               <td class="p-2">21</td>
-              <td class="p-2"><span class="pin">VSS</span></td>
+              <td class="p-2"><span class="signal">VSS</span></td>
               <td class="p-2">GND</td>
               <td class="p-2">Systemjord — sluten krets</td>
             </tr>
             <tr>
               <td class="p-2">37</td>
-              <td class="p-2"><span class="pin">PHI2</span></td>
+              <td class="p-2"><span class="signal">PHI2</span></td>
               <td class="p-2"><strong>Arduino D2</strong></td>
               <td class="p-2">Klockingång — Arduino skickar fyrkantsvåg</td>
             </tr>
             <tr>
               <td class="p-2">2</td>
-              <td class="p-2"><span class="pin">RDY</span></td>
+              <td class="p-2"><span class="signal">RDY</span></td>
               <td class="p-2">+5V via 10kΩ</td>
               <td class="p-2">Ready — HÖG = CPU får köra. Utan denna stannar CPU:n</td>
             </tr>
             <tr>
               <td class="p-2">4</td>
-              <td class="p-2"><span class="pin">/IRQ</span></td>
+              <td class="p-2"><span class="signal">/IRQ</span></td>
               <td class="p-2">+5V via 10kΩ</td>
               <td class="p-2">Interrupt request — HÖG = inget avbrott (vi använder ej avbrott än)</td>
             </tr>
             <tr>
               <td class="p-2">6</td>
-              <td class="p-2"><span class="pin">/NMI</span></td>
+              <td class="p-2"><span class="signal">/NMI</span></td>
               <td class="p-2">+5V via 10kΩ</td>
               <td class="p-2">Non-maskable interrupt — måste vara HÖG, annars kraschar CPU:n</td>
             </tr>
             <tr>
               <td class="p-2">36</td>
-              <td class="p-2"><span class="pin">BE</span></td>
+              <td class="p-2"><span class="signal">BE</span></td>
               <td class="p-2">+5V via 10kΩ</td>
               <td class="p-2">Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad!</td>
             </tr>
             <tr>
               <td class="p-2">38</td>
-              <td class="p-2"><span class="pin">/SO</span></td>
+              <td class="p-2"><span class="signal">/SO</span></td>
               <td class="p-2">+5V via 10kΩ</td>
               <td class="p-2">Set Overflow — HÖG = avaktiverad</td>
             </tr>
             <tr>
               <td class="p-2">40</td>
-              <td class="p-2"><span class="pin">/RESET</span></td>
+              <td class="p-2"><span class="signal">/RESET</span></td>
               <td class="p-2"><strong>Arduino D4</strong> (senare steg)</td>
               <td class="p-2">Lämnas flytande tills vidare — CPU:n startar själv</td>
             </tr>
@@ -592,12 +592,12 @@
         <h3>Kodens arkitektur i detta steg</h3>
         <p>Koden är uppdelad i tre lager:</p>
         <ol class="list-decimal pl-5 space-y-1">
-          <li><strong>Definitioner och konstanter</strong> — längst upp definierar vi pinnar (<span class="pin">PHI2</span>,
-            <span class="pin">RESB</span>) och räknar ut klockfrekvensen. Genom att använda namngivna konstanter istället för
+          <li><strong>Definitioner och konstanter</strong> — längst upp definierar vi pinnar (<span class="signal">PHI2</span>,
+            <span class="signal">RESB</span>) och räknar ut klockfrekvensen. Genom att använda namngivna konstanter istället för
             magiska siffror blir koden läsbar och lätt att ändra — vill du testa en snabbare klocka ändrar du bara
             <code>CLOCK_HZ</code>.</li>
           <li><strong>Hjälpfunktionen <code>pulse()</code></strong> som genererar en komplett klockcykel.
-            Funktionen drar <span class="pin">PHI2</span> HÖG i 500 ms (lysdioden lyser), sedan LÅG i 500 ms (lysdioden släcks). Resultatet
+            Funktionen drar <span class="signal">PHI2</span> HÖG i 500 ms (lysdioden lyser), sedan LÅG i 500 ms (lysdioden släcks). Resultatet
             är en symmetrisk fyrkantsvåg på 1 Hz — tillräckligt långsamt för att du ska kunna följa med i vad som
             händer. W65C02S är en statisk CMOS-krets, vilket betyder att den inte har någon minsta klockfrekvens —
             du kan göra pulserna hur långsamma du vill utan att processorn tappar sitt interna tillstånd.</li>
@@ -607,7 +607,7 @@
         </ol>
 
         <h3>Vad du ser när koden kör</h3>
-        <p>När du laddat upp koden och öppnar seriemonitor (115200 baud) ser du texten "Steg 1 — Klocka och ström". Lysdioden på klocklinjen blinkar en gång per sekund — den är tänd när <span class="pin">PHI2</span> är hög (CPU:n arbetar) och släckt när <span class="pin">PHI2</span> är låg. Du har just gett processorn dess första hjärtslag.</p>
+        <p>När du laddat upp koden och öppnar seriemonitor (115200 baud) ser du texten "Steg 1 — Klocka och ström". Lysdioden på klocklinjen blinkar en gång per sekund — den är tänd när <span class="signal">PHI2</span> är hög (CPU:n arbetar) och släckt när <span class="signal">PHI2</span> är låg. Du har just gett processorn dess första hjärtslag.</p>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 1 — strömmatning och klocka
@@ -664,7 +664,7 @@ void loop() {
         <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">Steg 1 — Klocka och ström
 Lysdioden på PHI2 ska blinka 1 Hz</pre>
         </div>
-        <p>Det är allt! Programmet har inget mer att rapportera — det bara loopar. Men titta på kopplingsdäcket: lysdioden blinkar i precis den takt som <code>pulse()</code> bestämmer. Varje gång dioden tänds är <span class="pin">PHI2</span> hög och processorn tar ett steg framåt. Varje gång den släcks förbereder processorn nästa steg.</p>
+        <p>Det är allt! Programmet har inget mer att rapportera — det bara loopar. Men titta på kopplingsdäcket: lysdioden blinkar i precis den takt som <code>pulse()</code> bestämmer. Varje gång dioden tänds är <span class="signal">PHI2</span> hög och processorn tar ett steg framåt. Varje gång den släcks förbereder processorn nästa steg.</p>
         <p>Prova att ändra <code>CLOCK_HZ</code> från <code>1</code> till <code>10</code> och ladda upp igen. Dioden blinkar nu tio gånger per sekund — för snabbt för att urskilja enskilda pulser, men du ser att den lyser svagare eftersom den är släckt halva tiden. Det här är samma princip som senare steg använder när klockan körs i 500 Hz — då syns inte blinkandet alls, men processorn jobbar för fullt.</p>
     </section>
 
@@ -673,13 +673,13 @@ Lysdioden på PHI2 ska blinka 1 Hz</pre>
       <h2>Om det inte fungerar</h2>
       <p>Här är några saker att kontrollera:</p>
         <ul class="list-disc pl-5 space-y-1">
-          <li><strong>Dioden blinkar inte?</strong> Kontrollera att du har rätt pinne (<span class="pin">D2</span>), att dioden är rättvänd
-            (långa benet till <span class="pin">D2</span> via motstånd, korta till <span class="pin">GND</span>), och att motståndet är 220Ω.</li>
+          <li><strong>Dioden blinkar inte?</strong> Kontrollera att du har rätt pinne (<span class="signal">D2</span>), att dioden är rättvänd
+            (långa benet till <span class="signal">D2</span> via motstånd, korta till <span class="signal">GND</span>), och att motståndet är 220Ω.</li>
           <li><strong>Dioden lyser konstant?</strong> Du har förmodligen glömt <code>delay()</code> eller har en
             kortslutning.</li>
           <li><strong>Spänningen under 4.8V?</strong> Använd en 12V DC-adapter i Arduinons barrel-jack. USB-portar ger
             ofta för låg spänning.</li>
-          <li><strong>Glöm inte avkopplingskondensatorn!</strong> 100nF keramisk mellan <span class="pin">VDD</span> och <span class="pin">VSS</span>, så nära CPU:n som
+          <li><strong>Glöm inte avkopplingskondensatorn!</strong> 100nF keramisk mellan <span class="signal">VDD</span> och <span class="signal">VSS</span>, så nära CPU:n som
             möjligt. Utan den kan CPU:n bete sig oberäkneligt.</li>
         </ul>
     </section>

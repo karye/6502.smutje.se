@@ -50,17 +50,17 @@
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Mål</h2>
     
-      <p>I steg 3 körde CPU:n fritt i en <code>NOP</code>-loop — kul att se, men svårt att felsöka. Nu kopplar vi in <strong>två tryckknappar</strong> och <strong><span class="pin">SYNC</span>-signalen</strong> för att kunna styra exekveringen manuellt. Det här är en av de stora fördelarna med W65C02S: eftersom den är statisk CMOS kan klockan stoppas hur länge som helst.</p>
+      <p>I steg 3 körde CPU:n fritt i en <code>NOP</code>-loop — kul att se, men svårt att felsöka. Nu kopplar vi in <strong>två tryckknappar</strong> och <strong><span class="signal">SYNC</span>-signalen</strong> för att kunna styra exekveringen manuellt. Det här är en av de stora fördelarna med W65C02S: eftersom den är statisk CMOS kan klockan stoppas hur länge som helst.</p>
       <p><strong>Knapp 1 (klocksteg):</strong> varje tryckning ger en enda klockcykel. Perfekt för att se vad som händer på bussen i ultrarapid.</p>
-      <p><strong>Knapp 2 (instruktionssteg):</strong> kör klockan tills CPU:n signalerar att en ny instruktion har hämtats. <span class="pin">SYNC</span>-pinnen (pin 7) går HÖG vid varje opcode fetch. Vi pulserar klockan tills <span class="pin">SYNC</span> går hög — då vet vi att CPU:n är i början av nästa instruktion.</p>
-      <p>Kodmässigt byter vi ut den automatiska <code>loop()</code> mot knappläsning med debounce (50 ms). Arduinons <code>INPUT_PULLUP</code> gör att vi slipper externa pull-up-motstånd — knappen kopplas direkt mellan pinne och <span class="pin">GND</span>.</p>
+      <p><strong>Knapp 2 (instruktionssteg):</strong> kör klockan tills CPU:n signalerar att en ny instruktion har hämtats. <span class="signal">SYNC</span>-pinnen (pin 7) går HÖG vid varje opcode fetch. Vi pulserar klockan tills <span class="signal">SYNC</span> går hög — då vet vi att CPU:n är i början av nästa instruktion.</p>
+      <p>Kodmässigt byter vi ut den automatiska <code>loop()</code> mot knappläsning med debounce (50 ms). Arduinons <code>INPUT_PULLUP</code> gör att vi slipper externa pull-up-motstånd — knappen kopplas direkt mellan pinne och <span class="signal">GND</span>.</p>
     
   </section>
 
   <!-- Nya komponenter -->
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Nya komponenter</h2>
-    <p>Två tryckknappar och en kopplingstråd för <span class="pin">SYNC</span> — det är allt. Men knapparna är de första komponenterna som ger dig direkt kontroll över exekveringen: en klockcykel eller en hel instruktion per tryck, tack vare att W65C02S är statisk CMOS.</p>
+    <p>Två tryckknappar och en kopplingstråd för <span class="signal">SYNC</span> — det är allt. Men knapparna är de första komponenterna som ger dig direkt kontroll över exekveringen: en klockcykel eller en hel instruktion per tryck, tack vare att W65C02S är statisk CMOS.</p>
     <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
       <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr></thead>
       <tbody class="divide-y">
@@ -73,7 +73,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2>Kopplingsschema</h2>
-    <p>Schemat visar de två tryckknapparna: en mellan Arduino <span class="pin">D11</span> och <span class="pin">GND</span> för klocksteg, en mellan <span class="pin">D12</span> och <span class="pin">GND</span> för instruktionssteg. Dessutom löper <span class="pin">SYNC</span>-signalen från CPU pin 7 till Arduino <span class="pin">D13</span>. Allt annat är oförändrat från steg 3.</p>
+    <p>Schemat visar de två tryckknapparna: en mellan Arduino <span class="signal">D11</span> och <span class="signal">GND</span> för klocksteg, en mellan <span class="signal">D12</span> och <span class="signal">GND</span> för instruktionssteg. Dessutom löper <span class="signal">SYNC</span>-signalen från CPU pin 7 till Arduino <span class="signal">D13</span>. Allt annat är oförändrat från steg 3.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-4.png" alt="Steg 4 — manuell stegning" class="w-full">
     </div>
@@ -82,29 +82,29 @@
     <!-- Kretstabell -->
   <section class="mb-8">
     <h2>Kopplingar</h2>
-    <p>Tabellen kompletteras med tre nya signaler: <span class="pin">SYNC</span> från CPU pin 7 till <span class="pin">D13</span>, samt de två knapparna som kopplas mellan D11/D12 och <span class="pin">GND</span>. Lägg märke till att knapparna drar signalen LÅG vid tryck — Arduinons inbyggda pull-up gör resten.</p>
+    <p>Tabellen kompletteras med tre nya signaler: <span class="signal">SYNC</span> från CPU pin 7 till <span class="signal">D13</span>, samt de två knapparna som kopplas mellan D11/D12 och <span class="signal">GND</span>. Lägg märke till att knapparna drar signalen LÅG vid tryck — Arduinons inbyggda pull-up gör resten.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
-          <tr><td class="p-2">8</td><td class="p-2"><span class="pin">VDD</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning — CPU:ns driftspänning</td></tr>
-          <tr><td class="p-2">21</td><td class="p-2"><span class="pin">VSS</span></td><td class="p-2">GND</td><td class="p-2">Systemjord — sluten krets</td></tr>
-          <tr><td class="p-2">37</td><td class="p-2"><span class="pin">PHI2</span></td><td class="p-2"><strong>Arduino D2</strong></td><td class="p-2">Klockingång — Arduino skickar fyrkantsvåg</td></tr>
-          <tr><td class="p-2">2</td><td class="p-2"><span class="pin">RDY</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Ready — HÖG = CPU får köra. Utan denna stannar CPU:n</td></tr>
-          <tr><td class="p-2">4</td><td class="p-2"><span class="pin">/IRQ</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Interrupt request — HÖG = inget avbrott</td></tr>
-          <tr><td class="p-2">6</td><td class="p-2"><span class="pin">/NMI</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Non-maskable interrupt — måste vara HÖG</td></tr>
-          <tr><td class="p-2">36</td><td class="p-2"><span class="pin">BE</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad!</td></tr>
-          <tr><td class="p-2">38</td><td class="p-2"><span class="pin">/SO</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Set Overflow — avaktiverad</td></tr>          <tr><td class="p-2">40</td><td class="p-2"><span class="pin">/RESET</span></td><td class="p-2"><strong>Arduino D4</strong></td><td class="p-2">Kontrollerad reset — Arduino håller CPU:n i reset tills vi är redo</td></tr>
-          <tr><td class="p-2">9–16</td><td class="p-2"><span class="pin">A0–A7</span></td><td class="p-2"><strong>Arduino A0–A7</strong></td><td class="p-2">Låga adressbyte — läses via PORTF</td></tr>
-          <tr><td class="p-2">17–20, 22–25</td><td class="p-2"><span class="pin">A8–A15</span></td><td class="p-2"><strong>Arduino A8–A15</strong></td><td class="p-2">Höga adressbyte — läses via PORTK</td></tr>          <tr><td class="p-2">34</td><td class="p-2"><span class="pin">R/W</span></td><td class="p-2"><strong>Arduino D3</strong></td><td class="p-2">HÖG = CPU läser, LÅG = CPU skriver. Arduino måste veta detta</td></tr>
-          <tr><td class="p-2">33</td><td class="p-2"><span class="pin">D0</span></td><td class="p-2"><strong>Arduino D22</strong> via 100Ω</td><td class="p-2">Databit 0 (LSB)</td></tr>
-          <tr><td class="p-2">32</td><td class="p-2"><span class="pin">D1</span></td><td class="p-2"><strong>Arduino D23</strong> via 100Ω</td><td class="p-2">Databit 1</td></tr>
-          <tr><td class="p-2">31</td><td class="p-2"><span class="pin">D2</span></td><td class="p-2"><strong>Arduino D24</strong> via 100Ω</td><td class="p-2">Databit 2</td></tr>
-          <tr><td class="p-2">30</td><td class="p-2"><span class="pin">D3</span></td><td class="p-2"><strong>Arduino D25</strong> via 100Ω</td><td class="p-2">Databit 3</td></tr>
-          <tr><td class="p-2">29</td><td class="p-2"><span class="pin">D4</span></td><td class="p-2"><strong>Arduino D26</strong> via 100Ω</td><td class="p-2">Databit 4</td></tr>
-          <tr><td class="p-2">28</td><td class="p-2"><span class="pin">D5</span></td><td class="p-2"><strong>Arduino D27</strong> via 100Ω</td><td class="p-2">Databit 5</td></tr>
-          <tr><td class="p-2">27</td><td class="p-2"><span class="pin">D6</span></td><td class="p-2"><strong>Arduino D28</strong> via 100Ω</td><td class="p-2">Databit 6</td></tr>
-          <tr><td class="p-2">26</td><td class="p-2"><span class="pin">D7</span></td><td class="p-2"><strong>Arduino D29</strong> via 100Ω</td><td class="p-2">Databit 7 (MSB)</td></tr>          <tr><td class="p-2">7</td><td class="p-2"><span class="pin">SYNC</span></td><td class="p-2"><strong>Arduino D13</strong></td><td class="p-2">HÖG = CPU:n hämtar första byten av ny instruktion</td></tr>
+          <tr><td class="p-2">8</td><td class="p-2"><span class="signal">VDD</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning — CPU:ns driftspänning</td></tr>
+          <tr><td class="p-2">21</td><td class="p-2"><span class="signal">VSS</span></td><td class="p-2">GND</td><td class="p-2">Systemjord — sluten krets</td></tr>
+          <tr><td class="p-2">37</td><td class="p-2"><span class="signal">PHI2</span></td><td class="p-2"><strong>Arduino D2</strong></td><td class="p-2">Klockingång — Arduino skickar fyrkantsvåg</td></tr>
+          <tr><td class="p-2">2</td><td class="p-2"><span class="signal">RDY</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Ready — HÖG = CPU får köra. Utan denna stannar CPU:n</td></tr>
+          <tr><td class="p-2">4</td><td class="p-2"><span class="signal">/IRQ</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Interrupt request — HÖG = inget avbrott</td></tr>
+          <tr><td class="p-2">6</td><td class="p-2"><span class="signal">/NMI</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Non-maskable interrupt — måste vara HÖG</td></tr>
+          <tr><td class="p-2">36</td><td class="p-2"><span class="signal">BE</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad!</td></tr>
+          <tr><td class="p-2">38</td><td class="p-2"><span class="signal">/SO</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Set Overflow — avaktiverad</td></tr>          <tr><td class="p-2">40</td><td class="p-2"><span class="signal">/RESET</span></td><td class="p-2"><strong>Arduino D4</strong></td><td class="p-2">Kontrollerad reset — Arduino håller CPU:n i reset tills vi är redo</td></tr>
+          <tr><td class="p-2">9–16</td><td class="p-2"><span class="signal">A0–A7</span></td><td class="p-2"><strong>Arduino A0–A7</strong></td><td class="p-2">Låga adressbyte — läses via PORTF</td></tr>
+          <tr><td class="p-2">17–20, 22–25</td><td class="p-2"><span class="signal">A8–A15</span></td><td class="p-2"><strong>Arduino A8–A15</strong></td><td class="p-2">Höga adressbyte — läses via PORTK</td></tr>          <tr><td class="p-2">34</td><td class="p-2"><span class="signal">R/W</span></td><td class="p-2"><strong>Arduino D3</strong></td><td class="p-2">HÖG = CPU läser, LÅG = CPU skriver. Arduino måste veta detta</td></tr>
+          <tr><td class="p-2">33</td><td class="p-2"><span class="signal">D0</span></td><td class="p-2"><strong>Arduino D22</strong> via 100Ω</td><td class="p-2">Databit 0 (LSB)</td></tr>
+          <tr><td class="p-2">32</td><td class="p-2"><span class="signal">D1</span></td><td class="p-2"><strong>Arduino D23</strong> via 100Ω</td><td class="p-2">Databit 1</td></tr>
+          <tr><td class="p-2">31</td><td class="p-2"><span class="signal">D2</span></td><td class="p-2"><strong>Arduino D24</strong> via 100Ω</td><td class="p-2">Databit 2</td></tr>
+          <tr><td class="p-2">30</td><td class="p-2"><span class="signal">D3</span></td><td class="p-2"><strong>Arduino D25</strong> via 100Ω</td><td class="p-2">Databit 3</td></tr>
+          <tr><td class="p-2">29</td><td class="p-2"><span class="signal">D4</span></td><td class="p-2"><strong>Arduino D26</strong> via 100Ω</td><td class="p-2">Databit 4</td></tr>
+          <tr><td class="p-2">28</td><td class="p-2"><span class="signal">D5</span></td><td class="p-2"><strong>Arduino D27</strong> via 100Ω</td><td class="p-2">Databit 5</td></tr>
+          <tr><td class="p-2">27</td><td class="p-2"><span class="signal">D6</span></td><td class="p-2"><strong>Arduino D28</strong> via 100Ω</td><td class="p-2">Databit 6</td></tr>
+          <tr><td class="p-2">26</td><td class="p-2"><span class="signal">D7</span></td><td class="p-2"><strong>Arduino D29</strong> via 100Ω</td><td class="p-2">Databit 7 (MSB)</td></tr>          <tr><td class="p-2">7</td><td class="p-2"><span class="signal">SYNC</span></td><td class="p-2"><strong>Arduino D13</strong></td><td class="p-2">HÖG = CPU:n hämtar första byten av ny instruktion</td></tr>
         </tbody>
       </table>
     </div>
@@ -118,24 +118,24 @@
     
       <p>I steg 3 körde CPU:n fritt i en loop — spännande men omöjligt att felsöka. Nu ger vi oss själva <strong>full kontroll över exekveringen</strong> med två fysiska knappar. Det här är en av de stora fördelarna med W65C02S: eftersom kretsen är statisk CMOS kan klockan stoppas hur länge som helst — minuter, timmar, dagar — utan att processorn tappar sitt interna tillstånd. Vi kan stega genom programmet i vår egen takt.</p>
 
-      <h3><span class="pin">SYNC</span> — processorns "nu börjar jag"-signal</h3>
-      <p>CPU:ns pin 7 (<span class="pin">SYNC</span>) är en av de mest användbara signalerna på hela kretsen. Den går <strong>HÖG</strong> under den klockcykel då processorn hämtar första byten av en ny instruktion (opcode fetch). Varje gång du ser <span class="pin">SYNC</span> tändas vet du att CPU:n precis har påbörjat nästa instruktion — oavsett om det är en enkel <code>NOP</code> eller en komplex adresseringsmod. <span class="pin">SYNC</span> är hemligheten bakom instruktionsstegningen.</p>
+      <h3><span class="signal">SYNC</span> — processorns "nu börjar jag"-signal</h3>
+      <p>CPU:ns pin 7 (<span class="signal">SYNC</span>) är en av de mest användbara signalerna på hela kretsen. Den går <strong>HÖG</strong> under den klockcykel då processorn hämtar första byten av en ny instruktion (opcode fetch). Varje gång du ser <span class="signal">SYNC</span> tändas vet du att CPU:n precis har påbörjat nästa instruktion — oavsett om det är en enkel <code>NOP</code> eller en komplex adresseringsmod. <span class="signal">SYNC</span> är hemligheten bakom instruktionsstegningen.</p>
 
       <h3>Två knappar, två olika beteenden</h3>
       <p>Koden ändrar bara <code>loop()</code> och lägger till några nya pinkonstanter — allt annat är oförändrat från steg 3. Så här fungerar knapparna:</p>
       <ul class="list-disc pl-5 space-y-1">
-        <li><strong>Knapp 1 (<span class="pin">D11</span>) — klocksteg:</strong> varje tryckning ger exakt en klockcykel. Du ser en
+        <li><strong>Knapp 1 (<span class="signal">D11</span>) — klocksteg:</strong> varje tryckning ger exakt en klockcykel. Du ser en
           ny rad i seriemonitor för varje tryck. Perfekt för att inspektera bussen i ultrarapid.</li>
-        <li><strong>Knapp 2 (<span class="pin">D12</span>) — instruktionssteg:</strong> pulserar klockan tills <span class="pin">SYNC</span> går hög. Då
+        <li><strong>Knapp 2 (<span class="signal">D12</span>) — instruktionssteg:</strong> pulserar klockan tills <span class="signal">SYNC</span> går hög. Då
           vet vi att CPU:n är i början av nästa instruktion. En enda tryckning kan generera flera
           klockcykler (t.ex. 4 cykler för en <code>NOP</code>), men stannar alltid på en instruktionsgräns.</li>
       </ul>
 
       <h3>Debounce — att hantera kontaktstudsar</h3>
-      <p>När du trycker på en mekanisk knapp studsar metallkontakterna mikroskopiskt — en enda tryckning kan generera dussintals snabba på/av-signaler. Utan debounce skulle CPU:n ta flera steg per tryck. Lösningen är enkel: <code>delay(50)</code> efter att knappen detekterats, vänta på att den släpps, och <code>delay(50)</code> igen. <code>INPUT_PULLUP</code> gör att Arduinons inbyggda pull-up-motstånd används — knappen kopplas direkt mellan pinne och <span class="pin">GND</span>, inga externa motstånd behövs.</p>
+      <p>När du trycker på en mekanisk knapp studsar metallkontakterna mikroskopiskt — en enda tryckning kan generera dussintals snabba på/av-signaler. Utan debounce skulle CPU:n ta flera steg per tryck. Lösningen är enkel: <code>delay(50)</code> efter att knappen detekterats, vänta på att den släpps, och <code>delay(50)</code> igen. <code>INPUT_PULLUP</code> gör att Arduinons inbyggda pull-up-motstånd används — knappen kopplas direkt mellan pinne och <span class="signal">GND</span>, inga externa motstånd behövs.</p>
 
       <h3>Vad som är nytt jämfört med steg 3</h3>
-      <p><span class="pin">SYNC</span>-pinnen kopplas in på <span class="pin">D13</span>. <code>loop()</code> ändras från en enkel <code>pulse()</code>-loop till knappläsning med debounce. Instruktionsstegningen (<code>do { pulse(); } while (!digitalRead(SYNC))</code>) är en av de smartaste kodraderna i hela projektet — den låter dig kliva genom ditt program instruktion för instruktion, precis som en debugger, fast i hårdvara.</p>
+      <p><span class="signal">SYNC</span>-pinnen kopplas in på <span class="signal">D13</span>. <code>loop()</code> ändras från en enkel <code>pulse()</code>-loop till knappläsning med debounce. Instruktionsstegningen (<code>do { pulse(); } while (!digitalRead(SYNC))</code>) är en av de smartaste kodraderna i hela projektet — den låter dig kliva genom ditt program instruktion för instruktion, precis som en debugger, fast i hårdvara.</p>
     
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
@@ -273,7 +273,7 @@ R $8002
 R $8003
 R $8004</pre>
       </div>
-        <p>Med <strong>Knapp 1</strong> får du en rad per tryck. Du kan se reset-vektorn hämtas — <code>$FFFC</code>, <code>$FFFD</code> — och sedan följa CPU:n när den läser <code>NOP</code>-instruktioner. Med <strong>Knapp 2</strong> körs flera rader samtidigt tills <span class="pin">SYNC</span> går hög, vilket för en <code>NOP</code> (<code>$EA</code>) betyder 2 klockcykler.</p>
+        <p>Med <strong>Knapp 1</strong> får du en rad per tryck. Du kan se reset-vektorn hämtas — <code>$FFFC</code>, <code>$FFFD</code> — och sedan följa CPU:n när den läser <code>NOP</code>-instruktioner. Med <strong>Knapp 2</strong> körs flera rader samtidigt tills <span class="signal">SYNC</span> går hög, vilket för en <code>NOP</code> (<code>$EA</code>) betyder 2 klockcykler.</p>
       <p>Känslan av att trycka på en knapp och se CPU:n ta ett enda steg är svår att beskriva. Du har full kontroll. Du kan stanna hur länge du vill, mäta spänningar, fundera på vad som händer — och sedan trycka igen.</p>
     
   </section>
@@ -284,9 +284,9 @@ R $8004</pre>
       
         <p>Här är några saker att kontrollera:</p>
         <ul class="list-disc pl-5 space-y-1">
-        <li><strong>Knapparna gör inget?</strong> Kontrollera att <code>INPUT_PULLUP</code> är satt, och att knappen sitter mellan rätt pinne och <span class="pin">GND</span>.</li>
+        <li><strong>Knapparna gör inget?</strong> Kontrollera att <code>INPUT_PULLUP</code> är satt, och att knappen sitter mellan rätt pinne och <span class="signal">GND</span>.</li>
         <li><strong>Flera steg per tryck?</strong> Debounce-tiden (50 ms) är för kort. Öka till 100 ms.</li>
-        <li><strong>Knapp 2 stannar aldrig?</strong> <span class="pin">SYNC</span> är inte inkopplad eller fel pinne. Mät CPU pin 7 — ska gå HÖG periodiskt.</li>
+        <li><strong>Knapp 2 stannar aldrig?</strong> <span class="signal">SYNC</span> är inte inkopplad eller fel pinne. Mät CPU pin 7 — ska gå HÖG periodiskt.</li>
       </ul>
     
 
