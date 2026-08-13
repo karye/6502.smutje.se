@@ -50,15 +50,15 @@
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Mål</h2>
     
-      <p>I steg 6 styrde <strong>Arduino</strong> LCD-displayen direkt. Nu tar vi nästa stora kliv: vi kopplar in en <strong>W65C22 VIA</strong> (Versatile Interface Adapter) — en I/O-krets som ger 6502-processorn 20 egna pinnar att styra. VIAn sitter på <strong>CPU</strong>:ns adress- och databuss, precis som ett RAM-minne, men istället för att lagra data styr den fysiska pinnar.</p>
+      <p>I steg 6 styrde <strong>Arduino</strong> <strong>LCD</strong>-displayen direkt. Nu tar vi nästa stora kliv: vi kopplar in en <strong>W65C22 VIA</strong> (Versatile Interface Adapter) — en I/O-krets som ger 6502-processorn 20 egna pinnar att styra. VIAn sitter på <strong>CPU</strong>:ns adress- och databuss, precis som ett RAM-minne, men istället för att lagra data styr den fysiska pinnar.</p>
       <p>En <strong>74HC00</strong> (två NAND-grindar) avkodar adressbussen så att VIA:n hamnar på adress <code>$4000–$400F</code>. U4A inverterar <span class="signal">A15</span>, U4B NAND:ar med <span class="signal">A14</span> — resultat: VIA aktiveras när <span class="signal">A14</span>=1 och <span class="signal">A15</span>=0.</p>
       <p>6502-programmet på <code>$8000</code> gör följande:</p>
       <ol class="list-decimal pl-5 space-y-1">
         <li>Sätter VIA:ns portar som utgångar</li>
-        <li>Initierar LCD:n i 8-bitarsläge (8-bitars databuss, 2 rader, 5×8 font, display on, entry mode)</li>
+        <li>Initierar <strong>LCD</strong>:n i 8-bitarsläge (8-bitars databuss, 2 rader, 5×8 font, display on, entry mode)</li>
         <li>Skriver två rader text genom att lägga ASCII-värden på port B och pulsa enable-signalen på port A — sedan <strong>clear display</strong> och loopa om från början</li>
       </ol>
-      <p>När allt fungerar har vi en dator där <strong>CPU:n själv styr I/O</strong> via minnesmappade adresser. <strong>Arduino</strong> är nu bara minnesemulator och klocka — all logik för LCD:n körs på 6502.</p>
+      <p>När allt fungerar har vi en dator där <strong>CPU:n själv styr I/O</strong> via minnesmappade adresser. <strong>Arduino</strong> är nu bara minnesemulator och klocka — all logik för <strong>LCD</strong>:n körs på 6502.</p>
     
   </section>
 
@@ -82,7 +82,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2>Kopplingsschema</h2>
-    <p>Schemat visar hur fyra kretsar nu delar på adress- och databussen: <strong>CPU</strong>, <strong>Arduino</strong>, VIA och <strong>74HC00</strong>. VIAn får sin klocka, <span class="signal">R/W</span> och reset från <strong>CPU</strong>:n, medan <strong>74HC00</strong>:ns utsignal till <span class="signal">/CS2</span> avgör när VIAn får prata. LCD:n har flyttat från <strong>Arduino</strong> till VIA:ns portar.</p>
+    <p>Schemat visar hur fyra kretsar nu delar på adress- och databussen: <strong>CPU</strong>, <strong>Arduino</strong>, VIA och <strong>74HC00</strong>. VIAn får sin klocka, <span class="signal">R/W</span> och reset från <strong>CPU</strong>:n, medan <strong>74HC00</strong>:ns utsignal till <span class="signal">/CS2</span> avgör när VIAn får prata. <strong>LCD</strong>:n har flyttat från <strong>Arduino</strong> till VIA:ns portar.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-7.png" alt="Steg 7 — VIA + LCD" class="w-full">
     </div>
@@ -201,7 +201,7 @@
   <!-- Kretstabeller -->
   <section class="mb-8">
     <h2>Kopplingar — krets för krets</h2>
-    <p>Kopplingarna är organiserade krets för krets, eftersom adress- och databussen nu delas av fyra enheter. För varje krets finns en egen tabell: vad varje pinne heter, vart den går, och varför. Börja med <strong>CPU</strong>:n, följ sedan VIA:n och <strong>74HC00</strong>:ns avkodning, och avsluta med LCD:n.</p>
+    <p>Kopplingarna är organiserade krets för krets, eftersom adress- och databussen nu delas av fyra enheter. För varje krets finns en egen tabell: vad varje pinne heter, vart den går, och varför. Börja med <strong>CPU</strong>:n, följ sedan VIA:n och <strong>74HC00</strong>:ns avkodning, och avsluta med <strong>LCD</strong>:n.</p>
 
     <!-- W65C02S -->
     <h3><strong>W65C02S</strong> <strong>CPU</strong></h3>
@@ -363,7 +363,7 @@
     <p>Programmet ligger på <code>$8000</code>:</p>
     <ol class="list-decimal pl-5 space-y-1">
       <li>sätter VIA-portar som utgångar,</li>
-      <li>initierar LCD i 8-bitarsläge,</li>
+      <li>initierar <strong>LCD</strong> i 8-bitarsläge,</li>
       <li>skriver två rader text,</li>
       <li>clear display och loopa om och loopa om. För varje byte: lägg data på PORTB, pulsa E (<span class="signal">PA2</span>) på <span class="signal">PORTA</span>.</li>
     </ol>
@@ -381,15 +381,15 @@
       </table>
     </div>
 
-    <h3>Att skriva ett tecken till LCD</h3>
+    <h3>Att skriva ett tecken till <strong>LCD</strong></h3>
     <ol class="list-decimal pl-5 space-y-1">
-      <li><strong>Sätt data:</strong> <code>STA $4000</code> — skicka ASCII-tecknet till PORTB (LCD <span class="signal">DB0–DB7</span>)</li>
+      <li><strong>Sätt data:</strong> <code>STA $4000</code> — skicka ASCII-tecknet till PORTB (<strong>LCD</strong> <span class="signal">DB0–DB7</span>)</li>
       <li><strong>Sätt <span class="signal">RS</span>=1, E=1:</strong> <code>LDA #$05; STA $4001</code> — <span class="signal">PA0</span>=<span class="signal">RS</span>=1 (data), <span class="signal">PA2</span>=E=1</li>
-      <li><strong>Sätt E=0:</strong> <code>LDA #$01; STA $4001</code> — <span class="signal">PA2</span>=E=0 (fallande flank → LCD läser)</li>
+      <li><strong>Sätt E=0:</strong> <code>LDA #$01; STA $4001</code> — <span class="signal">PA2</span>=E=0 (fallande flank → <strong>LCD</strong> läser)</li>
     </ol>
 
     <h3>Programmet i maskinkod</h3>
-    <p>Tabellen nedan visar hur <strong>Arduino</strong> bygger 6502-programmet i minnet, byte för byte. Första delen initierar VIA-portarna och LCD-displayen (8-bitarsläge, 2 rader, 5&times;8 font). Därefter skrivs en textrad i taget: cursor-positionering (&rarr; rad 1), <span class="signal">RS</span>=1 (teckenläge), och så varje ASCII-tecken med en enable-puls. Efter sista tecknet kommer clear display och ett <code>JMP</code>-hopp tillbaka till början.</p>
+    <p>Tabellen nedan visar hur <strong>Arduino</strong> bygger 6502-programmet i minnet, byte för byte. Första delen initierar VIA-portarna och <strong>LCD</strong>-displayen (8-bitarsläge, 2 rader, 5&times;8 font). Därefter skrivs en textrad i taget: cursor-positionering (&rarr; rad 1), <span class="signal">RS</span>=1 (teckenläge), och så varje ASCII-tecken med en enable-puls. Efter sista tecknet kommer clear display och ett <code>JMP</code>-hopp tillbaka till början.</p>
     <div class="overflow-x-auto mt-3">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Steg</th><th class="p-2 text-left">Assembler</th><th class="p-2 text-left">Bytes</th><th class="p-2 text-left">Förklaring</th></tr></thead>
@@ -420,7 +420,7 @@
       </table>
     </div>
     <div class="text-gray-700 space-y-3">
-      <p>Det här är projektets mest komplexa kod — och den största milstolpen. Vi introducerar <strong>två nya kretsar</strong> (<strong>W65C22</strong> VIA och <strong>74HC00</strong>) och låter <strong>CPU</strong>:n själv styra LCD-displayen via minnesmappad I/O. <strong>Arduino</strong> reduceras till det den gör bäst: emulera ROM och generera klocka. Allt annat sköter 6502-processorn.</p>
+      <p>Det här är projektets mest komplexa kod — och den största milstolpen. Vi introducerar <strong>två nya kretsar</strong> (<strong>W65C22</strong> VIA och <strong>74HC00</strong>) och låter <strong>CPU</strong>:n själv styra <strong>LCD</strong>-displayen via minnesmappad I/O. <strong>Arduino</strong> reduceras till det den gör bäst: emulera ROM och generera klocka. Allt annat sköter 6502-processorn.</p>
 
       <h3><code>is_via()</code> — Arduinons sätt att kliva ur vägen</h3>
       <p>Den viktigaste nya funktionen är <code>is_via()</code>. Den returnerar <code>true</code> för adresser mellan <code>$4000</code> och <code>$400F</code> — de 16 bytes som <strong>W65C22</strong> VIA-kretsen ockuperar. När <strong>CPU</strong>:n läser eller skriver till dessa adresser måste <strong>Arduino</strong> <strong>tri-stata</strong> databussen (<code>DDRA = 0x00</code>) så att den fysiska VIA-kretsen kan svara. Om <strong>Arduino</strong> skulle driva bussen samtidigt som VIA:n blir det en busskollision — dyrbar rök.</p>
@@ -434,22 +434,22 @@
       <ol class="list-decimal pl-5 space-y-1">
         <li><strong>Sätt VIA-portar som utgångar</strong> — <code>LDA #$FF</code> → <code>STA $4002</code>
           (DDRB) → <code>STA $4003</code> (<span class="signal">DDRA</span>). Alla 16 pinnar på port A och B blir utgångar.</li>
-        <li><strong>LCD-init i 8-bitarsläge</strong> — skickar <code>$30</code> tre gånger (väcker LCD:n
+        <li><strong>LCD-init i 8-bitarsläge</strong> — skickar <code>$30</code> tre gånger (väcker <strong>LCD</strong>:n
           i 8-bitarsläge), sedan <code>$38</code> (2 rader, 5×8 font), <code>$0C</code> (display on),
           <code>$01</code> (clear), <code>$06</code> (entry mode). Standardsekvens för HD44780.</li>
         <li><strong>Skriv text</strong> — sätter cursor på rad 1 (<code>$80</code>), byter till
           data-läge (<span class="signal">RS</span>=1), och skickar en sträng tecken för tecken via PORTB. Varje tecken kräver
           en enable-puls: <code>$05</code> (<span class="signal">RS</span>=1, E=1) → <code>$01</code> (<span class="signal">RS</span>=1, E=0). Den
-          fallande flanken på E får LCD:n att läsa PORTB.</li>
+          fallande flanken på E får <strong>LCD</strong>:n att läsa PORTB.</li>
         <li><strong>Clear + loop</strong> — avslutar med clear display (<code>$01</code>) och
           <code>JMP</code> tillbaka till textutskriften. Oändlig loop.</li>
       </ol>
 
       <h3>Debug-fasdetektion</h3>
-      <p>Koden innehåller en <code>phase</code>-variabel och fasdetektion som känner igen var i programmet <strong>CPU</strong>:n befinner sig — reset-sekvens, VIA-init, LCD-init, textutskrift, loop. Det är ovärderligt för felsökning: du ser direkt om <strong>CPU</strong>:n fastnar i fel fas eller hoppar till en oväntad adress.</p>
+      <p>Koden innehåller en <code>phase</code>-variabel och fasdetektion som känner igen var i programmet <strong>CPU</strong>:n befinner sig — reset-sekvens, VIA-init, <strong>LCD</strong>-init, textutskrift, loop. Det är ovärderligt för felsökning: du ser direkt om <strong>CPU</strong>:n fastnar i fel fas eller hoppar till en oväntad adress.</p>
 
       <h3>Vad som är nytt jämfört med steg 6</h3>
-      <p><strong>W65C22</strong> VIA, <strong>74HC00</strong>, omkoppling av LCD från <strong>Arduino</strong> till VIA. I koden: <code>is_via()</code>, <code>program[2048]</code>, utökad <code>read_mem()</code>/<code>write_mem()</code>, och programladdningen med <code>next++</code>-tricket. Inget <code>LiquidCrystal</code>-bibliotek längre — LCD:n styrs helt av 6502-assemblerkoden som Arduinon laddar in.</p>
+      <p><strong>W65C22</strong> VIA, <strong>74HC00</strong>, omkoppling av <strong>LCD</strong> från <strong>Arduino</strong> till VIA. I koden: <code>is_via()</code>, <code>program[2048]</code>, utökad <code>read_mem()</code>/<code>write_mem()</code>, och programladdningen med <code>next++</code>-tricket. Inget <code>LiquidCrystal</code>-bibliotek längre — <strong>LCD</strong>:n styrs helt av 6502-assemblerkoden som Arduinon laddar in.</p>
     </div>
     <p>Komplett <strong>Arduino</strong>-kod för steg 7:</p>
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
@@ -736,7 +736,7 @@ void loop() {
   <section class="mb-8">
     <h2>Exempel på körning</h2>
     
-      <p>När du laddat upp koden och öppnar seriemonitor ser du programmet genomlöpa alla faser. Samtidigt vaknar LCD-displayen till liv — styrd helt av 6502-processorn via VIA-kretsen:</p>
+      <p>När du laddat upp koden och öppnar seriemonitor ser du programmet genomlöpa alla faser. Samtidigt vaknar <strong>LCD</strong>-displayen till liv — styrd helt av 6502-processorn via VIA-kretsen:</p>
 
       <!-- Sida vid sida: seriemonitor + LCD -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -766,7 +766,7 @@ W $4000  ← VIA: 3D  (=)
 ══════ KLAR — JMP loop ══════</pre>
         </div>
         <div>
-          <p class="text-xs text-gray-500 mb-1 font-semibold">LCD-displayen — efter hello-utskriften</p>
+          <p class="text-xs text-gray-500 mb-1 font-semibold"><strong>LCD</strong>-displayen — efter hello-utskriften</p>
           <div class="bg-green-700 text-green-200 p-3 rounded-lg font-mono text-center shadow-inner">
             <div class="bg-green-900 text-green-300 px-2 py-0.5 rounded inline-block mb-2 text-xs">LCD 16×2</div>
             <div class="bg-green-950 rounded p-2">
@@ -774,11 +774,11 @@ W $4000  ← VIA: 3D  (=)
               <div>Hello from W65C02!&nbsp;&nbsp;</div>
             </div>
           </div>
-          <p class="text-xs text-gray-500 mt-2"><strong>CPU</strong>:n har skrivit två rader text till LCD:n via VIA:ns portar. Varje tecken skickades som en <code>W $4000</code> i seriemonitor.</p>
+          <p class="text-xs text-gray-500 mt-2"><strong>CPU</strong>:n har skrivit två rader text till <strong>LCD</strong>:n via VIA:ns portar. Varje tecken skickades som en <code>W $4000</code> i seriemonitor.</p>
         </div>
       </div>
 
-      <p>Varje <code>W $4000</code> eller <code>W $4001</code> är <strong>CPU</strong>:n som skriver till VIA:ns register — <strong>Arduino</strong> gör ingenting, den fysiska VIA-kretsen fångar upp skrivningen och styr LCD:n. Texten rullar fram på displayen, tecken för tecken, styrd helt av 6502-processorn.</p>
+      <p>Varje <code>W $4000</code> eller <code>W $4001</code> är <strong>CPU</strong>:n som skriver till VIA:ns register — <strong>Arduino</strong> gör ingenting, den fysiska VIA-kretsen fångar upp skrivningen och styr <strong>LCD</strong>:n. Texten rullar fram på displayen, tecken för tecken, styrd helt av 6502-processorn.</p>
       <p>När programmet når slutet hoppar det tillbaka till början och skriver om alltihop. Clear display, skriv text, clear display — i en oändlig loop. Datorn är nu självförsörjande: <strong>CPU</strong>:n styr I/O, <strong>Arduino</strong> levererar bara programkoden och klockan.</p>
     
   </section>

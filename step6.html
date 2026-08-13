@@ -50,7 +50,7 @@
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Mål</h2>
     
-      <p>Datorn är nu komplett — <strong>CPU</strong>, minne, LCD, knappar. Men den kör bara <code>NOP</code>:ar. Dags att skriva vårt <strong>första egna 6502-program!</strong></p>
+      <p>Datorn är nu komplett — <strong>CPU</strong>, minne, <strong>LCD</strong>, knappar. Men den kör bara <code>NOP</code>:ar. Dags att skriva vårt <strong>första egna 6502-program!</strong></p>
       <p>Vi skriver en enkel räknare: öka X-registret från 0 till 255, spara värdet på adress <code>$0200</code>, och loopa. Programmet är bara 9 bytes stort — men det innehåller allt ett riktigt program behöver: initiering, beräkning, minnesskrivning och loop.</p>
       <p>6502-program skrivs i <strong>maskinkod</strong> — varje instruktion är 1–3 bytes. <code>LDX #$00</code> är två bytes (<code>$A2 $00</code>), <code>INX</code> är en byte (<code>$E8</code>), <code>STX $0200</code> är tre bytes (<code>$8E $00 $02</code>). Vi skriver in dessa bytes direkt i Arduinons minnesarray, och <strong>CPU</strong>:n exekverar dem som ett riktigt program.</p>
       <p>Ingen ny hårdvara — samma koppling som steg 5. Allt nytt finns i mjukvaran.</p>
@@ -126,7 +126,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2>Kopplingsschema</h2>
-    <p>Samma hårdvara som steg 5. LCD:n kopplas direkt till <strong>Arduino</strong> — <span class="signal">RS</span>→<span class="signal">D5</span>, E→<span class="signal">D6</span>, <span class="signal">DB4–DB7</span>→<span class="signal">D10</span>,<span class="signal">D9</span>,<span class="signal">D8</span>,<span class="signal">D7</span> (omvänd ordning).</p>
+    <p>Samma hårdvara som steg 5. <strong>LCD</strong>:n kopplas direkt till <strong>Arduino</strong> — <span class="signal">RS</span>→<span class="signal">D5</span>, E→<span class="signal">D6</span>, <span class="signal">DB4–DB7</span>→<span class="signal">D10</span>,<span class="signal">D9</span>,<span class="signal">D8</span>,<span class="signal">D7</span> (omvänd ordning).</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-6.png" alt="Steg 6 — LCD kopplad till Arduino" class="w-full">
     </div>
@@ -219,10 +219,10 @@
       </div>
 
       <h3><strong>Arduino</strong>-koden — bara <code>setup()</code> ändras</h3>
-      <p><code>pulse()</code>, <code>loop()</code> och LCD-koden är helt oförändrade från steg 5. Det enda som ändras är programladdningen i <code>setup()</code>. Istället för en enda <code>write_mem(0x8000, 0xEA)</code> skriver vi nu 9 bytes — en i taget, på stigande adresser från <code>$8000</code>. Varje <code>write_mem()</code> placerar en byte i Arduinons <code>program[]</code>-array, och <strong>CPU</strong>:n kommer att läsa dem som instruktioner.</p>
+      <p><code>pulse()</code>, <code>loop()</code> och <strong>LCD</strong>-koden är helt oförändrade från steg 5. Det enda som ändras är programladdningen i <code>setup()</code>. Istället för en enda <code>write_mem(0x8000, 0xEA)</code> skriver vi nu 9 bytes — en i taget, på stigande adresser från <code>$8000</code>. Varje <code>write_mem()</code> placerar en byte i Arduinons <code>program[]</code>-array, och <strong>CPU</strong>:n kommer att läsa dem som instruktioner.</p>
 
-      <h3>Vad du ser på LCD:n</h3>
-      <p>När programmet körs kan du med Knapp 2 (instruktionssteg) följa programflödet: <code>$8000</code> (<code>LDX</code>) → <code>$8002</code> (<code>INX</code>) → <code>$8003</code> (<code>STX</code>) → <code>$8006</code> (<code>JMP</code>) → <code>$8002</code> (<code>INX</code> igen). Varje varv genom loopen ökar värdet på adress <code>$0200</code> — och du kan se det på LCD:ns rad 1 som <code>D:$01</code>, <code>D:$02</code>, <code>D:$03</code>… hela vägen upp till <code>D:$FF</code> (255). Sedan wrappar X-registret till 0 och loopen börjar om.</p>
+      <h3>Vad du ser på <strong>LCD</strong>:n</h3>
+      <p>När programmet körs kan du med Knapp 2 (instruktionssteg) följa programflödet: <code>$8000</code> (<code>LDX</code>) → <code>$8002</code> (<code>INX</code>) → <code>$8003</code> (<code>STX</code>) → <code>$8006</code> (<code>JMP</code>) → <code>$8002</code> (<code>INX</code> igen). Varje varv genom loopen ökar värdet på adress <code>$0200</code> — och du kan se det på <strong>LCD</strong>:ns rad 1 som <code>D:$01</code>, <code>D:$02</code>, <code>D:$03</code>… hela vägen upp till <code>D:$FF</code> (255). Sedan wrappar X-registret till 0 och loopen börjar om.</p>
     
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
@@ -362,7 +362,7 @@ void loop() {
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Exempel på körning</h2>
     
-      <p>När du laddat upp koden och trycker på <strong>Knapp 2</strong> (instruktionssteg) ser du programmet rulla genom adresserna — både i seriemonitor och på LCD-displayen:</p>
+      <p>När du laddat upp koden och trycker på <strong>Knapp 2</strong> (instruktionssteg) ser du programmet rulla genom adresserna — både i seriemonitor och på <strong>LCD</strong>-displayen:</p>
 
       <!-- Sida vid sida: seriemonitor + LCD -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -387,7 +387,7 @@ R $8002  ← tillbaka till INX
 ...</pre>
         </div>
         <div>
-          <p class="text-xs text-gray-500 mb-1 font-semibold">LCD-displayen — mitt i loopen</p>
+          <p class="text-xs text-gray-500 mb-1 font-semibold"><strong>LCD</strong>-displayen — mitt i loopen</p>
           <div class="bg-green-700 text-green-200 p-3 rounded-lg font-mono text-center shadow-inner">
             <div class="bg-green-900 text-green-300 px-2 py-0.5 rounded inline-block mb-2 text-xs">LCD 16×2</div>
             <div class="bg-green-950 rounded p-2">
@@ -399,7 +399,7 @@ R $8002  ← tillbaka till INX
         </div>
       </div>
 
-      <p>För första gången ser du ett <strong>W</strong> i loggen! <strong>CPU</strong>:n <em>skriver</em> till adress <code>$0200</code> — det är <code>STX $0200</code> som sparar X-registrets värde. På LCD:ns rad 1 ser du <code>D:$01</code>, <code>D:$02</code>, <code>D:$03</code>… räknaren ökar för varje varv. När den når <code>D:$FF</code> (255) wrappar den till <code>D:$00</code> — X-registret är bara 8 bitar brett.</p>
+      <p>För första gången ser du ett <strong>W</strong> i loggen! <strong>CPU</strong>:n <em>skriver</em> till adress <code>$0200</code> — det är <code>STX $0200</code> som sparar X-registrets värde. På <strong>LCD</strong>:ns rad 1 ser du <code>D:$01</code>, <code>D:$02</code>, <code>D:$03</code>… räknaren ökar för varje varv. När den når <code>D:$FF</code> (255) wrappar den till <code>D:$00</code> — X-registret är bara 8 bitar brett.</p>
       <p>Programmet är ynka 9 bytes, men det innehåller redan alla mönster du behöver för att skriva större program: initiering (<code>LDX</code>), beräkning (<code>INX</code>), lagring (<code>STX</code>) och kontrollflöde (<code>JMP</code>). Du har just skrivit ditt första 6502-program!</p>
     
   </section>

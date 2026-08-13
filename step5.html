@@ -51,8 +51,8 @@
     <h2>Mål</h2>
     
       <p>Datorn fungerar — men all feedback går via seriemonitorn på en laptopen. Nu kopplar vi in en <strong>LCD-display (16×2 tecken)</strong> som visar vad <strong>CPU</strong>:n gör direkt på kopplingsdäcket. Ingen datorskärm behövs längre.</p>
-      <p>LCD:n kopplas i <strong>4-bitars parallellt läge</strong> till <strong>Arduino</strong>. Det innebär att vi skickar data 4 bitar i taget via pinnar <span class="signal">D7–D10</span>. <strong>Arduino</strong>-biblioteket <code>LiquidCrystal</code> sköter all kommunikation — vi behöver bara tala om vilka pinnar som används.</p>
-      <p><strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. <strong>Arduino</strong> <span class="signal">D10</span> går till LCD <span class="signal">DB4</span>, <span class="signal">D9</span> till <span class="signal">DB5</span>, <span class="signal">D8</span> till <span class="signal">DB6</span>, <span class="signal">D7</span> till <span class="signal">DB7</span>. Koden måste spegla detta:</p>
+      <p><strong>LCD</strong>:n kopplas i <strong>4-bitars parallellt läge</strong> till <strong>Arduino</strong>. Det innebär att vi skickar data 4 bitar i taget via pinnar <span class="signal">D7–D10</span>. <strong>Arduino</strong>-biblioteket <code>LiquidCrystal</code> sköter all kommunikation — vi behöver bara tala om vilka pinnar som används.</p>
+      <p><strong>Viktig detalj:</strong> datapinnarna är i omvänd ordning. <strong>Arduino</strong> <span class="signal">D10</span> går till <strong>LCD</strong> <span class="signal">DB4</span>, <span class="signal">D9</span> till <span class="signal">DB5</span>, <span class="signal">D8</span> till <span class="signal">DB6</span>, <span class="signal">D7</span> till <span class="signal">DB7</span>. Koden måste spegla detta:</p>
       <pre class="bg-gray-900 text-gray-100 p-3 rounded text-sm font-mono">LiquidCrystal lcd(
   5,  // <span class="text-green-400">RS</span>
   6,  // <span class="text-green-400">E</span>
@@ -61,14 +61,14 @@
   8,  // <span class="text-green-400">DB6</span>
   7   // <span class="text-green-400">DB7</span>
 );</pre>
-      <p>LCD:ns <span class="signal">R/W</span>-pinne kopplas till <span class="signal">GND</span> — vi ska bara skriva till displayen, aldrig läsa.</p>
+      <p><strong>LCD</strong>:ns <span class="signal">R/W</span>-pinne kopplas till <span class="signal">GND</span> — vi ska bara skriva till displayen, aldrig läsa.</p>
     
   </section>
 
   <!-- Nya komponenter -->
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Nya komponenter</h2>
-    <p>En 16×2 LCD-display, en 10 kΩ-potentiometer för kontrast och ett 220Ω-motstånd för bakgrundsbelysningen. Med dessa ser du vad <strong>CPU</strong>:n gör direkt på kopplingsdäcket — datorn blir fristående från datorskärmen.</p>
+    <p>En 16×2 <strong>LCD</strong>-display, en 10 kΩ-potentiometer för kontrast och ett 220Ω-motstånd för bakgrundsbelysningen. Med dessa ser du vad <strong>CPU</strong>:n gör direkt på kopplingsdäcket — datorn blir fristående från datorskärmen.</p>
     <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
       <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th></tr></thead>
       <tbody class="divide-y">
@@ -82,7 +82,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2>Kopplingsschema</h2>
-    <p>Schemat visar LCD-displayen ansluten i 4-bitarsläge: <span class="signal">RS</span> till <span class="signal">D5</span>, E till <span class="signal">D6</span>, och datapinnarna <span class="signal">DB4–DB7</span> till <span class="signal">D10</span>, <span class="signal">D9</span>, <span class="signal">D8</span>, <span class="signal">D7</span> i omvänd ordning. Potentiometern sitter på <span class="signal">VO</span> för kontrast och 220Ω-motståndet matar bakgrundsbelysningen. Resten av datorn är oförändrad.</p>
+    <p>Schemat visar <strong>LCD</strong>-displayen ansluten i 4-bitarsläge: <span class="signal">RS</span> till <span class="signal">D5</span>, E till <span class="signal">D6</span>, och datapinnarna <span class="signal">DB4–DB7</span> till <span class="signal">D10</span>, <span class="signal">D9</span>, <span class="signal">D8</span>, <span class="signal">D7</span> i omvänd ordning. Potentiometern sitter på <span class="signal">VO</span> för kontrast och 220Ω-motståndet matar bakgrundsbelysningen. Resten av datorn är oförändrad.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-5.png" alt="Steg 5 — LCD-display" class="w-full">
     </div>
@@ -131,7 +131,7 @@
   <!-- Kretstabell -->
   <section class="mb-8">
     <h2>Kopplingar</h2>
-    <p>Här är hela kopplingen inklusive LCD:ns 16 pinnar, markerade med egen radgrupp i tabellen. Datapinnarna <span class="signal">DB4–DB7</span> går i omvänd ordning (<span class="signal">D10</span>→<span class="signal">DB4</span>, <span class="signal">D9</span>→<span class="signal">DB5</span>…) — en klassisk fallgrop när du kopplar, så dubbelkolla varje ledning mot tabellen.</p>
+    <p>Här är hela kopplingen inklusive <strong>LCD</strong>:ns 16 pinnar, markerade med egen radgrupp i tabellen. Datapinnarna <span class="signal">DB4–DB7</span> går i omvänd ordning (<span class="signal">D10</span>→<span class="signal">DB4</span>, <span class="signal">D9</span>→<span class="signal">DB5</span>…) — en klassisk fallgrop när du kopplar, så dubbelkolla varje ledning mot tabellen.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -179,22 +179,22 @@
     
       <p>Hittills har all feedback från datorn gått via seriemonitor på en laptop. Det fungerar, men det känns inte som en riktig dator. Nu kopplar vi in en <strong>LCD-display</strong> direkt på kopplingsdäcket — och vips är datorn fristående. Ingen PC krävs för att se vad <strong>CPU</strong>:n gör.</p>
 
-      <h3>LCD i 4-bitarsläge — att prata med displayen</h3>
-      <p>LCD-displayer med HD44780-kontroller (standard för 16×2 och 20×4) kan köras i två lägen: 8-bitars (alla 8 datapinnar används) eller 4-bitars (endast <span class="signal">DB4–DB7</span>). Vi använder 4-bitarsläget för att spara pinnar på <strong>Arduino</strong>. <strong>Arduino</strong>-biblioteket <code>LiquidCrystal</code> hanterar all kommunikation — vi behöver bara tala om vilka pinnar som används, och som vi såg i Mål-avsnittet speglar konstruktorn den omvända pin-ordningen.</p>
-      <p>Om din display har rak ordning (<span class="signal">D7</span>→<span class="signal">DB4</span> osv.) måste du ändra ordningen i konstruktorn. LCD:ns <span class="signal">R/W</span>-pinne (pin 5) kopplas till <span class="signal">GND</span> — vi skriver bara till displayen, vi läser aldrig från den.</p>
+      <h3><strong>LCD</strong> i 4-bitarsläge — att prata med displayen</h3>
+      <p><strong>LCD</strong>-displayer med HD44780-kontroller (standard för 16×2 och 20×4) kan köras i två lägen: 8-bitars (alla 8 datapinnar används) eller 4-bitars (endast <span class="signal">DB4–DB7</span>). Vi använder 4-bitarsläget för att spara pinnar på <strong>Arduino</strong>. <strong>Arduino</strong>-biblioteket <code>LiquidCrystal</code> hanterar all kommunikation — vi behöver bara tala om vilka pinnar som används, och som vi såg i Mål-avsnittet speglar konstruktorn den omvända pin-ordningen.</p>
+      <p>Om din display har rak ordning (<span class="signal">D7</span>→<span class="signal">DB4</span> osv.) måste du ändra ordningen i konstruktorn. <strong>LCD</strong>:ns <span class="signal">R/W</span>-pinne (pin 5) kopplas till <span class="signal">GND</span> — vi skriver bara till displayen, vi läser aldrig från den.</p>
 
-      <h3>LCD-uppdatering inuti <code>pulse()</code></h3>
-      <p>Den stora kodändringen sitter i <code>pulse()</code>. Efter varje klockcykel uppdateras LCD:n:</p>
+      <h3><strong>LCD</strong>-uppdatering inuti <code>pulse()</code></h3>
+      <p>Den stora kodändringen sitter i <code>pulse()</code>. Efter varje klockcykel uppdateras <strong>LCD</strong>:n:</p>
       <ul class="list-disc pl-5 space-y-1">
         <li><strong>Rad 0:</strong> visar aktuell adress i formatet <code>A:$8000</code>. Padding med
           mellanslag håller displayen ren när adressen växlar mellan olika längder.</li>
         <li><strong>Rad 1:</strong> visar data på databussen i formatet <code>D:$EA</code>. Enstaka
           hex-siffror paddas med en nolla för jämn bredd.</li>
       </ul>
-      <p><code>setup()</code> initierar LCD:n med <code>lcd.begin(16, 2)</code> och skriver en välkomsttext. <code>loop()</code> är oförändrad från steg 4 — knapparna fungerar precis som tidigare, men nu ser du resultatet både i seriemonitor och på displayen.</p>
+      <p><code>setup()</code> initierar <strong>LCD</strong>:n med <code>lcd.begin(16, 2)</code> och skriver en välkomsttext. <code>loop()</code> är oförändrad från steg 4 — knapparna fungerar precis som tidigare, men nu ser du resultatet både i seriemonitor och på displayen.</p>
 
       <h3>Vad som är nytt jämfört med steg 4</h3>
-      <p>LCD-display, 10kΩ-potentiometer för kontrast, och 220Ω för bakgrundsbelysningen. I koden: <code>#include &lt;LiquidCrystal.h&gt;</code>, LCD-objektet, och <code>lcd.print()</code>-anropen i <code>pulse()</code>. Det är allt — resten är samma beprövade minnesemulator som tidigare.</p>
+      <p><strong>LCD</strong>-display, 10kΩ-potentiometer för kontrast, och 220Ω för bakgrundsbelysningen. I koden: <code>#include &lt;LiquidCrystal.h&gt;</code>, <strong>LCD</strong>-objektet, och <code>lcd.print()</code>-anropen i <code>pulse()</code>. Det är allt — resten är samma beprövade minnesemulator som tidigare.</p>
     
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
@@ -323,7 +323,7 @@ void loop() {
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Exempel på körning</h2>
     
-      <p>Direkt efter uppladdning visar både seriemonitor och LCD-displayen att allt är redo:</p>
+      <p>Direkt efter uppladdning visar både seriemonitor och <strong>LCD</strong>-displayen att allt är redo:</p>
 
       <!-- Sida vid sida: seriemonitor + LCD vid uppstart -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -332,7 +332,7 @@ void loop() {
           <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">Steg 5 — LCD-display</pre>
         </div>
         <div>
-          <p class="text-xs text-gray-500 mb-1 font-semibold">LCD-displayen</p>
+          <p class="text-xs text-gray-500 mb-1 font-semibold"><strong>LCD</strong>-displayen</p>
           <div class="bg-green-700 text-green-200 p-3 rounded-lg font-mono text-center shadow-inner">
             <div class="bg-green-900 text-green-300 px-2 py-0.5 rounded inline-block mb-2 text-xs">LCD 16×2</div>
             <div class="bg-green-950 rounded p-2">
@@ -343,7 +343,7 @@ void loop() {
         </div>
       </div>
 
-      <p>När du trycker på <strong>Knapp 1</strong> (klocksteg) uppdateras båda vyerna samtidigt. Seriemonitor loggar varje minnesaccess, LCD:n visar adress och data i realtid:</p>
+      <p>När du trycker på <strong>Knapp 1</strong> (klocksteg) uppdateras båda vyerna samtidigt. Seriemonitor loggar varje minnesaccess, <strong>LCD</strong>:n visar adress och data i realtid:</p>
 
       <!-- Sida vid sida: seriemonitor + LCD vid stegning -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -356,7 +356,7 @@ R $8000
 R $8001</pre>
         </div>
         <div>
-          <p class="text-xs text-gray-500 mb-1 font-semibold">LCD-displayen — efter 4 tryck</p>
+          <p class="text-xs text-gray-500 mb-1 font-semibold"><strong>LCD</strong>-displayen — efter 4 tryck</p>
           <div class="bg-green-700 text-green-200 p-3 rounded-lg font-mono text-center shadow-inner">
             <div class="bg-green-900 text-green-300 px-2 py-0.5 rounded inline-block mb-2 text-xs">LCD 16×2</div>
             <div class="bg-green-950 rounded p-2">
@@ -367,8 +367,8 @@ R $8001</pre>
         </div>
       </div>
 
-      <p>Samma information på båda ställena — adress (<code>$8001</code>) och data (<code>$EA</code>, <code>NOP</code>). Skillnaden är att LCD:n visar <em>just nu</em> medan seriemonitor bygger en historik. Med Knapp 2 (instruktionssteg) ser du flera rader i seriemonitor per tryck medan LCD:n uppdateras för varje klockcykel — ett snabbt flimmer av adresser tills <span class="signal">SYNC</span> går hög.</p>
-      <p>Datorn har blivit fristående. Du kan koppla bort USB-kabeln (om <strong>Arduino</strong> drivs via DC-adaptern) och fortfarande stega genom programmet och se allt på LCD:n. Seriemonitor är praktisk för att logga och felsöka, men displayen på kopplingsdäcket gör datorn till en egen, komplett enhet.</p>
+      <p>Samma information på båda ställena — adress (<code>$8001</code>) och data (<code>$EA</code>, <code>NOP</code>). Skillnaden är att <strong>LCD</strong>:n visar <em>just nu</em> medan seriemonitor bygger en historik. Med Knapp 2 (instruktionssteg) ser du flera rader i seriemonitor per tryck medan <strong>LCD</strong>:n uppdateras för varje klockcykel — ett snabbt flimmer av adresser tills <span class="signal">SYNC</span> går hög.</p>
+      <p>Datorn har blivit fristående. Du kan koppla bort USB-kabeln (om <strong>Arduino</strong> drivs via DC-adaptern) och fortfarande stega genom programmet och se allt på <strong>LCD</strong>:n. Seriemonitor är praktisk för att logga och felsöka, men displayen på kopplingsdäcket gör datorn till en egen, komplett enhet.</p>
     
   </section>
 
@@ -379,7 +379,7 @@ R $8001</pre>
         <p>Här är några saker att kontrollera:</p>
         <ul class="list-disc pl-5 space-y-1">
         <li><strong>Helt tom skärm?</strong> Justera kontrasten med potentiometern. Testa båda ytterlägena.</li>
-        <li><strong>Svarta rutor på första raden?</strong> LCD:n är i 8-bitarsläge men får ingen data. Kontrollera att <code>lcd.begin(16,2)</code> körs.</li>
+        <li><strong>Svarta rutor på första raden?</strong> <strong>LCD</strong>:n är i 8-bitarsläge men får ingen data. Kontrollera att <code>lcd.begin(16,2)</code> körs.</li>
         <li><strong>Förvrängda tecken?</strong> Datapinnarna är i fel ordning. Prova <code>LiquidCrystal lcd(5, 6, 7, 8, 9, 10)</code> om din display har rak ordning.</li>
         <li><strong>Ingen bakgrundsbelysning?</strong> Kontrollera 220Ω till A (pin 15) och <span class="signal">GND</span> till K (pin 16).</li>
       </ul>
