@@ -83,7 +83,7 @@
       <h2>Hur det hänger ihop</h2>
       <p class="text-gray-700 mb-3">Så här pratar de olika kretsarna med varandra. CPU:n i mitten, adressbussen åt ena hållet och databussen åt det andra. Arduino är startmotorn — streckad, eftersom den fasas ut steg för steg.</p>
       <div class="rounded-lg shadow p-4 bg-gray-800">
-                        <svg viewBox="0 0 900 430" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto" role="img" aria-label="Översikt över 6502-datorn: Arduino, CPU, VIA med LCD, SRAM och EEPROM i en rad, med adress- och databuss ovanför och nedanför">
+                                <svg viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto" role="img" aria-label="Översikt över 6502-datorn: Arduino, CPU, VIA med LCD, SRAM och EEPROM i en rad, med adress- och databuss ovanför och nedanför">
           <defs>
             <marker id="arrowPurple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M 0 0 L 10 5 L 0 10 z" fill="#d8b4fe"/>
@@ -119,29 +119,33 @@
           </defs>
 
           <!-- ==== ADRESSBUSS — tjock motorväg (blå) ==== -->
-          <rect x="40" y="90" width="820" height="16" rx="4" fill="#3b82f6"/>
-          <line x1="45" y1="98" x2="855" y2="98" stroke="#bfdbfe" stroke-width="2" stroke-dasharray="8 6"/>
-          <text class="c" x="52" y="82" fill="#93c5fd" font-size="12" font-weight="bold">adressbuss A0–A15</text>
+          <rect x="40" y="70" width="820" height="16" rx="4" fill="#3b82f6"/>
+          <line x1="45" y1="78" x2="855" y2="78" stroke="#bfdbfe" stroke-width="2" stroke-dasharray="8 6"/>
+          <text class="c" x="52" y="62" fill="#93c5fd" font-size="12" font-weight="bold">adressbuss A0–A15</text>
 
           <!-- ==== DATABUSS — tjock motorväg (grön) ==== -->
-          <rect x="40" y="250" width="820" height="16" rx="4" fill="#22c55e"/>
-          <line x1="45" y1="258" x2="855" y2="258" stroke="#dcfce7" stroke-width="2" stroke-dasharray="8 6"/>
-          <text class="c" x="52" y="284" fill="#86efac" font-size="12" font-weight="bold">databuss D0–D7</text>
+          <rect x="40" y="270" width="820" height="16" rx="4" fill="#22c55e"/>
+          <line x1="45" y1="278" x2="855" y2="278" stroke="#dcfce7" stroke-width="2" stroke-dasharray="8 6"/>
+          <text class="c" x="52" y="298" fill="#86efac" font-size="12" font-weight="bold">databuss D0–D7</text>
 
-          <!-- ==== ARDUINO (startmotor, streckad — pratar också på bussen) ==== -->
-          <line class="onramp" x1="105" y1="130" x2="105" y2="106" stroke="#3b82f6"/>
-          <line class="onramp" x1="105" y1="220" x2="105" y2="250" stroke="#22c55e" marker-start="url(#arrowGreen)" marker-end="url(#arrowGreen)"/>
+          <!-- ==== ARDUINO (startmotor, streckad) ==== -->
+          <!-- adress in (buss → enhet) -->
+          <line class="onramp" x1="105" y1="86" x2="105" y2="130" stroke="#3b82f6" marker-end="url(#arrowBlue)"/>
+          <!-- data båda håll -->
+          <line class="onramp" x1="105" y1="220" x2="105" y2="270" stroke="#22c55e" marker-start="url(#arrowGreen)" marker-end="url(#arrowGreen)"/>
           <rect class="dev" x="40" y="130" width="130" height="90" stroke="#3b82f6" stroke-dasharray="6 4"/>
           <text class="c" x="105" y="170" text-anchor="middle" fill="#93c5fd" font-size="13" font-weight="bold">Arduino</text>
           <text class="c" x="105" y="188" text-anchor="middle" fill="#9ca3af" font-size="10">Mega 2560</text>
           <text class="c" x="105" y="204" text-anchor="middle" fill="#3b82f6" font-size="10">startmotor</text>
           <!-- Kontrollpil Arduino → CPU -->
           <line x1="170" y1="175" x2="186" y2="175" stroke="#d8b4fe" stroke-width="2" marker-end="url(#arrowPurple)"/>
-          <text class="c" x="178" y="160" text-anchor="middle" fill="#d8b4fe" font-size="9">klocka · R/W · SYNC</text>
+          <text class="c" x="178" y="120" text-anchor="middle" fill="#d8b4fe" font-size="9">klocka · R/W · SYNC</text>
 
           <!-- ==== W65C02S CPU ==== -->
-          <line class="onramp" x1="265" y1="130" x2="265" y2="106" stroke="#3b82f6" marker-end="url(#arrowBlue)"/>
-          <line class="onramp" x1="265" y1="220" x2="265" y2="250" stroke="#22c55e" marker-start="url(#arrowGreen)" marker-end="url(#arrowGreen)"/>
+          <!-- adress ut (CPU → buss) -->
+          <line class="onramp" x1="265" y1="130" x2="265" y2="86" stroke="#3b82f6" marker-end="url(#arrowBlue)"/>
+          <!-- data båda håll -->
+          <line class="onramp" x1="265" y1="220" x2="265" y2="270" stroke="#22c55e" marker-start="url(#arrowGreen)" marker-end="url(#arrowGreen)"/>
           <rect class="chip" x="190" y="130" width="150" height="90"/>
           <text class="c" x="265" y="172" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="bold">W65C02S</text>
           <text class="c" x="265" y="190" text-anchor="middle" fill="#9ca3af" font-size="11">8-bit CPU</text>
@@ -156,34 +160,40 @@
           <rect class="pin" x="340" y="190" width="8" height="8"/>
           <rect class="pin" x="340" y="206" width="8" height="8"/>
 
-          <!-- ==== VIA ==== -->
-          <line class="onramp" x1="435" y1="130" x2="435" y2="106" stroke="#3b82f6"/>
-          <line class="onramp" x1="435" y1="220" x2="435" y2="250" stroke="#22c55e" marker-end="url(#arrowGreen)"/>
+          <!-- ==== VIA (enkelriktad data) ==== -->
+          <!-- adress in (buss → enhet) -->
+          <line class="onramp" x1="435" y1="86" x2="435" y2="130" stroke="#3b82f6" marker-end="url(#arrowBlue)"/>
+          <!-- data enkel riktning (enhet → buss) -->
+          <line class="onramp" x1="435" y1="220" x2="435" y2="270" stroke="#22c55e" marker-end="url(#arrowGreen)"/>
           <rect class="dev" x="360" y="130" width="150" height="90" stroke="#facc15"/>
           <text class="c" x="435" y="172" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="bold">VIA</text>
           <text class="c" x="435" y="190" text-anchor="middle" fill="#facc15" font-size="11">W65C22 · I/O</text>
           <!-- Pil VIA → LCD (korsar databussen) -->
-          <line x1="435" y1="220" x2="435" y2="292" stroke="#facc15" stroke-width="2" stroke-dasharray="4 3"/>
-          <polygon points="435,304 430,294 440,294" fill="#facc15"/>
+          <line x1="400" y1="220" x2="400" y2="296" stroke="#facc15" stroke-width="2" stroke-dasharray="4 3"/>
+          <polygon points="400,308 395,298 405,298" fill="#facc15"/>
 
           <!-- ==== SRAM ==== -->
-          <line class="onramp" x1="605" y1="130" x2="605" y2="106" stroke="#3b82f6"/>
-          <line class="onramp" x1="605" y1="220" x2="605" y2="250" stroke="#22c55e" marker-start="url(#arrowGreen)" marker-end="url(#arrowGreen)"/>
+          <!-- adress in -->
+          <line class="onramp" x1="605" y1="86" x2="605" y2="130" stroke="#3b82f6" marker-end="url(#arrowBlue)"/>
+          <!-- data båda håll -->
+          <line class="onramp" x1="605" y1="220" x2="605" y2="270" stroke="#22c55e" marker-start="url(#arrowGreen)" marker-end="url(#arrowGreen)"/>
           <rect class="dev" x="530" y="130" width="150" height="90" stroke="#4ade80"/>
           <text class="c" x="605" y="172" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="bold">SRAM</text>
           <text class="c" x="605" y="190" text-anchor="middle" fill="#4ade80" font-size="11">62256 · RAM</text>
 
           <!-- ==== EEPROM ==== -->
-          <line class="onramp" x1="775" y1="130" x2="775" y2="106" stroke="#3b82f6"/>
-          <line class="onramp" x1="775" y1="220" x2="775" y2="250" stroke="#22c55e" marker-start="url(#arrowGreen)" marker-end="url(#arrowGreen)"/>
+          <!-- adress in -->
+          <line class="onramp" x1="775" y1="86" x2="775" y2="130" stroke="#3b82f6" marker-end="url(#arrowBlue)"/>
+          <!-- data båda håll -->
+          <line class="onramp" x1="775" y1="220" x2="775" y2="270" stroke="#22c55e" marker-start="url(#arrowGreen)" marker-end="url(#arrowGreen)"/>
           <rect class="dev" x="700" y="130" width="150" height="90" stroke="#c084fc"/>
           <text class="c" x="775" y="172" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="bold">EEPROM</text>
           <text class="c" x="775" y="190" text-anchor="middle" fill="#c084fc" font-size="11">AT28C256 · ROM</text>
 
           <!-- ==== LCD (under VIA) ==== -->
-          <rect class="dev" x="365" y="304" width="140" height="55" stroke="#4ade80"/>
-          <text class="c" x="435" y="332" text-anchor="middle" fill="#4ade80" font-size="13" font-weight="bold">LCD 16×2</text>
-          <text class="c" x="435" y="348" text-anchor="middle" fill="#9ca3af" font-size="10">via VIA-portar</text>
+          <rect class="dev" x="330" y="308" width="140" height="55" stroke="#4ade80"/>
+          <text class="c" x="400" y="336" text-anchor="middle" fill="#4ade80" font-size="13" font-weight="bold">LCD 16×2</text>
+          <text class="c" x="400" y="352" text-anchor="middle" fill="#9ca3af" font-size="10">via VIA-portar</text>
         </svg>
         <p class="text-xs text-gray-400 mt-2 font-mono"><span class="text-blue-300">■</span> Adressbuss &nbsp; <span class="text-green-300">■</span> Databuss &nbsp; <span class="text-purple-300">■</span> Kontroll &nbsp; <span class="text-yellow-300">■</span> Ström/pinnar</p>
       </div>
