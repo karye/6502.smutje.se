@@ -9,25 +9,27 @@
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
 
-  <nav class="bg-gray-900 text-white sticky top-0 z-50 shadow">
-    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
-      <a href="index.html" class="font-bold text-lg">W65C02</a>
-      <div class="flex gap-4 text-sm">
-        <a href="index.html" class="text-blue-300 font-semibold">Översikt</a>
-        <a href="step1.html" class="hover:text-blue-300 transition">Steg 1</a>
-        <a href="step2.html" class="hover:text-blue-300 transition">Steg 2</a>
-        <a href="step3.html" class="hover:text-blue-300 transition">Steg 3</a>
-        <a href="step4.html" class="hover:text-blue-300 transition">Steg 4</a>
-        <a href="step5.html" class="hover:text-blue-300 transition">Steg 5</a>
-        <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
-        <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
-        <a href="step8.html" class="hover:text-blue-300 transition">Steg 8</a>
-        <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
-        <a href="step10.html" class="hover:text-blue-300 transition">Steg 10</a>
-        <a href="step11.html" class="hover:text-blue-300 transition">Steg 11</a>
+  <header class="sticky top-0 z-50 shadow">
+    <nav class="bg-gray-900 text-white">
+      <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
+        <a href="index.html" class="font-bold text-lg">W65C02</a>
+        <div class="flex gap-4 text-sm">
+          <a href="index.html" class="text-blue-300 font-semibold">Översikt</a>
+          <a href="step1.html" class="hover:text-blue-300 transition">Steg 1</a>
+          <a href="step2.html" class="hover:text-blue-300 transition">Steg 2</a>
+          <a href="step3.html" class="hover:text-blue-300 transition">Steg 3</a>
+          <a href="step4.html" class="hover:text-blue-300 transition">Steg 4</a>
+          <a href="step5.html" class="hover:text-blue-300 transition">Steg 5</a>
+          <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
+          <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
+          <a href="step8.html" class="hover:text-blue-300 transition">Steg 8</a>
+          <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
+          <a href="step10.html" class="hover:text-blue-300 transition">Steg 10</a>
+          <a href="step11.html" class="hover:text-blue-300 transition">Steg 11</a>
+        </div>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </header>
 
   <main class="max-w-5xl mx-auto px-4 py-8">
 
@@ -43,19 +45,125 @@
           från processorns instruktionsregister hela vägen ut till en lysdiod eller en LCD-display.
         </p>
         <p>
-          Med en <strong>Arduino Mega 2560</strong> — en mikrokontroller med tillräckligt många
-          I/O-pinnar kan jag emulera klocka, ram och rom. Plötsligt gick det att <strong>bygga en riktig
-          6502-dator</strong>. Allt på kopplingsdäck. Allt går att ändra på
-          sekunder. Kombinationen av 50-årig processordesign och modern mikrokontroller ger en
-          unik möjlighet: en dator som är precis så långsam och begriplig att du kan följa med i
-          varje klockcykel.
-        </p>
-        <p>
           Eftersom W65C02S är en <strong>statisk CMOS-krets</strong> kan klockan stoppas helt
           utan att processorn glömmer sitt tillstånd. Två fysiska knappar låter dig stega igenom
           programmet — en klockcykel eller en hel instruktion i taget. Du ser allt som händer,
           i din egen takt.
         </p>
+      </div>
+    </section>
+
+    <!-- Arduino som startmotor -->
+    <section class="mb-8">
+      <h2>En Arduino som startmotor</h2>
+      <div class="text-gray-700 space-y-3">
+        <p>
+          En 6502-dator från 1970-talet behövde ROM och RAM som fysiska chips — och för att testa ett
+          nytt program fick man bränna ett nytt EPROM under UV-ljus, en process som tog 20 minuter
+          per försök. Här använder vi en <strong>Arduino Mega 2560 som startmotor</strong>: den står
+          för klocka, minne och diagnostik i början, så att vi kan fokusera på processorn och se varje
+          signal på kopplingsdäcket.
+        </p>
+        <p>
+          Steg för steg ersätter vi Arduinons uppgifter med riktiga kretsar. <strong>SRAM-chippet</strong>
+          tar över minnet, <strong>EEPROM:et</strong> tar över programkoden, <strong>VIA-kretsen</strong>
+          tar över I/O till LCD-displayen. Till slut är Arduino reducerad till klocka och seriell
+          diagnostik — och datorn fungerar helt på egen hand.
+        </p>
+        <p>
+          Det här är inte en emulator i mjukvara — processorn kör på riktigt, med riktiga elektriska
+          signaler. Allt du lär dig om 6502:ans instruktionsuppsättning, timing och bussprotokoll
+          gäller på riktigt.
+        </p>
+      </div>
+    </section>
+
+    <!-- Skiss -->
+    <section class="mb-8">
+      <h2>Hur det hänger ihop</h2>
+      <p class="text-gray-700 mb-3">En översikt över bussen och de enheter som svarar på olika adresser. Arduino är startmotorn — streckad, eftersom den fasas ut steg för steg.</p>
+      <div class="bg-white rounded-lg shadow p-4">
+        <svg viewBox="0 0 820 480" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto" role="img" aria-label="Översikt över 6502-datorn: CPU i mitten, bussar till SRAM, VIA och EEPROM, med Arduino som startmotor">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/>
+            </marker>
+            <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6"/>
+            </marker>
+            <style>
+              .box { fill: #f9fafb; stroke: #9ca3af; stroke-width: 1.5; rx: 8; }
+              .box-sram { fill: #f0fdf4; stroke: #4ade80; stroke-width: 2; rx: 8; }
+              .box-via { fill: #fefce8; stroke: #facc15; stroke-width: 2; rx: 8; }
+              .box-eeprom { fill: #faf5ff; stroke: #c084fc; stroke-width: 2; rx: 8; }
+              .box-arduino { fill: #eff6ff; stroke: #3b82f6; stroke-width: 2; stroke-dasharray: 6 4; rx: 8; }
+              .box-cpu { fill: #111827; stroke: #374151; stroke-width: 2; rx: 8; }
+              .bus { stroke: #6b7280; stroke-width: 3; }
+              .bus-thin { stroke: #9ca3af; stroke-width: 1.5; }
+              .lbl { font-family: ui-monospace, monospace; font-size: 13px; fill: #374151; }
+              .lbl-sm { font-family: ui-monospace, monospace; font-size: 11px; fill: #6b7280; }
+              .lbl-cpu { font-family: ui-monospace, monospace; font-size: 16px; fill: #ffffff; font-weight: bold; }
+              .lbl-cpu2 { font-family: ui-monospace, monospace; font-size: 11px; fill: #9ca3af; }
+              .lbl-bus { font-family: ui-monospace, monospace; font-size: 12px; fill: #6b7280; font-weight: bold; }
+            </style>
+          </defs>
+
+          <!-- CPU -->
+          <rect class="box-cpu" x="290" y="20" width="240" height="64"/>
+          <text class="lbl-cpu" x="410" y="48" text-anchor="middle">W65C02S</text>
+          <text class="lbl-cpu2" x="410" y="66" text-anchor="middle">8-bit CPU</text>
+
+          <!-- Bussar från CPU ned -->
+          <line class="bus" x1="410" y1="84" x2="410" y2="120"/>
+          <line class="bus" x1="80" y1="120" x2="740" y2="120"/>
+
+          <!-- Buss-etiketter -->
+          <text class="lbl-bus" x="120" y="112">adressbuss A0–A15</text>
+          <text class="lbl-bus" x="470" y="112">databuss D0–D7</text>
+
+          <!-- Ned till enheterna -->
+          <line class="bus-thin" x1="170" y1="120" x2="170" y2="150"/>
+          <line class="bus-thin" x1="410" y1="120" x2="410" y2="150"/>
+          <line class="bus-thin" x1="650" y1="120" x2="650" y2="150"/>
+
+          <!-- SRAM -->
+          <rect class="box-sram" x="70" y="150" width="200" height="90"/>
+          <text class="lbl" x="170" y="182" text-anchor="middle" font-weight="bold">62256 SRAM</text>
+          <text class="lbl-sm" x="170" y="200" text-anchor="middle">32 KB RAM</text>
+          <text class="lbl-sm" x="170" y="216" text-anchor="middle">$0000–$7FFF</text>
+          <text class="lbl-sm" x="170" y="232" text-anchor="middle" fill="#4ade80">minne · steg 9</text>
+
+          <!-- VIA -->
+          <rect class="box-via" x="310" y="150" width="200" height="90"/>
+          <text class="lbl" x="410" y="182" text-anchor="middle" font-weight="bold">W65C22 VIA</text>
+          <text class="lbl-sm" x="410" y="200" text-anchor="middle">I/O + LCD</text>
+          <text class="lbl-sm" x="410" y="216" text-anchor="middle">$A000–$A00F</text>
+          <text class="lbl-sm" x="410" y="232" text-anchor="middle" fill="#facc15">I/O · steg 7</text>
+
+          <!-- EEPROM -->
+          <rect class="box-eeprom" x="550" y="150" width="200" height="90"/>
+          <text class="lbl" x="650" y="182" text-anchor="middle" font-weight="bold">AT28C256</text>
+          <text class="lbl-sm" x="650" y="200" text-anchor="middle">EEPROM</text>
+          <text class="lbl-sm" x="650" y="216" text-anchor="middle">$8000–$FFFF</text>
+          <text class="lbl-sm" x="650" y="232" text-anchor="middle" fill="#c084fc">ROM · steg 10</text>
+
+          <!-- Arduino (startmotor, streckad) -->
+          <rect class="box-arduino" x="260" y="330" width="300" height="90"/>
+          <text class="lbl" x="410" y="358" text-anchor="middle" font-weight="bold" fill="#1d4ed8">Arduino Mega 2560</text>
+          <text class="lbl-sm" x="410" y="376" text-anchor="middle">startmotor — klocka, reset, diagnostik</text>
+          <text class="lbl-sm" x="410" y="392" text-anchor="middle">minnesemulering fasas ut (steg 3–10)</text>
+          <text class="lbl-sm" x="410" y="408" text-anchor="middle" fill="#3b82f6">kvar: klocka + seriemonitor</text>
+
+          <!-- Pil Arduino → CPU (klocka) -->
+          <line class="bus" x1="410" y1="330" x2="410" y2="300" marker-end="url(#arrowBlue)"/>
+          <path class="bus-thin" d="M 340 300 L 340 100" stroke-dasharray="4 4" stroke="#9ca3af"/>
+          <line class="bus-thin" x1="340" y1="100" x2="380" y2="100" marker-end="url(#arrow)" stroke="#9ca3af"/>
+          <text class="lbl-sm" x="330" y="210" text-anchor="end">klocka + reset</text>
+          <text class="lbl-sm" x="330" y="290" text-anchor="end" fill="#3b82f6">tidigare: RAM + ROM (fasas ut)</text>
+
+          <!-- Etikett kontroll -->
+          <text class="lbl-sm" x="760" y="90" text-anchor="end">kontroll: R/W, SYNC</text>
+        </svg>
       </div>
     </section>
 
@@ -72,9 +180,9 @@
           och alla kretsar på bussen ser den samtidigt.</p>
         <p>Den andra uppsättningen är <strong>databussen</strong> — 8 ledningar.
           Här kommer svaret tillbaka. När processorn vill läsa från en adress lägger den ut adressen,
-          sätter R/W-signalen till HÖG (Read), och väntar. Den krets som känner igen adressen — i vårt fall
-          Arduino — lägger ut rätt byte på databussen. Processorn läser av den och går vidare till nästa
-          instruktion.</p>
+          sätter R/W-signalen till HÖG (Read), och väntar. Den krets som känner igen adressen — i början
+          Arduino, senare SRAM, EEPROM eller VIA — lägger ut rätt byte på databussen. Processorn läser
+          av den och går vidare till nästa instruktion.</p>
 
         <h3>Instruktionscykeln — hämta, avkoda, utför</h3>
         <p>Varje gång processorn startar en ny instruktion tänder den <strong>SYNC</strong>-pinnen.
@@ -125,66 +233,20 @@
       </div>
     </section>
 
-    <!-- Byggsteg -->
+    <!-- Resan -->
     <section class="mb-8">
-      <h2>Byggsteg</h2>
-      <div class="text-gray-700 space-y-4">
-
-        <div>
-          <h3>Steg 1 — ström, klocka, reset</h3>
-          <p>Vi tänder liv i processorn. Arduino genererar en långsam klockpuls, en lysdiod blinkar i takt, och vi kan för första gången se att kretsen lever. Utan det här steget — bokstavligen ström och en hjärtslag — gör processorn ingenting alls.</p>
+      <h2>Resan</h2>
+      <div class="text-gray-700 space-y-3">
+        <p>Projektet byggs i elva steg — från en blinkande lysdiod till en fristående dator med riktig ROM, RAM och I/O. Bläddra i menyn högst upp, eller hoppa direkt:</p>
+        <div class="flex flex-wrap gap-2">
+          <a href="step1.html" class="px-3 py-1.5 bg-gray-100 rounded-lg text-sm text-blue-600 hover:bg-blue-50 transition">Steg 1 — ström och klocka</a>
+          <a href="step4.html" class="px-3 py-1.5 bg-gray-100 rounded-lg text-sm text-blue-600 hover:bg-blue-50 transition">Steg 4 — manuell stegning</a>
+          <a href="step6.html" class="px-3 py-1.5 bg-gray-100 rounded-lg text-sm text-blue-600 hover:bg-blue-50 transition">Steg 6 — första programmet</a>
+          <a href="step7.html" class="px-3 py-1.5 bg-gray-100 rounded-lg text-sm text-blue-600 hover:bg-blue-50 transition">Steg 7 — VIA + LCD</a>
+          <a href="step9.html" class="px-3 py-1.5 bg-gray-100 rounded-lg text-sm text-blue-600 hover:bg-blue-50 transition">Steg 9 — riktigt RAM</a>
+          <a href="step10.html" class="px-3 py-1.5 bg-gray-100 rounded-lg text-sm text-blue-600 hover:bg-blue-50 transition">Steg 10 — EEPROM</a>
+          <a href="step11.html" class="px-3 py-1.5 bg-gray-100 rounded-lg text-sm text-blue-600 hover:bg-blue-50 transition">Steg 11 — städad adressrymd</a>
         </div>
-
-        <div>
-          <h3>Steg 2 — adressbuss A0–A15</h3>
-          <p>Adressbussen kopplas in och vi kan se <em>var</em> i minnet CPU:n tittar. Efter reset läser alla 6502-processorer automatiskt en förprogrammerad startadress — vi fångar ögonblicket i seriemonitor och får en första inblick i hur processorn tänker.</p>
-        </div>
-
-        <div>
-          <h3>Steg 3 — databuss D0–D7 och minnesemulering</h3>
-          <p>Databussen ger CPU:n förmågan att läsa och skriva data. Arduino blir en fullvärdig minnesemulator som svarar på varje adress med rätt byte. Vi laddar ett NOP-program och ser processorn loopa för evigt — vårt första program, om än ett som gör ingenting.</p>
-        </div>
-
-        <div>
-          <h3>Steg 4 — manuell stegning med knappar</h3>
-          <p>Två tryckknappar gör datorn interaktiv. En ger en klockcykel per tryck, den andra en hel instruktion. Eftersom W65C02S är statisk CMOS kan klockan stoppas hur länge som helst — vi kan stega igenom programmet i vår egen takt och se precis vad som händer.</p>
-        </div>
-
-        <div>
-          <h3>Steg 5 — LCD-display (parallell 4-bit)</h3>
-          <p>En 16×2 LCD-display kopplas in. Istället för att titta i seriemonitor på en dator kan vi nu se adress och data direkt på kopplingsdäcket. Datorn blir fristående — ingen extern skärm behövs längre.</p>
-        </div>
-
-        <div>
-          <h3>Steg 6 — första egna 6502-programmet</h3>
-          <p>Vi skriver vårt första egna 6502-program: en räknare som ökar X-registret från 0 till 255 och loopar. Bara 9 bytes, men det innehåller allt — initiering, beräkning, lagring, loop. CPU:n gör något meningsfullt för första gången.</p>
-        </div>
-
-        <div>
-          <h3>Steg 7 — W65C22 VIA + 74HC00 adressavkodning</h3>
-          <p>En W65C22 VIA ger CPU:n riktiga I/O-pinnar, och en 74HC00 avkodar adressbussen. LCD:n flyttas från Arduino till VIA:n — CPU:n styr nu displayen helt själv via minnesmappade adresser. Arduino är reducerad till minne och klocka. Det här är en riktig datorarkitektur.</p>
-        </div>
-
-        <div>
-          <h3>Steg 8 — assembler-bygge med ca65</h3>
-          <p>Vi lämnar hårdkodade hex-bytes bakom oss och börjar skriva riktig assembler med ca65 och ld65 — samma verktyg som proffsen använder. Labels, subrutiner, kommentarer. PlatformIO bygger automatiskt om assemblerkoden före varje uppladdning. Ingen ny hårdvara, men ett enormt steg för arbetsflödet.</p>
-        </div>
-
-        <div>
-          <h3>Steg 9 — riktigt RAM (62256 SRAM)</h3>
-          <p>Ett 62256 SRAM-chip ersätter Arduinons mjukvaruemulerade RAM. Zero page, stack och variabler lagras nu i äkta kisel. Tre enheter delar på bussen: SRAM, VIA och Arduino. Datorn har tagit steget från emulering till riktig hårdvara.</p>
-        </div>
-
-        <div>
-          <h3>Steg 10 — EEPROM som ROM (AT28C256)</h3>
-          <p>Programmet bränns in på en AT28C256 EEPROM med hjälp av en andra Arduino som programmerare. Datorn startar direkt från äkta ROM — ingen Arduino behövs för att leverera programkoden längre. Fyra enheter på bussen. Datorn är helt fristående.</p>
-        </div>
-
-        <div>
-          <h3>Steg 11 — städad adressrymd</h3>
-          <p>SRAM utökas till hela 32 KB (hela 62256-chippet) och VIA:n flyttas till ett rent I/O-fönster på $A000 — inget dött utrymme kvar. Adressrymden blir som på riktiga 6502-datorer: RAM längst ner, I/O i mitten av ROM-fönstret, program högst upp.</p>
-        </div>
-
       </div>
     </section>
 
