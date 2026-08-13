@@ -39,7 +39,7 @@
   box.appendChild(title);
 
   var list = document.createElement('div');
-  list.className = 'flex flex-wrap gap-x-4 gap-y-1 text-sm';
+  list.className = 'flex flex-col gap-y-1 text-sm';
   links.forEach(function (a) { list.appendChild(a); });
   box.appendChild(list);
 
