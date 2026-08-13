@@ -50,9 +50,9 @@
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Mål</h2>
     
-      <p>Hittills har <strong>Arduino</strong> emulerat <strong>allt</strong> minne — varje gång <strong>CPU</strong>:n läser eller skriver en byte är det <strong>Arduino</strong> som svarar. Det fungerar utmärkt för inlärning och felsökning, men en riktig dator har riktigt minne. Nu tar vi steget och kopplar in ett <strong>62256 SRAM-chip</strong> — 32 kilobyte statiskt RAM i en DIP-28-kapsel.</p>
-      <p><strong>SRAM</strong>-chippet tar över adresserna <strong><code>$0000</code>–<code>$3FFF</code></strong> (16 KB). Det täcker zero page, stacken och gott om utrymme för variabler. <strong>Arduino</strong> fortsätter att leverera programkoden från <code>$8000</code> och uppåt, samt vektorerna på <code>$FFFA</code>–<code>$FFFF</code>. VIA:n ligger kvar på <code>$4000</code>–<code>$400F</code>.</p>
-      <p>Den stora förändringen i koden: <strong>Arduino</strong> går <strong>tri-state</strong> (hög impedans) för alla adresser under <code>$4000</code>. När <strong>CPU</strong>:n läser från <code>$0200</code> är det <strong>SRAM</strong>-chippet som lägger ut data på bussen — inte <strong>Arduino</strong>. Vi har nu <strong>tre enheter</strong> som delar på databussen: <strong>SRAM</strong>, VIA och <strong>Arduino</strong>.</p>
+      <p>Hittills har <strong>Arduino</strong> emulerat <strong>allt</strong> minne — varje gång <strong>CPU</strong>:n läser eller skriver en byte är det <strong>Arduino</strong> som svarar. Det fungerar utmärkt för inlärning och felsökning, men en riktig dator har riktigt minne. Nu tar vi steget och kopplar in ett <strong>62256 SRAM-chip</strong> — 32 kilobyte statiskt <strong>RAM</strong> i en DIP-28-kapsel.</p>
+      <p><strong>SRAM</strong>-chippet tar över adresserna <strong><code>$0000</code>–<code>$3FFF</code></strong> (16 KB). Det täcker zero page, stacken och gott om utrymme för variabler. <strong>Arduino</strong> fortsätter att leverera programkoden från <code>$8000</code> och uppåt, samt vektorerna på <code>$FFFA</code>–<code>$FFFF</code>. <strong>VIA</strong>:n ligger kvar på <code>$4000</code>–<code>$400F</code>.</p>
+      <p>Den stora förändringen i koden: <strong>Arduino</strong> går <strong>tri-state</strong> (hög impedans) för alla adresser under <code>$4000</code>. När <strong>CPU</strong>:n läser från <code>$0200</code> är det <strong>SRAM</strong>-chippet som lägger ut data på bussen — inte <strong>Arduino</strong>. Vi har nu <strong>tre enheter</strong> som delar på databussen: <strong>SRAM</strong>, <strong>VIA</strong> och <strong>Arduino</strong>.</p>
     
   </section>
 
@@ -160,7 +160,7 @@
   <!-- 74HC00 pinout -->
   <section class="mb-8">
     <h2>74HC00 — pinout</h2>
-    <p>DIP-14-kapsel. Alla fyra grindar används nu: U4A+U4B för VIA (steg 7), U4C+U4D för <strong>SRAM</strong> (steg 9).</p>
+    <p>DIP-14-kapsel. Alla fyra grindar används nu: U4A+U4B för <strong>VIA</strong> (steg 7), U4C+U4D för <strong>SRAM</strong> (steg 9).</p>
     <div class="flex justify-center">
       <div class="p-2 inline-flex bg-gray-800 text-white rounded-lg overflow-hidden shadow-lg font-mono text-sm leading-relaxed">
         <div class="flex flex-col justify-between py-2">
@@ -196,13 +196,13 @@
         </div>
       </div>
     </div>
-    <p><span class="text-blue-300">■</span> U4A (NOT <span class="signal">A15</span> → <strong>SRAM</strong> <span class="signal">/CE</span>) &nbsp; <span class="text-green-300">■</span> U4B (<span class="signal">A15</span> NAND <span class="signal">A14</span> → VIA <span class="signal">/CS2</span>) &nbsp; <span class="text-yellow-300">■</span> U4D (NAND) &nbsp; <span class="text-pink-300">■</span> U4C (NAND).</p>
+    <p><span class="text-blue-300">■</span> U4A (NOT <span class="signal">A15</span> → <strong>SRAM</strong> <span class="signal">/CE</span>) &nbsp; <span class="text-green-300">■</span> U4B (<span class="signal">A15</span> NAND <span class="signal">A14</span> → <strong>VIA</strong> <span class="signal">/CS2</span>) &nbsp; <span class="text-yellow-300">■</span> U4D (NAND) &nbsp; <span class="text-pink-300">■</span> U4C (NAND).</p>
   </section>
 
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2>Kopplingsschema</h2>
-    <p><strong>SRAM</strong>-chippet delar adress- och databuss med <strong>CPU</strong>, VIA och <strong>Arduino</strong>. Tre kontrollsignaler avgör vem som pratar.</p>
+    <p><strong>SRAM</strong>-chippet delar adress- och databuss med <strong>CPU</strong>, <strong>VIA</strong> och <strong>Arduino</strong>. Tre kontrollsignaler avgör vem som pratar.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-9.png" alt="Steg 9 — SRAM 62256" class="w-full">
     </div>
@@ -230,7 +230,7 @@
     </div>
 
     <h3><strong>74HC00</strong> — adressavkodning för <strong>SRAM</strong></h3>
-    <p>U4A (NOT <span class="signal">A15</span>) och U4B (NAND för VIA) är oförändrade från steg 7. U4C blir NOT <span class="signal">A14</span>. U4D gör (NOT <span class="signal">A14</span>) NAND (NOT <span class="signal">A15</span>) → LÅG endast vid <code>$0000</code>–<code>$3FFF</code>.</p>
+    <p>U4A (NOT <span class="signal">A15</span>) och U4B (NAND för <strong>VIA</strong>) är oförändrade från steg 7. U4C blir NOT <span class="signal">A14</span>. U4D gör (NOT <span class="signal">A14</span>) NAND (NOT <span class="signal">A15</span>) → LÅG endast vid <code>$0000</code>–<code>$3FFF</code>.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Grind</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -254,8 +254,8 @@
     </div>
     <p><strong>Logik:</strong> U4A inverterar <span class="signal">A15</span>, U4C inverterar <span class="signal">A14</span>. U4D gör (NOT <span class="signal">A14</span>) NAND (NOT <span class="signal">A15</span>) → LÅG <strong>endast</strong> när <span class="signal">A14</span>=0 OCH <span class="signal">A15</span>=0. <strong>SRAM</strong> aktiveras alltså vid <strong><code>$0000</code>–<code>$3FFF</code></strong> och ingen annanstans. VIAn (U4B) aktiveras vid <code>$4000</code>–<code>$7FFF</code>. Inga krockar.</p>
 
-    <h3><strong>CPU</strong>, VIA och <strong>LCD</strong></h3>
-    <p><strong>CPU</strong>, VIA och <strong>LCD</strong> är oförändrade från steg 7. Här är den kompletta kopplingslistan.</p>
+    <h3><strong>CPU</strong>, <strong>VIA</strong> och <strong>LCD</strong></h3>
+    <p><strong>CPU</strong>, <strong>VIA</strong> och <strong>LCD</strong> är oförändrade från steg 7. Här är den kompletta kopplingslistan.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -299,7 +299,7 @@
   <!-- Minneskarta -->
   <section class="mb-8">
     <h2>Minneskarta — tre enheter delar på bussen</h2>
-    <p>Nu har vi tre enheter som svarar på olika adressområden. <strong>SRAM</strong> tar den lägre halvan, VIA har sina 16 bytes, och <strong>Arduino</strong> levererar program och vektorer.</p>
+    <p>Nu har vi tre enheter som svarar på olika adressområden. <strong>SRAM</strong> tar den lägre halvan, <strong>VIA</strong> har sina 16 bytes, och <strong>Arduino</strong> levererar program och vektorer.</p>
     <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
       <div class="flex items-stretch border-b border-gray-300" style="min-height:8px">
         <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
@@ -344,34 +344,34 @@
         <div class="w-14 text-right text-gray-500 pr-2">16 KB</div>
       </div>
     </div>
-    <p><strong>Grön heldragen ram</strong> = <strong>62256</strong> <strong>SRAM</strong>. <strong>Gul</strong> = VIA. <strong>Blå/lila</strong> = <strong>Arduino</strong>. Tre enheter, en buss — adressavkodningen avgör vem som svarar.</p>
+    <p><strong>Grön heldragen ram</strong> = <strong>62256</strong> <strong>SRAM</strong>. <strong>Gul</strong> = <strong>VIA</strong>. <strong>Blå/lila</strong> = <strong>Arduino</strong>. Tre enheter, en buss — adressavkodningen avgör vem som svarar.</p>
   </section>
 
   <!-- Arduino-kod -->
   <section class="mb-8">
     <h2>Arduino-kod</h2>
     
-      <p>Det här är slutsteget — och den mest genomgripande förändringen av minnesemulatorn sedan steg 3. Vi kopplar in ett <strong>62256 SRAM-chip</strong> (32 KB statiskt RAM) som tar över adresserna <code>$0000–$3FFF</code>. <strong>Arduino</strong> måste nu <strong>tri-stata databussen</strong> för alla <strong>SRAM</strong>- och VIA-adresser — tre enheter delar på samma 8 datalinjer, och bara en får prata i taget.</p>
+      <p>Det här är slutsteget — och den mest genomgripande förändringen av minnesemulatorn sedan steg 3. Vi kopplar in ett <strong>62256 SRAM-chip</strong> (32 KB statiskt <strong>RAM</strong>) som tar över adresserna <code>$0000–$3FFF</code>. <strong>Arduino</strong> måste nu <strong>tri-stata databussen</strong> för alla <strong>SRAM</strong>- och <strong>VIA</strong>-adresser — tre enheter delar på samma 8 datalinjer, och bara en får prata i taget.</p>
 
       <h3>Tre enheter, en buss</h3>
-      <p>Databussen (<span class="signal">D0–D7</span>) är nu ansluten till tre kretsar samtidigt: <strong>CPU</strong>, <strong>Arduino</strong>, <strong>SRAM</strong> och VIA. Adressavkodningen (<strong>74HC00</strong>) avgör vem som svarar:</p>
+      <p>Databussen (<span class="signal">D0–D7</span>) är nu ansluten till tre kretsar samtidigt: <strong>CPU</strong>, <strong>Arduino</strong>, <strong>SRAM</strong> och <strong>VIA</strong>. Adressavkodningen (<strong>74HC00</strong>) avgör vem som svarar:</p>
       <ul class="list-disc pl-5 space-y-1">
         <li><strong><code>$0000</code>–<code>$3FFF</code></strong> → <code>is_sram()</code> returnerar <code>true</code>. <strong>Arduino</strong>
           rör inte bussen. <strong>SRAM</strong>-chippet läser och skriver helt på egen hand.</li>
         <li><strong><code>$4000</code>–<code>$400F</code></strong> → <code>is_via()</code> returnerar <code>true</code>. <strong>Arduino</strong>
-          rör inte bussen. VIA-kretsen hanterar I/O.</li>
-        <li><strong><code>$8000</code>–<code>$FFFF</code></strong> → <strong>Arduino</strong> svarar med programkod och vektorer. <strong>SRAM</strong> och VIA
+          rör inte bussen. <strong>VIA</strong>-kretsen hanterar I/O.</li>
+        <li><strong><code>$8000</code>–<code>$FFFF</code></strong> → <strong>Arduino</strong> svarar med programkod och vektorer. <strong>SRAM</strong> och <strong>VIA</strong>
           är inaktiva (deras <span class="signal">/CE</span>- och <span class="signal">/CS2</span>-signaler är höga).</li>
       </ul>
       <p>Det här är en <strong>riktig datorarkitektur</strong>: flera enheter på en delad buss, styrda av adressavkodningslogik. Exakt så här fungerar modernare datorer också — bara med fler kretsar och högre hastigheter.</p>
 
       <h3><code>is_sram()</code> — den nya gränsen</h3>
-      <p><code>is_sram()</code> är lika enkel som <code>is_via()</code>: returnerar <code>true</code> om adressen är högst <code>$3FFF</code>. I <code>read_mem()</code> och <code>write_mem()</code> kontrolleras <strong>SRAM</strong> före allt annat — om adressen är under <code>$4000</code> gör <strong>Arduino</strong> ingenting. <code>pulse()</code> har nu tre villkor: <code>!is_sram(a) && !is_via(a)</code> — <strong>Arduino</strong> driver bussen endast när varken <strong>SRAM</strong> eller VIA gör det.</p>
+      <p><code>is_sram()</code> är lika enkel som <code>is_via()</code>: returnerar <code>true</code> om adressen är högst <code>$3FFF</code>. I <code>read_mem()</code> och <code>write_mem()</code> kontrolleras <strong>SRAM</strong> före allt annat — om adressen är under <code>$4000</code> gör <strong>Arduino</strong> ingenting. <code>pulse()</code> har nu tre villkor: <code>!is_sram(a) && !is_via(a)</code> — <strong>Arduino</strong> driver bussen endast när varken <strong>SRAM</strong> eller <strong>VIA</strong> gör det.</p>
 
       <h3>Två programfaser</h3>
       <p>Koden är uppdelad i två faser som demonstrerar att <strong>SRAM</strong> fungerar:</p>
       <ol class="list-decimal pl-5 space-y-1">
-        <li><strong>Fas 1 — VIA/LCD-text:</strong> samma 4-radersprogram som tidigare. Visar att VIA
+        <li><strong>Fas 1 — VIA/LCD-text:</strong> samma 4-radersprogram som tidigare. Visar att <strong>VIA</strong>
           och <strong>LCD</strong> fungerar med <strong>SRAM</strong> inkopplat. Programmet väntar sedan på ett knapptryck.</li>
         <li><strong>Fas 2 — Fibonacci:</strong> ett <strong>6502</strong>-program som beräknar Fibonacci-sekvensen
           (0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233) och visar varje tal på <strong>LCD</strong>:n.
@@ -940,7 +940,7 @@ txt_fib:
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Exempel på körning</h2>
     
-      <p>När du laddat upp koden körs två faser efter varandra. Först VIA/<strong>LCD</strong>-programmet, sedan — efter ett knapptryck — Fibonacci-programmet som använder det fysiska <strong>SRAM</strong>-chippet.</p>
+      <p>När du laddat upp koden körs två faser efter varandra. Först <strong>VIA</strong>/<strong>LCD</strong>-programmet, sedan — efter ett knapptryck — Fibonacci-programmet som använder det fysiska <strong>SRAM</strong>-chippet.</p>
 
       <!-- Fas 1: sida vid sida -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -996,8 +996,8 @@ W $4000  ← VIA: 34  (siffran 4)</pre>
         </div>
       </div>
 
-      <p>Varje nytt Fibonacci-tal dyker upp med en kort paus. När talet når 233 (det sista som ryms i en 8-bitars byte) wrappar det tillbaka till 0 och sekvensen börjar om. Under tiden använder <strong>6502</strong>-programmet zero page-adresser (<code>$00</code>, <code>$01</code>, <code>$02</code>) för att lagra F(n-2), F(n-1) och F(n) — adresser som nu ligger i det fysiska <strong>SRAM</strong>-chippet, inte i Arduinons mjukvaruemulerade RAM. I seriemonitor syns dessa som <code>R $0000</code> och <code>W $0002</code> med <code>← SRAM</code>-markering.</p>
-      <p>Du har byggt en dator med tre kretsar som delar på samma buss, äkta <strong>SRAM</strong> för arbetsminne, en VIA för I/O, och en <strong>6502</strong>-processor som kör dina egna assembler-program. Från en blinkande lysdiod till Fibonacci på <strong>LCD</strong> — hela resan på nio steg.</p>
+      <p>Varje nytt Fibonacci-tal dyker upp med en kort paus. När talet når 233 (det sista som ryms i en 8-bitars byte) wrappar det tillbaka till 0 och sekvensen börjar om. Under tiden använder <strong>6502</strong>-programmet zero page-adresser (<code>$00</code>, <code>$01</code>, <code>$02</code>) för att lagra F(n-2), F(n-1) och F(n) — adresser som nu ligger i det fysiska <strong>SRAM</strong>-chippet, inte i Arduinons mjukvaruemulerade <strong>RAM</strong>. I seriemonitor syns dessa som <code>R $0000</code> och <code>W $0002</code> med <code>← SRAM</code>-markering.</p>
+      <p>Du har byggt en dator med tre kretsar som delar på samma buss, äkta <strong>SRAM</strong> för arbetsminne, en <strong>VIA</strong> för I/O, och en <strong>6502</strong>-processor som kör dina egna assembler-program. Från en blinkande lysdiod till Fibonacci på <strong>LCD</strong> — hela resan på nio steg.</p>
     
   </section>
 

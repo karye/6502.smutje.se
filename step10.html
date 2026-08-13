@@ -50,16 +50,16 @@
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Mål</h2>
     
-      <p>Hittills har <strong>Arduino</strong> levererat <strong>6502</strong>-programmet — varje gång <strong>CPU</strong>:n läser från <code>$8000</code> och uppåt är det Arduinons minnesarray som svarar. Det fungerar utmärkt, men en riktig dator har sitt program i <strong>ROM</strong> — icke-flyktigt minne som överlever strömavbrott. Nu tar vi det sista stora klivet: vi bränner in programmet på en <strong>AT28C256 EEPROM</strong> och låter den ersätta <strong>Arduino</strong> som ROM.</p>
-      <p>En <strong>andra Arduino Mega</strong> används som EEPROM-programmerare. Via USB tar den emot en <code>.bin</code>-fil från datorn, bränner den på <strong>AT28C256</strong>, och verifierar att varje byte sitter rätt. Sedan flyttar du EEPROM-chippet till datorns kopplingsdäck — och datorn startar direkt från äkta ROM, precis som en Commodore 64 eller Apple II.</p>
-      <p>Arduinon på kopplingsdäcket finns kvar som klocka och diagnostikverktyg — men datorn överlever utan den. Slå på strömmen, och <strong>CPU</strong>:n läser ditt program direkt ur EEPROM:et. Det här är en fristående dator.</p>
+      <p>Hittills har <strong>Arduino</strong> levererat <strong>6502</strong>-programmet — varje gång <strong>CPU</strong>:n läser från <code>$8000</code> och uppåt är det Arduinons minnesarray som svarar. Det fungerar utmärkt, men en riktig dator har sitt program i <strong>ROM</strong> — icke-flyktigt minne som överlever strömavbrott. Nu tar vi det sista stora klivet: vi bränner in programmet på en <strong>AT28C256 EEPROM</strong> och låter den ersätta <strong>Arduino</strong> som <strong>ROM</strong>.</p>
+      <p>En <strong>andra Arduino Mega</strong> används som <strong>EEPROM</strong>-programmerare. Via USB tar den emot en <code>.bin</code>-fil från datorn, bränner den på <strong>AT28C256</strong>, och verifierar att varje byte sitter rätt. Sedan flyttar du <strong>EEPROM</strong>-chippet till datorns kopplingsdäck — och datorn startar direkt från äkta <strong>ROM</strong>, precis som en Commodore 64 eller Apple II.</p>
+      <p>Arduinon på kopplingsdäcket finns kvar som klocka och diagnostikverktyg — men datorn överlever utan den. Slå på strömmen, och <strong>CPU</strong>:n läser ditt program direkt ur <strong>EEPROM</strong>:et. Det här är en fristående dator.</p>
     
   </section>
 
   <!-- Nya komponenter -->
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Nya komponenter</h2>
-    <p>En <strong>AT28C256</strong> EEPROM på 32 KB blir datorns ROM, en extra <strong>Arduino Mega</strong> agerar programmerare som bränner programmet, en extra <strong>74HC00</strong> avkodar <code>$8000</code>–<code>$FFFF</code> för EEPROM:et, och en kondensator avkopplar strömmen. Efter detta steg kan datorn starta helt utan <strong>Arduino</strong>.</p>
+    <p>En <strong>AT28C256</strong> <strong>EEPROM</strong> på 32 KB blir datorns <strong>ROM</strong>, en extra <strong>Arduino Mega</strong> agerar programmerare som bränner programmet, en extra <strong>74HC00</strong> avkodar <code>$8000</code>–<code>$FFFF</code> för <strong>EEPROM</strong>:et, och en kondensator avkopplar strömmen. Efter detta steg kan datorn starta helt utan <strong>Arduino</strong>.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th><th class="p-2 text-left">Används till</th></tr></thead>
@@ -136,7 +136,7 @@
   <!-- Kopplingsschema — programmerare -->
   <section class="mb-8">
     <h2>Kopplingsschema — programmeraren</h2>
-    <p>Den andra <strong>Arduino Mega</strong> kopplas 1:1 till <strong>AT28C256</strong>. Här finns inga andra kretsar — bara <strong>Arduino</strong>, EEPROM, och 100Ω skyddsmotstånd på databussen. När bränningen är klar kopplas allt isär.</p>
+    <p>Den andra <strong>Arduino Mega</strong> kopplas 1:1 till <strong>AT28C256</strong>. Här finns inga andra kretsar — bara <strong>Arduino</strong>, <strong>EEPROM</strong>, och 100Ω skyddsmotstånd på databussen. När bränningen är klar kopplas allt isär.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-10-1.png" alt="Steg 10 — EEPROM-programmerare" class="w-full">
     </div>
@@ -145,7 +145,7 @@
   <!-- Kopplingsschema — dator -->
   <section class="mb-8">
     <h2>Kopplingsschema — datorn med EEPROM</h2>
-    <p>EEPROM:et sitter nu på datorns adress- och databuss tillsammans med <strong>SRAM</strong>, VIA och <strong>Arduino</strong>. En extra <strong>74HC00</strong> avkodar <span class="signal">A15</span> till <span class="signal">/CE</span> — EEPROM:et aktiveras vid <code>$8000–$FFFF</code>.</p>
+    <p><strong>EEPROM</strong>:et sitter nu på datorns adress- och databuss tillsammans med <strong>SRAM</strong>, <strong>VIA</strong> och <strong>Arduino</strong>. En extra <strong>74HC00</strong> avkodar <span class="signal">A15</span> till <span class="signal">/CE</span> — <strong>EEPROM</strong>:et aktiveras vid <code>$8000–$FFFF</code>.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <p class="text-gray-500 italic text-sm">Schema för datorn kommer snart — se kopplingstabellerna nedan så länge.</p>
     </div>
@@ -172,7 +172,7 @@
       </table>
     </div>
 
-    <h3>Datorn — EEPROM på bussen</h3>
+    <h3>Datorn — <strong>EEPROM</strong> på bussen</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Ansluts till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -187,7 +187,7 @@
       </table>
     </div>
 
-    <h3><strong>74HC00</strong> — EEPROM-avkodning (ny grind)</h3>
+    <h3><strong>74HC00</strong> — <strong>EEPROM</strong>-avkodning (ny grind)</h3>
     <p>En extra <strong>74HC00</strong> vid sidan av den från steg 7/9. En enda grind används som inverterare för <span class="signal">A15</span>.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
@@ -200,13 +200,13 @@
         </tbody>
       </table>
     </div>
-    <p><strong>Logik:</strong> <span class="signal">A15</span> NAND <span class="signal">A15</span> = NOT <span class="signal">A15</span>. EEPROM:ets <span class="signal">/CE</span> är aktiv LÅG. När <span class="signal">A15</span>=1 (adress <code>$8000</code> eller högre) blir grindens utgång LÅG → EEPROM aktiverat. När <span class="signal">A15</span>=0 (under <code>$8000</code>) är utgången HÖG → EEPROM är bortkopplat, <strong>SRAM</strong> eller VIA tar över.</p>
+    <p><strong>Logik:</strong> <span class="signal">A15</span> NAND <span class="signal">A15</span> = NOT <span class="signal">A15</span>. <strong>EEPROM</strong>:ets <span class="signal">/CE</span> är aktiv LÅG. När <span class="signal">A15</span>=1 (adress <code>$8000</code> eller högre) blir grindens utgång LÅG → <strong>EEPROM</strong> aktiverat. När <span class="signal">A15</span>=0 (under <code>$8000</code>) är utgången HÖG → <strong>EEPROM</strong> är bortkopplat, <strong>SRAM</strong> eller <strong>VIA</strong> tar över.</p>
   </section>
 
   <!-- Minneskarta -->
   <section class="mb-8">
     <h2>Minneskarta — fyra enheter på bussen</h2>
-    <p>EEPROM:et tar över <code>$8000–$FFFF</code> från <strong>Arduino</strong>. Programmet ligger nu i äkta ROM.</p>
+    <p><strong>EEPROM</strong>:et tar över <code>$8000–$FFFF</code> från <strong>Arduino</strong>. Programmet ligger nu i äkta <strong>ROM</strong>.</p>
     <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
       <div class="flex items-stretch border-b-2 border-purple-500" style="height:263px">
         <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
@@ -238,14 +238,14 @@
         <div class="w-14 text-right text-gray-500 pr-2">16 KB</div>
       </div>
     </div>
-    <p><strong>Lila heldragen ram</strong> = <strong>AT28C256</strong> EEPROM (ny). <strong>Grön</strong> = <strong>62256</strong> <strong>SRAM</strong>. <strong>Gul</strong> = VIA. <strong>Arduino</strong> svarar inte på några minnesadresser längre — bara klocka och diagnostik. Fyra enheter, en buss.</p>
+    <p><strong>Lila heldragen ram</strong> = <strong>AT28C256</strong> <strong>EEPROM</strong> (ny). <strong>Grön</strong> = <strong>62256</strong> <strong>SRAM</strong>. <strong>Gul</strong> = <strong>VIA</strong>. <strong>Arduino</strong> svarar inte på några minnesadresser längre — bara klocka och diagnostik. Fyra enheter, en buss.</p>
   </section>
 
   <!-- Kod: programmerare -->
   <section class="mb-8">
     <h2>Arduino-kod — programmeraren</h2>
     
-      <p>Det här programmet laddas upp på den <strong>andra</strong> <strong>Arduino Mega</strong> — den som tillfälligt kopplas in som EEPROM-programmerare. Koden är enkel: ta emot 32 768 bytes över serieporten, bränn dem på <strong>AT28C256</strong>, och verifiera. Programmet körs en gång i <code>setup()</code> och rapporterar resultatet — <code>loop()</code> är tom.</p>
+      <p>Det här programmet laddas upp på den <strong>andra</strong> <strong>Arduino Mega</strong> — den som tillfälligt kopplas in som <strong>EEPROM</strong>-programmerare. Koden är enkel: ta emot 32 768 bytes över serieporten, bränn dem på <strong>AT28C256</strong>, och verifiera. Programmet körs en gång i <code>setup()</code> och rapporterar resultatet — <code>loop()</code> är tom.</p>
 
       <h3>Hur bränning går till</h3>
       <p><strong>AT28C256</strong> har inbyggd själv-timing. För att bränna en byte sätter du adress och data, drar <span class="signal">/WE</span> låg, väntar minst 10 millisekunder (vi använder 10 för marginal), och drar <span class="signal">/WE</span> hög igen. Kretsen sköter resten internt. För att läsa tillbaka drar du <span class="signal">/OE</span> låg och läser <span class="signal">PINA</span> — precis som med <strong>SRAM</strong>.</p>
@@ -463,9 +463,9 @@ if __name__ == '__main__':
   <section class="mb-8">
     <h2>Arduino-kod — datorn</h2>
     
-      <p>Koden på datorns <strong>Arduino</strong> förenklas dramatiskt. <code>program[2048]</code> och de hundratals <code>write_mem()</code>-anropen försvinner. Istället får vi en ny funktion <code>is_eeprom()</code> som returnerar <code>true</code> för adresser mellan <code>$8000</code> och <code>$FFFF</code>. När <strong>CPU</strong>:n läser från dessa adresser tri-statar <strong>Arduino</strong> bussen — EEPROM:et svarar själv.</p>
-      <p>Arduinon är nu reducerad till <strong>klockgenerator, reset-kontroll och seriell diagnostik</strong>. Alla minnesarrayer utom <code>vectors[6]</code> är borta. Vektorn på <code>$FFFA–$FFFF</code> ligger sist i EEPROM-bilden — <code>.segment "VECTORS"</code> i assembler-koden placerar dem där.</p>
-      <p>Koden nedan är baserad på steg 9 men med <code>is_eeprom()</code> istället för <code>program[]</code>. <code>read_mem()</code> returnerar 0 för EEPROM-adresser — <strong>Arduino</strong> rör dem inte.</p>
+      <p>Koden på datorns <strong>Arduino</strong> förenklas dramatiskt. <code>program[2048]</code> och de hundratals <code>write_mem()</code>-anropen försvinner. Istället får vi en ny funktion <code>is_eeprom()</code> som returnerar <code>true</code> för adresser mellan <code>$8000</code> och <code>$FFFF</code>. När <strong>CPU</strong>:n läser från dessa adresser tri-statar <strong>Arduino</strong> bussen — <strong>EEPROM</strong>:et svarar själv.</p>
+      <p>Arduinon är nu reducerad till <strong>klockgenerator, reset-kontroll och seriell diagnostik</strong>. Alla minnesarrayer utom <code>vectors[6]</code> är borta. Vektorn på <code>$FFFA–$FFFF</code> ligger sist i <strong>EEPROM</strong>-bilden — <code>.segment "VECTORS"</code> i assembler-koden placerar dem där.</p>
+      <p>Koden nedan är baserad på steg 9 men med <code>is_eeprom()</code> istället för <code>program[]</code>. <code>read_mem()</code> returnerar 0 för <strong>EEPROM</strong>-adresser — <strong>Arduino</strong> rör dem inte.</p>
     
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
@@ -598,7 +598,7 @@ void loop() {
     <h2>Exempel på körning</h2>
     
 
-      <h3>Fas 1 — bränna EEPROM</h3>
+      <h3>Fas 1 — bränna <strong>EEPROM</strong></h3>
       <p>Bygg programmet med ca65 som vanligt, kör Python-skriptet för att bränna:</p>
       <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">$ pio run -e step10 -t upload    # Ladda upp dator-Arduinon
 $ python3 upload_eeprom.py asm/program_hello.bin /dev/ttyACM1
@@ -614,7 +614,7 @@ Verifierar...
 KLAR
 Totalt brända bytes: 2054</pre>
 
-      <h3>Fas 2 — flytta EEPROM till datorn</h3>
+      <h3>Fas 2 — flytta <strong>EEPROM</strong> till datorn</h3>
       <p>Koppla bort programmerings-Arduinon. Flytta <strong>AT28C256</strong>-chippet till datorns kopplingsdäck och anslut enligt kopplingstabellen ovan. Slå på strömmen.</p>
 
       <!-- Sida vid sida: seriemonitor + LCD -->
@@ -648,7 +648,7 @@ W $4000  ← VIA: 3D  (=)
         </div>
       </div>
 
-      <p>Varje gång du ser <code>← EEPROM</code> i loggen är det <strong>AT28C256</strong> som svarar — inte <strong>Arduino</strong>. Reset-vektorn på <code>$FFFC</code>/<code>$FFFD</code> ligger i EEPROM:ets sista bytes, inskrivna av assembler-kedjan. <strong>CPU</strong>:n läser dem, hoppar till <code>$8000</code>, och kör programmet direkt från äkta ROM.</p>
+      <p>Varje gång du ser <code>← EEPROM</code> i loggen är det <strong>AT28C256</strong> som svarar — inte <strong>Arduino</strong>. Reset-vektorn på <code>$FFFC</code>/<code>$FFFD</code> ligger i <strong>EEPROM</strong>:ets sista bytes, inskrivna av assembler-kedjan. <strong>CPU</strong>:n läser dem, hoppar till <code>$8000</code>, och kör programmet direkt från äkta <strong>ROM</strong>.</p>
       <p>Koppla bort Arduinon helt (ersätt klockan med en 555-timer eller kristalloscillator) så har du en helt fristående <strong>6502</strong>-dator. Programmet överlever strömavbrott — slå på strömmen imorgon och det finns kvar, inbränt i kisel.</p>
     
   </section>
@@ -658,16 +658,16 @@ W $4000  ← VIA: 3D  (=)
     <h2>Om det inte fungerar</h2>
     <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
       <ul class="list-disc pl-5 space-y-1">
-        <li><strong>CPU:n läser <code>$FFFC</code>/<code>$FFFD</code> men hoppar till fel adress?</strong> EEPROM:ets <span class="signal">/CE</span>
+        <li><strong>CPU:n läser <code>$FFFC</code>/<code>$FFFD</code> men hoppar till fel adress?</strong> <strong>EEPROM</strong>:ets <span class="signal">/CE</span>
           är förmodligen inte rätt avkodat. Kontrollera att <strong>74HC00</strong>-grinden får <span class="signal">A15</span> på båda ingångarna
-          och att utgången går till EEPROM pin 20.</li>
+          och att utgången går till <strong>EEPROM</strong> pin 20.</li>
         <li><strong>Programmet körs inte alls?</strong> Kontrollera att <span class="signal">/OE</span> är kopplat till <span class="signal">GND</span>
-          och <span class="signal">/WE</span> till +<span class="signal">5V</span>. Utan <span class="signal">/OE</span> låg kör EEPROM:et inte ut data.</li>
-        <li><strong>Bränningen misslyckas?</strong> Mät spänningen vid EEPROM:ets <span class="signal">VDD</span> — den måste
+          och <span class="signal">/WE</span> till +<span class="signal">5V</span>. Utan <span class="signal">/OE</span> låg kör <strong>EEPROM</strong>:et inte ut data.</li>
+        <li><strong>Bränningen misslyckas?</strong> Mät spänningen vid <strong>EEPROM</strong>:ets <span class="signal">VDD</span> — den måste
           vara minst 4.8V. Använd 12V DC-adapter till programmerings-Arduinon.</li>
         <li><strong>Busskrockar?</strong> 100Ω motstånd på databussen är nu ännu viktigare —
           fyra enheter delar på samma 8 ledningar.</li>
-        <li><strong>Glöm inte avkopplingskondensatorn</strong> vid EEPROM:ets VDD/GND.</li>
+        <li><strong>Glöm inte avkopplingskondensatorn</strong> vid <strong>EEPROM</strong>:ets VDD/GND.</li>
       </ul>
     </div>
   </section>

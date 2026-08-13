@@ -139,7 +139,7 @@
     <ul class="list-disc pl-5 space-y-1 mb-3">
       <li><strong>Lila</strong> (<code>$FFFA</code>–<code>$FFFF</code>): vektorer — processorn läser här efter reset för att veta var programmet börjar</li>
       <li><strong>Blå</strong> (<code>$8000</code>–<code>$87FF</code>): vårt <strong>6502</strong>-program — 9 bytes maskinkod som <strong>Arduino</strong> laddar in från <code>setup()</code></li>
-      <li><strong>Grön</strong> (<code>$0000</code>–<code>$03FF</code>): arbetsminne — zero page (<code>$0000</code>–<code>$00FF</code>, snabbast åtkomst), stack (<code>$0100</code>–<code>$01FF</code>, <code>JSR</code>/<code>RTS</code>/<code>PHA</code>/<code>PLA</code>), och ledigt RAM (<code>$0200</code>–<code>$03FF</code>). Här kan <strong>CPU</strong>:n läsa och skriva fritt</li>
+      <li><strong>Grön</strong> (<code>$0000</code>–<code>$03FF</code>): arbetsminne — zero page (<code>$0000</code>–<code>$00FF</code>, snabbast åtkomst), stack (<code>$0100</code>–<code>$01FF</code>, <code>JSR</code>/<code>RTS</code>/<code>PHA</code>/<code>PLA</code>), och ledigt <strong>RAM</strong> (<code>$0200</code>–<code>$03FF</code>). Här kan <strong>CPU</strong>:n läsa och skriva fritt</li>
       <li><strong>Grå</strong>: oanvänt — <strong>Arduino</strong> returnerar <code>$EA</code> (<code>NOP</code>) så <strong>CPU</strong>:n hoppar bara vidare</li>
     </ul>
     <p>Blockens höjd är proportionell mot deras storlek.</p>
