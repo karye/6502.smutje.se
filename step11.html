@@ -341,9 +341,16 @@ void loop() {
     <!-- Länkskript -->
     <section class="mb-8 text-gray-700 space-y-3">
       <h2>Länkskript — program.cfg</h2>
-      
-        <p>Länkskriptet måste veta att <code>$A000</code>–<code>$A00F</code> är reserverat för <strong>VIA</strong>:n. Programmet placeras i <strong>ROM</strong>:en men hoppar över I/O-fönstret.</p>
-      
+      <p>I steg 8 skapade vi <code>program.cfg</code> — länkaren <strong>ld65</strong>:s karta över minnet. Den talar om var i adressrymden koden hamnar. Nu uppdateras den, för <strong>VIA</strong>:n har flyttat till <code>$A000</code>: <strong>ROM</strong>:en delas i två segment med ett 16-byte-gap där <strong>VIA</strong>-fönstret ligger.</p>
+      <div class="bg-white rounded-lg shadow p-4 border text-sm space-y-2">
+        <p class="font-semibold">Så här gör du</p>
+        <ol class="list-decimal pl-5 space-y-1">
+          <li>Öppna <code>src/program.cfg</code> i ditt PlatformIO-projekt — samma fil som skapades i steg 8.</li>
+          <li>Ersätt innehållet med koden nedan och spara.</li>
+          <li>Bygg projektet — <code>build_asm.py</code> skickar filen till <strong>ld65</strong> automatiskt (<code>-C program.cfg</code>). Inget att köra manuellt.</li>
+          <li>Assembler-filen behöver inga ändringar — segmenten nedan matchar den.</li>
+        </ol>
+      </div>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-cfg">
 ; program.cfg — steg 11
 ; Kod placeras i $8000–$9FFF och $A010–$FFFF,
@@ -363,10 +370,8 @@ SEGMENTS {
     VECTORS:  load = ROM2, start = $FFFA, type = ro;
 }
 </code></pre>
-      <p>Programmet läggs i <code>$8000–$9FFF</code> (8 KB räcker gott). Reset-vektorn ligger i <code>ROM2</code> på <code>$FFFA</code>–<code>$FFFF</code> — precis som alltid.</p>
+      <p>Koden läggs i <code>$8000</code>–<code>$9FFF</code> (<strong>ROM</strong>, 8 KB räcker gott) och fortsätter i <code>$A010</code>–<code>$FFFF</code> (<strong>ROM2</strong>). Reset-vektorn ligger som alltid på <code>$FFFA</code>–<code>$FFFF</code>.</p>
     </section>
-
-    <!-- Exempel på körning -->
     <section class="mb-8 text-gray-700 space-y-3">
       <h2>Exempel på körning</h2>
       
