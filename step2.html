@@ -49,17 +49,10 @@
     <section class="mb-8">
       <h2>Mål</h2>
       <div class="text-gray-700 space-y-3">
-        <p>I steg 1 gav vi processorn ström och klocka. Nu ska vi ge den kontroll över <strong>adressbussen</strong> —
-          16 ledningar som talar om <em>var</em> i minnet CPU:n vill läsa eller skriva.</p>
-        <p>Alla 6502-processorer startar på samma sätt: efter reset läser de adress <code>$FFFC</code> och
-          <code>$FFFD</code> för att få reda på var programmet börjar. Det är inbyggt i kisel — ingen mjukvara, ingen
-          konfiguration. Genom att koppla in adressbussen och en reset-signal kan vi se detta hända i seriemonitor.
-        </p>
-        <p>Vi kopplar också in <strong>/RESET</strong> (pin 40) till Arduino D4. När vi håller RESB låg i minst 2
-          klockcykler nollställs CPU:ns interna register. När vi sedan släpper den (HÖG) börjar CPU:n köra från
-          reset-vektorn.</p>
-        <p>Adressbussen läser vi via Arduinons analoga portar — <strong>PORTF</strong> (A0–A7) och
-          <strong>PORTK</strong> (A8–A15). Det ger oss 16 bitar i två registerläsningar.</p>
+        <p>I steg 1 gav vi processorn ström och klocka. Nu ska vi ge den kontroll över <strong>adressbussen</strong> — 16 ledningar som talar om <em>var</em> i minnet CPU:n vill läsa eller skriva.</p>
+        <p>Alla 6502-processorer startar på samma sätt: efter reset läser de adress <code>$FFFC</code> och <code>$FFFD</code> för att få reda på var programmet börjar. Det är inbyggt i kisel — ingen mjukvara, ingen konfiguration. Genom att koppla in adressbussen och en reset-signal kan vi se detta hända i seriemonitor.</p>
+        <p>Vi kopplar också in <strong>/RESET</strong> (pin 40) till Arduino D4. När vi håller RESB låg i minst 2 klockcykler nollställs CPU:ns interna register. När vi sedan släpper den (HÖG) börjar CPU:n köra från reset-vektorn.</p>
+        <p>Adressbussen läser vi via Arduinons analoga portar — <strong>PORTF</strong> (A0–A7) och <strong>PORTK</strong> (A8–A15). Det ger oss 16 bitar i två registerläsningar.</p>
       </div>
     </section>
 
@@ -184,20 +177,10 @@
     <section class="mb-8">
       <h2>Arduino-kod</h2>
       <div class="text-gray-700 space-y-3">
-        <p>
-          I steg 1 gav vi processorn liv. Nu ska vi lyssna på vad den säger. Koden i detta steg gör något
-          fundamentalt: den <strong>läser av processorns adressbuss</strong> — 16 ledningar som tillsammans
-          talar om var i minnet CPU:n vill läsa — och skriver ut adressen i seriemonitor. Det är som att
-          koppla in en logikanalysator, fast gratis.
-        </p>
+        <p>I steg 1 gav vi processorn liv. Nu ska vi lyssna på vad den säger. Koden i detta steg gör något fundamentalt: den <strong>läser av processorns adressbuss</strong> — 16 ledningar som tillsammans talar om var i minnet CPU:n vill läsa — och skriver ut adressen i seriemonitor. Det är som att koppla in en logikanalysator, fast gratis.</p>
 
         <h3>Portregister — att läsa 8 pinnar på en gång</h3>
-        <p>
-          Arduino Mega har 54 digitala pinnar, men att läsa dem en och en med <code>digitalRead()</code> är
-          alldeles för långsamt. Varje anrop tar flera mikrosekunder — och med 16 adresslinjer skulle vi tappa
-          synkroniseringen med processorn direkt. Lösningen är <strong>portregister</strong> — specialregister
-          som läser eller skriver 8 pinnar samtidigt i en enda maskininstruktion:
-        </p>
+        <p>Arduino Mega har 54 digitala pinnar, men att läsa dem en och en med <code>digitalRead()</code> är alldeles för långsamt. Varje anrop tar flera mikrosekunder — och med 16 adresslinjer skulle vi tappa synkroniseringen med processorn direkt. Lösningen är <strong>portregister</strong> — specialregister som läser eller skriver 8 pinnar samtidigt i en enda maskininstruktion:</p>
         <ul class="list-disc pl-5 space-y-1">
           <li><strong><code>DDRF = 0x00</code></strong> — sätt alla 8 pinnar på PORTF som ingångar. Motsvarar
             8 × <code>pinMode()</code> men går på några nanosekunder.</li>
@@ -205,15 +188,10 @@
             en pinne. Här är det CPU:ns A0–A7.</li>
           <li><strong><code>PINK</code></strong> — läser CPU:ns A8–A15 på samma sätt.</li>
         </ul>
-        <p>
-          För att få ihop en 16-bitars adress skiftar vi ihop de två byten: <code>(PINK &lt;&lt; 0) | (PINF &lt;&lt; 8)</code>.
-          Resultatet är ett tal mellan 0 och 65 535 — processor ns fullständiga adressrymd.
-        </p>
+        <p>För att få ihop en 16-bitars adress skiftar vi ihop de två byten: <code>(PINK &lt;&lt; 0) | (PINF &lt;&lt; 8)</code>. Resultatet är ett tal mellan 0 och 65 535 — processor ns fullständiga adressrymd.</p>
 
         <h3>Reset-sekvensen — vad som händer när CPU:n vaknar</h3>
-        <p>
-          Koden gör tre saker i <code>setup()</code>:
-        </p>
+        <p>Koden gör tre saker i <code>setup()</code>:</p>
         <ol class="list-decimal pl-5 space-y-1">
           <li><strong>Håller CPU:n i reset</strong> — <code>RESB = LOW</code> i minst 2 klockcykler (vi kör 5 för
             säkerhets skull). Under denna tid är CPU:ns interna register nollställda och bussarna är tri-state.</li>
@@ -226,12 +204,7 @@
         </ol>
 
         <h3>Vad som är nytt jämfört med steg 1</h3>
-        <p>
-          Klockan har höjts från 1 Hz till 500 Hz — för snabbt för att se med ögat, men lagom för att läsa
-          adressbussen i seriemonitor. <code>pulse()</code> har förenklats (ingen lysdiod denna gång) och
-          <code>loop()</code> gör nu det tunga jobbet: läsa portregister, skifta ihop adressen, skriva ut.
-          <code>setup()</code> har fått en reset-sekvens — den viktigaste nyheten i detta steg.
-        </p>
+        <p>Klockan har höjts från 1 Hz till 500 Hz — för snabbt för att se med ögat, men lagom för att läsa adressbussen i seriemonitor. <code>pulse()</code> har förenklats (ingen lysdiod denna gång) och <code>loop()</code> gör nu det tunga jobbet: läsa portregister, skifta ihop adressen, skriva ut. <code>setup()</code> har fått en reset-sekvens — den viktigaste nyheten i detta steg.</p>
       </div>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
@@ -308,9 +281,7 @@ void loop() {
     <section class="mb-8">
       <h2>Exempel på körning</h2>
       <div class="text-gray-700 space-y-3">
-        <p>
-          När du öppnar seriemonitor (115200 baud) efter uppladdning ser du ungefär detta:
-        </p>
+        <p>När du öppnar seriemonitor (115200 baud) efter uppladdning ser du ungefär detta:</p>
         <div>
 <p class="text-xs text-gray-500 mb-1 font-semibold">Seriemonitor (115200 baud)</p>
         <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">Steg 2 — adressbuss och reset
@@ -325,18 +296,9 @@ R $8004
 R $8005
 R $8006
 ...</pre>
-        </div><p>
-          Varje rad börjar med <code>R</code> (Read — CPU:n läser) följt av <code>$</code> och en hexadecimal adress.
-          De två första raderna är alltid <code>$FFFC</code> och <code>$FFFD</code> — reset-vektorn. Processorn frågar
-          "var ska jag börja?" och svaret (som just nu är skräp eftersom databussen inte är inkopplad) leder den
-          till någon adress — ofta <code>$8000</code> eller <code>$0000</code> beroende på vad som ligger på de
-          flytande datalinjerna.
-        </p>
-        <p>
-          Lägg märke till att <code>$FFFC</code> och <code>$FFFD</code> bara dyker upp en gång — efter reset.
-          Sedan räknar adresserna uppåt när CPU:n hämtar instruktioner. Utan databuss (steg 3) kan CPU:n inte
-          hämta riktiga opcodes, men adressbussen fungerar redan — och det är precis vad vi ville bevisa.
-        </p>
+        </div>
+        <p>Varje rad börjar med <code>R</code> (Read — CPU:n läser) följt av <code>$</code> och en hexadecimal adress. De två första raderna är alltid <code>$FFFC</code> och <code>$FFFD</code> — reset-vektorn. Processorn frågar "var ska jag börja?" och svaret (som just nu är skräp eftersom databussen inte är inkopplad) leder den till någon adress — ofta <code>$8000</code> eller <code>$0000</code> beroende på vad som ligger på de flytande datalinjerna.</p>
+        <p>Lägg märke till att <code>$FFFC</code> och <code>$FFFD</code> bara dyker upp en gång — efter reset. Sedan räknar adresserna uppåt när CPU:n hämtar instruktioner. Utan databuss (steg 3) kan CPU:n inte hämta riktiga opcodes, men adressbussen fungerar redan — och det är precis vad vi ville bevisa.</p>
       </div>
     </section>
 
