@@ -517,7 +517,7 @@ line2: .byte "Hello from W65C02!", 0
         </ol>
         <p>Hela kedjan styrs av <code>scripts/build_asm.py</code>, en pre-build hook som PlatformIO anropar automatiskt. Ändrar du <code>.asm</code>-filen byggs allt om.</p>
 
-        <h3><strong>Arduino</strong>-koden — bara <code>setup()</code> ändras</h3>
+        <h3>Arduino-koden — bara <code>setup()</code> ändras</h3>
         <p><code>pulse()</code>, <code>loop()</code> och hela minnesemulatorn är oförändrade från steg 7. Skillnaden sitter i <code>setup()</code>: istället för hundratals <code>write_mem()</code> loopar vi nu igenom <code>PROGRAM[]</code> och kopierar:</p>
         <ul class="list-disc pl-5 space-y-1">
           <li><strong>Kod:</strong> <code>PROGRAM_SIZE - 6</code> bytes kopieras till <code>$8000</code>
@@ -526,7 +526,7 @@ line2: .byte "Hello from W65C02!", 0
             Där finns reset-vektorn som talar om att programmet börjar på <code>$8000</code>.</li>
         </ul>
 
-        <h3><strong>6502</strong>-programmet — läsbar assembler</h3>
+        <h3>6502-programmet — läsbar assembler</h3>
         <p><code>program_hello.asm</code> är samma 2-radersprogram som steg 7, men nu med labels (<code>reset:</code>, <code>hello:</code>), subrutiner (<code>lcd_command:</code>, <code>lcd_data:</code>), och nollterminerade strängar (<code>.byte "...", 0</code>). <code>JSR</code> (Jump to Subroutine) och <code>RTS</code> (Return from Subroutine) använder stacken för att hålla reda på återhoppsadressen — precis som funktionsanrop i högnivåspråk. Att läsa assemblerkoden är som att läsa en receptbok: varje rad är ett steg, och tillsammans berättar de exakt vad processorn ska göra.</p>
 
         <h3>Vad som är nytt jämfört med steg 7</h3>

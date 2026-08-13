@@ -286,7 +286,7 @@
     <p>Kopplingarna är organiserade krets för krets, eftersom adress- och databussen nu delas av fyra enheter. För varje krets finns en egen tabell: vad varje pinne heter, vart den går, och varför. Börja med <strong>CPU</strong>:n, följ sedan <strong>VIA</strong>:n och <strong>74HC00</strong>:ns avkodning, och avsluta med <strong>LCD</strong>:n.</p>
 
     <!-- W65C02S -->
-    <h3><strong>W65C02S</strong> <strong>CPU</strong></h3>
+    <h3>W65C02S CPU</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -308,7 +308,7 @@
     </div>
 
     <!-- W65C22 -->
-    <h3><strong>W65C22</strong> <strong>VIA</strong></h3>
+    <h3>W65C22 VIA</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -330,7 +330,7 @@
     </div>
 
     <!-- 74HC00 -->
-    <h3><strong>74HC00</strong> (adressavkodning)</h3>
+    <h3>74HC00 (adressavkodning)</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Grind</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -348,7 +348,7 @@
     <p><strong>Logik:</strong> <span class="signal">A15</span> inverteras av U4A. U4B gör (NOT <span class="signal">A15</span>) NAND <span class="signal">A14</span> → LÅG när <span class="signal">A15</span>=0 och <span class="signal">A14</span>=1. VIAn aktiveras alltså vid adress <code>$4000–$7FFF</code>. <strong>CPU</strong>:ns <span class="signal">A0–A3</span> går till VIAns <span class="signal">RS0–RS3</span> vilket ger 16 register på <code>$4000–$400F</code>.</p>
 
     <!-- LCD -->
-    <h3><strong>LCD 16×2</strong> (parallell)</h3>
+    <h3>LCD 16×2 (parallell)</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -463,7 +463,7 @@
       </table>
     </div>
 
-    <h3>Att skriva ett tecken till <strong>LCD</strong></h3>
+    <h3>Att skriva ett tecken till LCD</h3>
     <ol class="list-decimal pl-5 space-y-1">
       <li><strong>Sätt data:</strong> <code>STA $4000</code> — skicka ASCII-tecknet till PORTB (<strong>LCD</strong> <span class="signal">DB0–DB7</span>)</li>
       <li><strong>Sätt <span class="signal">RS</span>=1, E=1:</strong> <code>LDA #$05; STA $4001</code> — <span class="signal">PA0</span>=<span class="signal">RS</span>=1 (data), <span class="signal">PA2</span>=E=1</li>
@@ -511,7 +511,7 @@
       <h3><code>read_mem()</code> och <code>write_mem()</code> — nu med full adressrymd</h3>
       <p>Minneshanteringen har vuxit. <code>program[2048]</code> täcker <code>$8000–$87FF</code> — 2 KB programkod. <code>ram[1024]</code> täcker zero page, stack och ledigt <strong>RAM</strong> (<code>$0000–$03FF</code>). <code>vectors[6]</code> täcker <code>$FFFA–$FFFF</code>. Allt annat returnerar <code>$EA</code> (<code>NOP</code>). Ordningen i <code>read_mem()</code> är viktig: <strong>VIA</strong>-adresser kontrolleras först, eftersom de inte får hanteras av <strong>Arduino</strong> över huvud taget.</p>
 
-      <h3><strong>6502</strong>-programmet byggs i <code>setup()</code></h3>
+      <h3>6502-programmet byggs i <code>setup()</code></h3>
       <p>Programmet som <strong>CPU</strong>:n ska köra byggs byte för byte med <code>write_mem(next++, ...)</code>. <code>next</code> är en pekare som automatiskt räknas upp efter varje byte — ett enkelt trick som gör koden mycket mer läsbar än hårdkodade adresser. Programmet gör följande, i tur och ordning:</p>
       <ol class="list-decimal pl-5 space-y-1">
         <li><strong>Sätt VIA-portar som utgångar</strong> — <code>LDA #$FF</code> → <code>STA $4002</code>

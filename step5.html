@@ -221,11 +221,11 @@
     
       <p>Hittills har all feedback från datorn gått via seriemonitor på en laptop. Det fungerar, men det känns inte som en riktig dator. Nu kopplar vi in en <strong>LCD</strong>-display direkt på kopplingsdäcket — och vips är datorn fristående. Ingen PC krävs för att se vad <strong>CPU</strong>:n gör.</p>
 
-      <h3><strong>LCD</strong> i 4-bitarsläge — att prata med displayen</h3>
+      <h3>LCD i 4-bitarsläge — att prata med displayen</h3>
       <p><strong>LCD</strong>-displayer med HD44780-kontroller (standard för 16×2 och 20×4) kan köras i två lägen: 8-bitars (alla 8 datapinnar används) eller 4-bitars (endast <span class="signal">DB4–DB7</span>). Vi använder 4-bitarsläget för att spara pinnar på <strong>Arduino</strong>. <strong>Arduino</strong>-biblioteket <code>LiquidCrystal</code> hanterar all kommunikation — vi behöver bara tala om vilka pinnar som används, och som vi såg i Mål-avsnittet speglar konstruktorn den omvända pin-ordningen.</p>
       <p>Om din display har rak ordning (<span class="signal">D7</span>→<span class="signal">DB4</span> osv.) måste du ändra ordningen i konstruktorn. <strong>LCD</strong>:ns <span class="signal">R/W</span>-pinne (pin 5) kopplas till <span class="signal">GND</span> — vi skriver bara till displayen, vi läser aldrig från den.</p>
 
-      <h3><strong>LCD</strong>-uppdatering inuti <code>pulse()</code></h3>
+      <h3>LCD-uppdatering inuti <code>pulse()</code></h3>
       <p>Den stora kodändringen sitter i <code>pulse()</code>. Efter varje klockcykel uppdateras <strong>LCD</strong>:n:</p>
       <ul class="list-disc pl-5 space-y-1">
         <li><strong>Rad 0:</strong> visar aktuell adress i formatet <code>A:$8000</code>. Padding med

@@ -187,7 +187,7 @@
     
       <p>Datorn fungerar — men den har hittills bara kört <code>NOP</code>:ar. Nu skriver vi vårt <strong>första egna 6502-program</strong>. Det är bara 9 bytes stort, men det innehåller allt ett riktigt program behöver: initiering, beräkning, minnesskrivning och en loop. <strong>CPU</strong>:n kommer att räkna från 0 till 255 i en oändlig loop — och du kommer att kunna följa varje steg.</p>
 
-      <h3><strong>6502</strong>-maskinkod — så här ser ett program ut</h3>
+      <h3>6502-maskinkod — så här ser ett program ut</h3>
       <p>En <strong>6502</strong>-instruktion är 1–3 bytes lång. Första byten är alltid <em>opcode</em> — en siffra som talar om för <strong>CPU</strong>:n vad den ska göra. Resten är <em>operander</em> — data eller adresser som instruktionen behöver. Vårt program har fyra instruktioner:</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
@@ -201,10 +201,10 @@
         </table>
       </div>
 
-      <h3><strong>Arduino</strong>-koden — bara <code>setup()</code> ändras</h3>
+      <h3>Arduino-koden — bara <code>setup()</code> ändras</h3>
       <p><code>pulse()</code>, <code>loop()</code> och <strong>LCD</strong>-koden är helt oförändrade från steg 5. Det enda som ändras är programladdningen i <code>setup()</code>. Istället för en enda <code>write_mem(0x8000, 0xEA)</code> skriver vi nu 9 bytes — en i taget, på stigande adresser från <code>$8000</code>. Varje <code>write_mem()</code> placerar en byte i Arduinons <code>program[]</code>-array, och <strong>CPU</strong>:n kommer att läsa dem som instruktioner.</p>
 
-      <h3>Vad du ser på <strong>LCD</strong>:n</h3>
+      <h3>Vad du ser på LCD:n</h3>
       <p>När programmet körs kan du med Knapp 2 (instruktionssteg) följa programflödet: <code>$8000</code> (<code>LDX</code>) → <code>$8002</code> (<code>INX</code>) → <code>$8003</code> (<code>STX</code>) → <code>$8006</code> (<code>JMP</code>) → <code>$8002</code> (<code>INX</code> igen). Varje varv genom loopen ökar värdet på adress <code>$0200</code> — och du kan se det på <strong>LCD</strong>:ns rad 1 som <code>D:$01</code>, <code>D:$02</code>, <code>D:$03</code>… hela vägen upp till <code>D:$FF</code> (255). Sedan wrappar X-registret till 0 och loopen börjar om.</p>
     
     <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">

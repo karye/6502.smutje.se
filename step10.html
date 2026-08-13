@@ -196,7 +196,7 @@
     <h2>Kopplingar</h2>
     <p>Först programmeraren — en enkel 1:1-koppling. Sedan datorn — fyra enheter på samma buss.</p>
 
-    <h3>Programmeraren — <strong>Arduino</strong> till <strong>AT28C256</strong></h3>
+    <h3>Programmeraren — Arduino till AT28C256</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Arduino</th><th class="p-2 text-left">AT28C256</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -212,7 +212,7 @@
       </table>
     </div>
 
-    <h3>Datorn — <strong>EEPROM</strong> på bussen</h3>
+    <h3>Datorn — EEPROM på bussen</h3>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Ansluts till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -227,7 +227,7 @@
       </table>
     </div>
 
-    <h3><strong>74HC00</strong> — <strong>EEPROM</strong>-avkodning (ny grind)</h3>
+    <h3>74HC00 — EEPROM-avkodning (ny grind)</h3>
     <p>En extra <strong>74HC00</strong> vid sidan av den från steg 7/9. En enda grind används som inverterare för <span class="signal">A15</span>.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
@@ -638,7 +638,7 @@ void loop() {
     <h2>Exempel på körning</h2>
     
 
-      <h3>Fas 1 — bränna <strong>EEPROM</strong></h3>
+      <h3>Fas 1 — bränna EEPROM</h3>
       <p>Bygg programmet med ca65 som vanligt, kör Python-skriptet för att bränna:</p>
       <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">$ pio run -e step10 -t upload    # Ladda upp dator-Arduinon
 $ python3 upload_eeprom.py asm/program_hello.bin /dev/ttyACM1
@@ -654,7 +654,7 @@ Verifierar...
 KLAR
 Totalt brända bytes: 2054</pre>
 
-      <h3>Fas 2 — flytta <strong>EEPROM</strong> till datorn</h3>
+      <h3>Fas 2 — flytta EEPROM till datorn</h3>
       <p>Koppla bort programmerings-Arduinon. Flytta <strong>AT28C256</strong>-chippet till datorns kopplingsdäck och anslut enligt kopplingstabellen ovan. Slå på strömmen.</p>
 
       <!-- Sida vid sida: seriemonitor + LCD -->

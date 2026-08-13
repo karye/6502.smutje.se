@@ -209,7 +209,7 @@
       <pre class="bg-gray-900 text-gray-100 p-3 rounded text-sm font-mono">uint16_t addr = (PINK &lt;&lt; 0) | (PINF &lt;&lt; 8);</pre>
       <p>Resultatet är ett tal mellan 0 och 65 535 — processor ns fullständiga adressrymd.</p>
 
-          <h3>Reset-sekvensen — vad som händer när <strong>CPU</strong>:n vaknar</h3>
+          <h3>Reset-sekvensen — vad som händer när CPU:n vaknar</h3>
           <p>Koden gör tre saker i <code>setup()</code>:</p>
           <ol class="list-decimal pl-5 space-y-1">
             <li><strong>Håller CPU:n i reset</strong> — <code>RESB = LOW</code> i minst 2 klockcykler (vi kör 5 för säkerhets skull). Under denna tid är <strong>CPU</strong>:ns interna register nollställda och bussarna är tri-state.</li>
