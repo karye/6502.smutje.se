@@ -1,21 +1,29 @@
 // ==============================================================
-// toc.js — auto-genererad innehållsförteckning för steg-sidorna
+// toc.js — innehållsförteckning (sidebar) med scrollspy
 // ==============================================================
-// Hittar alla <h2> i <main>, ger varje sektion ett id, och
-// bygger en innehållsruta direkt under <h1>. Ankarlänkarna
-// scrollar mjukt till sektionen (kräver scroll-smooth på <html>).
+// Fyller <nav aria-label="Innehållsförteckning"> med länkar till
+// alla <h2> i <main>. Markerar aktiv sektion vid scrollning.
+// Kräver scroll-smooth på <html> för mjuk scrollning.
 (function () {
   var main = document.querySelector('main');
-  if (!main) return;
+  var tocNav = document.querySelector('nav[aria-label="Innehållsförteckning"]');
+  if (!main || !tocNav) return;
 
   var headings = main.querySelectorAll('h2');
   if (headings.length === 0) return;
 
-  // --- Ge varje h2 ett id om det saknas ---
+  // --- Ge varje h2 ett id härlett från rubriktexten ---
+  var ids = {};
   headings.forEach(function (h, i) {
-    if (!h.id) {
-      h.id = 'sektion-' + (i + 1);
-    }
+    var base = (h.textContent || '').toLowerCase()
+      .replace(/å/g, 'a').replace(/ä/g, 'a').replace(/ö/g, 'o')
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    if (!base) base = 'sektion-' + (i + 1);
+    var id = base;
+    var n = 2;
+    while (ids[id]) { id = base + '-' + (n++); }
+    ids[id] = true;
+    h.id = id;
   });
 
   // --- Bygg länkarna ---
@@ -24,39 +32,44 @@
     var a = document.createElement('a');
     a.href = '#' + h.id;
     a.textContent = h.textContent;
-    a.className = 'text-blue-600 hover:underline whitespace-nowrap';
+    a.className = 'block text-blue-600 hover:underline py-0.5';
     links.push(a);
   });
 
-  // --- Bygg innehållsrutan ---
-  var box = document.createElement('nav');
-  box.className = 'mb-8 bg-gray-100 rounded-lg p-4 border border-gray-200';
-  box.setAttribute('aria-label', 'Innehåll');
+  // --- "Till toppen"-länk ---
+  var top = document.createElement('a');
+  top.href = '#';
+  top.textContent = '↑ Till toppen';
+  top.className = 'block text-gray-500 hover:text-gray-700 text-xs mt-3';
+  links.push(top);
 
-  var title = document.createElement('p');
-  title.className = 'font-semibold text-sm text-gray-700 mb-2';
-  title.textContent = 'Innehåll';
-  box.appendChild(title);
-
+  // --- Fyll nav ---
   var list = document.createElement('div');
-  list.className = 'flex flex-col gap-y-1 text-sm';
+  list.className = 'text-sm';
   links.forEach(function (a) { list.appendChild(a); });
-  box.appendChild(list);
+  tocNav.appendChild(list);
 
-  // --- Lägg till en "till toppen"-länk på långa sidor ---
-  if (headings.length >= 10) {
-    var top = document.createElement('a');
-    top.href = '#';
-    top.textContent = '↑ Till toppen';
-    top.className = 'text-gray-500 hover:text-gray-700 text-xs block mt-2';
-    box.appendChild(top);
+  // --- Scrollspy: markera aktiv sektion ---
+  var spyTargets = Array.prototype.slice.call(headings);
+  function setActive(id) {
+    links.forEach(function (a) {
+      var isActive = a.getAttribute('href') === '#' + id;
+      if (isActive) {
+        a.classList.add('font-semibold', 'text-gray-900');
+        a.classList.remove('text-blue-600');
+      } else {
+        a.classList.remove('font-semibold', 'text-gray-900');
+        a.classList.add('text-blue-600');
+      }
+    });
   }
 
-  // --- Infoga direkt efter <h1> ---
-  var h1 = main.querySelector('h1');
-  if (h1 && h1.nextSibling) {
-    main.insertBefore(box, h1.nextSibling);
-  } else {
-    main.insertBefore(box, main.firstChild);
+  if ('IntersectionObserver' in window) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      });
+    }, { rootMargin: '-15% 0px -70% 0px' });
+    spyTargets.forEach(function (h) { spy.observe(h); });
   }
 })();
