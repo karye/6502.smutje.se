@@ -50,9 +50,9 @@
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Mål</h2>
     
-      <p>Hittills har <strong>Arduino</strong> emulerat <strong>allt</strong> minne — varje gång CPU:n läser eller skriver en byte är det <strong>Arduino</strong> som svarar. Det fungerar utmärkt för inlärning och felsökning, men en riktig dator har riktigt minne. Nu tar vi steget och kopplar in ett <strong>62256 SRAM-chip</strong> — 32 kilobyte statiskt RAM i en DIP-28-kapsel.</p>
+      <p>Hittills har <strong>Arduino</strong> emulerat <strong>allt</strong> minne — varje gång <strong>CPU</strong>:n läser eller skriver en byte är det <strong>Arduino</strong> som svarar. Det fungerar utmärkt för inlärning och felsökning, men en riktig dator har riktigt minne. Nu tar vi steget och kopplar in ett <strong>62256 SRAM-chip</strong> — 32 kilobyte statiskt RAM i en DIP-28-kapsel.</p>
       <p>SRAM-chippet tar över adresserna <strong><code>$0000</code>–<code>$3FFF</code></strong> (16 KB). Det täcker zero page, stacken och gott om utrymme för variabler. <strong>Arduino</strong> fortsätter att leverera programkoden från <code>$8000</code> och uppåt, samt vektorerna på <code>$FFFA</code>–<code>$FFFF</code>. VIA:n ligger kvar på <code>$4000</code>–<code>$400F</code>.</p>
-      <p>Den stora förändringen i koden: <strong>Arduino</strong> går <strong>tri-state</strong> (hög impedans) för alla adresser under <code>$4000</code>. När CPU:n läser från <code>$0200</code> är det SRAM-chippet som lägger ut data på bussen — inte <strong>Arduino</strong>. Vi har nu <strong>tre enheter</strong> som delar på databussen: SRAM, VIA och <strong>Arduino</strong>.</p>
+      <p>Den stora förändringen i koden: <strong>Arduino</strong> går <strong>tri-state</strong> (hög impedans) för alla adresser under <code>$4000</code>. När <strong>CPU</strong>:n läser från <code>$0200</code> är det SRAM-chippet som lägger ut data på bussen — inte <strong>Arduino</strong>. Vi har nu <strong>tre enheter</strong> som delar på databussen: SRAM, VIA och <strong>Arduino</strong>.</p>
     
   </section>
 
@@ -202,7 +202,7 @@
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2>Kopplingsschema</h2>
-    <p>SRAM-chippet delar adress- och databuss med CPU, VIA och <strong>Arduino</strong>. Tre kontrollsignaler avgör vem som pratar.</p>
+    <p>SRAM-chippet delar adress- och databuss med <strong>CPU</strong>, VIA och <strong>Arduino</strong>. Tre kontrollsignaler avgör vem som pratar.</p>
     <div class="schematic bg-white rounded-lg shadow p-4">
       <img src="schematics/steg-9.png" alt="Steg 9 — SRAM 62256" class="w-full">
     </div>
@@ -254,8 +254,8 @@
     </div>
     <p><strong>Logik:</strong> U4A inverterar <span class="signal">A15</span>, U4C inverterar <span class="signal">A14</span>. U4D gör (NOT <span class="signal">A14</span>) NAND (NOT <span class="signal">A15</span>) → LÅG <strong>endast</strong> när <span class="signal">A14</span>=0 OCH <span class="signal">A15</span>=0. SRAM aktiveras alltså vid <strong><code>$0000</code>–<code>$3FFF</code></strong> och ingen annanstans. VIAn (U4B) aktiveras vid <code>$4000</code>–<code>$7FFF</code>. Inga krockar.</p>
 
-    <h3>CPU, VIA och LCD</h3>
-    <p>CPU, VIA och LCD är oförändrade från steg 7. Här är den kompletta kopplingslistan.</p>
+    <h3><strong>CPU</strong>, VIA och LCD</h3>
+    <p><strong>CPU</strong>, VIA och LCD är oförändrade från steg 7. Här är den kompletta kopplingslistan.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -354,7 +354,7 @@
       <p>Det här är slutsteget — och den mest genomgripande förändringen av minnesemulatorn sedan steg 3. Vi kopplar in ett <strong>62256 SRAM-chip</strong> (32 KB statiskt RAM) som tar över adresserna <code>$0000–$3FFF</code>. <strong>Arduino</strong> måste nu <strong>tri-stata databussen</strong> för alla SRAM- och VIA-adresser — tre enheter delar på samma 8 datalinjer, och bara en får prata i taget.</p>
 
       <h3>Tre enheter, en buss</h3>
-      <p>Databussen (<span class="signal">D0–D7</span>) är nu ansluten till tre kretsar samtidigt: CPU, <strong>Arduino</strong>, SRAM och VIA. Adressavkodningen (<strong>74HC00</strong>) avgör vem som svarar:</p>
+      <p>Databussen (<span class="signal">D0–D7</span>) är nu ansluten till tre kretsar samtidigt: <strong>CPU</strong>, <strong>Arduino</strong>, SRAM och VIA. Adressavkodningen (<strong>74HC00</strong>) avgör vem som svarar:</p>
       <ul class="list-disc pl-5 space-y-1">
         <li><strong><code>$0000</code>–<code>$3FFF</code></strong> → <code>is_sram()</code> returnerar <code>true</code>. <strong>Arduino</strong>
           rör inte bussen. SRAM-chippet läser och skriver helt på egen hand.</li>

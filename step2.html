@@ -51,13 +51,13 @@
           <h2>Mål</h2>
 
           <p>I steg 1 gav vi processorn ström och klocka. Nu ska vi ge den kontroll över <strong>adressbussen</strong> —
-            16 ledningar som talar om <em>var</em> i minnet CPU:n vill läsa eller skriva.</p>
+            16 ledningar som talar om <em>var</em> i minnet <strong>CPU</strong>:n vill läsa eller skriva.</p>
           <p>Alla 6502-processorer startar på samma sätt: efter reset läser de sk reset-vektorn på adress
             <code>$FFFC</code> och <code>$FFFD</code> för att få reda på var programmet börjar. Det är inbyggt i kisel —
             ingen mjukvara, ingen konfiguration. Genom att koppla in adressbussen och en reset-signal kan vi se detta
             hända i seriemonitor.</p>
           <p>Vi kopplar också in <strong><span class="signal">/RESET</span></strong> (pin 40) till <strong>Arduino</strong> <span class="signal">D4</span>. När vi håller <strong><span class="signal">RESB</span></strong>
-            låg i minst 2 klockcykler nollställs CPU:ns interna register. När vi sedan släpper den (HÖG) börjar CPU:n
+            låg i minst 2 klockcykler nollställs <strong>CPU</strong>:ns interna register. När vi sedan släpper den (HÖG) börjar <strong>CPU</strong>:n
             köra från reset-vektorn.</p>
           <p>Adressbussen läser vi via Arduinons analoga portar — <strong><span class="signal">PORTF</span></strong> (<span class="signal">A0–A7</span>) och
             <strong><span class="signal">PORTK</span></strong> (<span class="signal">A8–A15</span>). Det ger oss 16 bitar i två registerläsningar.</p>
@@ -68,7 +68,7 @@
         <section class="mb-8 text-gray-700 space-y-3">
           <h2>Nya komponenter</h2>
           <p>Det här steget kräver inga nya elektroniska komponenter — bara kopplingstrådar. Sexton för adresslinjerna
-            <span class="signal">A0–A15</span> och en extra för reset-signalen, eftersom vi nu tar kontroll över CPU:ns uppstart via
+            <span class="signal">A0–A15</span> och en extra för reset-signalen, eftersom vi nu tar kontroll över <strong>CPU</strong>:ns uppstart via
             <strong><span class="signal">/RESET</span></strong>.</p>
           <div class="overflow-x-auto">
             <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
@@ -91,7 +91,7 @@
         <!-- Kopplingsschema -->
         <section class="mb-8">
           <h2>Kopplingsschema</h2>
-          <p>Schemat visar den nya kopplingen: 16 adresslinjer som löper från CPU:ns <span class="signal">A0–A15</span> till Arduinons analoga
+          <p>Schemat visar den nya kopplingen: 16 adresslinjer som löper från <strong>CPU</strong>:ns <span class="signal">A0–A15</span> till Arduinons analoga
             portar <span class="signal">A0–A15</span>, plus reset-signalen från <span class="signal">D4</span> till <strong><span class="signal">/RESET</span></strong>. Allt annat är oförändrat från steg
             1.</p>
           <div class="schematic bg-white rounded-lg shadow p-4">
@@ -193,7 +193,7 @@
 
           <p>I steg 1 gav vi processorn liv. Nu ska vi lyssna på vad den säger. Koden i detta steg gör något
             fundamentalt: den <strong>läser av processorns adressbuss</strong> — 16 ledningar som tillsammans talar om
-            var i minnet CPU:n vill läsa — och skriver ut adressen i seriemonitor. Det är som att koppla in en
+            var i minnet <strong>CPU</strong>:n vill läsa — och skriver ut adressen i seriemonitor. Det är som att koppla in en
             logikanalysator, fast gratis.</p>
 
           <h3>Portregister — att läsa 8 pinnar på en gång</h3>
@@ -202,18 +202,18 @@
             <li><strong><code>DDRF = 0x00</code></strong> — sätt alla 8 pinnar på <span class="signal">PORTF</span> som ingångar. Motsvarar
               8 × <code>pinMode()</code> men går på några nanosekunder.</li>
             <li><strong><span class="signal">PINF</span></strong> — läs alla 8 pinnar på en gång. Varje bit i byten motsvarar
-              en pinne. Här är det CPU:ns <span class="signal">A0–A7</span>.</li>
-            <li><strong><span class="signal">PINK</span></strong> — läser CPU:ns <span class="signal">A8–A15</span> på samma sätt.</li>
+              en pinne. Här är det <strong>CPU</strong>:ns <span class="signal">A0–A7</span>.</li>
+            <li><strong><span class="signal">PINK</span></strong> — läser <strong>CPU</strong>:ns <span class="signal">A8–A15</span> på samma sätt.</li>
           </ul>
       <p>För att få ihop en 16-bitars adress skiftar vi ihop de två byten:</p>
       <pre class="bg-gray-900 text-gray-100 p-3 rounded text-sm font-mono">uint16_t addr = (PINK &lt;&lt; 0) | (PINF &lt;&lt; 8);</pre>
       <p>Resultatet är ett tal mellan 0 och 65 535 — processor ns fullständiga adressrymd.</p>
 
-          <h3>Reset-sekvensen — vad som händer när CPU:n vaknar</h3>
+          <h3>Reset-sekvensen — vad som händer när <strong>CPU</strong>:n vaknar</h3>
           <p>Koden gör tre saker i <code>setup()</code>:</p>
           <ol class="list-decimal pl-5 space-y-1">
-            <li><strong>Håller CPU:n i reset</strong> — <code>RESB = LOW</code> i minst 2 klockcykler (vi kör 5 för säkerhets skull). Under denna tid är CPU:ns interna register nollställda och bussarna är tri-state.</li>
-            <li><strong>Släpper reset</strong> — <code>RESB = HIGH</code>. Detta är ögonblicket CPU:n vaknar. Den gör inget val, fattar inget beslut — den läser helt enkelt reset-vektorn på adress <code>$FFFC</code> och <code>$FFFD</code>.</li>
+            <li><strong>Håller CPU:n i reset</strong> — <code>RESB = LOW</code> i minst 2 klockcykler (vi kör 5 för säkerhets skull). Under denna tid är <strong>CPU</strong>:ns interna register nollställda och bussarna är tri-state.</li>
+            <li><strong>Släpper reset</strong> — <code>RESB = HIGH</code>. Detta är ögonblicket <strong>CPU</strong>:n vaknar. Den gör inget val, fattar inget beslut — den läser helt enkelt reset-vektorn på adress <code>$FFFC</code> och <code>$FFFD</code>.</li>
             <li><strong>Läser och loggar</strong> — i <code>loop()</code> läser vi adressbussen i varje klockcykel och skriver ut den. Första två raderna kommer alltid att vara <code>$FFFC</code> och <code>$FFFD</code> — reset-vektorn. Det är processorns sätt att fråga "var ska jag börja?".</li>
           </ol>
 
@@ -313,13 +313,13 @@ R $8005
 R $8006
 ...</pre>
           </div>
-          <p>Varje rad börjar med <code>R</code> (Read — CPU:n läser) följt av <code>$</code> och en hexadecimal adress.
+          <p>Varje rad börjar med <code>R</code> (Read — <strong>CPU</strong>:n läser) följt av <code>$</code> och en hexadecimal adress.
             De två första raderna är alltid <code>$FFFC</code> och <code>$FFFD</code> — reset-vektorn. Processorn frågar
             "var ska jag börja?" och svaret (som just nu är skräp eftersom databussen inte är inkopplad) leder den till
             någon adress — ofta <code>$8000</code> eller <code>$0000</code> beroende på vad som ligger på de flytande
             datalinjerna.</p>
           <p>Lägg märke till att <code>$FFFC</code> och <code>$FFFD</code> bara dyker upp en gång — efter reset. Sedan
-            räknar adresserna uppåt när CPU:n hämtar instruktioner. Utan databuss (steg 3) kan CPU:n inte hämta riktiga
+            räknar adresserna uppåt när <strong>CPU</strong>:n hämtar instruktioner. Utan databuss (steg 3) kan <strong>CPU</strong>:n inte hämta riktiga
             opcodes, men adressbussen fungerar redan — och det är precis vad vi ville bevisa.</p>
 
         </section>
@@ -330,7 +330,7 @@ R $8006
 
           <p>Här är några saker att kontrollera:</p>
           <ul class="list-disc pl-5 space-y-1">
-            <li><strong>Ser du bara <code>0</code> eller <code>1</code>?</strong> CPU:n är fortfarande i reset eller <span class="signal">BE</span>
+            <li><strong>Ser du bara <code>0</code> eller <code>1</code>?</strong> <strong>CPU</strong>:n är fortfarande i reset eller <span class="signal">BE</span>
               är
               LÅG. Kontrollera att <span class="signal">RESB</span> går HÖG efter reset-sekvensen, och att <span class="signal">BE</span> har +<span class="signal">5V</span>.</li>
             <li><strong>Ser du <code>FFFC</code> men inte <code>FFFD</code>?</strong> Någon adresslinje är felkopplad.

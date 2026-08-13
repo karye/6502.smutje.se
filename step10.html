@@ -50,9 +50,9 @@
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Mål</h2>
     
-      <p>Hittills har <strong>Arduino</strong> levererat 6502-programmet — varje gång CPU:n läser från <code>$8000</code> och uppåt är det Arduinons minnesarray som svarar. Det fungerar utmärkt, men en riktig dator har sitt program i <strong>ROM</strong> — icke-flyktigt minne som överlever strömavbrott. Nu tar vi det sista stora klivet: vi bränner in programmet på en <strong>AT28C256 EEPROM</strong> och låter den ersätta <strong>Arduino</strong> som ROM.</p>
+      <p>Hittills har <strong>Arduino</strong> levererat 6502-programmet — varje gång <strong>CPU</strong>:n läser från <code>$8000</code> och uppåt är det Arduinons minnesarray som svarar. Det fungerar utmärkt, men en riktig dator har sitt program i <strong>ROM</strong> — icke-flyktigt minne som överlever strömavbrott. Nu tar vi det sista stora klivet: vi bränner in programmet på en <strong>AT28C256 EEPROM</strong> och låter den ersätta <strong>Arduino</strong> som ROM.</p>
       <p>En <strong>andra Arduino Mega</strong> används som EEPROM-programmerare. Via USB tar den emot en <code>.bin</code>-fil från datorn, bränner den på <strong>AT28C256</strong>, och verifierar att varje byte sitter rätt. Sedan flyttar du EEPROM-chippet till datorns kopplingsdäck — och datorn startar direkt från äkta ROM, precis som en Commodore 64 eller Apple II.</p>
-      <p>Arduinon på kopplingsdäcket finns kvar som klocka och diagnostikverktyg — men datorn överlever utan den. Slå på strömmen, och CPU:n läser ditt program direkt ur EEPROM:et. Det här är en fristående dator.</p>
+      <p>Arduinon på kopplingsdäcket finns kvar som klocka och diagnostikverktyg — men datorn överlever utan den. Slå på strömmen, och <strong>CPU</strong>:n läser ditt program direkt ur EEPROM:et. Det här är en fristående dator.</p>
     
   </section>
 
@@ -463,7 +463,7 @@ if __name__ == '__main__':
   <section class="mb-8">
     <h2>Arduino-kod — datorn</h2>
     
-      <p>Koden på datorns <strong>Arduino</strong> förenklas dramatiskt. <code>program[2048]</code> och de hundratals <code>write_mem()</code>-anropen försvinner. Istället får vi en ny funktion <code>is_eeprom()</code> som returnerar <code>true</code> för adresser mellan <code>$8000</code> och <code>$FFFF</code>. När CPU:n läser från dessa adresser tri-statar <strong>Arduino</strong> bussen — EEPROM:et svarar själv.</p>
+      <p>Koden på datorns <strong>Arduino</strong> förenklas dramatiskt. <code>program[2048]</code> och de hundratals <code>write_mem()</code>-anropen försvinner. Istället får vi en ny funktion <code>is_eeprom()</code> som returnerar <code>true</code> för adresser mellan <code>$8000</code> och <code>$FFFF</code>. När <strong>CPU</strong>:n läser från dessa adresser tri-statar <strong>Arduino</strong> bussen — EEPROM:et svarar själv.</p>
       <p>Arduinon är nu reducerad till <strong>klockgenerator, reset-kontroll och seriell diagnostik</strong>. Alla minnesarrayer utom <code>vectors[6]</code> är borta. Vektorn på <code>$FFFA–$FFFF</code> ligger sist i EEPROM-bilden — <code>.segment "VECTORS"</code> i assembler-koden placerar dem där.</p>
       <p>Koden nedan är baserad på steg 9 men med <code>is_eeprom()</code> istället för <code>program[]</code>. <code>read_mem()</code> returnerar 0 för EEPROM-adresser — <strong>Arduino</strong> rör dem inte.</p>
     
@@ -648,7 +648,7 @@ W $4000  ← VIA: 3D  (=)
         </div>
       </div>
 
-      <p>Varje gång du ser <code>← EEPROM</code> i loggen är det <strong>AT28C256</strong> som svarar — inte <strong>Arduino</strong>. Reset-vektorn på <code>$FFFC</code>/<code>$FFFD</code> ligger i EEPROM:ets sista bytes, inskrivna av assembler-kedjan. CPU:n läser dem, hoppar till <code>$8000</code>, och kör programmet direkt från äkta ROM.</p>
+      <p>Varje gång du ser <code>← EEPROM</code> i loggen är det <strong>AT28C256</strong> som svarar — inte <strong>Arduino</strong>. Reset-vektorn på <code>$FFFC</code>/<code>$FFFD</code> ligger i EEPROM:ets sista bytes, inskrivna av assembler-kedjan. <strong>CPU</strong>:n läser dem, hoppar till <code>$8000</code>, och kör programmet direkt från äkta ROM.</p>
       <p>Koppla bort Arduinon helt (ersätt klockan med en 555-timer eller kristalloscillator) så har du en helt fristående 6502-dator. Programmet överlever strömavbrott — slå på strömmen imorgon och det finns kvar, inbränt i kisel.</p>
     
   </section>
