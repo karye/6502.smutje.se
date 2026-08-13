@@ -342,15 +342,13 @@ void loop() {
     <section class="mb-8 text-gray-700 space-y-3">
       <h2>Länkskript — program.cfg</h2>
       <p>I steg 8 skapade vi <code>program.cfg</code> — länkaren <strong>ld65</strong>:s karta över minnet. Den talar om var i adressrymden koden hamnar. Nu uppdateras den, för <strong>VIA</strong>:n har flyttat till <code>$A000</code>: <strong>ROM</strong>:en delas i två segment med ett 16-byte-gap där <strong>VIA</strong>-fönstret ligger.</p>
-      <div class="bg-white rounded-lg shadow p-4 border text-sm space-y-2">
-        <p class="font-semibold">Så här gör du</p>
-        <ol class="list-decimal pl-5 space-y-1">
-          <li>Öppna <code>src/program.cfg</code> i ditt PlatformIO-projekt — samma fil som skapades i steg 8.</li>
-          <li>Ersätt innehållet med koden nedan och spara.</li>
-          <li>Bygg projektet — <code>build_asm.py</code> skickar filen till <strong>ld65</strong> automatiskt (<code>-C program.cfg</code>). Inget att köra manuellt.</li>
-          <li>Assembler-filen behöver inga ändringar — segmenten nedan matchar den.</li>
-        </ol>
-      </div>
+      <p class="font-semibold">Så här gör du</p>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li>Öppna <code>src/program.cfg</code> i ditt PlatformIO-projekt — samma fil som skapades i steg 8.</li>
+        <li>Ersätt innehållet med koden nedan och spara.</li>
+        <li>Bygg projektet — <code>build_asm.py</code> skickar filen till <strong>ld65</strong> automatiskt (<code>-C program.cfg</code>). Inget att köra manuellt.</li>
+        <li>Assembler-filen behöver inga ändringar — segmenten nedan matchar den.</li>
+      </ol>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-cfg">
 ; program.cfg — steg 11
 ; Kod placeras i $8000–$9FFF och $A010–$FFFF,
