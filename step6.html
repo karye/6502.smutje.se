@@ -106,23 +106,6 @@
     </div>
   </section>
 
-  <!-- Programmet -->
-  <section class="mb-8">
-    <h2>6502-programmet — räknare</h2>
-    <p>Här är programmet som processorn ska köra. Varje rad är en instruktion i <strong>6502</strong>:ans språk — maskinkod som <strong>CPU</strong>:n förstår direkt.</p>
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Adress</th><th class="p-2 text-left">Bytes</th><th class="p-2 text-left">Assembler</th><th class="p-2 text-left">Vad händer</th></tr></thead>
-        <tbody class="divide-y">
-          <tr><td class="p-2 font-mono">$8000</td><td class="p-2 font-mono">A2 00</td><td class="p-2 font-mono">LDX #$00</td><td class="p-2">X = 0 — nollställ räknaren (körs bara en gång)</td></tr>
-          <tr><td class="p-2 font-mono">$8002</td><td class="p-2 font-mono">E8</td><td class="p-2 font-mono">INX</td><td class="p-2">X = X + 1 — öka räknaren</td></tr>
-          <tr><td class="p-2 font-mono">$8003</td><td class="p-2 font-mono">8E 00 02</td><td class="p-2 font-mono">STX $0200</td><td class="p-2">Spara X-värdet till minnesadress $0200</td></tr>
-          <tr><td class="p-2 font-mono">$8006</td><td class="p-2 font-mono">4C 02 80</td><td class="p-2 font-mono">JMP $8002</td><td class="p-2">Hoppa tillbaka till INX — oändlig loop</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2>Kopplingsschema</h2>
