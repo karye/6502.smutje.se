@@ -81,89 +81,104 @@
     <!-- Skiss -->
     <section class="mb-8">
       <h2>Hur det hänger ihop</h2>
-      <p class="text-gray-700 mb-3">En översikt över bussen och de enheter som svarar på olika adresser. Arduino är startmotorn — streckad, eftersom den fasas ut steg för steg.</p>
-      <div class="bg-white rounded-lg shadow p-4">
-        <svg viewBox="0 0 820 480" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto" role="img" aria-label="Översikt över 6502-datorn: CPU i mitten, bussar till SRAM, VIA och EEPROM, med Arduino som startmotor">
+      <p class="text-gray-700 mb-3">Så här pratar de olika kretsarna med varandra. CPU:n i mitten, adressbussen åt ena hållet och databussen åt det andra. Arduino är startmotorn — streckad, eftersom den fasas ut steg för steg.</p>
+      <div class="rounded-lg shadow p-4 bg-gray-800">
+        <svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto" role="img" aria-label="Översikt över 6502-datorn: CPU med adressbuss till SRAM, EEPROM och VIA, databuss tillbaka, LCD kopplad till VIA, och Arduino som startmotor">
           <defs>
-            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/>
+            <marker id="arrowPurple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#d8b4fe"/>
             </marker>
-            <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6"/>
+            <marker id="arrowGray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ca3af"/>
             </marker>
             <style>
-              .box { fill: #f9fafb; stroke: #9ca3af; stroke-width: 1.5; rx: 8; }
-              .box-sram { fill: #f0fdf4; stroke: #4ade80; stroke-width: 2; rx: 8; }
-              .box-via { fill: #fefce8; stroke: #facc15; stroke-width: 2; rx: 8; }
-              .box-eeprom { fill: #faf5ff; stroke: #c084fc; stroke-width: 2; rx: 8; }
-              .box-arduino { fill: #eff6ff; stroke: #3b82f6; stroke-width: 2; stroke-dasharray: 6 4; rx: 8; }
-              .box-cpu { fill: #111827; stroke: #374151; stroke-width: 2; rx: 8; }
-              .bus { stroke: #6b7280; stroke-width: 3; }
-              .bus-thin { stroke: #9ca3af; stroke-width: 1.5; }
-              .lbl { font-family: ui-monospace, monospace; font-size: 13px; fill: #374151; }
-              .lbl-sm { font-family: ui-monospace, monospace; font-size: 11px; fill: #6b7280; }
-              .lbl-cpu { font-family: ui-monospace, monospace; font-size: 16px; fill: #ffffff; font-weight: bold; }
-              .lbl-cpu2 { font-family: ui-monospace, monospace; font-size: 11px; fill: #9ca3af; }
-              .lbl-bus { font-family: ui-monospace, monospace; font-size: 12px; fill: #6b7280; font-weight: bold; }
+              .c {
+                font-family: ui-monospace, monospace;
+              }
+              .chip {
+                fill: #111827;
+                stroke: #4b5563;
+                stroke-width: 2;
+                rx: 8;
+              }
+              .pin {
+                fill: #eab308;
+              }
+              .dev {
+                fill: #1f2937;
+                stroke-width: 2;
+                rx: 8;
+              }
+              .bus {
+                stroke-width: 4;
+              }
+              .wire {
+                stroke-width: 2;
+              }
             </style>
           </defs>
 
-          <!-- CPU -->
-          <rect class="box-cpu" x="290" y="20" width="240" height="64"/>
-          <text class="lbl-cpu" x="410" y="48" text-anchor="middle">W65C02S</text>
-          <text class="lbl-cpu2" x="410" y="66" text-anchor="middle">8-bit CPU</text>
+          <!-- ==== W65C02S CPU ==== -->
+          <rect class="chip" x="40" y="150" width="170" height="110"/>
+          <text class="c" x="125" y="192" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="bold">W65C02S</text>
+          <text class="c" x="125" y="212" text-anchor="middle" fill="#9ca3af" font-size="11">8-bit CPU</text>
+          <!-- Gula pinnar: adress (vänster), data (höger) -->
+          <rect class="pin" x="32" y="162" width="8" height="8"/>
+          <rect class="pin" x="32" y="178" width="8" height="8"/>
+          <rect class="pin" x="32" y="194" width="8" height="8"/>
+          <rect class="pin" x="32" y="210" width="8" height="8"/>
+          <rect class="pin" x="32" y="226" width="8" height="8"/>
+          <rect class="pin" x="210" y="162" width="8" height="8"/>
+          <rect class="pin" x="210" y="178" width="8" height="8"/>
+          <rect class="pin" x="210" y="194" width="8" height="8"/>
+          <rect class="pin" x="210" y="210" width="8" height="8"/>
+          <rect class="pin" x="210" y="226" width="8" height="8"/>
 
-          <!-- Bussar från CPU ned -->
-          <line class="bus" x1="410" y1="84" x2="410" y2="120"/>
-          <line class="bus" x1="80" y1="120" x2="740" y2="120"/>
+          <!-- ==== Bussar: adress (blå) och data (grön) ==== -->
+          <line class="bus" x1="210" y1="140" x2="860" y2="140" stroke="#93c5fd"/>
+          <line class="bus" x1="210" y1="270" x2="860" y2="270" stroke="#86efac"/>
+          <!-- Ledare från CPU till bussarna -->
+          <line class="wire" x1="210" y1="158" x2="210" y2="140" stroke="#93c5fd"/>
+          <line class="wire" x1="210" y1="252" x2="210" y2="270" stroke="#86efac"/>
+          <!-- Etiketter -->
+          <text class="c" x="225" y="133" fill="#93c5fd" font-size="12" font-weight="bold">adressbuss A0–A15</text>
+          <text class="c" x="845" y="288" text-anchor="end" fill="#86efac" font-size="12" font-weight="bold">databuss D0–D7</text>
 
-          <!-- Buss-etiketter -->
-          <text class="lbl-bus" x="120" y="112">adressbuss A0–A15</text>
-          <text class="lbl-bus" x="470" y="112">databuss D0–D7</text>
+          <!-- ==== SRAM ==== -->
+          <line class="wire" x1="420" y1="160" x2="420" y2="140" stroke="#93c5fd"/>
+          <line class="wire" x1="420" y1="250" x2="420" y2="270" stroke="#86efac"/>
+          <rect class="dev" x="340" y="160" width="160" height="90" stroke="#4ade80"/>
+          <text class="c" x="420" y="197" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold">SRAM</text>
+          <text class="c" x="420" y="215" text-anchor="middle" fill="#4ade80" font-size="11">62256 · RAM</text>
 
-          <!-- Ned till enheterna -->
-          <line class="bus-thin" x1="170" y1="120" x2="170" y2="150"/>
-          <line class="bus-thin" x1="410" y1="120" x2="410" y2="150"/>
-          <line class="bus-thin" x1="650" y1="120" x2="650" y2="150"/>
+          <!-- ==== EEPROM ==== -->
+          <line class="wire" x1="600" y1="160" x2="600" y2="140" stroke="#93c5fd"/>
+          <line class="wire" x1="600" y1="250" x2="600" y2="270" stroke="#86efac"/>
+          <rect class="dev" x="520" y="160" width="160" height="90" stroke="#c084fc"/>
+          <text class="c" x="600" y="197" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold">EEPROM</text>
+          <text class="c" x="600" y="215" text-anchor="middle" fill="#c084fc" font-size="11">AT28C256 · ROM</text>
 
-          <!-- SRAM -->
-          <rect class="box-sram" x="70" y="150" width="200" height="90"/>
-          <text class="lbl" x="170" y="182" text-anchor="middle" font-weight="bold">62256 SRAM</text>
-          <text class="lbl-sm" x="170" y="200" text-anchor="middle">32 KB RAM</text>
-          <text class="lbl-sm" x="170" y="216" text-anchor="middle">$0000–$7FFF</text>
-          <text class="lbl-sm" x="170" y="232" text-anchor="middle" fill="#4ade80">minne · steg 9</text>
+          <!-- ==== VIA ==== -->
+          <line class="wire" x1="780" y1="160" x2="780" y2="140" stroke="#93c5fd"/>
+          <line class="wire" x1="780" y1="250" x2="780" y2="270" stroke="#86efac"/>
+          <rect class="dev" x="700" y="160" width="160" height="90" stroke="#facc15"/>
+          <text class="c" x="780" y="197" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold">VIA</text>
+          <text class="c" x="780" y="215" text-anchor="middle" fill="#facc15" font-size="11">W65C22 · I/O</text>
+          <!-- Pil till LCD -->
+          <line class="wire" x1="780" y1="250" x2="780" y2="315" stroke="#facc15" stroke-dasharray="4 3"/>
+          <polygon points="780,327 775,317 785,317" fill="#facc15"/>
+          <text class="c" x="792" y="323" fill="#facc15" font-size="11">LCD 16×2</text>
 
-          <!-- VIA -->
-          <rect class="box-via" x="310" y="150" width="200" height="90"/>
-          <text class="lbl" x="410" y="182" text-anchor="middle" font-weight="bold">W65C22 VIA</text>
-          <text class="lbl-sm" x="410" y="200" text-anchor="middle">I/O + LCD</text>
-          <text class="lbl-sm" x="410" y="216" text-anchor="middle">$A000–$A00F</text>
-          <text class="lbl-sm" x="410" y="232" text-anchor="middle" fill="#facc15">I/O · steg 7</text>
-
-          <!-- EEPROM -->
-          <rect class="box-eeprom" x="550" y="150" width="200" height="90"/>
-          <text class="lbl" x="650" y="182" text-anchor="middle" font-weight="bold">AT28C256</text>
-          <text class="lbl-sm" x="650" y="200" text-anchor="middle">EEPROM</text>
-          <text class="lbl-sm" x="650" y="216" text-anchor="middle">$8000–$FFFF</text>
-          <text class="lbl-sm" x="650" y="232" text-anchor="middle" fill="#c084fc">ROM · steg 10</text>
-
-          <!-- Arduino (startmotor, streckad) -->
-          <rect class="box-arduino" x="260" y="330" width="300" height="90"/>
-          <text class="lbl" x="410" y="358" text-anchor="middle" font-weight="bold" fill="#1d4ed8">Arduino Mega 2560</text>
-          <text class="lbl-sm" x="410" y="376" text-anchor="middle">startmotor — klocka, reset, diagnostik</text>
-          <text class="lbl-sm" x="410" y="392" text-anchor="middle">minnesemulering fasas ut (steg 3–10)</text>
-          <text class="lbl-sm" x="410" y="408" text-anchor="middle" fill="#3b82f6">kvar: klocka + seriemonitor</text>
-
-          <!-- Pil Arduino → CPU (klocka) -->
-          <line class="bus" x1="410" y1="330" x2="410" y2="300" marker-end="url(#arrowBlue)"/>
-          <path class="bus-thin" d="M 340 300 L 340 100" stroke-dasharray="4 4" stroke="#9ca3af"/>
-          <line class="bus-thin" x1="340" y1="100" x2="380" y2="100" marker-end="url(#arrow)" stroke="#9ca3af"/>
-          <text class="lbl-sm" x="330" y="210" text-anchor="end">klocka + reset</text>
-          <text class="lbl-sm" x="330" y="290" text-anchor="end" fill="#3b82f6">tidigare: RAM + ROM (fasas ut)</text>
-
-          <!-- Etikett kontroll -->
-          <text class="lbl-sm" x="760" y="90" text-anchor="end">kontroll: R/W, SYNC</text>
+          <!-- ==== Arduino (startmotor, streckad) ==== -->
+          <rect class="dev" x="40" y="320" width="170" height="80" stroke="#3b82f6" stroke-dasharray="6 4"/>
+          <text class="c" x="125" y="352" text-anchor="middle" fill="#93c5fd" font-size="13" font-weight="bold">Arduino Mega 2560</text>
+          <text class="c" x="125" y="370" text-anchor="middle" fill="#9ca3af" font-size="10">startmotor — klocka, reset, diagnostik</text>
+          <text class="c" x="125" y="384" text-anchor="middle" fill="#3b82f6" font-size="10">fasas ut steg för steg</text>
+          <!-- Pil Arduino → CPU (kontroll) -->
+          <line class="wire" x1="125" y1="320" x2="125" y2="262" stroke="#d8b4fe" marker-end="url(#arrowPurple)"/>
+          <text class="c" x="137" y="296" fill="#d8b4fe" font-size="10">klocka · R/W · SYNC</text>
         </svg>
+        <p class="text-xs text-gray-400 mt-2 font-mono"><span class="text-blue-300">■</span> Adressbuss &nbsp; <span class="text-green-300">■</span> Databuss &nbsp; <span class="text-purple-300">■</span> Kontroll &nbsp; <span class="text-yellow-300">■</span> Ström/pinnar</p>
       </div>
     </section>
 
