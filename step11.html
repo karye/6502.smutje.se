@@ -58,18 +58,81 @@
     <!-- Nya komponenter -->
     <section class="mb-8 text-gray-700 space-y-3">
       <h2>Nya komponenter</h2>
-      <p>Inga nya kretsar! Det här steget handlar om att <em>omkoppla det vi redan har</em>. Du behöver bara en andra <strong>74HC00</strong> för den nya adressavkodningen (du har sex stycken) och en extra kopplingstråd för <strong>SRAM</strong>:ns <span class="signal">A14</span>.</p>
+      <p>Inga nya kretsar! Det här steget handlar om att <em>omkoppla det vi redan har</em>. Du behöver två <strong>74HC00</strong> (IC1 + IC2) för den nya adressavkodningen — kitet har sex stycken. Dessutom en extra kopplingstråd för <strong>SRAM</strong>:ns <span class="signal">A14</span>. Den gamla <strong>74HC00</strong>:an från steg 9 kopplas bort — den behövs inte längre.</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th><th class="p-2 text-left">Används till</th></tr></thead>
           <tbody class="divide-y">
-            <tr><td class="p-2">1</td><td class="p-2"><strong>74HC00</strong> (andra chippet)</td><td class="p-2">Ny avkodning: VIA på $A000 och EEPROM runt den</td></tr>
+            <tr><td class="p-2">2</td><td class="p-2"><strong>74HC00</strong> (IC1 + IC2)</td><td class="p-2">NAND-trädet: VIA på $A000 och EEPROM runt den</td></tr>
             <tr><td class="p-2">1</td><td class="p-2">Kopplingstråd</td><td class="p-2">SRAM A14 (pin 1) → CPU A14 — öppnar den andra halvan av 62256</td></tr>
             <tr><td class="p-2">—</td><td class="p-2">Kopplingstrådar (omkoppling)</td><td class="p-2">Flytta VIA:ns /CS2 och EEPROM:ets /CE till nya avkodningssignaler</td></tr>
           </tbody>
         </table>
       </div>
-      <p><strong>Logik i ord:</strong> <strong>VIA</strong> får prata när <span class="signal">A15</span>=1 (övre halvan), <span class="signal">A14</span>=0, <span class="signal">A13</span>=1 och <span class="signal">A12</span>=0 — det vill säga <code>$A000</code>–<code>$AFFF</code> (registren speglas var 16:e byte via RS0–RS3 = A0–A3). <strong>EEPROM</strong>:et får prata när <span class="signal">A15</span>=1 och <strong>VIA</strong> inte gör det. <strong>SRAM</strong> får prata när <span class="signal">A15</span>=0. Ingen krock, inget dött utrymme.</p>
+            <h3>Fysiskt kopplingsschema</h3>
+      <p>Här är avkodaren översatt till fysiska kopplingar på breadboardet med två stycken <strong>74HC00</strong>-chip. <strong>VCC (+5V)</strong> går till pin 14 på båda kretsarna, <strong>GND</strong> till pin 7 på båda. Siffrorna inom parentes, t.ex. <code>(IC1 P1,2→3)</code>, visar vilken krets och vilka pinnar grinden använder (ingång 1, ingång 2 → utgång).</p>
+
+      <h3>Logiskt grindschema med pin-mappning</h3>
+      <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border font-mono">SRAM /CE dras direkt från A15.
+
+A14 ─┬─[NAND]── /A14
+A14 ─┘ (IC1 P1,2-&gt;3)
+
+A12 ─┬─[NAND]── /A12
+A12 ─┘ (IC1 P4,5-&gt;6)
+
+        (Från P3)
+/A14 ──┬─[NAND]── X ──────┬─[NAND]── X_INV
+ A15 ──┘ (IC1 P10,9-&gt;8)   │ (IC2 P1,2-&gt;3)
+                          X ─┘
+
+        (Från P6)
+/A12 ──┬─[NAND]── Y ──────┬─[NAND]── Y_INV
+ A13 ──┘ (IC1 P12,13-&gt;11) │ (IC2 P4,5-&gt;6)
+                          Y ─┘
+
+        (Från P3)
+X_INV ─┬─[NAND]── VIA /CS2
+Y_INV ─┘ (IC2 P9,10-&gt;8)
+(Från P6)
+
+ A15 ──────┬─[NAND]── EEPROM /CE
+VIA /CS2 ──┘ (IC2 P12,13-&gt;11)
+(Från P8)</pre>
+
+      <h3>ASCII-schema över de fysiska kretsarna</h3>
+      <p>De två kretsarna uppifrån (skåran/pricken pekar uppåt). Siffrorna inom parentes visar var en kabel ska dras mellan pinnar.</p>
+      <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border font-mono">       KRETS 1: 74HC00 (invertering och första steget)
+                   +---\/---+
+             A14 --| 1    14|-- VCC (+5V)
+             A14 --| 2    13|-- A13
+(Koppla till 10) --| 3    12|-- (Koppla från pin 6)
+             A12 --| 4    11|-- (Koppla till Krets 2, Pin 4 &amp; 5)
+             A12 --| 5    10|-- (Koppla från pin 3)
+(Koppla till 12) --| 6     9|-- A15
+             GND --| 7     8|-- (Koppla till Krets 2, Pin 1 &amp; 2)
+                   +--------+
+
+       KRETS 2: 74HC00 (slutgiltig avkodning)
+                   +---\/---+
+(Från Krets 1 P8) -| 1    14|-- VCC (+5V)
+(Från Krets 1 P8) -| 2    13|-- (Koppla från pin 8, din nya VIA-signal)
+ (Koppla till 9) --| 3    12|-- A15
+(Från Krets 1 P11)-| 4    11|-- &gt;&gt;&gt; UT TILL EEPROM /CE &lt;&lt;&lt;
+(Från Krets 1 P11)-| 5    10|-- (Koppla från pin 6)
+ (Koppla till 10)--| 6     9|-- (Koppla från pin 3)
+             GND --| 7     8|-- &gt;&gt;&gt; UT TILL VIA /CS2 &lt;&lt;&lt;
+                   +--------+</pre>
+
+      <h3>Checklista — dra kabel för kabel</h3>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li><strong>Steg 1 — bygla ingångar för att skapa inverterare (NOT):</strong> Krets 1: bygel mellan pin 1 och 2, och mellan pin 4 och 5. Krets 2: bygel mellan pin 1 och 2, och mellan pin 4 och 5.</li>
+        <li><strong>Steg 2 — interna signalvägar:</strong> Krets 1: kabel från pin 3 till 10, och från pin 6 till 12. Krets 2: kabel från pin 3 till 9, från pin 6 till 10, och från pin 8 till 13.</li>
+        <li><strong>Steg 3 — koppla mellan kretsarna:</strong> Kabel från Krets 1 pin 8 till Krets 2 pin 1 (eller 2). Kabel från Krets 1 pin 11 till Krets 2 pin 4 (eller 5).</li>
+        <li><strong>Steg 4 — hämta adressbussen från CPU:n:</strong> A15 → Krets 1 pin 9. A15 → Krets 2 pin 12. A14 → Krets 1 pin 1 (eller 2). A13 → Krets 1 pin 13. A12 → Krets 1 pin 4 (eller 5).</li>
+        <li><strong>Steg 5 — slutdestinationerna:</strong> Krets 2 pin 8 → VIA pin 23 (<span class="signal">/CS2</span>). Krets 2 pin 11 → EEPROM pin 20 (<span class="signal">/CE</span>). Glöm inte: CPU:ns <span class="signal">A15</span> dras direkt till SRAM:ets <span class="signal">/CE</span>.</li>
+      </ol>
+<p><strong>Logik i ord:</strong> <strong>VIA</strong> får prata när <span class="signal">A15</span>=1 (övre halvan), <span class="signal">A14</span>=0, <span class="signal">A13</span>=1 och <span class="signal">A12</span>=0 — det vill säga <code>$A000</code>–<code>$AFFF</code> (registren speglas var 16:e byte via RS0–RS3 = A0–A3). <strong>EEPROM</strong>:et får prata när <span class="signal">A15</span>=1 och <strong>VIA</strong> inte gör det. <strong>SRAM</strong> får prata när <span class="signal">A15</span>=0. Ingen krock, inget dött utrymme.</p>
     </section>
 
     <!-- Kopplingsschema -->
@@ -137,7 +200,7 @@
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
           <tbody class="divide-y">
-            <tr><td class="p-2">23</td><td class="p-2"><span class="signal">/CS2</span></td><td class="p-2"><strong>U4D-utgång</strong> (final-NAND i trädet)</td><td class="p-2">LÅG vid $A000–$AFFF — VIA:ns nya hem</td></tr>
+            <tr><td class="p-2">23</td><td class="p-2"><span class="signal">/CS2</span></td><td class="p-2"><strong>IC2 pin 8</strong> (final-NAND i trädet)</td><td class="p-2">LÅG vid $A000–$AFFF — VIA:ns nya hem</td></tr>
             <tr><td class="p-2">24</td><td class="p-2"><span class="signal">CS1</span></td><td class="p-2">+5V (oförändrad)</td><td class="p-2">Chip Select 1 — alltid aktiv</td></tr>
             <tr><td class="p-2">38–35</td><td class="p-2"><span class="signal">RS0–RS3</span></td><td class="p-2"><strong>CPU A0–A3</strong> (oförändrad)</td><td class="p-2">Väljer register — de speglas var 16:e byte i fönstret</td></tr>
           </tbody>
@@ -149,13 +212,13 @@
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
           <tbody class="divide-y">
-            <tr><td class="p-2">20</td><td class="p-2"><span class="signal">/CE</span></td><td class="p-2"><strong>U6A-utgång</strong> (ny)</td><td class="p-2">Aktivt vid $8000–$9FFF + $B000–$FFFF</td></tr>
+            <tr><td class="p-2">20</td><td class="p-2"><span class="signal">/CE</span></td><td class="p-2"><strong>IC2 pin 11</strong></td><td class="p-2">Aktivt vid $8000–$9FFF + $B000–$FFFF</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h3>74HC00 — ny avkodning (U5 + U6)</h3>
-      <p>Avkodningen byggs som ett NAND-träd: U5 (den andra <strong>74HC00</strong>:an) gör inverterare och mellanresultat, U4:s lediga grindar (U4B–U4D) bygger vidare, och en tredje <strong>74HC00</strong> (U6) gör EEPROM <span class="signal">/CE</span>. <strong>SRAM</strong>:s <span class="signal">/CE</span> kopplas direkt till <span class="signal">A15</span> — ingen grind. Åtta grindar, fyra signaler:</p>
+      <h3>74HC00 — ny avkodning (IC1 + IC2)</h3>
+      <p>Avkodningen byggs som ett NAND-träd på två <strong>74HC00</strong>-kretsar. <strong>IC1</strong> gör inverterarna (¬<span class="signal">A14</span>, ¬<span class="signal">A12</span>) och mellanresultaten (X, Y); <strong>IC2</strong> gör X_INV, Y_INV, VIA <span class="signal">/CS2</span> och EEPROM <span class="signal">/CE</span>. <strong>SRAM</strong>:s <span class="signal">/CE</span> kopplas direkt till <span class="signal">A15</span> — ingen grind. Åtta grindar, fyra signaler:</p>
       <div class="flex justify-center">
         <svg viewBox="0 0 980 640" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto" role="img" aria-label="NAND-träd — adressavkodning">
 <style>.lg{font-family:ui-monospace,monospace}.sig{font-family:ui-monospace,monospace;font-size:12px}.glab{font-family:ui-monospace,monospace;font-size:10px;fill:#9ca3af}</style>
@@ -163,35 +226,35 @@
 <path d="M200,80 L280,80 A25,25 0 0 1 280,130 L200,130 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
 <text class="lg" x="252.5" y="112" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
 <circle cx="311" cy="105" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
-<text class="glab" x="252.5" y="72" text-anchor="middle">U5A</text>
+<text class="glab" x="252.5" y="72" text-anchor="middle">IC1 G1</text>
 <path d="M200,140 L280,140 A25,25 0 0 1 280,190 L200,190 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
 <text class="lg" x="252.5" y="172" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
 <circle cx="311" cy="165" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
-<text class="glab" x="252.5" y="132" text-anchor="middle">U5B</text>
+<text class="glab" x="252.5" y="132" text-anchor="middle">IC1 G2</text>
 <path d="M200,225 L280,225 A25,25 0 0 1 280,275 L200,275 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
 <text class="lg" x="252.5" y="257" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
 <circle cx="311" cy="250" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
-<text class="glab" x="252.5" y="217" text-anchor="middle">U5C</text>
+<text class="glab" x="252.5" y="217" text-anchor="middle">IC1 G3</text>
 <path d="M390,225 L470,225 A25,25 0 0 1 470,275 L390,275 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
 <text class="lg" x="442.5" y="257" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
 <circle cx="501" cy="250" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
-<text class="glab" x="442.5" y="217" text-anchor="middle">U4B</text>
+<text class="glab" x="442.5" y="217" text-anchor="middle">IC2 G1</text>
 <path d="M200,315 L280,315 A25,25 0 0 1 280,365 L200,365 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
 <text class="lg" x="252.5" y="347" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
 <circle cx="311" cy="340" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
-<text class="glab" x="252.5" y="307" text-anchor="middle">U5D</text>
+<text class="glab" x="252.5" y="307" text-anchor="middle">IC1 G4</text>
 <path d="M390,315 L470,315 A25,25 0 0 1 470,365 L390,365 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
 <text class="lg" x="442.5" y="347" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
 <circle cx="501" cy="340" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
-<text class="glab" x="442.5" y="307" text-anchor="middle">U4C</text>
+<text class="glab" x="442.5" y="307" text-anchor="middle">IC2 G2</text>
 <path d="M290,415 L370,415 A25,25 0 0 1 370,465 L290,465 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
 <text class="lg" x="342.5" y="447" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
 <circle cx="401" cy="440" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
-<text class="glab" x="342.5" y="407" text-anchor="middle">U4D</text>
+<text class="glab" x="342.5" y="407" text-anchor="middle">IC2 G3</text>
 <path d="M290,495 L370,495 A25,25 0 0 1 370,545 L290,545 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
 <text class="lg" x="342.5" y="527" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
 <circle cx="401" cy="520" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
-<text class="glab" x="342.5" y="487" text-anchor="middle">U6A</text>
+<text class="glab" x="342.5" y="487" text-anchor="middle">IC2 G4</text>
 <text class="sig" x="22" y="54" fill="#93c5fd" font-weight="bold">A15</text>
 <text class="sig" x="610" y="54" fill="#86efac">SRAM /CE</text>
 <text class="sig" x="330" y="44" fill="#9ca3af">(= A15 — direktanslutning)</text>
@@ -248,28 +311,27 @@
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
           <tbody class="divide-y">
-            <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">U5 — inverterare och mellanresultat</td></tr>
-            <tr><td class="p-2">U5: 1, 2</td><td class="p-2"><span class="signal">A14</span> (in)</td><td class="p-2"><strong>CPU <span class="signal">A14</span></strong></td><td class="p-2">NAND(<span class="signal">A14</span>, <span class="signal">A14</span>) = ¬A14 — inverterare</td></tr>
-            <tr><td class="p-2">U5: 3</td><td class="p-2">¬A14 (ut)</td><td class="p-2"><strong>U5 pin 10</strong></td><td class="p-2">Till X-grinden</td></tr>
-            <tr><td class="p-2">U5: 4, 5</td><td class="p-2"><span class="signal">A12</span> (in)</td><td class="p-2"><strong>CPU <span class="signal">A12</span></strong></td><td class="p-2">NAND(<span class="signal">A12</span>, <span class="signal">A12</span>) = ¬A12 — inverterare</td></tr>
-            <tr><td class="p-2">U5: 6</td><td class="p-2">¬A12 (ut)</td><td class="p-2"><strong>U5 pin 13</strong></td><td class="p-2">Till Y-grinden</td></tr>
-            <tr><td class="p-2">U5: 9</td><td class="p-2"><span class="signal">A15</span> (in)</td><td class="p-2"><strong>CPU <span class="signal">A15</span></strong></td><td class="p-2">X = ¬(<span class="signal">A15</span>·¬<span class="signal">A14</span>)</td></tr>
-            <tr><td class="p-2">U5: 10</td><td class="p-2">¬A14 (in)</td><td class="p-2"><strong>U5 pin 3</strong></td><td class="p-2">X = ¬(<span class="signal">A15</span>·¬<span class="signal">A14</span>)</td></tr>
-            <tr><td class="p-2">U5: 8</td><td class="p-2">X (ut)</td><td class="p-2"><strong>U4 pin 4</strong></td><td class="p-2">Mellanresultat → U4B</td></tr>
-            <tr><td class="p-2">U5: 12</td><td class="p-2"><span class="signal">A13</span> (in)</td><td class="p-2"><strong>CPU <span class="signal">A13</span></strong></td><td class="p-2">Y = ¬(<span class="signal">A13</span>·¬<span class="signal">A12</span>)</td></tr>
-            <tr><td class="p-2">U5: 13</td><td class="p-2">¬A12 (in)</td><td class="p-2"><strong>U5 pin 6</strong></td><td class="p-2">Y = ¬(<span class="signal">A13</span>·¬<span class="signal">A12</span>)</td></tr>
-            <tr><td class="p-2">U5: 11</td><td class="p-2">Y (ut)</td><td class="p-2"><strong>U4 pin 9</strong></td><td class="p-2">Mellanresultat → U4C</td></tr>
-            <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">U4B–U4D — AND-trädet till VIA /CS2</td></tr>
-            <tr><td class="p-2">U4: 4, 5</td><td class="p-2">X (in)</td><td class="p-2"><strong>U5 pin 8</strong></td><td class="p-2">X_INV = <span class="signal">A15</span>·¬<span class="signal">A14</span> — inverterare</td></tr>
-            <tr><td class="p-2">U4: 6</td><td class="p-2">X_INV (ut)</td><td class="p-2"><strong>U4 pin 12</strong></td><td class="p-2">Till final-NAND</td></tr>
-            <tr><td class="p-2">U4: 9, 10</td><td class="p-2">Y (in)</td><td class="p-2"><strong>U5 pin 11</strong></td><td class="p-2">Y_INV = <span class="signal">A13</span>·¬<span class="signal">A12</span> — inverterare</td></tr>
-            <tr><td class="p-2">U4: 8</td><td class="p-2">Y_INV (ut)</td><td class="p-2"><strong>U4 pin 13</strong></td><td class="p-2">Till final-NAND</td></tr>
-            <tr><td class="p-2">U4: 12, 13</td><td class="p-2">(in)</td><td class="p-2"><strong>U4 pin 6</strong> + <strong>U4 pin 8</strong></td><td class="p-2">VIA <span class="signal">/CS2</span> = ¬(X_INV·Y_INV) = ¬(<span class="signal">A15</span>·¬<span class="signal">A14</span>·<span class="signal">A13</span>·¬<span class="signal">A12</span>)</td></tr>
-            <tr><td class="p-2">U4: 11</td><td class="p-2">VIA <span class="signal">/CS2</span> (ut)</td><td class="p-2"><strong>VIA pin 23</strong> + <strong>U6 pin 2</strong></td><td class="p-2">LÅG vid $A000–$AFFF</td></tr>
-            <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">U6 — EEPROM /CE</td></tr>
-            <tr><td class="p-2">U6: 1</td><td class="p-2"><span class="signal">A15</span> (in)</td><td class="p-2"><strong>CPU <span class="signal">A15</span></strong></td><td class="p-2">EEPROM <span class="signal">/CE</span> = ¬(<span class="signal">A15</span>·VIA <span class="signal">/CS2</span>)</td></tr>
-            <tr><td class="p-2">U6: 2</td><td class="p-2">VIA <span class="signal">/CS2</span> (in)</td><td class="p-2"><strong>U4 pin 11</strong></td><td class="p-2">EEPROM tyst när VIA pratar</td></tr>
-            <tr><td class="p-2">U6: 3</td><td class="p-2">EEPROM <span class="signal">/CE</span> (ut)</td><td class="p-2"><strong>AT28C256 pin 20</strong></td><td class="p-2">LÅG vid $8000–$9FFF + $B000–$FFFF</td></tr>
+            <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">IC1 — inverterare och mellanresultat</td></tr>
+            <tr><td class="p-2">IC1: 1, 2</td><td class="p-2"><span class="signal">A14</span> (in)</td><td class="p-2"><strong>CPU <span class="signal">A14</span></strong></td><td class="p-2">NAND(<span class="signal">A14</span>, <span class="signal">A14</span>) = ¬A14 — inverterare</td></tr>
+            <tr><td class="p-2">IC1: 3</td><td class="p-2">¬A14 (ut)</td><td class="p-2"><strong>IC1 pin 10</strong></td><td class="p-2">Till X-grinden</td></tr>
+            <tr><td class="p-2">IC1: 4, 5</td><td class="p-2"><span class="signal">A12</span> (in)</td><td class="p-2"><strong>CPU <span class="signal">A12</span></strong></td><td class="p-2">NAND(<span class="signal">A12</span>, <span class="signal">A12</span>) = ¬A12 — inverterare</td></tr>
+            <tr><td class="p-2">IC1: 6</td><td class="p-2">¬A12 (ut)</td><td class="p-2"><strong>IC1 pin 12</strong></td><td class="p-2">Till Y-grinden</td></tr>
+            <tr><td class="p-2">IC1: 9</td><td class="p-2"><span class="signal">A15</span> (in)</td><td class="p-2"><strong>CPU <span class="signal">A15</span></strong></td><td class="p-2">X = ¬(<span class="signal">A15</span>·¬<span class="signal">A14</span>)</td></tr>
+            <tr><td class="p-2">IC1: 10</td><td class="p-2">¬A14 (in)</td><td class="p-2"><strong>IC1 pin 3</strong></td><td class="p-2">X = ¬(<span class="signal">A15</span>·¬<span class="signal">A14</span>)</td></tr>
+            <tr><td class="p-2">IC1: 8</td><td class="p-2">X (ut)</td><td class="p-2"><strong>IC2 pin 1</strong> (eller 2)</td><td class="p-2">Till X_INV-grinden</td></tr>
+            <tr><td class="p-2">IC1: 12</td><td class="p-2">¬A12 (in)</td><td class="p-2"><strong>IC1 pin 6</strong></td><td class="p-2">Y = ¬(<span class="signal">A13</span>·¬<span class="signal">A12</span>)</td></tr>
+            <tr><td class="p-2">IC1: 13</td><td class="p-2"><span class="signal">A13</span> (in)</td><td class="p-2"><strong>CPU <span class="signal">A13</span></strong></td><td class="p-2">Y = ¬(<span class="signal">A13</span>·¬<span class="signal">A12</span>)</td></tr>
+            <tr><td class="p-2">IC1: 11</td><td class="p-2">Y (ut)</td><td class="p-2"><strong>IC2 pin 4</strong> (eller 5)</td><td class="p-2">Till Y_INV-grinden</td></tr>
+            <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">IC2 — slutgiltig avkodning</td></tr>
+            <tr><td class="p-2">IC2: 1, 2</td><td class="p-2">X (in)</td><td class="p-2"><strong>IC1 pin 8</strong></td><td class="p-2">X_INV = <span class="signal">A15</span>·¬<span class="signal">A14</span> — inverterare</td></tr>
+            <tr><td class="p-2">IC2: 3</td><td class="p-2">X_INV (ut)</td><td class="p-2"><strong>IC2 pin 9</strong></td><td class="p-2">Till final-NAND</td></tr>
+            <tr><td class="p-2">IC2: 4, 5</td><td class="p-2">Y (in)</td><td class="p-2"><strong>IC1 pin 11</strong></td><td class="p-2">Y_INV = <span class="signal">A13</span>·¬<span class="signal">A12</span> — inverterare</td></tr>
+            <tr><td class="p-2">IC2: 6</td><td class="p-2">Y_INV (ut)</td><td class="p-2"><strong>IC2 pin 10</strong></td><td class="p-2">Till final-NAND</td></tr>
+            <tr><td class="p-2">IC2: 9, 10</td><td class="p-2">X_INV + Y_INV (in)</td><td class="p-2"><strong>IC2 pin 3</strong> + <strong>IC2 pin 6</strong></td><td class="p-2">VIA <span class="signal">/CS2</span> = ¬(X_INV·Y_INV) = ¬(<span class="signal">A15</span>·¬<span class="signal">A14</span>·<span class="signal">A13</span>·¬<span class="signal">A12</span>)</td></tr>
+            <tr><td class="p-2">IC2: 8</td><td class="p-2">VIA <span class="signal">/CS2</span> (ut)</td><td class="p-2"><strong>VIA pin 23</strong> + <strong>IC2 pin 13</strong></td><td class="p-2">LÅG vid $A000–$AFFF</td></tr>
+            <tr><td class="p-2">IC2: 12</td><td class="p-2"><span class="signal">A15</span> (in)</td><td class="p-2"><strong>CPU <span class="signal">A15</span></strong></td><td class="p-2">EEPROM <span class="signal">/CE</span> = ¬(<span class="signal">A15</span>·VIA <span class="signal">/CS2</span>)</td></tr>
+            <tr><td class="p-2">IC2: 13</td><td class="p-2">VIA <span class="signal">/CS2</span> (in)</td><td class="p-2"><strong>IC2 pin 8</strong></td><td class="p-2">EEPROM tyst när VIA pratar</td></tr>
+            <tr><td class="p-2">IC2: 11</td><td class="p-2">EEPROM <span class="signal">/CE</span> (ut)</td><td class="p-2"><strong>AT28C256 pin 20</strong></td><td class="p-2">LÅG vid $8000–$9FFF + $B000–$FFFF</td></tr>
             <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">SRAM /CE — ingen grind</td></tr>
             <tr><td class="p-2">—</td><td class="p-2">SRAM <span class="signal">/CE</span></td><td class="p-2"><strong>CPU <span class="signal">A15</span></strong> direkt</td><td class="p-2">Aktivt låg: LÅG när A15=0 → SRAM svarar vid $0000–$7FFF</td></tr></tbody>
         </table>
