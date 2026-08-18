@@ -263,22 +263,22 @@
     <p>U4A inverterar <span class="signal">A15</span>, U4C inverterar <span class="signal">A14</span>. U4D gör (NOT <span class="signal">A14</span>) NAND (NOT <span class="signal">A15</span>) → LÅG <strong>endast</strong> när <span class="signal">A14</span>=0 OCH <span class="signal">A15</span>=0. <strong>SRAM</strong> aktiveras alltså vid <strong><code>$0000</code>–<code>$3FFF</code></strong> och ingen annanstans. VIAn (U4B) aktiveras vid <code>$4000</code>–<code>$7FFF</code>. Inga krockar.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Grind</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+        <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
-          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="5">VIA-avkodning (U4A + U4B — oförändrad från steg 7)</td></tr>
-          <tr><td class="p-2">1, 2</td><td class="p-2"><strong>U4A</strong> in</td><td class="p-2"><span class="signal">A15</span> (in)</td><td class="p-2"><strong><span class="signal">A15</span></strong></td><td class="p-2">Båda ingångarna till A15 → inverterare: ut = NOT A15</td></tr>
-          <tr><td class="p-2">3</td><td class="p-2"><strong>U4A</strong> ut</td><td class="p-2">NOT <span class="signal">A15</span> (ut)</td><td class="p-2"><strong>U4B</strong> pin 4 + <strong>U4D</strong> pin 13</td><td class="p-2">NOT A15 → till U4B och U4D</td></tr>
-          <tr><td class="p-2">4</td><td class="p-2"><strong>U4B</strong> in</td><td class="p-2">NOT <span class="signal">A15</span></td><td class="p-2"><strong>U4A</strong> pin 3 (NOT A15)</td><td class="p-2">NOT A15</td></tr>
-          <tr><td class="p-2">5</td><td class="p-2"><strong>U4B</strong> in</td><td class="p-2"><span class="signal">A14</span> (in)</td><td class="p-2"><strong><span class="signal">A14</span></strong></td><td class="p-2">(NOT A15) NAND A14 → LÅG vid $4000–$7FFF</td></tr>
-          <tr><td class="p-2">6</td><td class="p-2"><strong>U4B</strong> ut</td><td class="p-2">VIA <span class="signal">/CS2</span> (ut)</td><td class="p-2"><strong>VIA</strong> <span class="signal">/CS2</span> (pin 23)</td><td class="p-2">VIA aktiveras vid $4000–$7FFF</td></tr>
-          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="5">SRAM-avkodning (U4C + U4D — nytt i steg 9)</td></tr>
-          <tr><td class="p-2">9, 10</td><td class="p-2"><strong>U4C</strong> in</td><td class="p-2"><span class="signal">A14</span> (in)</td><td class="p-2"><strong><span class="signal">A14</span></strong></td><td class="p-2">Båda ingångarna till A14 → inverterare: ut = NOT A14</td></tr>
-          <tr><td class="p-2">8</td><td class="p-2"><strong>U4C</strong> ut</td><td class="p-2">NOT <span class="signal">A14</span> (ut)</td><td class="p-2"><strong>U4D</strong> pin 12</td><td class="p-2">NOT A14 → U4D ingång</td></tr>
-          <tr><td class="p-2">12</td><td class="p-2"><strong>U4D</strong> in</td><td class="p-2">NOT <span class="signal">A14</span></td><td class="p-2"><strong>U4C</strong> pin 8 (NOT A14)</td><td class="p-2">NOT A14</td></tr>
-          <tr><td class="p-2">13</td><td class="p-2"><strong>U4D</strong> in</td><td class="p-2">NOT <span class="signal">A15</span></td><td class="p-2"><strong>U4A</strong> pin 3 (NOT A15)</td><td class="p-2">(NOT A14) NAND (NOT A15) → LÅG endast vid $0000–$3FFF</td></tr>
-          <tr><td class="p-2">11</td><td class="p-2"><strong>U4D</strong> ut</td><td class="p-2">SRAM <span class="signal">/CE</span> (ut)</td><td class="p-2"><strong>SRAM</strong> <span class="signal">/CE</span> (pin 20)</td><td class="p-2">SRAM aktiveras ENDAST vid $0000–$3FFF</td></tr>
-          <tr><td class="p-2">14</td><td class="p-2">VCC</td><td class="p-2"><span class="signal">VCC</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
-          <tr><td class="p-2">7</td><td class="p-2">GND</td><td class="p-2"><span class="signal">GND</span></td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">VIA-avkodning (U4A + U4B — oförändrad från steg 7)</td></tr>
+          <tr><td class="p-2">1, 2</td><td class="p-2"><span class="signal">A15</span> (in)</td><td class="p-2"><strong><span class="signal">A15</span></strong></td><td class="p-2">Båda ingångarna till A15 → inverterare: ut = NOT A15</td></tr>
+          <tr><td class="p-2">3</td><td class="p-2">NOT <span class="signal">A15</span> (ut)</td><td class="p-2"><strong>U4B</strong> pin 4 + <strong>U4D</strong> pin 13</td><td class="p-2">NOT A15 → till U4B och U4D</td></tr>
+          <tr><td class="p-2">4</td><td class="p-2">NOT <span class="signal">A15</span></td><td class="p-2"><strong>U4A</strong> pin 3 (NOT A15)</td><td class="p-2">NOT A15</td></tr>
+          <tr><td class="p-2">5</td><td class="p-2"><span class="signal">A14</span> (in)</td><td class="p-2"><strong><span class="signal">A14</span></strong></td><td class="p-2">(NOT A15) NAND A14 → LÅG vid $4000–$7FFF</td></tr>
+          <tr><td class="p-2">6</td><td class="p-2">VIA <span class="signal">/CS2</span> (ut)</td><td class="p-2"><strong>VIA</strong> <span class="signal">/CS2</span> (pin 23)</td><td class="p-2">VIA aktiveras vid $4000–$7FFF</td></tr>
+          <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">SRAM-avkodning (U4C + U4D — nytt i steg 9)</td></tr>
+          <tr><td class="p-2">9, 10</td><td class="p-2"><span class="signal">A14</span> (in)</td><td class="p-2"><strong><span class="signal">A14</span></strong></td><td class="p-2">Båda ingångarna till A14 → inverterare: ut = NOT A14</td></tr>
+          <tr><td class="p-2">8</td><td class="p-2">NOT <span class="signal">A14</span> (ut)</td><td class="p-2"><strong>U4D</strong> pin 12</td><td class="p-2">NOT A14 → U4D ingång</td></tr>
+          <tr><td class="p-2">12</td><td class="p-2">NOT <span class="signal">A14</span></td><td class="p-2"><strong>U4C</strong> pin 8 (NOT A14)</td><td class="p-2">NOT A14</td></tr>
+          <tr><td class="p-2">13</td><td class="p-2">NOT <span class="signal">A15</span></td><td class="p-2"><strong>U4A</strong> pin 3 (NOT A15)</td><td class="p-2">(NOT A14) NAND (NOT A15) → LÅG endast vid $0000–$3FFF</td></tr>
+          <tr><td class="p-2">11</td><td class="p-2">SRAM <span class="signal">/CE</span> (ut)</td><td class="p-2"><strong>SRAM</strong> <span class="signal">/CE</span> (pin 20)</td><td class="p-2">SRAM aktiveras ENDAST vid $0000–$3FFF</td></tr>
+          <tr><td class="p-2">14</td><td class="p-2"><span class="signal">VCC</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
+          <tr><td class="p-2">7</td><td class="p-2"><span class="signal">GND</span></td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
         </tbody>
       </table>
     </div>
