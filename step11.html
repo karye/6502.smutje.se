@@ -156,6 +156,97 @@
 
       <h3>74HC00 — ny avkodning (U5 + U6)</h3>
       <p>Avkodningen byggs som ett NAND-träd: U5 (den andra <strong>74HC00</strong>:an) gör inverterare och mellanresultat, U4:s lediga grindar (U4B–U4D) bygger vidare, och en tredje <strong>74HC00</strong> (U6) gör EEPROM <span class="signal">/CE</span>. Nio grindar, fyra signaler:</p>
+      <div class="flex justify-center">
+        <svg viewBox="0 0 1020 480" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto" role="img" aria-label="NAND-träd — adressavkodning">
+<style>.lg{font-family:ui-monospace,monospace}.sig{font-family:ui-monospace,monospace;font-size:12px}.glab{font-family:ui-monospace,monospace;font-size:10px;fill:#9ca3af}</style>
+<rect x="10" y="10" width="1000" height="460" rx="12" fill="#1f2937"/>
+<path d="M30,60 L930,60" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M30,150 L170,150 L170,160" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M30,250 L170,250" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M170,250 L170,240" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M170,250 L170,260" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M30,320 L170,320" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M170,320 L170,310" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M170,320 L170,330" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M215,60 L215,60 L215,140" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M215,140 L170,140" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M755,60 L755,60 L755,410" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M755,410 L710,410" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M266,60 L930,60" stroke="#86efac" stroke-width="2" fill="none"/>
+<path d="M266,150 L350,150" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M350,150 L350,140" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M350,150 L350,160" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M446,150 L710,150" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M710,150 L710,140" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M266,250 L350,250" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M350,250 L350,275" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M266,320 L350,320" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M350,320 L350,295" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M446,285 L530,285" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M530,285 L530,275" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M530,285 L530,295" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M626,285 L710,285" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M710,285 L710,160" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M806,150 L930,150" stroke="#fde047" stroke-width="2" fill="none"/>
+<path d="M850,150 L850,414 A6,6 0 0 1 850,426 L850,430" stroke="#fde047" stroke-width="2" fill="none"/>
+<path d="M850,430 L710,430" stroke="#fde047" stroke-width="2" fill="none"/>
+<path d="M806,420 L930,420" stroke="#d8b4fe" stroke-width="2" fill="none"/>
+<path d="M170,60 L170,50" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M170,60 L170,70" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<text class="sig" x="22" y="64" fill="#93c5fd" font-weight="bold">A15</text>
+<text class="sig" x="22" y="154" fill="#93c5fd" font-weight="bold">A13</text>
+<text class="sig" x="22" y="254" fill="#93c5fd" font-weight="bold">A14</text>
+<text class="sig" x="22" y="324" fill="#93c5fd" font-weight="bold">A12</text>
+<text class="sig" x="500" y="54" fill="#86efac">¬A15</text>
+<text class="sig" x="940" y="64" fill="#86efac">SRAM /CE</text>
+<text class="sig" x="305" y="144" fill="#9ca3af">T1</text>
+<text class="sig" x="500" y="144" fill="#9ca3af">T1i</text>
+<text class="sig" x="280" y="244" fill="#93c5fd">¬A14</text>
+<text class="sig" x="280" y="314" fill="#93c5fd">¬A12</text>
+<text class="sig" x="480" y="279" fill="#9ca3af">T2</text>
+<text class="sig" x="610" y="279" fill="#9ca3af">T2i</text>
+<text class="sig" x="840" y="144" fill="#fde047">VIA /CS2</text>
+<text class="sig" x="775" y="424" fill="#fde047">VIA /CS2</text>
+<text class="sig" x="820" y="414" fill="#d8b4fe">EEPROM /CE</text>
+<text class="sig" x="260" y="40" fill="#93c5fd">A15</text>
+<rect x="170" y="35" width="90" height="50" rx="6" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="lg" x="215.0" y="67" text-anchor="middle" fill="#f8f8f2" font-size="20" font-weight="bold">&amp;</text>
+<circle cx="266" cy="60" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
+<text class="glab" x="215.0" y="27" text-anchor="middle">U4A</text>
+<rect x="170" y="125" width="90" height="50" rx="6" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="lg" x="215.0" y="157" text-anchor="middle" fill="#f8f8f2" font-size="20" font-weight="bold">&amp;</text>
+<circle cx="266" cy="150" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
+<text class="glab" x="215.0" y="117" text-anchor="middle">U5C</text>
+<rect x="350" y="125" width="90" height="50" rx="6" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="lg" x="395.0" y="157" text-anchor="middle" fill="#f8f8f2" font-size="20" font-weight="bold">&amp;</text>
+<circle cx="446" cy="150" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
+<text class="glab" x="395.0" y="117" text-anchor="middle">U4B</text>
+<rect x="170" y="225" width="90" height="50" rx="6" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="lg" x="215.0" y="257" text-anchor="middle" fill="#f8f8f2" font-size="20" font-weight="bold">&amp;</text>
+<circle cx="266" cy="250" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
+<text class="glab" x="215.0" y="217" text-anchor="middle">U5A</text>
+<rect x="170" y="295" width="90" height="50" rx="6" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="lg" x="215.0" y="327" text-anchor="middle" fill="#f8f8f2" font-size="20" font-weight="bold">&amp;</text>
+<circle cx="266" cy="320" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
+<text class="glab" x="215.0" y="287" text-anchor="middle">U5B</text>
+<rect x="350" y="260" width="90" height="50" rx="6" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="lg" x="395.0" y="292" text-anchor="middle" fill="#f8f8f2" font-size="20" font-weight="bold">&amp;</text>
+<circle cx="446" cy="285" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
+<text class="glab" x="395.0" y="252" text-anchor="middle">U5D</text>
+<rect x="530" y="260" width="90" height="50" rx="6" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="lg" x="575.0" y="292" text-anchor="middle" fill="#f8f8f2" font-size="20" font-weight="bold">&amp;</text>
+<circle cx="626" cy="285" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
+<text class="glab" x="575.0" y="252" text-anchor="middle">U4C</text>
+<rect x="710" y="125" width="90" height="50" rx="6" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="lg" x="755.0" y="157" text-anchor="middle" fill="#f8f8f2" font-size="20" font-weight="bold">&amp;</text>
+<circle cx="806" cy="150" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
+<text class="glab" x="755.0" y="117" text-anchor="middle">U4D</text>
+<rect x="710" y="395" width="90" height="50" rx="6" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="lg" x="755.0" y="427" text-anchor="middle" fill="#f8f8f2" font-size="20" font-weight="bold">&amp;</text>
+<circle cx="806" cy="420" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
+<text class="glab" x="755.0" y="387" text-anchor="middle">U6A</text>
+</svg>
+      </div>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
