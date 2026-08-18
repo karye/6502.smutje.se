@@ -157,94 +157,91 @@
       <h3>74HC00 — ny avkodning (U5 + U6)</h3>
       <p>Avkodningen byggs som ett NAND-träd: U5 (den andra <strong>74HC00</strong>:an) gör inverterare och mellanresultat, U4:s lediga grindar (U4B–U4D) bygger vidare, och en tredje <strong>74HC00</strong> (U6) gör EEPROM <span class="signal">/CE</span>. <strong>SRAM</strong>:s <span class="signal">/CE</span> kopplas direkt till <span class="signal">A15</span> — ingen grind. Åtta grindar, fyra signaler:</p>
       <div class="flex justify-center">
-        <svg viewBox="0 0 1020 470" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto" role="img" aria-label="NAND-träd — adressavkodning">
+        <svg viewBox="0 0 980 640" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto" role="img" aria-label="NAND-träd — adressavkodning">
 <style>.lg{font-family:ui-monospace,monospace}.sig{font-family:ui-monospace,monospace;font-size:12px}.glab{font-family:ui-monospace,monospace;font-size:10px;fill:#9ca3af}</style>
-<rect x="10" y="10" width="1000" height="450" rx="12" fill="#1f2937"/>
-<text class="sig" x="30" y="35" fill="#9ca3af">Adress från CPU (vänster) →</text>
-<text class="sig" x="22" y="64" fill="#93c5fd" font-weight="bold">A15</text>
-<text class="sig" x="22" y="314" fill="#93c5fd" font-weight="bold">A13</text>
-<text class="sig" x="22" y="214" fill="#93c5fd" font-weight="bold">A14</text>
-<text class="sig" x="22" y="384" fill="#93c5fd" font-weight="bold">A12</text>
-<path d="M150,185 L230,185 A25,25 0 0 1 230,235 L150,235 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
-<text class="lg" x="202.5" y="217" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
-<circle cx="261" cy="210" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
-<text class="glab" x="202.5" y="177" text-anchor="middle">U5A</text>
-<line x1="138" y1="197" x2="150" y2="197" stroke="#9ca3af" stroke-width="2"/>
-<line x1="138" y1="222" x2="150" y2="222" stroke="#9ca3af" stroke-width="2"/>
-<line x1="134" y1="197" x2="134" y2="222" stroke="#9ca3af" stroke-width="1.5"/>
-<path d="M150,355 L230,355 A25,25 0 0 1 230,405 L150,405 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
-<text class="lg" x="202.5" y="387" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
-<circle cx="261" cy="380" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
-<text class="glab" x="202.5" y="347" text-anchor="middle">U5B</text>
-<line x1="138" y1="367" x2="150" y2="367" stroke="#9ca3af" stroke-width="2"/>
-<line x1="138" y1="392" x2="150" y2="392" stroke="#9ca3af" stroke-width="2"/>
-<line x1="134" y1="367" x2="134" y2="392" stroke="#9ca3af" stroke-width="1.5"/>
-<path d="M340,85 L420,85 A25,25 0 0 1 420,135 L340,135 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
-<text class="lg" x="392.5" y="117" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
-<circle cx="451" cy="110" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
-<text class="glab" x="392.5" y="77" text-anchor="middle">U5C</text>
-<line x1="328" y1="97" x2="340" y2="97" stroke="#9ca3af" stroke-width="2"/>
-<line x1="328" y1="122" x2="340" y2="122" stroke="#9ca3af" stroke-width="2"/>
-<path d="M340,285 L420,285 A25,25 0 0 1 420,335 L340,335 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
-<text class="lg" x="392.5" y="317" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
-<circle cx="451" cy="310" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
-<text class="glab" x="392.5" y="277" text-anchor="middle">U5D</text>
-<line x1="328" y1="297" x2="340" y2="297" stroke="#9ca3af" stroke-width="2"/>
-<line x1="328" y1="322" x2="340" y2="322" stroke="#9ca3af" stroke-width="2"/>
-<path d="M530,85 L610,85 A25,25 0 0 1 610,135 L530,135 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
-<text class="lg" x="582.5" y="117" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
-<circle cx="641" cy="110" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
-<text class="glab" x="582.5" y="77" text-anchor="middle">U4B</text>
-<line x1="518" y1="97" x2="530" y2="97" stroke="#9ca3af" stroke-width="2"/>
-<line x1="518" y1="122" x2="530" y2="122" stroke="#9ca3af" stroke-width="2"/>
-<line x1="514" y1="97" x2="514" y2="122" stroke="#9ca3af" stroke-width="1.5"/>
-<path d="M530,285 L610,285 A25,25 0 0 1 610,335 L530,335 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
-<text class="lg" x="582.5" y="317" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
-<circle cx="641" cy="310" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
-<text class="glab" x="582.5" y="277" text-anchor="middle">U4C</text>
-<line x1="518" y1="297" x2="530" y2="297" stroke="#9ca3af" stroke-width="2"/>
-<line x1="518" y1="322" x2="530" y2="322" stroke="#9ca3af" stroke-width="2"/>
-<line x1="514" y1="297" x2="514" y2="322" stroke="#9ca3af" stroke-width="1.5"/>
-<path d="M700,175 L780,175 A25,25 0 0 1 780,225 L700,225 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
-<text class="lg" x="752.5" y="207" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
-<circle cx="811" cy="200" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
-<text class="glab" x="752.5" y="167" text-anchor="middle">U4D</text>
-<line x1="688" y1="187" x2="700" y2="187" stroke="#9ca3af" stroke-width="2"/>
-<line x1="688" y1="212" x2="700" y2="212" stroke="#9ca3af" stroke-width="2"/>
-<path d="M700,395 L780,395 A25,25 0 0 1 780,445 L700,445 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
-<text class="lg" x="752.5" y="427" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
-<circle cx="811" cy="420" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
-<text class="glab" x="752.5" y="387" text-anchor="middle">U6A</text>
-<line x1="688" y1="407" x2="700" y2="407" stroke="#9ca3af" stroke-width="2"/>
-<line x1="688" y1="432" x2="700" y2="432" stroke="#9ca3af" stroke-width="2"/>
-<path d="M860,414 A6,6 0 0 1 860,426" stroke="#fde047" stroke-width="2" fill="none"/>
-<path d="M30,60 L930,60" stroke="#93c5fd" stroke-width="2" fill="none"/>
-<path d="M30,310 L328,310" stroke="#93c5fd" stroke-width="2" fill="none"/>
-<path d="M30,210 L138,210" stroke="#93c5fd" stroke-width="2" fill="none"/>
-<path d="M30,380 L138,380" stroke="#93c5fd" stroke-width="2" fill="none"/>
-<path d="M380,60 L380,97.5 L340,97.5" stroke="#93c5fd" stroke-width="2" fill="none"/>
-<path d="M273,210 L340,210 L340,122.5" stroke="#93c5fd" stroke-width="2" fill="none"/>
-<path d="M463,110 L530,110 L530,97.5" stroke="#9ca3af" stroke-width="2" fill="none"/>
-<path d="M653,110 L700,110 L700,187.5" stroke="#9ca3af" stroke-width="2" fill="none"/>
-<path d="M328,310 L328,297.5 L340,297.5" stroke="#93c5fd" stroke-width="2" fill="none"/>
-<path d="M273,380 L340,380 L340,322.5" stroke="#93c5fd" stroke-width="2" fill="none"/>
-<path d="M463,310 L530,310 L530,297.5" stroke="#9ca3af" stroke-width="2" fill="none"/>
-<path d="M653,310 L700,310 L700,212.5" stroke="#9ca3af" stroke-width="2" fill="none"/>
-<path d="M823,200 L930,200" stroke="#fde047" stroke-width="2" fill="none"/>
-<path d="M860,200 L860,414" stroke="#fde047" stroke-width="2" fill="none"/>
-<path d="M860,426 L860,432.5 L700,432.5" stroke="#fde047" stroke-width="2" fill="none"/>
-<path d="M745,60 L745,407.5 L700,407.5" stroke="#93c5fd" stroke-width="2" fill="none"/>
-<path d="M823,420 L930,420" stroke="#d8b4fe" stroke-width="2" fill="none"/>
-<text class="sig" x="770" y="54" fill="#86efac">SRAM /CE (= A15)</text>
-<text class="sig" x="410" y="104" fill="#9ca3af">X</text>
-<text class="sig" x="600" y="104" fill="#9ca3af">X_INV</text>
-<text class="sig" x="260" y="204" fill="#93c5fd">¬A14</text>
-<text class="sig" x="260" y="374" fill="#93c5fd">¬A12</text>
-<text class="sig" x="410" y="304" fill="#9ca3af">Y</text>
-<text class="sig" x="600" y="304" fill="#9ca3af">Y_INV</text>
-<text class="sig" x="850" y="194" fill="#fde047">VIA /CS2</text>
-<text class="sig" x="780" y="426" fill="#fde047">VIA /CS2</text>
-<text class="sig" x="830" y="414" fill="#d8b4fe">EEPROM /CE</text>
+<rect x="10" y="10" width="960" height="620" rx="12" fill="#1f2937"/>
+<path d="M200,80 L280,80 A25,25 0 0 1 280,130 L200,130 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="lg" x="252.5" y="112" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
+<circle cx="311" cy="105" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
+<text class="glab" x="252.5" y="72" text-anchor="middle">U5A</text>
+<path d="M200,140 L280,140 A25,25 0 0 1 280,190 L200,190 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="lg" x="252.5" y="172" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
+<circle cx="311" cy="165" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
+<text class="glab" x="252.5" y="132" text-anchor="middle">U5B</text>
+<path d="M200,225 L280,225 A25,25 0 0 1 280,275 L200,275 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="lg" x="252.5" y="257" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
+<circle cx="311" cy="250" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
+<text class="glab" x="252.5" y="217" text-anchor="middle">U5C</text>
+<path d="M390,225 L470,225 A25,25 0 0 1 470,275 L390,275 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="lg" x="442.5" y="257" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
+<circle cx="501" cy="250" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
+<text class="glab" x="442.5" y="217" text-anchor="middle">U4B</text>
+<path d="M200,315 L280,315 A25,25 0 0 1 280,365 L200,365 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="lg" x="252.5" y="347" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
+<circle cx="311" cy="340" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
+<text class="glab" x="252.5" y="307" text-anchor="middle">U5D</text>
+<path d="M390,315 L470,315 A25,25 0 0 1 470,365 L390,365 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="lg" x="442.5" y="347" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
+<circle cx="501" cy="340" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
+<text class="glab" x="442.5" y="307" text-anchor="middle">U4C</text>
+<path d="M290,415 L370,415 A25,25 0 0 1 370,465 L290,465 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="lg" x="342.5" y="447" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
+<circle cx="401" cy="440" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
+<text class="glab" x="342.5" y="407" text-anchor="middle">U4D</text>
+<path d="M290,495 L370,495 A25,25 0 0 1 370,545 L290,545 Z" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="lg" x="342.5" y="527" text-anchor="middle" fill="#f8f8f2" font-size="18" font-weight="bold">&amp;</text>
+<circle cx="401" cy="520" r="6" fill="#1f2937" stroke="#f8f8f2" stroke-width="2"/>
+<text class="glab" x="342.5" y="487" text-anchor="middle">U6A</text>
+<text class="sig" x="22" y="54" fill="#93c5fd" font-weight="bold">A15</text>
+<text class="sig" x="610" y="54" fill="#86efac">SRAM /CE</text>
+<text class="sig" x="330" y="44" fill="#9ca3af">(= A15 — direktanslutning)</text>
+<text class="sig" x="22" y="109" fill="#93c5fd" font-weight="bold">A14</text>
+<text class="sig" x="330" y="120" fill="#93c5fd">¬A14</text>
+<text class="sig" x="22" y="169" fill="#93c5fd" font-weight="bold">A12</text>
+<text class="sig" x="330" y="180" fill="#93c5fd">¬A12</text>
+<text class="sig" x="22" y="254" fill="#93c5fd" font-weight="bold">A15</text>
+<text class="sig" x="250" y="244" fill="#9ca3af">X</text>
+<text class="sig" x="430" y="244" fill="#9ca3af">X_INV</text>
+<text class="sig" x="22" y="344" fill="#93c5fd" font-weight="bold">A13</text>
+<text class="sig" x="250" y="334" fill="#9ca3af">Y</text>
+<text class="sig" x="430" y="334" fill="#9ca3af">Y_INV</text>
+<text class="sig" x="560" y="244" fill="#9ca3af">X_INV</text>
+<text class="sig" x="560" y="334" fill="#9ca3af">Y_INV</text>
+<text class="sig" x="330" y="434" fill="#fde047">VIA /CS2</text>
+<text class="sig" x="570" y="444" fill="#fde047">VIA /CS2</text>
+<text class="sig" x="570" y="524" fill="#d8b4fe">EEPROM /CE</text>
+<path d="M30,50 L600,50" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M520,50 L600,50" stroke="#86efac" stroke-width="2" fill="none"/>
+<path d="M80,50 L80,507.5 L278,507.5" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M30,105 L160,105" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M160,105 L160,93 L188,93" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M160,105 L160,117 L188,117" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M323,105 L317,262.5 L188,262" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M30,165 L160,165" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M160,165 L160,153 L188,153" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M160,165 L160,177 L188,177" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M323,165 L317,352.5 L188,352" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M30,250 L160,250 L160,238 L188,238" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M100,250 L100,507.5 L278,507.5" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M323,250 L378,250" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M378,250 L378,238 L378,238" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M378,250 L378,262 L378,262" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M30,340 L160,340 L160,328 L188,328" stroke="#93c5fd" stroke-width="2" fill="none"/>
+<path d="M323,340 L378,340" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M378,340 L378,328 L378,328" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M378,340 L378,352 L378,352" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M513,250 L480,250 L480,428 L278,428" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M513,340 L507,452.5 L278,452" stroke="#9ca3af" stroke-width="2" fill="none"/>
+<path d="M413,440 L560,440" stroke="#fde047" stroke-width="2" fill="none"/>
+<path d="M440,440 L440,532.5 L278,532" stroke="#fde047" stroke-width="2" fill="none"/>
+<path d="M413,520 L560,520" stroke="#d8b4fe" stroke-width="2" fill="none"/>
+<circle cx="80" cy="50" r="3.5" fill="#93c5fd"/>
+<circle cx="160" cy="105" r="3.5" fill="#93c5fd"/>
+<circle cx="160" cy="165" r="3.5" fill="#93c5fd"/>
+<circle cx="100" cy="250" r="3.5" fill="#93c5fd"/>
+<circle cx="378" cy="250" r="3.5" fill="#9ca3af"/>
+<circle cx="378" cy="340" r="3.5" fill="#9ca3af"/>
+<circle cx="440" cy="440" r="3.5" fill="#fde047"/>
 </svg>
       </div>
       <div class="overflow-x-auto">
