@@ -260,6 +260,7 @@
 
     <h3>74HC00 — adressavkodning för SRAM</h3>
     <p>U4A (NOT <span class="signal">A15</span>) och U4B (NAND för <strong>VIA</strong>) är oförändrade från steg 7. U4C blir NOT <span class="signal">A14</span>. U4D gör (NOT <span class="signal">A14</span>) NAND (NOT <span class="signal">A15</span>) → LÅG endast vid <code>$0000</code>–<code>$3FFF</code>.</p>
+    <p>U4A inverterar <span class="signal">A15</span>, U4C inverterar <span class="signal">A14</span>. U4D gör (NOT <span class="signal">A14</span>) NAND (NOT <span class="signal">A15</span>) → LÅG <strong>endast</strong> när <span class="signal">A14</span>=0 OCH <span class="signal">A15</span>=0. <strong>SRAM</strong> aktiveras alltså vid <strong><code>$0000</code>–<code>$3FFF</code></strong> och ingen annanstans. VIAn (U4B) aktiveras vid <code>$4000</code>–<code>$7FFF</code>. Inga krockar.</p>
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Grind</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -281,7 +282,6 @@
         </tbody>
       </table>
     </div>
-    <p><strong>Logik:</strong> U4A inverterar <span class="signal">A15</span>, U4C inverterar <span class="signal">A14</span>. U4D gör (NOT <span class="signal">A14</span>) NAND (NOT <span class="signal">A15</span>) → LÅG <strong>endast</strong> när <span class="signal">A14</span>=0 OCH <span class="signal">A15</span>=0. <strong>SRAM</strong> aktiveras alltså vid <strong><code>$0000</code>–<code>$3FFF</code></strong> och ingen annanstans. VIAn (U4B) aktiveras vid <code>$4000</code>–<code>$7FFF</code>. Inga krockar.</p>
 
     <h3>CPU, VIA och LCD</h3>
     <p><strong>CPU</strong>, <strong>VIA</strong> och <strong>LCD</strong> är oförändrade från steg 7. Här är den kompletta kopplingslistan.</p>

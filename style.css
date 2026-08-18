@@ -3,10 +3,6 @@ html {
   scroll-padding-top: 5rem; /* Håll rubriker synliga under den sticky headern */
 }
 
-body {
-  min-width: 100%;
-}
-
 .schematic object,
 .schematic img {
   max-width: 100%;
