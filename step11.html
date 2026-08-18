@@ -50,7 +50,7 @@
       <h2>Mål</h2>
       
         <p>I steg 10 fick vi en fristående dator — men adressrymden var inte vacker. <strong>VIA</strong>:ns 16 bytes på <code>$4000</code> klippte av <strong>SRAM</strong>-minnet mitt i, och den övre halvan av <strong>62256</strong>-chippet (<code>$4000</code>–<code>$7FFF</code>) låg helt oanvänd. Det kändes slarvigt.</p>
-        <p>Nu städar vi upp. <strong>SRAM utökas till hela 32 KB</strong> (<code>$0000</code>–<code>$7FFF</code>) genom att ansluta <span class="signal">A14</span> — hela <strong>62256</strong>-chippet används äntligen. <strong>VIA:n flyttas till <code>$A000</code>–<code>$A00F</code></strong>, ett rent I/O-fönster i <strong>ROM</strong>:ens övre del, precis som I/O-portar sitter på riktiga <strong>6502</strong>-datorer (Apple II hade I/O på <code>$C000</code>, C64 på <code>$D000</code>).</p>
+        <p>Nu städar vi upp. <strong>SRAM utökas till hela 32 KB</strong> (<code>$0000</code>–<code>$7FFF</code>) genom att ansluta <span class="signal">A14</span> — hela <strong>62256</strong>-chippet används äntligen. <strong>VIA:n flyttas till <code>$A000</code>–<code>$AFFF</code></strong>, ett 4 KB-stort I/O-fönster i <strong>ROM</strong>:ens övre del, precis som I/O-portar sitter på riktiga <strong>6502</strong>-datorer (Apple II hade I/O på <code>$C000</code>, C64 på <code>$D000</code>).</p>
         <p>Resultatet är en adressrymd utan dött utrymme: <strong>RAM</strong> längst ner, <strong>ROM</strong> i mitten och I/O i ett fönster högst upp. Det här är den klassiska <strong>6502</strong>-layouten — nu har vi byggt den själva.</p>
       
     </section>
@@ -69,6 +69,7 @@
           </tbody>
         </table>
       </div>
+      <p><strong>Logik i ord:</strong> <strong>VIA</strong> får prata när <span class="signal">A15</span>=1 (övre halvan), <span class="signal">A14</span>=0, <span class="signal">A13</span>=1 och <span class="signal">A12</span>=0 — det vill säga <code>$A000</code>–<code>$AFFF</code> (registren speglas var 16:e byte via RS0–RS3 = A0–A3). <strong>EEPROM</strong>:et får prata när <span class="signal">A15</span>=1 och <strong>VIA</strong> inte gör det. <strong>SRAM</strong> får prata när <span class="signal">A15</span>=0. Ingen krock, inget dött utrymme.</p>
     </section>
 
     <!-- Kopplingsschema -->
@@ -95,21 +96,21 @@
       <h3>Nya kartan (steg 11)</h3>
       <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-sm text-gray-700 space-y-2">
         <p><strong>✓ SRAM 32 KB (<code>$0000</code>–<code>$7FFF</code>):</strong> <span class="signal">A14</span> ansluts, <span class="signal">/CE</span> = NOT <span class="signal">A15</span> — hela chippet aktivt när <span class="signal">A15</span>=0.</p>
-        <p><strong>✓ VIA på <code>$A000</code>–<code>$A00F</code>:</strong> <span class="signal">/CS2</span> = <span class="signal">A15</span>·¬<span class="signal">A14</span>·<span class="signal">A13</span>·¬<span class="signal">A12</span> — bara 16 bytes, inget mer.</p>
-        <p><strong>✓ EEPROM på <code>$8000</code>–<code>$FFFF</code>:</strong> <span class="signal">/CE</span> = <span class="signal">A15</span>·¬(<strong>VIA</strong>) — aktivt överallt utom just <strong>VIA</strong>-fönstret.</p>
+        <p><strong>✓ VIA på <code>$A000</code>–<code>$AFFF</code>:</strong> <span class="signal">/CS2</span> = <span class="signal">A15</span>·¬<span class="signal">A14</span>·<span class="signal">A13</span>·¬<span class="signal">A12</span> — 4 KB-fönster, registren speglas var 16:e byte.</p>
+        <p><strong>✓ EEPROM på <code>$8000</code>–<code>$9FFF</code> + <code>$B000</code>–<code>$FFFF</code>:</strong> <span class="signal">/CE</span> = <span class="signal">A15</span>·¬(<strong>VIA</strong>) — aktivt överallt utom <strong>VIA</strong>-fönstret.</p>
       </div>
       
       <h3>Sanningstabell — vem svarar på vilken adress?</h3>
-      <p>Lägg märke till att <code>$A000</code>–<code>$A00F</code> är <em>det enda hålet</em> — <strong>VIA</strong> stjäl 16 bytes av <strong>EEPROM</strong>:et. Allt annat utrymme används.</p>
+      <p>Lägg märke till att <code>$A000</code>–<code>$AFFF</code> är <em>det enda hålet</em> — <strong>VIA</strong> tar 4 KB av <strong>EEPROM</strong>:et. Allt annat utrymme används.</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Adressintervall</th><th class="p-2 text-left">A15</th><th class="p-2 text-left">A14</th><th class="p-2 text-left">A13</th><th class="p-2 text-left">A12</th><th class="p-2 text-left">SRAM /CE</th><th class="p-2 text-left">VIA /CS2</th><th class="p-2 text-left">EEPROM /CE</th><th class="p-2 text-left">Vem svarar</th></tr></thead>
           <tbody class="divide-y">
             <tr><td class="p-2 font-mono">$0000–$7FFF</td><td class="p-2">0</td><td class="p-2">–</td><td class="p-2">–</td><td class="p-2">–</td><td class="p-2">LÅG ✓</td><td class="p-2">HÖG</td><td class="p-2">HÖG</td><td class="p-2"><strong>SRAM</strong></td></tr>
             <tr><td class="p-2 font-mono">$8000–$9FFF</td><td class="p-2">1</td><td class="p-2">0</td><td class="p-2">0</td><td class="p-2">0</td><td class="p-2">HÖG</td><td class="p-2">HÖG</td><td class="p-2">LÅG ✓</td><td class="p-2"><strong>EEPROM</strong></td></tr>
-            <tr class="bg-yellow-50"><td class="p-2 font-mono">$A000–$A00F</td><td class="p-2">1</td><td class="p-2">0</td><td class="p-2">1</td><td class="p-2">0</td><td class="p-2">HÖG</td><td class="p-2">LÅG ✓</td><td class="p-2">HÖG</td><td class="p-2"><strong>VIA</strong></td></tr>
-            <tr><td class="p-2 font-mono">$A010–$FFFF</td><td class="p-2">1</td><td class="p-2">0</td><td class="p-2">1</td><td class="p-2">0/1</td><td class="p-2">HÖG</td><td class="p-2">HÖG</td><td class="p-2">LÅG ✓</td><td class="p-2"><strong>EEPROM</strong></td></tr>
-            <tr><td class="p-2 font-mono">$A000–$A00F (detalj)</td><td class="p-2" colspan="8">VIA aktiveras ENDAST när A15=1, A14=0, A13=1, A12=0 — de lägre bitarna A0–A3 går till RS0–RS3 för att välja register.</td></tr>
+            <tr class="bg-yellow-50"><td class="p-2 font-mono">$A000–$AFFF</td><td class="p-2">1</td><td class="p-2">0</td><td class="p-2">1</td><td class="p-2">0</td><td class="p-2">HÖG</td><td class="p-2">LÅG ✓</td><td class="p-2">HÖG</td><td class="p-2"><strong>VIA</strong></td></tr>
+            <tr><td class="p-2 font-mono">$B000–$FFFF</td><td class="p-2">1</td><td class="p-2">–</td><td class="p-2">–</td><td class="p-2">–</td><td class="p-2">HÖG</td><td class="p-2">HÖG</td><td class="p-2">LÅG ✓</td><td class="p-2"><strong>EEPROM</strong></td></tr>
+            <tr><td class="p-2 font-mono">$A000–$AFFF (detalj)</td><td class="p-2" colspan="8">VIA aktiveras när A15=1, A14=0, A13=1, A12=0 — A0–A3 går till RS0–RS3; registren speglas var 16:e byte i fönstret.</td></tr>
           </tbody>
         </table>
       </div>
@@ -136,9 +137,9 @@
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
           <tbody class="divide-y">
-            <tr><td class="p-2">23</td><td class="p-2"><span class="signal">/CS2</span></td><td class="p-2"><strong>U4B-utgång</strong> (ny avkodning)</td><td class="p-2">LÅG endast vid $A000–$A00F — VIA:ns nya hem</td></tr>
+            <tr><td class="p-2">23</td><td class="p-2"><span class="signal">/CS2</span></td><td class="p-2"><strong>U4D-utgång</strong> (final-NAND i trädet)</td><td class="p-2">LÅG vid $A000–$AFFF — VIA:ns nya hem</td></tr>
             <tr><td class="p-2">24</td><td class="p-2"><span class="signal">CS1</span></td><td class="p-2">+5V (oförändrad)</td><td class="p-2">Chip Select 1 — alltid aktiv</td></tr>
-            <tr><td class="p-2">38–35</td><td class="p-2"><span class="signal">RS0–RS3</span></td><td class="p-2"><strong>CPU A0–A3</strong> (oförändrad)</td><td class="p-2">Väljer register inom VIA:ns 16 bytes</td></tr>
+            <tr><td class="p-2">38–35</td><td class="p-2"><span class="signal">RS0–RS3</span></td><td class="p-2"><strong>CPU A0–A3</strong> (oförändrad)</td><td class="p-2">Väljer register — de speglas var 16:e byte i fönstret</td></tr>
           </tbody>
         </table>
       </div>
@@ -148,22 +149,39 @@
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
           <tbody class="divide-y">
-            <tr><td class="p-2">20</td><td class="p-2"><span class="signal">/CE</span></td><td class="p-2"><strong>U4D-utgång</strong> (ny)</td><td class="p-2">Aktivt vid $8000–$FFFF utom $A000–$A00F</td></tr>
+            <tr><td class="p-2">20</td><td class="p-2"><span class="signal">/CE</span></td><td class="p-2"><strong>U6A-utgång</strong> (ny)</td><td class="p-2">Aktivt vid $8000–$9FFF + $B000–$FFFF</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h3>74HC00 #2 — nya grindar</h3>
-      <p>Den andra <strong>74HC00</strong>:an (låt oss kalla den U5) sköter den nya avkodningen. Fyra grindar, fyra signaler:</p>
-      <p><strong>VIA</strong> får prata när <span class="signal">A15</span>=1 (övre halvan), <span class="signal">A14</span>=0, <span class="signal">A13</span>=1 och <span class="signal">A12</span>=0 — det vill säga exakt <code>$A000</code>–<code>$A00F</code>. <strong>EEPROM</strong>:et får prata när <span class="signal">A15</span>=1 och <strong>VIA</strong> inte gör det. <strong>SRAM</strong> får prata när <span class="signal">A15</span>=0. Ingen krock, inget dött utrymme.</p>
+      <h3>74HC00 — ny avkodning (U5 + U6)</h3>
+      <p>Avkodningen byggs som ett NAND-träd: U5 (den andra <strong>74HC00</strong>:an) gör inverterare och mellanresultat, U4:s lediga grindar (U4B–U4D) bygger vidare, och en tredje <strong>74HC00</strong> (U6) gör EEPROM <span class="signal">/CE</span>. Nio grindar, fyra signaler:</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
-          <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Grind</th><th class="p-2 text-left">Ingångar</th><th class="p-2 text-left">Utgång</th><th class="p-2 text-left">Signalen</th></tr></thead>
+          <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
           <tbody class="divide-y">
-            <tr><td class="p-2">U5A</td><td class="p-2">A14, A14</td><td class="p-2">¬A14</td><td class="p-2">Inverterare — behövs för VIA-avkodningen</td></tr>
-            <tr><td class="p-2">U5B</td><td class="p-2">A12, A12</td><td class="p-2">¬A12</td><td class="p-2">Inverterare — behövs för VIA-avkodningen</td></tr>
-            <tr><td class="p-2">U5C</td><td class="p-2">A15, A14-ut, A13, A12-ut</td><td class="p-2">VIA /CS2</td><td class="p-2">NAND-kombination → LÅG endast vid $A000–$A00F</td></tr>
-            <tr><td class="p-2">U5D</td><td class="p-2">A15, VIA /CS2-ut</td><td class="p-2">EEPROM /CE</td><td class="p-2">Aktivt när A15=1 OCH inte VIA</td></tr>
+            <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">U5 — inverterare och mellanresultat</td></tr>
+            <tr><td class="p-2">U5: 1, 2</td><td class="p-2"><span class="signal">A14</span> (in)</td><td class="p-2"><strong>CPU <span class="signal">A14</span></strong></td><td class="p-2">NAND(<span class="signal">A14</span>, <span class="signal">A14</span>) = ¬A14 — inverterare</td></tr>
+            <tr><td class="p-2">U5: 3</td><td class="p-2">¬A14 (ut)</td><td class="p-2"><strong>U5 pin 13</strong></td><td class="p-2">Till T2-paret</td></tr>
+            <tr><td class="p-2">U5: 4, 5</td><td class="p-2"><span class="signal">A12</span> (in)</td><td class="p-2"><strong>CPU <span class="signal">A12</span></strong></td><td class="p-2">NAND(<span class="signal">A12</span>, <span class="signal">A12</span>) = ¬A12 — inverterare</td></tr>
+            <tr><td class="p-2">U5: 6</td><td class="p-2">¬A12 (ut)</td><td class="p-2"><strong>U5 pin 12</strong></td><td class="p-2">Till T2-paret</td></tr>
+            <tr><td class="p-2">U5: 9</td><td class="p-2"><span class="signal">A15</span> (in)</td><td class="p-2"><strong>CPU <span class="signal">A15</span></strong></td><td class="p-2">T1 = ¬(<span class="signal">A15</span>·<span class="signal">A13</span>)</td></tr>
+            <tr><td class="p-2">U5: 10</td><td class="p-2"><span class="signal">A13</span> (in)</td><td class="p-2"><strong>CPU <span class="signal">A13</span></strong></td><td class="p-2">T1 = ¬(<span class="signal">A15</span>·<span class="signal">A13</span>)</td></tr>
+            <tr><td class="p-2">U5: 8</td><td class="p-2">T1 (ut)</td><td class="p-2"><strong>U4 pin 4</strong></td><td class="p-2">Mellanresultat → U4B</td></tr>
+            <tr><td class="p-2">U5: 12</td><td class="p-2">¬A14 (in)</td><td class="p-2"><strong>U5 pin 3</strong></td><td class="p-2">T2 = ¬(¬A14·¬A12)</td></tr>
+            <tr><td class="p-2">U5: 13</td><td class="p-2">¬A12 (in)</td><td class="p-2"><strong>U5 pin 6</strong></td><td class="p-2">T2 = ¬(¬A14·¬A12)</td></tr>
+            <tr><td class="p-2">U5: 11</td><td class="p-2">T2 (ut)</td><td class="p-2"><strong>U4 pin 9</strong></td><td class="p-2">Mellanresultat → U4C</td></tr>
+            <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">U4B–U4D — AND-trädet till VIA /CS2</td></tr>
+            <tr><td class="p-2">U4: 4, 5</td><td class="p-2">T1 (in)</td><td class="p-2"><strong>U5 pin 8</strong></td><td class="p-2">¬T1 = <span class="signal">A15</span>·<span class="signal">A13</span> — inverterare</td></tr>
+            <tr><td class="p-2">U4: 6</td><td class="p-2"><span class="signal">A15</span>·<span class="signal">A13</span> (ut)</td><td class="p-2"><strong>U4 pin 12</strong></td><td class="p-2">Till final-NAND</td></tr>
+            <tr><td class="p-2">U4: 9, 10</td><td class="p-2">T2 (in)</td><td class="p-2"><strong>U5 pin 11</strong></td><td class="p-2">¬T2 = ¬A14·¬A12 — inverterare</td></tr>
+            <tr><td class="p-2">U4: 8</td><td class="p-2">¬A14·¬A12 (ut)</td><td class="p-2"><strong>U4 pin 13</strong></td><td class="p-2">Till final-NAND</td></tr>
+            <tr><td class="p-2">U4: 12, 13</td><td class="p-2">(in)</td><td class="p-2"><strong>U4 pin 6</strong> + <strong>U4 pin 8</strong></td><td class="p-2">VIA <span class="signal">/CS2</span> = ¬(<span class="signal">A15</span>·¬<span class="signal">A14</span>·<span class="signal">A13</span>·¬<span class="signal">A12</span>)</td></tr>
+            <tr><td class="p-2">U4: 11</td><td class="p-2">VIA <span class="signal">/CS2</span> (ut)</td><td class="p-2"><strong>VIA pin 23</strong> + <strong>U6 pin 2</strong></td><td class="p-2">LÅG vid $A000–$AFFF</td></tr>
+            <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">U6 — EEPROM /CE</td></tr>
+            <tr><td class="p-2">U6: 1</td><td class="p-2"><span class="signal">A15</span> (in)</td><td class="p-2"><strong>CPU <span class="signal">A15</span></strong></td><td class="p-2">EEPROM <span class="signal">/CE</span> = ¬(<span class="signal">A15</span>·VIA <span class="signal">/CS2</span>)</td></tr>
+            <tr><td class="p-2">U6: 2</td><td class="p-2">VIA <span class="signal">/CS2</span> (in)</td><td class="p-2"><strong>U4 pin 11</strong></td><td class="p-2">EEPROM tyst när VIA pratar</td></tr>
+            <tr><td class="p-2">U6: 3</td><td class="p-2">EEPROM <span class="signal">/CE</span> (ut)</td><td class="p-2"><strong>AT28C256 pin 20</strong></td><td class="p-2">LÅG vid $8000–$9FFF + $B000–$FFFF</td></tr>
           </tbody>
         </table>
       </div>
@@ -174,21 +192,21 @@
       <h2>Minneskarta</h2>
       <p>Nu används hela 64 KB. <strong>SRAM</strong> tar nedre halvan, <strong>EEPROM</strong> övre halvan minus ett litet I/O-fönster.</p>
       <div class="bg-white rounded-lg shadow font-mono text-xs leading-tight">
-        <div class="flex items-stretch border-b-2 border-purple-500" style="height:263px">
+        <div class="flex items-stretch border-b-2 border-purple-500" style="height:219px">
           <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:8px">
             <span class="text-gray-500">$FFFF</span>
-            <span class="text-gray-400">$A010</span>
+            <span class="text-gray-400">$B000</span>
           </div>
           <div class="flex-1 bg-purple-100 border-l border-r border-purple-400 px-2 flex items-center">AT28C256 EEPROM — program + vektorer</div>
-          <div class="w-14 text-right text-gray-500 pr-2">~24 KB</div>
+          <div class="w-14 text-right text-gray-500 pr-2">~20 KB</div>
         </div>
-        <div class="flex items-stretch border-b-2 border-yellow-500" style="min-height:16px">
+        <div class="flex items-stretch border-b-2 border-yellow-500" style="height:60px">
           <div class="w-20 pr-3 flex flex-col justify-between text-right" style="min-height:16px">
             <span class="text-gray-500">$A000</span>
-            <span class="text-gray-400">$A00F</span>
+            <span class="text-gray-400">$AFFF</span>
           </div>
-          <div class="flex-1 bg-yellow-100 border-l border-r border-yellow-400 px-2 flex items-center font-bold">W65C22 VIA — I/O-fönster</div>
-          <div class="w-14 text-right text-gray-500 pr-2">16 B</div>
+          <div class="flex-1 bg-yellow-100 border-l border-r border-yellow-400 px-2 flex items-center font-bold">W65C22 VIA — I/O-fönster (4 KB)</div>
+          <div class="w-14 text-right text-gray-500 pr-2">4 KB</div>
         </div>
         <div class="flex items-stretch border-b border-gray-300" style="height:120px">
           <div class="w-20 text-right pr-3 text-gray-400 self-start pt-1">$9FFF</div>
@@ -218,7 +236,7 @@
 // Steg 11 — städad adressrymd
 // ==============================================================
 // SRAM: $0000–$7FFF (32 KB, hela 62256-chippet)
-// VIA:  $A000–$A00F (I/O-fönster)
+// VIA:  $A000–$AFFF (I/O-fönster, 4 KB)
 // EEPROM: $8000–$FFFF (minus VIA-fönstret)
 // Arduino: endast klocka + reset + diagnostik.
 
@@ -242,14 +260,14 @@
 // --- is_sram() — hela nedre halvan, fysisk 62256 ---
 bool is_sram(uint16_t addr) { return addr &lt;= SRAM_END; }
 
-// --- is_via() — I/O-fönster på $A000 ---
+// --- is_via() — I/O-fönster på $A000 (4 KB, register speglade) ---
 bool is_via(uint16_t addr) {
-  return (addr &gt;= VIA_BASE &amp;&amp; addr &lt; VIA_BASE + 16);
+  return (addr &gt;= VIA_BASE &amp;&amp; addr &lt; VIA_BASE + 0x1000);
 }
 
 // --- is_eeprom() — övre halvan minus VIA-fönstret ---
 bool is_eeprom(uint16_t addr) {
-  if (is_via(addr)) return false;        // VIA stjäl 16 bytes
+  if (is_via(addr)) return false;        // VIA tar 4 KB
   return (addr &gt;= EEPROM_START &amp;&amp; addr &lt;= EEPROM_END);
 }
 
@@ -341,7 +359,7 @@ void loop() {
     <!-- Länkskript -->
     <section class="mb-8 text-gray-700 space-y-3">
       <h2>Länkskript — program.cfg</h2>
-      <p>I steg 8 skapade vi <code>program.cfg</code> — länkaren <strong>ld65</strong>:s karta över minnet. Den talar om var i adressrymden koden hamnar. Nu uppdateras den, för <strong>VIA</strong>:n har flyttat till <code>$A000</code>: <strong>ROM</strong>:en delas i två segment med ett 16-byte-gap där <strong>VIA</strong>-fönstret ligger.</p>
+      <p>I steg 8 skapade vi <code>program.cfg</code> — länkaren <strong>ld65</strong>:s karta över minnet. Den talar om var i adressrymden koden hamnar. Nu uppdateras den, för <strong>VIA</strong>:n har flyttat till <code>$A000</code>: <strong>ROM</strong>:en delas i två segment med ett 4 KB-gap där <strong>VIA</strong>-fönstret ligger.</p>
       <h3>Så här gör du</h3>
       <ol class="list-decimal pl-5 space-y-1">
         <li>Öppna <code>src/program.cfg</code> i ditt PlatformIO-projekt — samma fil som skapades i steg 8.</li>
@@ -351,14 +369,14 @@ void loop() {
       </ol>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-cfg">
 ; program.cfg — steg 11
-; Kod placeras i $8000–$9FFF och $A010–$FFFF,
-; men hoppar över VIA-fönstret $A000–$A00F.
+; Kod placeras i $8000–$9FFF och $B000–$FFFF,
+; men hoppar över VIA-fönstret $A000–$AFFF.
 
 MEMORY {
     ZP:    start = $0000, size = $0100, type = rw;  ; zero page
     RAM:   start = $0200, size = $7E00, type = rw;  ; ledigt RAM
     ROM:   start = $8000, size = $2000, type = ro;  ; $8000–$9FFF
-    ROM2:  start = $A010, size = $5FF0, type = ro;  ; $A010–$FFFF
+    ROM2:  start = $B000, size = $5000, type = ro;  ; $B000–$FFFF
 }
 
 SEGMENTS {
@@ -368,7 +386,7 @@ SEGMENTS {
     VECTORS:  load = ROM2, start = $FFFA, type = ro;
 }
 </code></pre>
-      <p>Koden läggs i <code>$8000</code>–<code>$9FFF</code> (<strong>ROM</strong>, 8 KB räcker gott) och fortsätter i <code>$A010</code>–<code>$FFFF</code> (<strong>ROM2</strong>). Reset-vektorn ligger som alltid på <code>$FFFA</code>–<code>$FFFF</code>.</p>
+      <p>Koden läggs i <code>$8000</code>–<code>$9FFF</code> (<strong>ROM</strong>, 8 KB räcker gott) och fortsätter i <code>$B000</code>–<code>$FFFF</code> (<strong>ROM2</strong>). Reset-vektorn ligger som alltid på <code>$FFFA</code>–<code>$FFFF</code>.</p>
     </section>
     <section class="mb-8 text-gray-700 space-y-3">
       <h2>Exempel på körning</h2>
@@ -419,7 +437,7 @@ W $A000  ← VIA: 3D         (tecknet "=")
           <li><strong>VIA:n svarar inte på <code>$A000</code>?</strong> Kontrollera U5A–U5C-avkodningen. <span class="signal">A15</span>=1, <span class="signal">A14</span>=0, <span class="signal">A13</span>=1, <span class="signal">A12</span>=0 måste ge LÅG på <span class="signal">/CS2</span>. Dubbelkolla att <span class="signal">RS0–RS3</span> fortfarande går till <span class="signal">A0–A3</span>.</li>
           <li><strong>SRAM fortfarande bara 16 KB?</strong> <span class="signal">A14</span> (<strong>SRAM</strong> pin 1) är inte ansluten. Utan den kan processorn inte nå <code>$4000</code>–<code>$7FFF</code>.</li>
           <li><strong>Busskrockar?</strong> Två enheter kan svara samtidigt om avkodningen är fel. Mät <span class="signal">/CE</span> och <span class="signal">/CS2</span> medan <strong>CPU</strong>:n läser — exakt en ska vara LÅG.</li>
-          <li><strong>Programmet kraschar vid <code>$A000</code>?</strong> Länkskriptet placerade kod i <strong>VIA</strong>-fönstret. Kontrollera <code>program.cfg</code> — <strong>ROM</strong>-segmentet får inte inkludera <code>$A000</code>–<code>$A00F</code>.</li>
+          <li><strong>Programmet kraschar vid <code>$A000</code>?</strong> Länkskriptet placerade kod i <strong>VIA</strong>-fönstret. Kontrollera <code>program.cfg</code> — <strong>ROM</strong>-segmentet får inte inkludera <code>$A000</code>–<code>$AFFF</code>.</li>
         </ul>
       </div>
     </section>
