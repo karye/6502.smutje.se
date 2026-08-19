@@ -358,7 +358,7 @@ void setup() {
 
   Serial.println("AT28C256 EEPROM-programmerare");
   Serial.println("Redo att ta emot .bin-fil...");
-  Serial.println("Skicka data med: python3 upload_eeprom.py program.bin");
+  Serial.println("Skicka data med: python3 scripts/upload_eeprom.py program.bin");
 
   // --- Ta emot data sida för sida ---
   // Protokoll: 256 bytes per sida. Efter sista sidan: "DONE".
@@ -642,7 +642,7 @@ void loop() {
       <h3>Fas 1 — bränna EEPROM</h3>
       <p>Bygg programmet med ca65 som vanligt, kör Python-skriptet för att bränna:</p>
       <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">$ pio run -e step10 -t upload    # Ladda upp dator-Arduinon
-$ python3 upload_eeprom.py asm/program_hello.bin /dev/ttyACM1
+$ python3 scripts/upload_eeprom.py asm/program_hello.bin /dev/ttyACM1
 
 AT28C256 EEPROM-programmerare
 Redo att ta emot .bin-fil...
@@ -697,7 +697,7 @@ W $4000  ← VIA: 3D  (=)
   <!-- Om det inte fungerar -->
   <section class="mb-8">
     <h2>Om det inte fungerar</h2>
-    <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
+    <p>Här är några saker att kontrollera:</p>
       <ul class="list-disc pl-5 space-y-1">
         <li><strong>CPU:n läser <code>$FFFC</code>/<code>$FFFD</code> men hoppar till fel adress?</strong> <strong>EEPROM</strong>:ets <span class="signal">/CE</span>
           är förmodligen inte rätt avkodat. Kontrollera att <strong>74HC00</strong>-grinden får <span class="signal">A15</span> på båda ingångarna
@@ -710,7 +710,6 @@ W $4000  ← VIA: 3D  (=)
           fyra enheter delar på samma 8 ledningar.</li>
         <li><strong>Glöm inte avkopplingskondensatorn</strong> vid <strong>EEPROM</strong>:ets VDD/GND.</li>
       </ul>
-    </div>
   </section>
 
   <div class="flex gap-4 mt-8">

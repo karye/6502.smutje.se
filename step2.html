@@ -206,7 +206,7 @@
             <li><strong><span class="signal">PINK</span></strong> — läser <strong>CPU</strong>:ns <span class="signal">A8–A15</span> på samma sätt.</li>
           </ul>
       <p>För att få ihop en 16-bitars adress skiftar vi ihop de två byten:</p>
-      <pre class="bg-gray-900 text-gray-100 p-3 rounded text-sm font-mono">uint16_t addr = (PINK &lt;&lt; 0) | (PINF &lt;&lt; 8);</pre>
+      <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">uint16_t addr = (PINF &lt;&lt; 0) | (PINK &lt;&lt; 8);</pre>
       <p>Resultatet är ett tal mellan 0 och 65 535 — processor ns fullständiga adressrymd.</p>
 
           <h3>Reset-sekvensen — vad som händer när CPU:n vaknar</h3>
@@ -279,9 +279,9 @@ void loop() {
   delay(CLOCK_DELAY);
 
   // Läs adressbussen medan PHI2 är låg — adressen är redan giltig
-  uint16_t addr = (PINK &lt;&lt; 0) | (PINF &lt;&lt; 8);
-  // PINK = CPU A8–A15 (hög byte)
+  uint16_t addr = (PINF &lt;&lt; 0) | (PINK &lt;&lt; 8);
   // PINF = CPU A0–A7  (låg byte)
+  // PINK = CPU A8–A15 (hög byte)
 
   digitalWrite(PHI2, HIGH);
   delay(CLOCK_DELAY);

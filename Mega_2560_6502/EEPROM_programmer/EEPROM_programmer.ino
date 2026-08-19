@@ -67,7 +67,7 @@ void setup() {
 
   Serial.println("AT28C256 EEPROM-programmerare");
   Serial.println("Redo att ta emot .bin-fil...");
-  Serial.println("Skicka data med: python3 upload_eeprom.py program.bin");
+  Serial.println("Skicka data med: python3 scripts/upload_eeprom.py program.bin");
 
   // --- Ta emot data sida för sida ---
   // Protokoll: 256 bytes per sida. Efter sista sidan: "DONE".

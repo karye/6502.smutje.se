@@ -233,7 +233,7 @@
     <section class="mb-8">
       <h2>PlatformIO-byggskript</h2>
       <p><code>scripts/build_asm.py</code> är en <em>pre-build hook</em> som PlatformIO kör före C++-kompileringen. Den anropar ca65, ld65 och bin2h.py i sekvens, konfigurerad i <code>platformio.ini</code>:</p>
-        <pre class="bg-gray-900 text-gray-100 p-3 rounded text-sm font-mono">extra_scripts = pre:scripts/build_asm.py</pre>
+        <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">extra_scripts = pre:scripts/build_asm.py</pre>
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-python"># Byggscript för PlatformIO — anropas före C++-kompilering
 # Kör ca65 + ld65 för att assemblera program_hello.asm → program_hello.h
 
@@ -338,8 +338,8 @@ if __name__ == '__main__':
       
         <p>Det här programmet körs på <strong>6502</strong>-processorn — inte på <strong>Arduino</strong>. Det är skrivet i ren assembler för <strong>W65C02</strong> och pratar direkt med <strong>VIA</strong>-kretsen som i sin tur styr <strong>LCD</strong>-displayen. När processorn startar efter reset hoppar den till <code>reset</code>-labeln, initierar <strong>VIA</strong>:ns portar som utgångar, skickar en standardsekvens av kommandon för att väcka <strong>LCD</strong>:n i 8-bitarsläge, och går sedan in i huvudloopen <code>hello</code>. Där skrivs två rader text ut — "=== <strong>6502</strong> <strong>VIA</strong> <strong>LCD</strong> ===" och "Hello from <strong>W65C02</strong>!" — displayen rensas, och allt börjar om. En oändlig loop av text, rensa, text, rensa.</p>
         <p>Programmet är uppbyggt i lager. Överst definieras fyra konstanter — <code>VIA_ORB</code>, <code>VIA_ORA</code>, <code>VIA_DDRB</code> och <code>VIA_DDRA</code> — som ger mänskliga namn åt <strong>VIA</strong>-kretsens registeradresser. Sedan följer själva koden i segmentet <code>CODE</code> som placeras från adress <code>$8000</code>. Där finns <code>reset</code> (startpunkten), <code>hello</code> (huvudloopen), och två subrutiner: <code>lcd_command</code> och <code>lcd_data</code>. Efter koden ligger strängdatan — två rader text, var och en avslutad med en nolla som signalerar att strängen är slut. Sist kommer vektorsegmentet där <code>.word reset</code> på adress <code>$FFFC</code> talar om för processorn var programmet börjar.</p>
-        <p>De två subrutinerna är programmets verkliga arbetshästar. <code>lcd_command</code> skickar ett kommando till <strong>LCD</strong>:n: den lägger kommandobyten på PORTB, sätter <span class="signal">RS</span>=0 och E=1, och drar sedan E till 0 — den fallande flanken får <strong>LCD</strong>:n att läsa. <code>lcd_data</code> gör exakt samma sak, men med <span class="signal">RS</span>=1 för att signalera att byten är ett tecken, inte ett kommando. Båda anropas med <code>JSR</code> (Jump to Subroutine) och återvänder med <code>RTS</code> — <strong>6502</strong>:ans motsvarighet till funktionsanrop. Strängarna skrivs ut tecken för tecken i en loop: X-registret räknar genom strängen, <code>LDA line1,x</code> hämtar nästa tecken, och när en nolla dyker upp vet programmet att strängen är slut.</p>
-        <p>Det fina med att ha programmet i en separat <code>.asm</code>-fil är att du kan ändra och experimentera utan att röra <strong>Arduino</strong>-koden. Byt ut texten i <code>line1</code> mot ditt eget namn, kör <code>pio run -t upload</code>, och inom sekunder visar <strong>LCD</strong>:n din nya text. Assemblerkoden är kommenterad på svenska så att varje instruktion förklarar sig själv — läs den som en receptbok, rad för rad, så förstår du exakt vad processorn gör i varje ögonblick.</p>
+        <p>De två subrutinerna är programmets verkliga arbetshästar. <code>lcd_command</code> skickar ett kommando till <strong>LCD</strong>:n: den lägger kommandobyten på PORTB, sätter <span class="signal">RS</span>=0 och <span class="signal">E</span>=1, och drar sedan <span class="signal">E</span> till 0 — den fallande flanken får <strong>LCD</strong>:n att läsa. <code>lcd_data</code> gör exakt samma sak, men med <span class="signal">RS</span>=1 för att signalera att byten är ett tecken, inte ett kommando. Båda anropas med <code>JSR</code> (Jump to Subroutine) och återvänder med <code>RTS</code> — <strong>6502</strong>:ans motsvarighet till funktionsanrop. Strängarna skrivs ut tecken för tecken i en loop: X-registret räknar genom strängen, <code>LDA line1,x</code> hämtar nästa tecken, och när en nolla dyker upp vet programmet att strängen är slut.</p>
+        <p>Det fina med att ha programmet i en separat <code>.asm</code>-fil är att du kan ändra och experimentera utan att röra <strong>Arduino</strong>-koden. Byt ut texten i <code>line1</code> mot ditt eget namn, kör <code>pio run -e step8 -t upload</code>, och inom sekunder visar <strong>LCD</strong>:n din nya text. Assemblerkoden är kommenterad på svenska så att varje instruktion förklarar sig själv — läs den som en receptbok, rad för rad, så förstår du exakt vad processorn gör i varje ögonblick.</p>
       
       <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-x86asm">; ================================================================
 ; 6502-program för steg 8 — VIA LCD
@@ -666,7 +666,7 @@ void loop() {
     <pre><code class="apache">nano asm/program_hello.asm</code></pre>
 
     <p><strong>2. Bygg och ladda upp (Windows-maskinen):</strong></p>
-    <pre><code class="apache">pio run -t upload -t monitor</code></pre>
+    <pre><code class="apache">pio run -e step8 -t upload -t monitor</code></pre>
 
     <p><strong>Viktigt:</strong> <code>platformio.ini</code> måste ha <code>build_src_filter = +&lt;*&gt; -&lt;program.asm&gt;</code> för att förhindra att AVR-assemblern försöker kompilera <strong>6502</strong>-koden.</p>
 
@@ -677,7 +677,7 @@ void loop() {
       <h2>Exempel på körning</h2>
       
         <p>När du bygger och laddar upp ser du byggkedjan arbeta i terminalen:</p>
-        <pre class="bg-gray-900 text-gray-100 p-3 rounded text-sm font-mono">pio run -e step8 -t upload -t monitor</pre>
+        <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">pio run -e step8 -t upload -t monitor</pre>
         <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">[build_asm] Assemblerar .../asm/program_hello.asm …
 [build_asm] OK — 2054 bytes → .../program_hello.h
 Processing step8 (platform: ...)
@@ -710,7 +710,7 @@ W $4000  ← VIA: 3D  (=)
         </div>
 
         <p>Seriemonitor visar samma <strong>VIA</strong>- och <strong>LCD</strong>-aktivitet som i steg 7 — men med en avgörande skillnad: du har inte skrivit en enda <code>write_mem()</code>. Programmet kommer från <code>program_hello.asm</code>, en ren assembler-fil med labels, subrutiner och kommentarer.</p>
-        <p>Gör ett test: ändra texten i <code>line1:</code> från "=== <strong>6502</strong> <strong>VIA</strong> <strong>LCD</strong> ===" till "Hej varlden!" och kör <code>pio run -t upload -t monitor</code> igen. Hela kedjan körs om — ca65, ld65, bin2h, kompilering, uppladdning — och <strong>LCD</strong>:n visar din nya text. Iterationstiden är sekunder, inte minuter. Det här är arbetsflödet som gör resten av projektet njutbart.</p>
+        <p>Gör ett test: ändra texten i <code>line1:</code> från "=== <strong>6502</strong> <strong>VIA</strong> <strong>LCD</strong> ===" till "Hej varlden!" och kör <code>pio run -e step8 -t upload -t monitor</code> igen. Hela kedjan körs om — ca65, ld65, bin2h, kompilering, uppladdning — och <strong>LCD</strong>:n visar din nya text. Iterationstiden är sekunder, inte minuter. Det här är arbetsflödet som gör resten av projektet njutbart.</p>
       
     </section>
 

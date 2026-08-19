@@ -335,7 +335,7 @@ void loop() {
       <p>I steg 8 skapade vi <code>program.cfg</code> — länkaren <strong>ld65</strong>:s karta över minnet. Den talar om var i adressrymden koden hamnar. Nu uppdateras den: <strong>ROM</strong>:en ligger nu rent på <code>$C000</code>–<code>$FFFF</code> (16 KB) — inga fönster eller gap längre.</p>
       <h3>Så här gör du</h3>
       <ol class="list-decimal pl-5 space-y-1">
-        <li>Öppna <code>src/program.cfg</code> i ditt PlatformIO-projekt — samma fil som skapades i steg 8.</li>
+        <li>Öppna <code>asm/program.cfg</code> i ditt PlatformIO-projekt — samma fil som skapades i steg 8.</li>
         <li>Ersätt innehållet med koden nedan och spara.</li>
         <li>Bygg projektet — <code>build_asm.py</code> skickar filen till <strong>ld65</strong> automatiskt (<code>-C program.cfg</code>). Inget att köra manuellt.</li>
         <li>Assembler-filen behöver inga ändringar — segmenten nedan matchar den.</li>
@@ -402,7 +402,7 @@ W $8000  ← VIA: 3D         (tecknet "=")
     <!-- Om det inte fungerar -->
     <section class="mb-8">
       <h2>Om det inte fungerar</h2>
-      <div class="bg-white rounded-lg shadow p-4 border text-sm text-gray-700 space-y-2">
+      <p>Här är några saker att kontrollera:</p>
         <ul class="list-disc pl-5 space-y-1">
           <li><strong>CPU:n läser <code>$FFFC</code>/<code>$FFFD</code> men hoppar till fel adress?</strong> <strong>EEPROM</strong>:ets <span class="signal">/CE</span> är förmodligen inte rätt avkodat. Kontrollera NAND-grinden (74HC00 pin 3) — den måste ge LÅG när <span class="signal">A15</span>=1 och <span class="signal">A14</span>=1.</li>
           <li><strong>VIA:n svarar inte på <code>$8000</code>?</strong> Kontrollera <span class="signal">CS1</span> (pin 24) = <span class="signal">A15</span> (hög) och <span class="signal">/CS2</span> (pin 23) = <span class="signal">A14</span> (låg) — VIA:n kräver båda samtidigt. Dubbelkolla att <span class="signal">RS0–RS3</span> fortfarande går till <span class="signal">A0–A3</span>.</li>
@@ -410,7 +410,6 @@ W $8000  ← VIA: 3D         (tecknet "=")
           <li><strong>Busskrockar?</strong> Två enheter kan svara samtidigt om avkodningen är fel. Mät <span class="signal">/CE</span> och <span class="signal">/CS2</span> medan <strong>CPU</strong>:n läser — exakt en ska vara LÅG.</li>
           <li><strong>Programmet kraschar vid <code>$8000</code>?</strong> Länkskriptet placerade kod i <strong>VIA</strong>-fönstret. Kontrollera <code>program.cfg</code> — <strong>ROM</strong> ska börja på <code>$C000</code>, inte tidigare.</li>
         </ul>
-      </div>
     </section>
 
     <div class="flex gap-4 mt-8">

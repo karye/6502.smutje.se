@@ -52,3 +52,36 @@ span.signal {
   padding: 0.125rem 0.25rem;
   border-radius: 0.25rem;
 }
+
+/* --- Utskrift: ren, utan navigering --- */
+@media print {
+  header, footer, aside {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+  }
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  pre {
+    background: #fff !important;
+    border: 1px solid #ccc !important;
+    page-break-inside: avoid;
+  }
+  pre code, pre code * {
+    color: #000 !important;
+  }
+  table {
+    page-break-inside: avoid;
+  }
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+  .schematic object,
+  .schematic img {
+    border: 1px solid #ccc !important;
+  }
+}
