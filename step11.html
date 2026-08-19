@@ -154,7 +154,7 @@
       </div>
 
             <h3>Adressavkodning — en enda NAND-grind</h3>
-      <p>Här är tricket: kretsarnas egna chip-select-pinnar gör avkodningen. <strong>SRAM</strong>:s <span class="signal">/CE</span> är aktivt låg, och <strong>VIA</strong>:n har <em>två</em> chip-selects med motsatt polaritet — <span class="signal">CS1</span> (pin 24, aktivt hög) och <span class="signal">/CS2</span> (pin 23, aktivt låg). Då matchar adressbitarna kretsarna direkt, och bara <strong>EEPROM</strong>:s <span class="signal">/CE</span> behöver en NAND-grind. Aktiveringslogiken finns i sanningstabellen i Adressavkodning-sektionen ovan. Samma väg som <em>Steve Wozniak</em> använde i Apple II och som <em>Ben Eater</em> visade i sin klassiska 6502-serie.</p>
+      <p>Här är tricket: kretsarnas egna chip-select-pinnar gör avkodningen. <strong>SRAM</strong>:s <span class="signal">/CE</span> är aktivt låg, och <strong>VIA</strong>:n har <em>två</em> chip-selects med motsatt polaritet — <span class="signal">CS1</span> (pin 24, aktivt hög) och <span class="signal">/CS2</span> (pin 23, aktivt låg). Då matchar adressbitarna kretsarna direkt, och bara <strong>EEPROM</strong>:s <span class="signal">/CE</span> behöver en NAND-grind. Aktiveringslogiken finns i sanningstabellen i Adressavkodning-sektionen ovan, och de fyra direktanslutningarna — SRAM <span class="signal">/CE</span>, VIA <span class="signal">CS1</span>/<span class="signal">/CS2</span> och EEPROM <span class="signal">A14</span> — står i kretstabellerna ovan. Här visas bara NAND-grinden. Samma väg som <em>Steve Wozniak</em> använde i Apple II och som <em>Ben Eater</em> visade i sin klassiska 6502-serie.</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -163,11 +163,6 @@
             <tr><td class="p-2">1, 2</td><td class="p-2"><span class="signal">A15</span>, <span class="signal">A14</span> (in)</td><td class="p-2"><strong>CPU <span class="signal">A15</span></strong>, <strong>CPU <span class="signal">A14</span></strong></td><td class="p-2">NAND(<span class="signal">A15</span>, <span class="signal">A14</span>) — HÖG när någon är 0</td></tr>
             <tr><td class="p-2">3</td><td class="p-2">EEPROM <span class="signal">/CE</span> (ut)</td><td class="p-2"><strong>AT28C256 pin 20</strong></td><td class="p-2">LÅG när A15=1 och A14=1 → $C000–$FFFF</td></tr>
             <tr><td class="p-2">14, 7</td><td class="p-2">VCC, GND</td><td class="p-2">+5V, GND</td><td class="p-2">Strömmatning</td></tr>
-            <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">Direktanslutningar — ingen grind</td></tr>
-            <tr><td class="p-2">—</td><td class="p-2">SRAM <span class="signal">/CE</span> (pin 20)</td><td class="p-2"><strong>CPU <span class="signal">A15</span></strong> direkt</td><td class="p-2">Aktivt låg — SRAM vid $0000–$7FFF</td></tr>
-            <tr><td class="p-2">—</td><td class="p-2">VIA <span class="signal">CS1</span> (pin 24)</td><td class="p-2"><strong>CPU <span class="signal">A15</span></strong> direkt</td><td class="p-2">Aktivt hög — övre halvan</td></tr>
-            <tr><td class="p-2">—</td><td class="p-2">VIA <span class="signal">/CS2</span> (pin 23)</td><td class="p-2"><strong>CPU <span class="signal">A14</span></strong> direkt</td><td class="p-2">Aktivt låg — VIA vid $8000–$BFFF</td></tr>
-            <tr><td class="p-2">—</td><td class="p-2">EEPROM <span class="signal">A14</span> (pin 1)</td><td class="p-2"><strong>CPU <span class="signal">A14</span></strong></td><td class="p-2">EEPROM läser övre halvan ($C000–$FFFF)</td></tr>
           </tbody>
         </table>
       </div>
