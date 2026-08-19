@@ -1030,6 +1030,11 @@ W $4000  ← VIA: 34  (siffran 4)</pre>
 
       <p>Varje nytt Fibonacci-tal dyker upp med en kort paus. När talet når 233 (det sista som ryms i en 8-bitars byte) wrappar det tillbaka till 0 och sekvensen börjar om. Under tiden använder <strong>6502</strong>-programmet zero page-adresser (<code>$00</code>, <code>$01</code>, <code>$02</code>) för att lagra F(n-2), F(n-1) och F(n) — adresser som nu ligger i det fysiska <strong>SRAM</strong>-chippet, inte i Arduinons mjukvaruemulerade <strong>RAM</strong>. I seriemonitor syns dessa som <code>R $0000</code> och <code>W $0002</code> med <code>← SRAM</code>-markering.</p>
       <p>Du har byggt en dator med tre kretsar som delar på samma buss, äkta <strong>SRAM</strong> för arbetsminne, en <strong>VIA</strong> för I/O, och en <strong>6502</strong>-processor som kör dina egna assembler-program. Från en blinkande lysdiod till Fibonacci på <strong>LCD</strong> — hela resan på nio steg.</p>
+      <h3>Prova själv</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>Räkna Fibonacciserien för hand och jämför med displayen — efter 233 börjar den om.</li>
+        <li>Använd <strong>Knapp 2</strong> och stega medan <code>show_num</code> arbetar — följ subrutinen rad för rad i <code>asm/program_fib.asm</code>.</li>
+      </ul>
     
   </section>
 

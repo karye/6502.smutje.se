@@ -864,6 +864,11 @@ W $4000  ← VIA: 3D  (=)
 
       <p>Varje <code>W $4000</code> eller <code>W $4001</code> är <strong>CPU</strong>:n som skriver till <strong>VIA</strong>:ns register — <strong>Arduino</strong> gör ingenting, den fysiska <strong>VIA</strong>-kretsen fångar upp skrivningen och styr <strong>LCD</strong>:n. Texten rullar fram på displayen, tecken för tecken, styrd helt av <strong>6502</strong>-processorn.</p>
       <p>När programmet når slutet hoppar det tillbaka till början och skriver om alltihop. Clear display, skriv text, clear display — i en oändlig loop. Datorn är nu självförsörjande: <strong>CPU</strong>:n styr I/O, <strong>Arduino</strong> levererar bara programkoden och klockan.</p>
+      <h3>Prova själv</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>Ändra rad-strängarna i <code>step7.inc</code> till ditt eget namn och ladda om — <strong>LCD</strong>:n visar din text.</li>
+        <li>Mät <span class="signal">/CS2</span> (VIA pin 23) medan du stegar — den ska vara låg vid <code>$4000</code>–<code>$7FFF</code>.</li>
+      </ul>
     
   </section>
 

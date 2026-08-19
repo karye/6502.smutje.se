@@ -713,6 +713,11 @@ W $4000  ← VIA: 3D  (=)
 
         <p>Seriemonitor visar samma <strong>VIA</strong>- och <strong>LCD</strong>-aktivitet som i steg 7 — men med en avgörande skillnad: du har inte skrivit en enda <code>write_mem()</code>. Programmet kommer från <code>program_hello.asm</code>, en ren assembler-fil med labels, subrutiner och kommentarer.</p>
         <p>Gör ett test: ändra texten i <code>line1:</code> från "=== <strong>6502</strong> <strong>VIA</strong> <strong>LCD</strong> ===" till "Hej varlden!" och kör <code>pio run -e step8 -t upload -t monitor</code> igen. Hela kedjan körs om — ca65, ld65, bin2h, kompilering, uppladdning — och <strong>LCD</strong>:n visar din nya text. Iterationstiden är sekunder, inte minuter. Det här är arbetsflödet som gör resten av projektet njutbart.</p>
+        <h3>Prova själv</h3>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>Ändra texten i <code>line4</code> (rad 4) till ditt eget namn och kör <code>pio run -e step8 -t upload</code> — se hela kedjan kompilera om.</li>
+          <li>Lägg till ett utropstecken i slutet av <code>line2</code> och titta på vilka bytes som ändras i <code>.bin</code>-filen.</li>
+        </ul>
       
     </section>
 

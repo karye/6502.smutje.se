@@ -323,6 +323,10 @@ R $8006
           <p>Lägg märke till att <code>$FFFC</code> och <code>$FFFD</code> bara dyker upp en gång — efter reset. Sedan
             räknar adresserna uppåt när <strong>CPU</strong>:n hämtar instruktioner. Utan databuss (steg 3) kan <strong>CPU</strong>:n inte hämta riktiga
             opcodes, men adressbussen fungerar redan — och det är precis vad vi ville bevisa.</p>
+        <h3>Prova själv</h3>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>Koppla en lysdiod med 220 Ω från <span class="signal">A0</span> (pin 9) till <span class="signal">GND</span> — A0 växlar på varannan adress, så dioden blinkar i takt med att adresserna räknas.</li>
+        </ul>
 
         </section>
 

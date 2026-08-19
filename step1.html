@@ -604,6 +604,10 @@ Lysdioden på PHI2 ska blinka 1 Hz</pre>
         </div>
         <p>Det är allt! Programmet har inget mer att rapportera — det bara loopar. Men titta på kopplingsdäcket: lysdioden blinkar i precis den takt som <code>pulse()</code> bestämmer. Varje gång dioden tänds är <span class="signal">PHI2</span> hög och processorn tar ett steg framåt. Varje gång den släcks förbereder processorn nästa steg.</p>
         <p>Prova att ändra <code>CLOCK_HZ</code> från <code>1</code> till <code>10</code> och ladda upp igen. Dioden blinkar nu tio gånger per sekund — för snabbt för att urskilja enskilda pulser, men du ser att den lyser svagare eftersom den är släckt halva tiden. Det här är samma princip som senare steg använder när klockan körs i 500 Hz — då syns inte blinkandet alls, men processorn jobbar för fullt.</p>
+        <h3>Prova själv</h3>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>Mät med multimetern att <span class="signal">VDD</span> (pin 8) ligger på 5V mot <span class="signal">VSS</span> (pin 21), och att <span class="signal">PHI2</span> (pin 37) växlar mellan 0 och 5V i takt med att lysdioden blinkar.</li>
+        </ul>
     </section>
 
     <!-- Testning och felsökning -->

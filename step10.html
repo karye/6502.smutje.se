@@ -693,6 +693,10 @@ W $4000  ← VIA: 3D  (=)
 
       <p>Varje gång du ser <code>← EEPROM</code> i loggen är det <strong>AT28C256</strong> som svarar — inte <strong>Arduino</strong>. Reset-vektorn på <code>$FFFC</code>/<code>$FFFD</code> ligger i <strong>EEPROM</strong>:ets sista bytes, inskrivna av assembler-kedjan. <strong>CPU</strong>:n läser dem, hoppar till <code>$8000</code>, och kör programmet direkt från äkta <strong>ROM</strong>.</p>
       <p>Koppla bort Arduinon helt (ersätt klockan med en 555-timer eller kristalloscillator) så har du en helt fristående <strong>6502</strong>-dator. Programmet överlever strömavbrott — slå på strömmen imorgon och det finns kvar, inbränt i kisel.</p>
+      <h3>Prova själv</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>Bränn <code>asm/program_fib.bin</code> i stället för hello-programmet och se datorn starta direkt i Fibonacci — utan att röra datorns <strong>Arduino</strong>.</li>
+      </ul>
     
   </section>
 

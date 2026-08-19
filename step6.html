@@ -393,6 +393,11 @@ R $8002  ← tillbaka till INX
 
       <p>För första gången ser du ett <strong>W</strong> i loggen! <strong>CPU</strong>:n <em>skriver</em> till adress <code>$0200</code> — det är <code>STX $0200</code> som sparar X-registrets värde. På <strong>LCD</strong>:ns rad 1 ser du <code>D:$01</code>, <code>D:$02</code>, <code>D:$03</code>… räknaren ökar för varje varv. När den når <code>D:$FF</code> (255) wrappar den till <code>D:$00</code> — X-registret är bara 8 bitar brett.</p>
       <p>Programmet är ynka 9 bytes, men det innehåller redan alla mönster du behöver för att skriva större program: initiering (<code>LDX</code>), beräkning (<code>INX</code>), lagring (<code>STX</code>) och kontrollflöde (<code>JMP</code>). Du har just skrivit ditt första <strong>6502</strong>-program!</p>
+      <h3>Prova själv</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>Låt räknaren börja på 5: ändra <code>LDX #$00</code> till <code>LDX #$05</code> i <code>step6.inc</code> och ladda om.</li>
+        <li>Byt <code>INX</code> mot <code>DEX</code> och se räknaren gå baklänges — den wrappar till 255 efter noll.</li>
+      </ul>
     
   </section>
 

@@ -280,6 +280,10 @@ R $8004</pre>
       </div>
         <p>Med <strong>Knapp 1</strong> får du en rad per tryck. Du kan se reset-vektorn hämtas — <code>$FFFC</code>, <code>$FFFD</code> — och sedan följa <strong>CPU</strong>:n när den läser <code>NOP</code>-instruktioner. Med <strong>Knapp 2</strong> körs flera rader samtidigt tills <span class="signal">SYNC</span> går hög, vilket för en <code>NOP</code> (<code>$EA</code>) betyder 2 klockcykler.</p>
       <p>Känslan av att trycka på en knapp och se <strong>CPU</strong>:n ta ett enda steg är svår att beskriva. Du har full kontroll. Du kan stanna hur länge du vill, mäta spänningar, fundera på vad som händer — och sedan trycka igen.</p>
+      <h3>Prova själv</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>Stega genom reset-sekvensen med <strong>Knapp 1</strong> och räkna klockcyklerna — jämför med <strong>Knapp 2</strong>, som stannar vid varje ny opcode (<span class="signal">SYNC</span>).</li>
+      </ul>
     
   </section>
 

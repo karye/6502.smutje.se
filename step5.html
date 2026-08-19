@@ -413,6 +413,10 @@ R $8001</pre>
 
       <p>Samma information på båda ställena — adress (<code>$8001</code>) och data (<code>$EA</code>, <code>NOP</code>). Skillnaden är att <strong>LCD</strong>:n visar <em>just nu</em> medan seriemonitor bygger en historik. Med Knapp 2 (instruktionssteg) ser du flera rader i seriemonitor per tryck medan <strong>LCD</strong>:n uppdateras för varje klockcykel — ett snabbt flimmer av adresser tills <span class="signal">SYNC</span> går hög.</p>
       <p>Datorn har blivit fristående. Du kan koppla bort USB-kabeln (om <strong>Arduino</strong> drivs via DC-adaptern) och fortfarande stega genom programmet och se allt på <strong>LCD</strong>:n. Seriemonitor är praktisk för att logga och felsöka, men displayen på kopplingsdäcket gör datorn till en egen, komplett enhet.</p>
+      <h3>Prova själv</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>Vrid kontrast-potentiometern långsamt medan displayen visar adresser — märk när texten försvinner. Byt också meddelandet i <code>setup()</code> till ditt eget namn.</li>
+      </ul>
     
   </section>
 

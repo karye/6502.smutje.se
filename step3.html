@@ -422,6 +422,10 @@ R $8004
           <p>Det ser kanske händelselöst ut, men varje rad i loggen är ett mirakel: <strong>Arduino</strong> har läst adressbussen,
             kollat <span class="signal">R/W</span>, slagit upp rätt byte i minnet, och lagt ut den på databussen — allt innan <strong>CPU</strong>:n hann märka någon
             fördröjning. Du tittar på en <strong>fungerande dator</strong> vars program är att göra ingenting.</p>
+        <h3>Prova själv</h3>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>Ändra reset-vektorn i <code>setup()</code> till <code>$0000</code> i stället för <code>$8000</code> och ladda om — följ i loggen hur <strong>CPU</strong>:n börjar på fel ställe och vandrar genom NOP-land.</li>
+        </ul>
 
         </section>
 

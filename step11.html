@@ -398,6 +398,11 @@ W $8000  ← VIA: 3D         (tecknet "=")
         </div>
 
         <p>Lägg märke till skillnaden mot steg 10: <strong>SRAM</strong>-skrivningar kan nu ske var som helst i <code>$0000</code>–<code>$7FFF</code>, <strong>VIA</strong>:n svarar på <code>$8000</code> och <strong>EEPROM</strong> på <code>$C000</code>. Bussloggen visar tydligt vilken enhet som pratar.</p>
+      <h3>Prova själv</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>Mät <span class="signal">/CE</span> på <strong>SRAM</strong> (pin 20) och <strong>EEPROM</strong> (pin 20) samt <span class="signal">CS1</span>/<span class="signal">/CS2</span> på <strong>VIA</strong>:n medan du stegar — exakt en enhet ska vara aktiv varje klockcykel.</li>
+        <li>Prova att byta plats på <span class="signal">CS1</span> och <span class="signal">/CS2</span> (A15 och A14) och se hur avkodningen bryts.</li>
+      </ul>
       
     </section>
 
