@@ -81,6 +81,30 @@
     </div>
   </section>
 
+  <!-- Vad är nytt i detta steg -->
+  <section class="mb-8 text-gray-700 space-y-3">
+    <h2>Vad är nytt i det här steget?</h2>
+    <ul class="list-disc pl-5 space-y-1">
+      <li><strong>VIAn</strong> — en W65C22 som ger processorn 20 egna I/O-pinnar, på samma buss som minnet.</li>
+      <li><strong>Minnesmappad I/O</strong> — att skriva till en adress (<code>$4000</code>) är samma sak som att styra pinnar.</li>
+      <li><strong>Adressavkodning</strong> — 74HC00:ns grindar väljer ut VIAn:s fönster (<code>$4000</code>–<code>$7FFF</code>).</li>
+      <li><strong>LCD direkt från 6502</strong> — processorn styr displayen själv; Arduino är bara minne + klocka.</li>
+      <li><strong>Ett mycket längre program</strong> — LCD-initieringen kräver en hel kommandosekvens, så programmet är tiotals gånger större än i steg 6.</li>
+    </ul>
+  </section>
+
+  <!-- Så här fungerar en VIA -->
+  <section class="mb-8 text-gray-700 space-y-3">
+    <h2>Så här fungerar en VIA</h2>
+    <p>En <strong>VIA</strong> är som ett litet arkiv av brevlådor för elektriska signaler. Processorn skriver och läser på 16 registeradresser (<code>$4000</code>–<code>$400F</code>), och kretsen översätter varje värde till verkliga spänningar på sina pinnar. Tre saker räcker för att förstå allt vi gör här:</p>
+    <ul class="list-disc pl-5 space-y-1">
+      <li><strong>Register = brevlådor.</strong> <code>$4000</code> (PORTB) och <code>$4001</code> (PORTA) är portarna — det värde processorn skriver dit läggs ut på pinnarna. <code>$4002</code>/<code>$4003</code> (DDRB/DDRA) bestämmer riktningen: 1 = utgång, 0 = ingång. Vi sätter <code>$FF</code> = alla 8 pinnar som utgångar.</li>
+      <li><strong>Minnesmappad I/O.</strong> VIAn har inga egna adressbegrepp — den tittar bara på sina chip-select-pinnar (<span class="signal">CS1</span> = HÖG, <span class="signal">/CS2</span> = LÅG). När 74HC00:an gör <span class="signal">/CS2</span> låg vid <code>$4000</code>–<code>$7FFF</code> svarar VIAn på alla adresser i fönstret, som om den vore 16 bytes minne (registren speglas).</li>
+      <li><strong>Skriv = styr, läs = avläs.</strong> När processorn skriver till PORTB läggs värdet ut på LCD:ns datapinnar. När den läser PORTB avläses pinnarnas spänningar.</li>
+    </ul>
+    <p>LCD:ns <em>fallande flank</em> är den sista pusselbiten: displayen läser databussen i ögonblicket då <span class="signal">E</span> (PA2) går från HÖG till LÅG. Därför skriver varje tecken- eller kommandosekvens alltid i tre steg: data till PORTB → <span class="signal">E</span>=1 → <span class="signal">E</span>=0.</p>
+  </section>
+
   <!-- Kopplingsschema -->
   <section class="mb-8">
     <h2>Kopplingsschema</h2>
