@@ -83,7 +83,7 @@
     <!-- Avkodning -->
     <section class="mb-8">
       <h2>Adressavkodning</h2>
-      <p>Allt handlar om vilken enhet som får prata på bussen. Tre enheter, tre chip select-signaler — och nu med två <strong>74HC00</strong>-chips räcker grindarna till.</p>
+      <p>Allt handlar om vilken enhet som får prata på bussen. Tre enheter, tre chip select-signaler — och en enda NAND-grind räcker.</p>
 
       <h3>Gamla kartan (steg 10) — problemen</h3>
       <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-gray-700 space-y-2">
@@ -154,12 +154,7 @@
       </div>
 
             <h3>Adressavkodning — en enda NAND-grind</h3>
-      <p>Hemligheten ligger i chip-select-pinnarna. <strong>SRAM</strong>:s <span class="signal">/CE</span> är aktivt låg, och <strong>VIA</strong>:n har <em>två</em> chip-selects med motsatt polaritet: <span class="signal">CS1</span> (pin 24, aktivt hög) och <span class="signal">/CS2</span> (pin 23, aktivt låg). Då matchar adressbitarna kretsarna direkt — nästan inga grindar behövs:</p>
-      <ul class="list-disc pl-5 space-y-1">
-        <li><strong>SRAM (0 grindar):</strong> <span class="signal">A15</span> → <span class="signal">/CE</span> (pin 20) — aktivt när A15=0.</li>
-        <li><strong>VIA (0 grindar):</strong> <span class="signal">A15</span> → <span class="signal">CS1</span> (pin 24), <span class="signal">A14</span> → <span class="signal">/CS2</span> (pin 23) — aktivt när A15=1 och A14=0.</li>
-        <li><strong>EEPROM (1 grind):</strong> NAND(<span class="signal">A15</span>, <span class="signal">A14</span>) → <span class="signal">/CE</span> (pin 20) — aktivt när A15=1 och A14=1.</li>
-      </ul>
+      <p>Här är tricket: kretsarnas egna chip-select-pinnar gör avkodningen. <strong>SRAM</strong>:s <span class="signal">/CE</span> är aktivt låg, och <strong>VIA</strong>:n har <em>två</em> chip-selects med motsatt polaritet — <span class="signal">CS1</span> (pin 24, aktivt hög) och <span class="signal">/CS2</span> (pin 23, aktivt låg). Då matchar adressbitarna kretsarna direkt, och bara <strong>EEPROM</strong>:s <span class="signal">/CE</span> behöver en NAND-grind. Aktiveringslogiken finns i sanningstabellen i Adressavkodning-sektionen ovan. Samma väg som <em>Steve Wozniak</em> använde i Apple II och som <em>Ben Eater</em> visade i sin klassiska 6502-serie.</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
@@ -176,7 +171,6 @@
           </tbody>
         </table>
       </div>
-      <p><strong>Logik i ord:</strong> <strong>SRAM</strong> svarar när <span class="signal">A15</span>=0 (<code>$0000</code>–<code>$7FFF</code>). <strong>VIA</strong> svarar när <span class="signal">A15</span>=1 och <span class="signal">A14</span>=0 (<code>$8000</code>–<code>$BFFF</code>) — registren speglas var 16:e byte via RS0–RS3 = A0–A3. <strong>EEPROM</strong> svarar när <span class="signal">A15</span>=1 och <span class="signal">A14</span>=1 (<code>$C000</code>–<code>$FFFF</code>). Inga krockar, inget dött utrymme — en enda NAND-grind gör hela jobbet. Det här tricket — att låta kretsarnas egna chip-select-pinnar sköta avkodningen — är samma väg som <em>Steve Wozniak</em> använde i Apple II och som <em>Ben Eater</em> visade i sin klassiska 6502-serie.</p>
     </section>
 
 <h2>Minneskarta</h2>
