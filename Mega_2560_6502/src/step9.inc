@@ -29,8 +29,9 @@ bool debug_pulse = false;   // Styr loggutskrift i pulse()
 bool is_sram(uint16_t addr) { return addr <= SRAM_END; }
 
 // --- is_via() — hanteras av fysisk W65C22 ---
+// VIA sitter i fönstret $4000–$7FFF (register speglas var 16:e byte).
 bool is_via(uint16_t addr) {
-  return (addr >= VIA_BASE && addr < VIA_BASE + 16);
+  return (addr >= VIA_BASE && addr < 0x8000);
 }
 
 // --- read_mem() — Arduino svarar bara utanför SRAM/VIA ---

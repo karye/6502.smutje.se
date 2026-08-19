@@ -513,7 +513,7 @@ if __name__ == '__main__':
 // ==============================================================
 // Arduino är nu ENDAST klocka + reset + diagnostik.
 // $8000–$FFFF hanteras av AT28C256 EEPROM.
-// SRAM ($0000–$3FFF) och VIA ($4000–$400F) är oförändrade.
+// SRAM ($0000–$3FFF) och VIA ($4000–$7FFF) är oförändrade.
 
 #include &lt;Arduino.h&gt;
 
@@ -536,8 +536,9 @@ if __name__ == '__main__':
 bool is_sram(uint16_t addr) { return addr &lt;= SRAM_END; }
 
 // --- is_via() — hanteras av fysisk W65C22 ---
+// VIA sitter i fönstret $4000–$7FFF (register speglas var 16:e byte).
 bool is_via(uint16_t addr) {
-  return (addr &gt;= VIA_BASE &amp;&amp; addr &lt; VIA_BASE + 16);
+  return (addr &gt;= VIA_BASE &amp;&amp; addr &lt; 0x8000);
 }
 
 // --- is_eeprom() — hanteras av fysisk AT28C256 (NY!) ---

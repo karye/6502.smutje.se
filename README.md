@@ -10,13 +10,17 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 | 1 | Arduino Mega 2560 |
 | 1 | W65C22 VIA (DIP-40) — steg 7 |
 | 1 | 74HC00 (quad NAND) — steg 7 |
+| 1 | 74HC00 (quad NAND) — steg 10 (EEPROM-avkodning) |
+| 1 | 62256 SRAM (DIP-28, 32 KB) — steg 9 |
+| 1 | AT28C256 EEPROM (DIP-28, 32 KB) — steg 10 |
+| 1 | Arduino Mega 2560 (till) — EEPROM-programmerare, steg 10 |
 | 1 | LCD 16×2 eller 20×4 (parallell, t.ex. QC1602A) — steg 5 |
 | 1 | Lysdiod (klockindikering) |
 | 1 | 220 Ω motstånd (LED-strömbegränsning) |
 | 1 | 220 Ω motstånd (LCD-bakgrundsbelysning) |
 | 1 | 10 kΩ potentiometer (LCD-kontrast) |
 | 4 | 10 kΩ motstånd (pull-up: RDY, IRQB, NMIB, SOB) |
-| 1 | 10 kΩ motstånd (pull-down: BE → GND) |
+| 1 | 10 kΩ motstånd (pull-up: BE → +5V) |
 | 8 | 100 Ω motstånd (databuss-skydd) |
 | 1 | 100 nF keramisk kondensator (avkoppling CPU) |
 | 1 | 10 µF elektrolytisk kondensator (strömstabilisering) |
@@ -66,7 +70,7 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 | 33 | D0 | I/O | Databuss bit 0 (LSB) |
 | 34 | RWB | Ut | Read/Write — HÖG = läs, LÅG = skriv |
 | 35 | NC | — | Ej ansluten |
-| 36 | BE | In | Bus Enable — LÅG = bussar aktiva, HÖG = tri-state |
+| 36 | BE | In | Bus Enable — HÖG = bussar aktiva, LÅG = tri-state |
 | 37 | PHI2 | In | Phase 2 In — klockingång |
 | 38 | SOB | In | Set Overflow (aktiv LÅG) |
 | 39 | PHI2O | Ut | Phase 2 Out — klocka ut, ansluts ej |
@@ -90,13 +94,13 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 |---------|--------|---------|-----|
 | 8 | VDD | 5V | Strömmatning |
 | 21 | VSS | GND | Systemjord |
-| 37 | PHI2 | D2 | Klocka (20 Hz) |
+| 37 | PHI2 | D2 | Klocka (500 Hz) |
 | 34 | R/W | D3 | Read/Write |
 | 40 | /RESET | D4 | Reset |
 | 2 | RDY | 5V via 10kΩ | Pull-up |
 | 4 | /IRQ | 5V via 10kΩ | Pull-up |
 | 6 | /NMI | 5V via 10kΩ | Pull-up |
-| 36 | BE | GND | Bus Enable — LÅG = bussar aktiva |
+| 36 | BE | +5V via 10kΩ | Bus Enable — HÖG = bussar aktiva |
 | 38 | /SO | 5V via 10kΩ | Pull-up |
 
 ### Adressbuss (1:1)
@@ -123,11 +127,9 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 
 ```
 $FFFF ┌──────────────┐
-      │  EEPROM ROM   │  $A010–$FFFF (steg 11: program + vektorer)
-$A010 ├──────────────┤
-$A000 │  W65C22 VIA   │  $A000–$A00F (I/O-fönster)
-$9FFF ├──────────────┤
-      │  EEPROM ROM   │  $8000–$9FFF (steg 11)
+      │  EEPROM ROM   │  $C000–$FFFF (steg 11: program + vektorer)
+$C000 ├──────────────┤
+$BFFF │  W65C22 VIA   │  $8000–$BFFF (I/O-fönster, 16 KB)
 $8000 ├──────────────┤
       │              │
 $7FFF ├──────────────┤
@@ -135,8 +137,7 @@ $7FFF ├──────────────┤
 $0000 └──────────────┘
 ```
 
-Steg 7–10 använde VIA på $4000 och SRAM på $0000–$3FFF. Från och med steg 11:
-SRAM täcker hela 32 KB, VIA sitter i ett I/O-fönster på $A000.
+Steg 7–10 använde VIA på $4000 (register speglas i $4000–$7FFF). Steg 9–10 använde SRAM på $0000–$3FFF; steg 7–8 hade Arduino-emulerat RAM (1 KB). Från och med steg 11: SRAM täcker hela 32 KB, VIA sitter i ett I/O-fönster på $8000 och EEPROM på $C000.
 
 ---
 
@@ -153,8 +154,8 @@ SRAM täcker hela 32 KB, VIA sitter i ett I/O-fönster på $A000.
 | 7 | W65C22 VIA + 74HC00, LCD via VIA | VIA, 74HC00 |
 | 8 | Assembler-bygge med ca65 | — (samma hårdvara) |
 | 9 | Riktigt RAM (62256 SRAM) | 62256 SRAM |
-| 10 | EEPROM som ROM (AT28C256) | AT28C256 EEPROM |
-| 11 | Städad adressrymd | (andra 74HC00) |
+| 10 | EEPROM som ROM (AT28C256) | AT28C256 EEPROM, 2:a 74HC00, 2:a Arduino (programmerare) |
+| 11 | Städad adressrymd | — (omkoppling, ingen ny krets) |
 
 ---
 
@@ -177,17 +178,19 @@ SRAM täcker hela 32 KB, VIA sitter i ett I/O-fönster på $A000.
 
 ## PlatformIO — växla mellan steg
 
-Alla sju steg finns som separata `.inc`-filer i `src/`. `main.cpp` är en dispatcher som inkluderar rätt fil baserat på `-DSTEPx`.
+Alla elva steg finns som separata `.inc`-filer i `src/`. `main.cpp` är en dispatcher som inkluderar rätt fil baserat på `-DSTEPx`.
 
 ### I VS Code
-Välj aktiv miljö i PlatformIO-fliken: `env:step1` … `env:step8`, klicka sedan Upload.
+Välj aktiv miljö i PlatformIO-fliken: `env:step1` … `env:step11`, klicka sedan Upload.
 
 ### Kommandorad
 ```bash
+pio run -e step11 -t upload -t monitor  # steg 11 (städad adressrymd)
+pio run -e step10 -t upload -t monitor  # steg 10 (EEPROM som ROM)
 pio run -e step8 -t upload -t monitor   # steg 8 (assembler-bygge)
 pio run -e step7 -t upload -t monitor   # steg 7 (VIA + LCD)
 pio run -e step6 -t upload -t monitor   # steg 6 (räknarprogram)
-pio run -t upload -t monitor            # default = steg 8
+pio run -t upload -t monitor            # default = steg 9
 ```
 
 ### Filstruktur
@@ -202,7 +205,24 @@ src/
 ├── step6.inc       # räknarprogram
 ├── step7.inc       # VIA + LCD
 ├── step8.inc       # Assembler-bygge (ca65)
-└── program.asm     # 6502 assembler-kod
+├── step9.inc       # 62256 SRAM
+├── step10.inc      # EEPROM som ROM
+├── step11.inc      # städad adressrymd
+├── program_hello.h # genereras av build_asm.py (ca65 → ld65 → bin2h)
+└── program_fib.h   # genereras av build_asm.py
+
+asm/
+├── program.cfg     # ld65-länkskript
+├── program_hello.asm
+└── program_fib.asm
+
+scripts/
+├── build_asm.py    # pre-build-hook: ca65 + ld65 + bin2h för alla *.asm
+├── bin2h.py        # .bin → C-header
+└── upload_eeprom.py # skicka .bin till EEPROM-programmeraren (steg 10)
+
+EEPROM_programmer/
+└── EEPROM_programmer.ino  # separat Arduino (steg 10, Arduino IDE)
 ```
 
 ## Steg 7: LCD via VIA (8-bit parallell)
@@ -233,7 +253,7 @@ Arduinon är endast minnesemulator + klocka — all LCD-logik körs på 6502.
 
 1. **Sätt VIA-portar:** `LDA #$FF` → `STA $4002` (DDRB) → `STA $4003` (DDRA)
 2. **LCD-init (8-bit):** $30 × 3 → $38 (function set) → $0C (display ON) → $01 (clear) → $06 (entry mode)
-3. **Skriv text:** Flytta cursor via kommando ($80, $C0, $94, $D4 för rad 1–4), skriv tecken via PORTB + pulsa E på PORTA
+3. **Skriv text:** Flytta cursor via kommando ($80, $C0 för rad 1–2), skriv tecken via PORTB + pulsa E på PORTA
 4. **Clear + loop:** $01 (clear display) → JMP tillbaka till start
 
 ### Felsökning steg 7

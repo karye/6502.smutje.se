@@ -22,10 +22,10 @@ uint8_t vectors[6];      // $FFFA–$FFFF
 #define VIA_BASE 0x4000
 
 // --- is_via() — är detta en VIA-adress? ---
-// VIA sitter på $4000–$400F. Arduino ska INTE svara här —
-// den fysiska W65C22-kretsen hanterar dessa adresser själv.
+// VIA sitter i fönstret $4000–$7FFF (register speglas var 16:e byte).
+// Arduino ska INTE svara här — den fysiska W65C22-kretsen gör det.
 bool is_via(uint16_t addr) {
-  return (addr >= VIA_BASE && addr < VIA_BASE + 16);
+  return (addr >= VIA_BASE && addr < 0x8000);
 }
 
 // --- read_mem() — slå upp ett minnesvärde ---

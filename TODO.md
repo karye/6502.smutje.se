@@ -1,13 +1,12 @@
 # TODO — Kommande korrigeringar
 
 ## Hårdvara / KiCad
-- [ ] BE (CPU pin 36) → GND i KiCad för alla steg (steg1–steg7)
-- [x] LCD R/W (pin 5) kopplas till GND (inte VIA PA1) — steg 7
-- [x] Via CS1 (pin 4) kopplas till GND — steg 7
+- [ ] Koppla BE (CPU pin 36) till +5V via 10 kΩ i KiCad för alla steg — HÖG = bussar aktiva enligt databladet. Koppla INTE till GND.
+- [ ] Kontrollera VIA CS1 (pin 24) — ska vara +5V (aktiv HÖG). Koppla inte till GND.
 - [ ] Exportera nya netlister för alla steg
 - [ ] Generera nya PNG:er
 
 ## Dokumentation
 - [ ] Kopiera nya PNG:er till `schematics/`
-- [ ] Uppdatera step1–8.html med korrigerade scheman
-- [ ] README.md: verifiera BE-beskrivning korrekt (redan fixat, dubbelkolla)
+- [ ] Uppdatera step1–11.html med korrigerade scheman
+- [ ] Steg 11: fyll i kopplingsschema (placeholder finns kvar i step11.html)

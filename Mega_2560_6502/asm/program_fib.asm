@@ -110,7 +110,7 @@ no_wrap:
 ; SUBRUTIN: delay_ms — vänta en kort stund
 ; ================================================================
 ; Två nästlade loopar: X räknar ner från 5, Y från 5.
-; 5 × 5 × 2 instruktioner = ~50 cykler ≈ 1 sekund vid 50 Hz.
+; 5 × 5 × 2 instruktioner = ~50 cykler ≈ 0,1 sekund vid 500 Hz.
 delay_ms:
     ldx #5
 dly_outer:

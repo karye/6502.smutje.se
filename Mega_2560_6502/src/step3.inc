@@ -50,7 +50,7 @@ void pulse() {
   digitalWrite(PHI2, LOW);
   delay(CLOCK_DELAY);
 
-  uint16_t a = (PINK << 0) | (PINF << 8);  // Läs adressbuss
+  uint16_t a = (PINF << 0) | (PINK << 8);  // Läs adressbuss
   bool rw = digitalRead(RWB);               // Läs R/W
 
   // Styr databussen baserat på R/W

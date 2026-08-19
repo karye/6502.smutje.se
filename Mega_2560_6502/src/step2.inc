@@ -54,9 +54,9 @@ void loop() {
   delay(CLOCK_DELAY);
 
   // Läs adressbussen medan PHI2 är låg — adressen är redan giltig
-  uint16_t addr = (PINK << 0) | (PINF << 8);
-  // PINK = CPU A8–A15 (hög byte)
+  uint16_t addr = (PINF << 0) | (PINK << 8);
   // PINF = CPU A0–A7  (låg byte)
+  // PINK = CPU A8–A15 (hög byte)
 
   digitalWrite(PHI2, HIGH);
   delay(CLOCK_DELAY);

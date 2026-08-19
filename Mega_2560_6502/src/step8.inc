@@ -23,8 +23,9 @@ uint8_t vectors[6];
 #define VIA_BASE 0x4000
 
 // --- is_via() — är detta en VIA-adress? ---
+// VIA sitter i fönstret $4000–$7FFF (register speglas var 16:e byte).
 bool is_via(uint16_t addr) {
-  return (addr >= VIA_BASE && addr < VIA_BASE + 16);
+  return (addr >= VIA_BASE && addr < 0x8000);
 }
 
 // --- read_mem() — slå upp minnesvärde ---

@@ -2,17 +2,16 @@
 """bin2h.py — konvertera program.bin till program.h (C-header med byte-array).
 
 Användning:
-    python3 bin2h.py program.bin program.h
+    python3 bin2h.py program.bin program.h [ARRAY_NAMN]
 
 Genererar:
-    const unsigned char PROGRAM[] PROGMEM = { 0xA9, 0xFF, ... };
-    const unsigned int PROGRAM_SIZE = ...;
+    const unsigned char ARRAY_NAMN[] PROGMEM = { 0xA9, 0xFF, ... };
+    const unsigned int ARRAY_NAMN_SIZE = ...;
 """
 
 import sys
-import os
 
-def bin2h(bin_path, h_path):
+def bin2h(bin_path, h_path, arrname="PROGRAM"):
     with open(bin_path, 'rb') as f:
         data = f.read()
 
@@ -22,7 +21,7 @@ def bin2h(bin_path, h_path):
     lines.append('')
     lines.append('#include <avr/pgmspace.h>')
     lines.append('')
-    lines.append(f'const unsigned char PROGRAM[] PROGMEM = {{')
+    lines.append(f'const unsigned char {arrname}[] PROGMEM = {{')
 
     hex_bytes = []
     for i, b in enumerate(data):
@@ -34,7 +33,7 @@ def bin2h(bin_path, h_path):
         lines.append('    ' + ', '.join(hex_bytes))
 
     lines.append('};')
-    lines.append(f'const unsigned int PROGRAM_SIZE = {len(data)};')
+    lines.append(f'const unsigned int {arrname}_SIZE = {len(data)};')
     lines.append('')
 
     with open(h_path, 'w') as f:
@@ -43,7 +42,8 @@ def bin2h(bin_path, h_path):
     print(f'bin2h: {bin_path} ({len(data)} bytes) → {h_path}')
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print(f'Användning: {sys.argv[0]} program.bin program.h')
+    if len(sys.argv) not in (3, 4):
+        print(f'Användning: {sys.argv[0]} program.bin program.h [ARRAY_NAMN]')
         sys.exit(1)
-    bin2h(sys.argv[1], sys.argv[2])
+    name = sys.argv[3] if len(sys.argv) == 4 else 'PROGRAM'
+    bin2h(sys.argv[1], sys.argv[2], name)

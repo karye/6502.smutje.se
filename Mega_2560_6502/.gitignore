@@ -3,5 +3,6 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
-src/program.o
-src/program.bin
+asm/*.o
+asm/*.bin
+__pycache__/

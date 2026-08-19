@@ -292,7 +292,7 @@
           <tr class="bg-gray-100"><td class="p-2 font-bold" colspan="4">— ström och kontroll</td></tr>
           <tr><td class="p-2">8</td><td class="p-2"><span class="signal">VDD</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
           <tr><td class="p-2">21</td><td class="p-2"><span class="signal">VSS</span></td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
-          <tr><td class="p-2">37</td><td class="p-2"><span class="signal">PHI2</span></td><td class="p-2"><strong>Arduino D2</strong></td><td class="p-2">Klocka — 20 Hz fyrkantsvåg</td></tr>
+          <tr><td class="p-2">37</td><td class="p-2"><span class="signal">PHI2</span></td><td class="p-2"><strong>Arduino D2</strong></td><td class="p-2">Klocka — 500 Hz fyrkantsvåg</td></tr>
           <tr><td class="p-2">34</td><td class="p-2"><span class="signal">R/W</span></td><td class="p-2"><strong>Arduino D3</strong>, <strong>VIA</strong> pin 22, SRAM /WE</td><td class="p-2">Read/Write — alla kretsar behöver veta</td></tr>
           <tr><td class="p-2">40</td><td class="p-2"><span class="signal">/RESET</span></td><td class="p-2"><strong>Arduino D4</strong>, <strong>VIA</strong> pin 34</td><td class="p-2">Reset</td></tr>
           <tr><td class="p-2">2</td><td class="p-2"><span class="signal">RDY</span></td><td class="p-2">+5V via 10kΩ</td><td class="p-2">Ready — HÖG = kör</td></tr>
@@ -443,8 +443,9 @@ bool debug_pulse = false;   // Styr loggutskrift i pulse()
 bool is_sram(uint16_t addr) { return addr &lt;= SRAM_END; }
 
 // --- is_via() — hanteras av fysisk W65C22 ---
+// VIA sitter i fönstret $4000–$7FFF (register speglas var 16:e byte).
 bool is_via(uint16_t addr) {
-  return (addr &gt;= VIA_BASE &amp;&amp; addr &lt; VIA_BASE + 16);
+  return (addr &gt;= VIA_BASE &amp;&amp; addr &lt; 0x8000);
 }
 
 // --- read_mem() — Arduino svarar bara utanför SRAM/VIA ---

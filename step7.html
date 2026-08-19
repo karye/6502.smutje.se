@@ -293,7 +293,7 @@
         <tbody class="divide-y">
           <tr><td class="p-2">8</td><td class="p-2"><span class="signal">VDD</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning</td></tr>
           <tr><td class="p-2">21</td><td class="p-2"><span class="signal">VSS</span></td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
-          <tr><td class="p-2">37</td><td class="p-2"><span class="signal">PHI2</span></td><td class="p-2"><strong>Arduino D2</strong></td><td class="p-2">Klocka — Arduino genererar 20 Hz fyrkantsvåg</td></tr>
+          <tr><td class="p-2">37</td><td class="p-2"><span class="signal">PHI2</span></td><td class="p-2"><strong>Arduino D2</strong></td><td class="p-2">Klocka — Arduino genererar 500 Hz fyrkantsvåg</td></tr>
           <tr><td class="p-2">34</td><td class="p-2"><span class="signal">R/W</span></td><td class="p-2"><strong>Arduino D3</strong> + <strong>VIA pin 22</strong></td><td class="p-2">Talar om för alla kretsar om CPU:n läser eller skriver</td></tr>
           <tr><td class="p-2">40</td><td class="p-2"><span class="signal">/RESET</span></td><td class="p-2"><strong>Arduino D4</strong> + <strong>VIA pin 34</strong></td><td class="p-2">Kontrollerad reset — båda kretsarna startar samtidigt</td></tr>
           <tr><td class="p-2">9–16, 17–20, 22–25</td><td class="p-2"><span class="signal">A0–A15</span></td><td class="p-2"><strong>Arduino A0–A15</strong> + VIA + 74HC00</td><td class="p-2">Adressbuss — alla kretsar delar samma 16 linjer</td></tr>
@@ -559,10 +559,10 @@ uint8_t vectors[6];      // $FFFA–$FFFF
 #define VIA_BASE 0x4000
 
 // --- is_via() — är detta en VIA-adress? ---
-// VIA sitter på $4000–$400F. Arduino ska INTE svara här —
-// den fysiska W65C22-kretsen hanterar dessa adresser själv.
+// VIA sitter i fönstret $4000–$7FFF (register speglas var 16:e byte).
+// Arduino ska INTE svara här — den fysiska W65C22-kretsen gör det.
 bool is_via(uint16_t addr) {
-  return (addr &gt;= VIA_BASE &amp;&amp; addr &lt; VIA_BASE + 16);
+  return (addr &gt;= VIA_BASE &amp;&amp; addr &lt; 0x8000);
 }
 
 // --- read_mem() — slå upp ett minnesvärde ---
@@ -803,7 +803,7 @@ void setup() {
   for (int i = 0; i &lt; 5; i++) pulse();
   digitalWrite(RESB, HIGH);
 
-  // ~2000 cykler för det stora 4-radersprogrammet (ca 40 sek vid 20 Hz)
+  // ~2000 cykler för det stora 4-radersprogrammet (ca 4 sek vid 500 Hz)
   for (int i = 0; i &lt; 2000; i++) pulse();
 }
 
@@ -874,7 +874,7 @@ W $4000  ← VIA: 3D  (=)
         <p><strong>2. Ser inga $4xxx-adresser?</strong> Dubbelkolla <strong>74HC00</strong>-kopplingen och att <strong>VIA</strong>:ns bussanslutningar sitter rätt.</p>
         <p><strong>3. Mät med multimeter:</strong></p>
         <ul class="list-disc pl-5 space-y-1">
-          <li><span class="signal">PHI2</span> (<strong>CPU</strong> pin 37): ~2.<span class="signal">5V</span> medel (20 Hz fyrkant)</li>
+          <li><span class="signal">PHI2</span> (<strong>CPU</strong> pin 37): ~2.<span class="signal">5V</span> medel (500 Hz fyrkant)</li>
           <li><span class="signal">BE</span> (<strong>CPU</strong> pin 36): >4.8V</li>
           <li><strong>VIA</strong> <span class="signal">/CS2</span> (pin 23): ska gå LÅG vid <code>$4000</code>–<code>$7FFF</code></li>
           <li><strong>VIA</strong> <span class="signal">VDD</span> (pin 20): >4.8V</li>

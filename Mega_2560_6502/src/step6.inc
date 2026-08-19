@@ -46,7 +46,7 @@ void pulse() {
   digitalWrite(PHI2, LOW);
   delay(CLOCK_DELAY);
 
-  uint16_t a = (PINK << 0) | (PINF << 8);
+  uint16_t a = (PINF << 0) | (PINK << 8);
   bool rw = digitalRead(RWB);
   uint8_t data = 0;
 

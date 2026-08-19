@@ -1,6 +1,6 @@
 // W65C02 8-bitarsdator — dispatcher
-// Välj steg via platformio.ini build_flags: env:step1 … env:step7
-// Default (inget definierat) = steg 7
+// Välj steg via platformio.ini build_flags: env:step1 … env:step11
+// Default (inget definierat) = steg 9
 
 #if defined(STEP1)
   #include "step1.inc"
@@ -20,6 +20,10 @@
   #include "step8.inc"
 #elif defined(STEP9)
   #include "step9.inc"
+#elif defined(STEP10)
+  #include "step10.inc"
+#elif defined(STEP11)
+  #include "step11.inc"
 #else
-  #include "step8.inc"
+  #include "step9.inc"
 #endif
