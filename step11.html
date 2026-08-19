@@ -45,6 +45,8 @@
 
     <h1>Städad adressrymd</h1>
 
+    <p class="text-gray-600 italic mb-6">En dator som fungerar men har en stökig adressrymd stör mig. Att se hela 64 KB falla på plats — RAM nedtill, I/O i mitten, ROM upptill — är det snyggaste avslut ett bygge kan få.</p>
+
     <!-- Mål -->
     <section class="mb-8 text-gray-700 space-y-3">
       <h2>Mål</h2>
@@ -410,6 +412,11 @@ W $8000  ← VIA: 3D         (tecknet "=")
           <li><strong>Busskrockar?</strong> Två enheter kan svara samtidigt om avkodningen är fel. Mät <span class="signal">/CE</span> och <span class="signal">/CS2</span> medan <strong>CPU</strong>:n läser — exakt en ska vara LÅG.</li>
           <li><strong>Programmet kraschar vid <code>$8000</code>?</strong> Länkskriptet placerade kod i <strong>VIA</strong>-fönstret. Kontrollera <code>program.cfg</code> — <strong>ROM</strong> ska börja på <code>$C000</code>, inte tidigare.</li>
         </ul>
+    </section>
+
+    <section class="mb-8 text-gray-700 space-y-3">
+      <h2>Vad händer härnäst?</h2>
+      <p>Där står den: en dator du byggt och förstår från första pulsen till sista adressen. Härifrån finns bara nya vägar — avbrott, fler minneskretsar, ett eget operativsystem… eller en helt egen maskin, från grunden.</p>
     </section>
 
     <div class="flex gap-4 mt-8">
