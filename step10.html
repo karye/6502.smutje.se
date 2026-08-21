@@ -295,7 +295,8 @@
       <p><strong>AT28C256</strong> har inbyggd själv-timing. För att bränna en byte sätter du adress och data, drar <span class="signal">/WE</span> låg, väntar minst 10 millisekunder (vi använder 10 för marginal), och drar <span class="signal">/WE</span> hög igen. Kretsen sköter resten internt. För att läsa tillbaka drar du <span class="signal">/OE</span> låg och läser <span class="signal">PINA</span> — precis som med <strong>SRAM</strong>.</p>
       <p>Verifieringen läser tillbaka varje byte och jämför med originaldatan. Om något inte stämmer rapporteras adressen och de två värdena. Annars: "OK — 32768 bytes verifierade".</p>
     
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
+    <details class="codeblock"><summary><span class="chev">&#9656;</span> EEPROM-programmeraren — EEPROM_programmer.ino <span class="lines">· 139 rader</span></summary>
+<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 10 — EEPROM-programmerare (andra Arduino Mega)
 // ==============================================================
@@ -435,13 +436,15 @@ void loop() {
   // Tom — allt sker i setup()
 }
 </code></pre>
+</details>
   </section>
 
   <!-- upload_eeprom.py -->
   <section class="mb-8 text-gray-700 space-y-3">
     <h2>Python-skript — skicka .bin-fil till programmeraren</h2>
     <p>Ett enkelt Python 3-skript som läser <code>program.bin</code> och skickar det sida för sida över serieporten. Kräver <code>pyserial</code> (<code>pip install pyserial</code>).</p>
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-python">#!/usr/bin/env python3
+    <details class="codeblock"><summary><span class="chev">&#9656;</span> Python-skript — upload_eeprom.py <span class="lines">· 59 rader</span></summary>
+<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-python">#!/usr/bin/env python3
 """upload_eeprom.py — skicka .bin-fil till AT28C256 EEPROM-programmerare."""
 
 import serial
@@ -501,6 +504,7 @@ if __name__ == '__main__':
         sys.exit(1)
     upload(sys.argv[1], sys.argv[2])
 </code></pre>
+</details>
   </section>
 
   <!-- Kod: dator-Arduino -->
@@ -511,7 +515,8 @@ if __name__ == '__main__':
       <p>Arduinon är nu reducerad till <em>klockgenerator, reset-kontroll och seriell diagnostik</em>. Alla minnesarrayer utom <code>vectors[6]</code> är borta. Vektorn på <code>$FFFA–$FFFF</code> ligger sist i <strong>EEPROM</strong>-bilden — <code>.segment "VECTORS"</code> i assembler-koden placerar dem där.</p>
       <p>Koden nedan är baserad på steg 9 men med <code>is_eeprom()</code> istället för <code>program[]</code>. <code>read_mem()</code> returnerar 0 för <strong>EEPROM</strong>-adresser — <strong>Arduino</strong> rör dem inte.</p>
     
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
+    <details class="codeblock"><summary><span class="chev">&#9656;</span> Datorns Arduino — step10.inc <span class="lines">· 124 rader</span></summary>
+<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 10 — EEPROM som ROM
 // ==============================================================
@@ -636,6 +641,7 @@ void loop() {
   pulse();
 }
 </code></pre>
+</details>
   </section>
 
   <!-- Exempel på körning -->

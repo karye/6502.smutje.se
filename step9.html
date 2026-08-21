@@ -415,7 +415,8 @@
       <h3>Vad som är nytt jämfört med steg 7–8</h3>
       <p><strong>62256</strong> <strong>SRAM</strong>-chip, utökad <strong>74HC00</strong>-avkodning (U4C+U4D för <strong>SRAM</strong>). I koden: <code>is_sram()</code>, utökade villkor i <code>pulse()</code>/<code>read_mem()</code>/<code>write_mem()</code>, tvåfasigt programflöde i <code>setup()</code>, och Fibonacci-programmet byggt med ca65. <code>ram[1024]</code> från tidigare steg är borta — den har ersatts av äkta kisel.</p>
     
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
+    <details class="codeblock"><summary><span class="chev">&#9656;</span> Arduino-kod — step9.inc <span class="lines">· 304 rader</span></summary>
+<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // Steg 9 — Riktigt RAM (62256 32KB SRAM)
 // Baserat på steg 7: först visa 4-raders text via VIA/LCD,
 // sedan vänta på knapptryck, kör RAM-test.
@@ -720,6 +721,7 @@ void loop() {
   }
 }
 </code></pre>
+</details>
   </section>
 
   <!-- 6502 Fibonacci-program -->
@@ -758,7 +760,8 @@ void loop() {
         </table>
       </div>
     
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-x86asm">; ================================================================
+    <details class="codeblock"><summary><span class="chev">&#9656;</span> 6502-programmet — program_fib.asm <span class="lines">· 235 rader</span></summary>
+<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-x86asm">; ================================================================
 ; Fibonacci-program för 6502 — VIA LCD
 ; ================================================================
 ; Räkna ut Fibonacci-sekvensen och visa varje tal på LCD.
@@ -994,6 +997,7 @@ txt_fib:
     .word $0000       ; NMI   — oanvänd
     .word reset       ; RESET — pekar på $8000
     .word $0000       ; IRQ   — oanvänd</code></pre>
+</details>
     <p>Komplett assembler-kod: <code>Mega_2560_6502/asm/program_fib.asm</code>. Byggs med <code>ca65 + ld65 → program_fib.h → inkluderas av step9.inc</code>.</p>
   </section>
 

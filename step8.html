@@ -163,7 +163,8 @@
       <h2>PlatformIO-byggskript</h2>
       <p><code>scripts/build_asm.py</code> är en <em>pre-build hook</em> som PlatformIO kör före C++-kompileringen. Den anropar ca65, ld65 och bin2h.py i sekvens, konfigurerad i <code>platformio.ini</code>:</p>
         <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">extra_scripts = pre:scripts/build_asm.py</pre>
-      <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-python"># Byggscript för PlatformIO — anropas före C++-kompilering
+      <details class="codeblock"><summary><span class="chev">&#9656;</span> Byggskriptet — build_asm.py <span class="lines">· 52 rader</span></summary>
+<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-python"># Byggscript för PlatformIO — anropas före C++-kompilering
 # Kör ca65 + ld65 för att assemblera program_hello.asm → program_hello.h
 
 Import("env")
@@ -216,10 +217,12 @@ def build_asm(target, source, env):
 
 # Registrera som pre-build hook
 env.AddPreAction("buildprog", build_asm)</code></pre>
+</details>
 
       <h3>bin2h.py — binär till C-header</h3>
       <p>Konverterar <code>program_hello.bin</code> till <code>PROGRAM[]</code> (en <code>PROGMEM</code>-array) som <code>main.cpp</code> inkluderar.</p>
-      <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-python">#!/usr/bin/env python3
+      <details class="codeblock"><summary><span class="chev">&#9656;</span> Byggskriptet — bin2h.py <span class="lines">· 39 rader</span></summary>
+<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-python">#!/usr/bin/env python3
 """bin2h.py — konvertera program_hello.bin till program.h (C-header med byte-array)."""
 
 import sys
@@ -259,6 +262,7 @@ if __name__ == '__main__':
         print(f'Användning: {sys.argv[0]} program_hello.bin program.h')
         sys.exit(1)
     bin2h(sys.argv[1], sys.argv[2])</code></pre>
+</details>
     </section>
 <section class="mb-8 text-gray-700 space-y-3">
 <h2>Så här använder du det</h2>
@@ -284,7 +288,8 @@ if __name__ == '__main__':
         <p>De två subrutinerna är programmets verkliga arbetshästar. <code>lcd_command</code> skickar ett kommando till <strong>LCD</strong>:n: den lägger kommandobyten på PORTB, sätter <span class="signal">RS</span>=0 och <span class="signal">E</span>=1, och drar sedan <span class="signal">E</span> till 0 — den fallande flanken får <strong>LCD</strong>:n att läsa. <code>lcd_data</code> gör exakt samma sak, men med <span class="signal">RS</span>=1 för att signalera att byten är ett tecken, inte ett kommando. Båda anropas med <code>JSR</code> (Jump to Subroutine) och återvänder med <code>RTS</code> — <strong>6502</strong>:ans motsvarighet till funktionsanrop. Strängarna skrivs ut tecken för tecken i en loop: X-registret räknar genom strängen, <code>LDA line1,x</code> hämtar nästa tecken, och när en nolla dyker upp vet programmet att strängen är slut.</p>
         <p>Det fina med att ha programmet i en separat <code>.asm</code>-fil är att du kan ändra och experimentera utan att röra <strong>Arduino</strong>-koden. Byt ut texten i <code>line1</code> mot ditt eget namn, kör <code>pio run -e step8 -t upload</code>, och inom sekunder visar <strong>LCD</strong>:n din nya text. Assemblerkoden är kommenterad på svenska så att varje instruktion förklarar sig själv — läs den som en receptbok, rad för rad, så förstår du exakt vad processorn gör i varje ögonblick.</p>
       
-      <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-x86asm">; ================================================================
+      <details class="codeblock"><summary><span class="chev">&#9656;</span> 6502-programmet — program_hello.asm <span class="lines">· 151 rader</span></summary>
+<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-x86asm">; ================================================================
 ; 6502-program för steg 8 — VIA LCD
 ; ================================================================
 ; Det här programmet körs på 6502-processorn, inte på Arduino!
@@ -436,6 +441,7 @@ line2: .byte "Hello from W65C02!", 0
     .word $0000       ; NMI   — används inte
     .word reset       ; RESET — här börjar programmet ($8000)
     .word $0000       ; IRQ   — används inte</code></pre>
+</details>
       <p>Komplett assembler-kod: <code>Mega_2560_6502/asm/program_hello.asm</code>.</p>
     </section>
 <!-- Arduino-kod -->
@@ -474,7 +480,8 @@ line2: .byte "Hello from W65C02!", 0
         <h3>Vad som är nytt jämfört med steg 7</h3>
         <p>Ingen ny hårdvara. I koden: <code>#include "program_hello.h"</code>, <code>PROGRAM[]</code>, <code>PROGRAM_SIZE</code>, och <code>pgm_read_byte()</code>. I byggkedjan: <code>ca65</code>, <code>ld65</code>, <code>bin2h.py</code>, <code>build_asm.py</code>. Det här är samma verktyg som användes för att bygga spel till NES och program till Apple II — professionella verktyg för en hobbyprocessor.</p>
       
-      <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
+      <details class="codeblock"><summary><span class="chev">&#9656;</span> Arduino-kod — step8.inc <span class="lines">· 125 rader</span></summary>
+<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 8 — assembler-bygge med ca65
 // ==============================================================
@@ -600,6 +607,7 @@ void loop() {
   pulse();
 }
 </code></pre>
+</details>
     </section>
 <!-- Minneskarta -->
 <section class="mb-8">

@@ -72,4 +72,11 @@
     }, { rootMargin: '-15% 0px -70% 0px' });
     spyTargets.forEach(function (h) { spy.observe(h); });
   }
+
+  // Öppna alla kollapsbara kodrutor vid utskrift
+  if ('onbeforeprint' in window) {
+    window.addEventListener('beforeprint', function () {
+      document.querySelectorAll('details.codeblock').forEach(function (d) { d.open = true; });
+    });
+  }
 })();
