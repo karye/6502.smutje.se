@@ -4,18 +4,18 @@ En dator som fungerar men har en stökig adressrymd stör mig. Att se hela 64 KB
 
 ## Mål
 
-I steg 10 fick vi en fristående dator — men adressrymden var inte vacker. VIA:ns 16 bytes på $4000 klippte av SRAM-minnet mitt i, och den övre halvan av 62256-chippet ($4000–$7FFF) låg helt oanvänd. Det kändes slarvigt.
+I steg 10 fick vi en fristående dator — men adressrymden var inte vacker. VIA:ns 16 bytes på `$4000` klippte av SRAM-minnet mitt i, och den övre halvan av 62256-chippet (`$4000`–`$7FFF`) låg helt oanvänd. Det kändes slarvigt.
 
-Nu städar vi upp. SRAM utökas till hela 32 KB ($0000–$7FFF) genom att ansluta A14 — hela 62256-chippet används äntligen. VIA:n flyttas till $8000–$BFFF, ett 16 KB-stort I/O-fönster i mitten av adressrymden, precis som I/O-portar sitter på riktiga 6502-datorer (Apple II hade I/O på $C000, C64 på $D000).
+Nu städar vi upp. SRAM utökas till hela 32 KB (`$0000`–`$7FFF`) genom att ansluta `A14` — hela 62256-chippet används äntligen. VIA:n flyttas till `$8000`–`$BFFF`, ett 16 KB-stort I/O-fönster i mitten av adressrymden, precis som I/O-portar sitter på riktiga 6502-datorer (Apple II hade I/O på `$C000`, C64 på `$D000`).
 
 Resultatet är en adressrymd utan dött utrymme: RAM längst ner, ROM i mitten och I/O i ett fönster högst upp. Det här är den klassiska 6502-layouten — nu har vi byggt den själva.
 
 ## Nya komponenter
 
-Inga nya kretsar! Det här steget handlar om att omkoppla det vi redan har. Du behöver bara en enda NAND-grind (¼ av en 74HC00) för hela den nya adressavkodningen. Dessutom en extra kopplingstråd för SRAM:ns A14 och en för EEPROM:ets A14.
+Inga nya kretsar! Det här steget handlar om att *omkoppla det vi redan har*. Du behöver bara en enda NAND-grind (¼ av en 74HC00) för hela den nya adressavkodningen. Dessutom en extra kopplingstråd för SRAM:ns `A14` och en för EEPROM:ets `A14`.
 | Antal | Komponent | Används till |
 |---|---|---|
-| 1 | **74HC00** (en grind, ¼ av chippet) | EEPROM /CE = NAND(A15, A14) |
+| 1 | 74HC00 (en grind, ¼ av chippet) | EEPROM /CE = NAND(A15, A14) |
 | 1 | Kopplingstråd | SRAM A14 (pin 1) → CPU A14 — öppnar den andra halvan av 62256 |
 | — | Kopplingstrådar (omkoppling) | Flytta VIA:ns /CS2 och EEPROM:ets /CE till nya avkodningssignaler |
 
@@ -31,83 +31,83 @@ Allt handlar om vilken enhet som får prata på bussen. Tre enheter, tre chip se
 
 ### Gamla kartan (steg 10) — problemen
 
-✗ SRAM bara 16 KB: 62256 är ett 32 KB-chip, men A14 var inte ansluten. Den övre halvan låg död.
+✗ SRAM bara 16 KB: 62256 är ett 32 KB-chip, men `A14` var inte ansluten. Den övre halvan låg död.
 
-✗ VIA klippte av minnet: 16 bytes på $4000 mitt i adressrymden delade RAM:et i två — $0000–$3FFF använt, $4000–$7FFF dött.
+✗ VIA klippte av minnet: 16 bytes på `$4000` mitt i adressrymden delade RAM:et i två — `$0000`–`$3FFF` använt, `$4000`–`$7FFF` dött.
 
-✗ EEPROM-avkodning enkel: bara NOT A15 — fungerade, men kunde inte samexistera med VIA på samma sida.
+✗ EEPROM-avkodning enkel: bara NOT `A15` — fungerade, men kunde inte samexistera med VIA på samma sida.
 
 ### Nya kartan (steg 11)
 
-✓ SRAM 32 KB ($0000–$7FFF): A14 ansluts, /CE = A15 direkt (aktivt låg) — hela chippet aktivt när A15=0.
+✓ SRAM 32 KB (`$0000`–`$7FFF`): `A14` ansluts, `/CE` = `A15` direkt (aktivt låg) — hela chippet aktivt när `A15`=0.
 
-✓ VIA på $8000–$BFFF: A15 → CS1 (aktivt hög), A14 → /CS2 (aktivt låg) — inga grindar alls, kretsens egna chip-selects gör jobbet.
+✓ VIA på `$8000`–`$BFFF`: `A15` → `CS1` (aktivt hög), `A14` → `/CS2` (aktivt låg) — *inga grindar alls*, kretsens egna chip-selects gör jobbet.
 
-✓ EEPROM på $C000–$FFFF: /CE = NAND(A15, A14) — en enda grind, och A14 kopplas även till EEPROM:ets A14 så chippet läser sin övre halva.
+✓ EEPROM på `$C000`–`$FFFF`: `/CE` = NAND(`A15`, `A14`) — en enda grind, och `A14` kopplas även till EEPROM:ets `A14` så chippet läser sin övre halva.
 
 ### Sanningstabell — vem svarar på vilken adress?
 
 Varje enhet har en egen region — inga fönster, inga speglingar mellan enheter. Adressavkodningen är bara fyra kablar och en NAND-grind.
 | Adressintervall | A15 | A14 | SRAM /CE | VIA CS1·/CS2 | EEPROM /CE | Vem svarar |
 |---|---|---|---|---|---|---|
-| $0000–$7FFF | 0 | – | LÅG ✓ | – | HÖG | **SRAM** |
-| $8000–$BFFF | 1 | 0 | HÖG | AKTIV ✓ | HÖG | **VIA** |
-| $C000–$FFFF | 1 | 1 | HÖG | – | LÅG ✓ | **EEPROM** |
+| $0000–$7FFF | 0 | – | LÅG ✓ | – | HÖG | SRAM |
+| $8000–$BFFF | 1 | 0 | HÖG | AKTIV ✓ | HÖG | VIA |
+| $C000–$FFFF | 1 | 1 | HÖG | – | LÅG ✓ | EEPROM |
 | VIA: CS1 = A15 (aktivt hög) och /CS2 = A14 (aktivt låg) — aktiveras när A15=1 och A14=0. A0–A3 går till RS0–RS3 och väljer register; de speglas var 16:e byte i fönstret. EEPROM: A14 kopplas också till chippets A14 så det läser övre halvan. |  |  |  |  |  |  |
 
 ## Kopplingar
 
 Här är vad som ändras jämfört med steg 10. Allt annat — ström, klocka, reset, adress-/databuss till SRAM och EEPROM — är oförändrat.
 
-### SRAM — nu med A14
+### SRAM — nu med `A14`
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
-| 1 | `A14` | **CPU A14** (NY!) | Öppnar den andra halvan av 62256 — SRAM blir 32 KB |
-| 20 | `/CE` | **CPU `A15` direkt** (aktivt låg) | LÅG när A15=0 — hela nedre halvan, ingen grind behövs |
+| 1 | `A14` | CPU A14 (NY!) | Öppnar den andra halvan av 62256 — SRAM blir 32 KB |
+| 20 | `/CE` | CPU `A15` direkt (aktivt låg) | LÅG när A15=0 — hela nedre halvan, ingen grind behövs |
 
-### VIA — flyttad till $8000
+### VIA — flyttad till `$8000`
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
-| 23 | `/CS2` | **CPU `A14` direkt** (aktivt låg) | LÅG när A14=0 → VIA vid $8000–$BFFF |
-| 24 | `CS1` | **CPU `A15` direkt** (aktivt hög) | HÖG när A15=1 → övre halvan |
-| 38–35 | `RS0–RS3` | **CPU A0–A3** (oförändrad) | Väljer register — de speglas var 16:e byte i fönstret |
+| 23 | `/CS2` | CPU `A14` direkt (aktivt låg) | LÅG när A14=0 → VIA vid $8000–$BFFF |
+| 24 | `CS1` | CPU `A15` direkt (aktivt hög) | HÖG när A15=1 → övre halvan |
+| 38–35 | `RS0–RS3` | CPU A0–A3 (oförändrad) | Väljer register — de speglas var 16:e byte i fönstret |
 
-### EEPROM — övre halvan ($C000–$FFFF)
+### EEPROM — övre halvan (`$C000`–`$FFFF`)
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
-| 20 | `/CE` | **NAND-grindens utgång** (74HC00 pin 3) | LÅG när A15=1 och A14=1 → $C000–$FFFF |
-| 1 | `A14` | **CPU `A14`** | EEPROM läser sin övre halva — $C000–$FFFF |
+| 20 | `/CE` | NAND-grindens utgång (74HC00 pin 3) | LÅG när A15=1 och A14=1 → $C000–$FFFF |
+| 1 | `A14` | CPU `A14` | EEPROM läser sin övre halva — $C000–$FFFF |
 
 ### Adressavkodning — en enda NAND-grind
 
-Här är tricket: kretsarnas egna chip-select-pinnar gör avkodningen. SRAM:s /CE är aktivt låg, och VIA:n har två chip-selects med motsatt polaritet — CS1 (pin 24, aktivt hög) och /CS2 (pin 23, aktivt låg). Då matchar adressbitarna kretsarna direkt, och bara EEPROM:s /CE behöver en NAND-grind. Aktiveringslogiken finns i sanningstabellen i Adressavkodning-sektionen ovan, och de fyra direktanslutningarna — SRAM /CE, VIA CS1//CS2 och EEPROM A14 — står i kretstabellerna ovan. Här visas bara NAND-grinden. Samma väg som Steve Wozniak använde i Apple II och som Ben Eater visade i sin klassiska 6502-serie.
+Här är tricket: kretsarnas egna chip-select-pinnar gör avkodningen. SRAM:s `/CE` är aktivt låg, och VIA:n har *två* chip-selects med motsatt polaritet — `CS1` (pin 24, aktivt hög) och `/CS2` (pin 23, aktivt låg). Då matchar adressbitarna kretsarna direkt, och bara EEPROM:s `/CE` behöver en NAND-grind. Aktiveringslogiken finns i sanningstabellen i Adressavkodning-sektionen ovan, och de fyra direktanslutningarna — SRAM `/CE`, VIA `CS1`/`/CS2` och EEPROM `A14` — står i kretstabellerna ovan. Här visas bara NAND-grinden. Samma väg som *Steve Wozniak* använde i Apple II och som *Ben Eater* visade i sin klassiska 6502-serie.
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
 | 74HC00 — endast en NAND-grind |  |  |  |
-| 1, 2 | `A15`, `A14` (in) | **CPU `A15`**, **CPU `A14`** | NAND(`A15`, `A14`) — HÖG när någon är 0 |
-| 3 | EEPROM `/CE` (ut) | **AT28C256 pin 20** | LÅG när A15=1 och A14=1 → $C000–$FFFF |
+| 1, 2 | `A15`, `A14` (in) | CPU `A15`, CPU `A14` | NAND(`A15`, `A14`) — HÖG när någon är 0 |
+| 3 | EEPROM `/CE` (ut) | AT28C256 pin 20 | LÅG när A15=1 och A14=1 → $C000–$FFFF |
 | 14, 7 | VCC, GND | +5V, GND | Strömmatning |
 
 > [!NOTE] 🗺️ Minnestarta · se step11.html
 
 ## Arduino-kod
 
-Ändringarna i Arduinon är minimala — bara tre konstanter och en villkorsändring i is_eeprom(). Koden vet nu att SRAM täcker $0000–$7FFF, VIA bor på $8000 och EEPROM på $C000. Allt annat är tri-state för fysiska kretsar.
+Ändringarna i Arduinon är minimala — bara tre konstanter och en villkorsändring i `is_eeprom()`. Koden vet nu att SRAM täcker `$0000`–`$7FFF`, VIA bor på `$8000` och EEPROM på `$C000`. Allt annat är tri-state för fysiska kretsar.
 > [!NOTE] 📦 Arduino-kod — step11.inc · 121 rader · se step11.html
 
 ## Länkskript — program.cfg
 
-I steg 8 skapade vi program.cfg — länkaren ld65:s karta över minnet. Den talar om var i adressrymden koden hamnar. Nu uppdateras den: ROM:en ligger nu rent på $C000–$FFFF (16 KB) — inga fönster eller gap längre.
+I steg 8 skapade vi `program.cfg` — länkaren ld65:s karta över minnet. Den talar om var i adressrymden koden hamnar. Nu uppdateras den: ROM:en ligger nu rent på `$C000`–`$FFFF` (16 KB) — inga fönster eller gap längre.
 
 ### Så här gör du
 
-1. Öppna asm/program.cfg i ditt PlatformIO-projekt — samma fil som skapades i steg 8.
+1. Öppna `asm/program.cfg` i ditt PlatformIO-projekt — samma fil som skapades i steg 8.
 1. Ersätt innehållet med koden nedan och spara.
-1. Bygg projektet — build_asm.py skickar filen till ld65 automatiskt (-C program.cfg). Inget att köra manuellt.
+1. Bygg projektet — `build_asm.py` skickar filen till ld65 automatiskt (`-C program.cfg`). Inget att köra manuellt.
 1. Assembler-filen behöver inga ändringar — segmenten nedan matchar den.
 > [!NOTE] 📦 Länkskript — program.cfg · 16 rader · se step11.html
 
-Koden läggs i $C000–$FFFF (ROM, 16 KB). Reset-vektorn ligger som alltid på $FFFA–$FFFF.
+Koden läggs i `$C000`–`$FFFF` (ROM, 16 KB). Reset-vektorn ligger som alltid på `$FFFA`–`$FFFF`.
 
 ## Exempel på körning
 
@@ -133,24 +133,24 @@ W $8000  ← VIA: 3D         (tecknet "=")
 
 LCD-displayen (16×2)
 
-Samma program som steg 8–10, men VIA:n adresseras nu på $8000 istället för $4000.
+Samma program som steg 8–10, men VIA:n adresseras nu på `$8000` istället för `$4000`.
 
-Lägg märke till skillnaden mot steg 10: SRAM-skrivningar kan nu ske var som helst i $0000–$7FFF, VIA:n svarar på $8000 och EEPROM på $C000. Bussloggen visar tydligt vilken enhet som pratar.
+Lägg märke till skillnaden mot steg 10: SRAM-skrivningar kan nu ske var som helst i `$0000`–`$7FFF`, VIA:n svarar på `$8000` och EEPROM på `$C000`. Bussloggen visar tydligt vilken enhet som pratar.
 
 ### Prova själv
 
-- Mät /CE på SRAM (pin 20) och EEPROM (pin 20) samt CS1//CS2 på VIA:n medan du stegar — exakt en enhet ska vara aktiv varje klockcykel.
-- Prova att byta plats på CS1 och /CS2 (A15 och A14) och se hur avkodningen bryts.
+- Mät `/CE` på SRAM (pin 20) och EEPROM (pin 20) samt `CS1`/`/CS2` på VIA:n medan du stegar — exakt en enhet ska vara aktiv varje klockcykel.
+- Prova att byta plats på `CS1` och `/CS2` (A15 och A14) och se hur avkodningen bryts.
 
 ## Om det inte fungerar
 
 Här är några saker att kontrollera:
 
-- CPU:n läser $FFFC/$FFFD men hoppar till fel adress? EEPROM:ets /CE är förmodligen inte rätt avkodat. Kontrollera NAND-grinden (74HC00 pin 3) — den måste ge LÅG när A15=1 och A14=1.
-- VIA:n svarar inte på $8000? Kontrollera CS1 (pin 24) = A15 (hög) och /CS2 (pin 23) = A14 (låg) — VIA:n kräver båda samtidigt. Dubbelkolla att RS0–RS3 fortfarande går till A0–A3.
-- SRAM fortfarande bara 16 KB? A14 (SRAM pin 1) är inte ansluten. Utan den kan processorn inte nå $4000–$7FFF.
-- Busskrockar? Två enheter kan svara samtidigt om avkodningen är fel. Mät /CE och /CS2 medan CPU:n läser — exakt en ska vara LÅG.
-- Programmet kraschar vid $8000? Länkskriptet placerade kod i VIA-fönstret. Kontrollera program.cfg — ROM ska börja på $C000, inte tidigare.
+- CPU:n läser `$FFFC`/`$FFFD` men hoppar till fel adress? EEPROM:ets `/CE` är förmodligen inte rätt avkodat. Kontrollera NAND-grinden (74HC00 pin 3) — den måste ge LÅG när `A15`=1 och `A14`=1.
+- VIA:n svarar inte på `$8000`? Kontrollera `CS1` (pin 24) = `A15` (hög) och `/CS2` (pin 23) = `A14` (låg) — VIA:n kräver båda samtidigt. Dubbelkolla att `RS0–RS3` fortfarande går till `A0–A3`.
+- SRAM fortfarande bara 16 KB? `A14` (SRAM pin 1) är inte ansluten. Utan den kan processorn inte nå `$4000`–`$7FFF`.
+- Busskrockar? Två enheter kan svara samtidigt om avkodningen är fel. Mät `/CE` och `/CS2` medan CPU:n läser — exakt en ska vara LÅG.
+- Programmet kraschar vid `$8000`? Länkskriptet placerade kod i VIA-fönstret. Kontrollera `program.cfg` — ROM ska börja på `$C000`, inte tidigare.
 
 ## Vad händer härnäst?
 

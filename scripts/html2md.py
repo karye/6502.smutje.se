@@ -98,11 +98,8 @@ class Html2Md(HTMLParser):
         else:
             self.inline.append(s)
 
-    def _inline_rm(self, marker):
-        for i in range(len(self.inline) - 1, -1, -1):
-            if self.inline[i] == marker:
-                del self.inline[i]
-                return
+    def _inline_close(self, marker):
+        """Stängande marker — läggs till i samma mål som öppningen."""
         t = self._cell_target()
         if t is not None:
             self.cell += marker
@@ -202,7 +199,7 @@ class Html2Md(HTMLParser):
             self.in_svg = True
             self.svg_label = d.get('aria-label', 'diagram')
         elif tag in ('strong', 'b'):
-            self._inline_add('**')
+            pass   # fetstil tas bort — designkonvention i HTML, inte innehåll
         elif tag in ('em', 'i'):
             self._inline_add('*')
         elif tag == 'span':
@@ -252,7 +249,7 @@ class Html2Md(HTMLParser):
                 self.emit('```' + lang + '\n' + code + '\n```\n')
         elif tag == 'code':
             if not self.in_pre and not (self.in_details_code and not self.summary_mode):
-                self._inline_rm('`')
+                self._inline_close('`')
         elif tag == 'table':
             self.in_table = False
             self._emit_table()
@@ -288,13 +285,13 @@ class Html2Md(HTMLParser):
                 label = self.svg_label.replace(' pinout', '').replace('pinout', '').strip() or 'Diagram'
                 self.emit('> [!NOTE] 🧩 ' + label + ' · se ' + self.page + '.html\n')
         elif tag in ('strong', 'b'):
-            self._inline_rm('**')
+            pass   # fetstil borttagen
         elif tag in ('em', 'i'):
-            self._inline_rm('*')
+            self._inline_close('*')
         elif tag == 'span':
             if self.span_signal:
                 if self.span_signal.pop():
-                    self._inline_rm('`')
+                    self._inline_close('`')
         elif tag == 'a':
             self._inline_rm_a()
         elif tag == 'br':

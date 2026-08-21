@@ -4,13 +4,13 @@ En uppslagsplats för alla ord du möter i serien — förklaringar som är kort
 
 ## Bussar och signaler
 
-Adressbuss — 16 ledningar (A0–A15) som talar om var processorn vill läsa eller skriva. Värdet på bussen är en adress, t.ex. $8000.
+Adressbuss — 16 ledningar (A0–A15) som talar om var processorn vill läsa eller skriva. Värdet på bussen är en adress, t.ex. `$8000`.
 
 Databuss — 8 dubbelriktade ledningar (D0–D7) som bär själva datan mellan kretsarna.
 
-R/W (Read/Write) — signalen som talar om ifall processorn läser (HÖG) eller skriver (LÅG). Pinnen på processorn heter RWB.
+R/W (Read/Write) — signalen som talar om ifall processorn läser (HÖG) eller skriver (LÅG). Pinnen på processorn heter `RWB`.
 
-Klocka (PHI2) — pulsen som driver processorn. W65C02S är statisk CMOS: klockan kan stoppas hur länge som helst utan att tillståndet försvinner.
+Klocka (`PHI2`) — pulsen som driver processorn. W65C02S är *statisk CMOS*: klockan kan stoppas hur länge som helst utan att tillståndet försvinner.
 
 Tri-state — ett läge där en krets inte driver en ledning alls (hög impedans), så att någon annan kan göra det i stället.
 
@@ -22,17 +22,17 @@ Chip select — en ingång som talar om för en krets om just den ska svara på 
 
 ## Minne
 
-Adressrymd — alla 65 536 möjliga adresser ($0000–$FFFF) som processorn kan nå.
+Adressrymd — alla 65 536 möjliga adresser (`$0000`–`$FFFF`) som processorn kan nå.
 
-Reset-vektor — adresserna $FFFC/$FFFD där processorn efter reset läser var programmet börjar.
+Reset-vektor — adresserna `$FFFC`/`$FFFD` där processorn efter reset läser var programmet börjar.
 
-Hex — hexadecimala tal, bas 16, med prefixet $. $FF = 255, $8000 = 32 768.
+Hex — hexadecimala tal, bas 16, med prefixet `$`. `$FF` = 255, `$8000` = 32 768.
 
-Little-endian — ordningen där en 16-bitars adress lagras med låg byte först ($8000 skrivs 00 80).
+Little-endian — ordningen där en 16-bitars adress lagras med låg byte först (`$8000` skrivs `00 80`).
 
-Zero page — minnesområdet $0000–$00FF; nås med kortare och snabbare instruktioner.
+Zero page — minnesområdet `$0000`–`$00FF`; nås med kortare och snabbare instruktioner.
 
-Stacken — minnesområdet $0100–$01FF där JSR/PHA/RTS automatiskt sparar och hämtar data.
+Stacken — minnesområdet `$0100`–`$01FF` där `JSR`/`PHA`/`RTS` automatiskt sparar och hämtar data.
 
 RAM / SRAM — arbetsminne som försvinner när strömmen bryts. 62256 är 32 KB SRAM.
 
@@ -48,17 +48,17 @@ Opcode — den första byten i en instruktion; talet som talar om vad processorn
 
 Operand — de följande 0–2 byten; data eller adress som instruktionen behöver.
 
-Assembler — mänskligt läsbar 6502-kod (LDX, STA…) som översätts till maskinkod.
+Assembler — mänskligt läsbar 6502-kod (`LDX`, `STA`…) som översätts till maskinkod.
 
-ca65 / ld65 — assembler och länkare från cc65-verktygslådan; bygger .asm till .bin.
+ca65 / ld65 — assembler och länkare från cc65-verktygslådan; bygger `.asm` till `.bin`.
 
-Label — ett namn på en minnesadress i assembler, t.ex. reset: eller fib_loop.
+Label — ett namn på en minnesadress i assembler, t.ex. `reset:` eller `fib_loop`.
 
-Subrutin — ett namngivet kodblock som anropas med JSR och återvänder med RTS.
+Subrutin — ett namngivet kodblock som anropas med `JSR` och återvänder med `RTS`.
 
 Carry-flagga — en minnesbit som minns om förra additionen rymdes; grunden för 16-bitars räkning i en 8-bitars CPU.
 
-Branch — ett villkorligt hopp som beror på en flagga (BEQ, BCC, BNE…).
+Branch — ett villkorligt hopp som beror på en flagga (`BEQ`, `BCC`, `BNE`…).
 
 ## Kretsar
 
