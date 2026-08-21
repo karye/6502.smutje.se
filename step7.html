@@ -562,7 +562,8 @@
       <p><strong>W65C22</strong> <strong>VIA</strong>, <strong>74HC00</strong>, omkoppling av <strong>LCD</strong> från <strong>Arduino</strong> till <strong>VIA</strong>. I koden: <code>is_via()</code>, <code>program[2048]</code>, utökad <code>read_mem()</code>/<code>write_mem()</code>, och programladdningen med <code>next++</code>-tricket. Inget <code>LiquidCrystal</code>-bibliotek längre — <strong>LCD</strong>:n styrs helt av <strong>6502</strong>-assemblerkoden som Arduinon laddar in.</p>
     </div>
     <p>Komplett <strong>Arduino</strong>-kod för steg 7:</p>
-    <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
+    <details class="codeblock"><summary><span class="chev">&#9656;</span> Arduino-kod — step7.inc <span class="lines">· 277 rader</span></summary>
+<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 #include &lt;Arduino.h&gt;
 
 // ==============================================================
@@ -840,6 +841,7 @@ void loop() {
   pulse();
 }
 </code></pre>
+</details>
   </section>
 
   <!-- Exempel på körning -->

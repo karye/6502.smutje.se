@@ -225,7 +225,8 @@
             <code>loop()</code> gör nu det tunga jobbet: läsa portregister, skifta ihop adressen, skriva ut.
             <code>setup()</code> har fått en reset-sekvens — den viktigaste nyheten i detta steg.</p>
 
-          <pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
+          <details class="codeblock"><summary><span class="chev">&#9656;</span> Arduino-kod — step2.inc <span class="lines">· 68 rader</span></summary>
+<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 2 — adressbuss och reset-sekvens
 // ==============================================================
@@ -294,6 +295,7 @@ void loop() {
   Serial.println(addr, HEX);   // Adress i hexadecimalt format
 }
 </code></pre>
+</details>
         </section>
 
         <!-- Exempel på körning -->
