@@ -40,6 +40,11 @@ En oscillator är en komplett klockkrets i en kapsel: kristallen och förstärka
 
 1 MHz är samma fart som original-Apple II:n — snabbt nog att kännas som en riktig dator, långsamt nog att följa med i vad som händer.
 
+## 74HC393 — pinout
+
+DIP-14-kapsel. Två oberoende 4-bitars ripple-räknare (1 och 2). `1Q3` är den utgång vi använder — 16 MHz ÷16 = 1 MHz till `PHI2`.
+> [!NOTE] 🧩 74HC393 · se step12.html
+
 ## Kopplingar
 
 Tre små kretsar att koppla: oscillatorn, delaren och reset-kretsen. Allt annat — ström, bussar, SRAM, VIA, EEPROM — är oförändrat från steg 11.

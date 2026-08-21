@@ -103,6 +103,62 @@
       <p>1 MHz är samma fart som original-Apple II:n — snabbt nog att kännas som en riktig dator, långsamt nog att följa med i vad som händer.</p>
     </section>
 
+
+    <!-- 74HC393 pinout -->
+    <section class="mb-8">
+      <h2>74HC393 — pinout</h2>
+      <p>DIP-14-kapsel. Två oberoende 4-bitars ripple-räknare (1 och 2). <span class="signal">1Q3</span> är den utgång vi använder — 16 MHz ÷16 = <strong>1 MHz</strong> till <span class="signal">PHI2</span>.</p>
+      <div class="flex justify-center">
+<svg viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto" role="img" aria-label="74HC393 pinout">
+<style>.p{font-family:ui-monospace,monospace;font-size:13px}.chip{font-family:ui-monospace,monospace;font-size:16px;font-weight:bold}.pn{font-family:ui-monospace,monospace;font-size:10px;fill:#6b7280}</style>
+<rect x="10" y="10" width="680" height="160" rx="12" fill="#1f2937"/>
+<rect x="300" y="25" width="120" height="130" rx="6" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="chip" x="360.0" y="95.0" text-anchor="middle" fill="#ffffff">74HC393</text>
+<path d="M300,30.785714285714285 L293.5,30.785714285714285 Q290,30.785714285714285 290,34.285714285714285 L290,34.285714285714285 Q290,37.785714285714285 293.5,37.785714285714285 L300,37.785714285714285 Z" fill="#eab308"/>
+<text class="pn" x="306" y="37.285714285714285">1</text>
+<text class="p" x="272" y="38.285714285714285" text-anchor="end" fill="#93c5fd">1CLK</text>
+<path d="M300,49.35714285714286 L293.5,49.35714285714286 Q290,49.35714285714286 290,52.85714285714286 L290,52.85714285714286 Q290,56.35714285714286 293.5,56.35714285714286 L300,56.35714285714286 Z" fill="#eab308"/>
+<text class="pn" x="306" y="55.85714285714286">2</text>
+<text class="p" x="272" y="56.85714285714286" text-anchor="end" fill="#fca5a5">1MR</text>
+<path d="M300,67.92857142857143 L293.5,67.92857142857143 Q290,67.92857142857143 290,71.42857142857143 L290,71.42857142857143 Q290,74.92857142857143 293.5,74.92857142857143 L300,74.92857142857143 Z" fill="#eab308"/>
+<text class="pn" x="306" y="74.42857142857143">3</text>
+<text class="p" x="272" y="75.42857142857143" text-anchor="end" fill="#86efac">1Q0</text>
+<path d="M300,86.5 L293.5,86.5 Q290,86.5 290,90.0 L290,90.0 Q290,93.5 293.5,93.5 L300,93.5 Z" fill="#eab308"/>
+<text class="pn" x="306" y="93.0">4</text>
+<text class="p" x="272" y="94.0" text-anchor="end" fill="#86efac">1Q1</text>
+<path d="M300,105.07142857142858 L293.5,105.07142857142858 Q290,105.07142857142858 290,108.57142857142858 L290,108.57142857142858 Q290,112.07142857142858 293.5,112.07142857142858 L300,112.07142857142858 Z" fill="#eab308"/>
+<text class="pn" x="306" y="111.57142857142858">5</text>
+<text class="p" x="272" y="112.57142857142858" text-anchor="end" fill="#86efac">1Q2</text>
+<path d="M300,123.64285714285714 L293.5,123.64285714285714 Q290,123.64285714285714 290,127.14285714285714 L290,127.14285714285714 Q290,130.64285714285714 293.5,130.64285714285714 L300,130.64285714285714 Z" fill="#eab308"/>
+<text class="pn" x="306" y="130.14285714285714">6</text>
+<text class="p" x="272" y="131.14285714285714" text-anchor="end" fill="#fde047" font-weight="bold">1Q3</text>
+<path d="M300,142.21428571428572 L293.5,142.21428571428572 Q290,142.21428571428572 290,145.71428571428572 L290,145.71428571428572 Q290,149.21428571428572 293.5,149.21428571428572 L300,149.21428571428572 Z" fill="#eab308"/>
+<text class="pn" x="306" y="148.71428571428572">7</text>
+<text class="p" x="272" y="149.71428571428572" text-anchor="end" fill="#fca5a5">GND</text>
+<path d="M420,30.785714285714285 L426.5,30.785714285714285 Q430,30.785714285714285 430,34.285714285714285 L430,34.285714285714285 Q430,37.785714285714285 426.5,37.785714285714285 L420,37.785714285714285 Z" fill="#eab308"/>
+<text class="pn" x="414" y="37.285714285714285" text-anchor="end">14</text>
+<text class="p" x="438" y="38.285714285714285" fill="#fca5a5">VCC (+5V)</text>
+<path d="M420,49.35714285714286 L426.5,49.35714285714286 Q430,49.35714285714286 430,52.85714285714286 L430,52.85714285714286 Q430,56.35714285714286 426.5,56.35714285714286 L420,56.35714285714286 Z" fill="#eab308"/>
+<text class="pn" x="414" y="55.85714285714286" text-anchor="end">13</text>
+<text class="p" x="438" y="56.85714285714286" fill="#93c5fd">2CLK</text>
+<path d="M420,67.92857142857143 L426.5,67.92857142857143 Q430,67.92857142857143 430,71.42857142857143 L430,71.42857142857143 Q430,74.92857142857143 426.5,74.92857142857143 L420,74.92857142857143 Z" fill="#eab308"/>
+<text class="pn" x="414" y="74.42857142857143" text-anchor="end">12</text>
+<text class="p" x="438" y="75.42857142857143" fill="#fca5a5">2MR</text>
+<path d="M420,86.5 L426.5,86.5 Q430,86.5 430,90.0 L430,90.0 Q430,93.5 426.5,93.5 L420,93.5 Z" fill="#eab308"/>
+<text class="pn" x="414" y="93.0" text-anchor="end">11</text>
+<text class="p" x="438" y="94.0" fill="#86efac">2Q0</text>
+<path d="M420,105.07142857142858 L426.5,105.07142857142858 Q430,105.07142857142858 430,108.57142857142858 L430,108.57142857142858 Q430,112.07142857142858 426.5,112.07142857142858 L420,112.07142857142858 Z" fill="#eab308"/>
+<text class="pn" x="414" y="111.57142857142858" text-anchor="end">10</text>
+<text class="p" x="438" y="112.57142857142858" fill="#86efac">2Q1</text>
+<path d="M420,123.64285714285714 L426.5,123.64285714285714 Q430,123.64285714285714 430,127.14285714285714 L430,127.14285714285714 Q430,130.64285714285714 426.5,130.64285714285714 L420,130.64285714285714 Z" fill="#eab308"/>
+<text class="pn" x="414" y="130.14285714285714" text-anchor="end">9</text>
+<text class="p" x="438" y="131.14285714285714" fill="#86efac">2Q2</text>
+<path d="M420,142.21428571428572 L426.5,142.21428571428572 Q430,142.21428571428572 430,145.71428571428572 L430,145.71428571428572 Q430,149.21428571428572 426.5,149.21428571428572 L420,149.21428571428572 Z" fill="#eab308"/>
+<text class="pn" x="414" y="148.71428571428572" text-anchor="end">8</text>
+<text class="p" x="438" y="149.71428571428572" fill="#86efac">2Q3</text>
+</svg>
+      </div>
+    </section>
     <!-- Kopplingar -->
     <section class="mb-8">
       <h2>Kopplingar</h2>
