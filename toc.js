@@ -79,4 +79,17 @@
       document.querySelectorAll('details.codeblock, details.wiring').forEach(function (d) { d.open = true; });
     });
   }
+
+  // Radnummer i de kollapsbara kodblocken
+  // Körs efter hljs.highlightAll() (toc.js laddas sist). Varje rad i
+  // details.codeblock får en <span class="ln"> med radnumret.
+  Array.prototype.slice.call(document.querySelectorAll('details.codeblock code')).forEach(function (el) {
+    var txt = el.innerHTML;
+    if (txt.slice(-1) === '\n') txt = txt.slice(0, -1);   // sista tomma raden
+    var lines = txt.split('\n');
+    el.innerHTML = lines.map(function (line, i) {
+      var content = line === '' ? '\u00A0' : line;        // tom rad → håll höjden
+      return '<span class="ln-row"><span class="ln">' + (i + 1) + '</span><span class="ln-code">' + content + '</span></span>';
+    }).join('');
+  });
 })();

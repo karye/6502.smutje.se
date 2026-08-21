@@ -162,6 +162,26 @@ details.wiring table {
   box-shadow: none !important;
 }
 
+/* Radnummer i kodblocken */
+details.codeblock code .ln-row {
+  display: flex;
+}
+
+details.codeblock code .ln {
+  flex: 0 0 auto;
+  width: 2.5rem;
+  padding-right: 0.75rem;
+  text-align: right;
+  color: #9ca3af;
+  border-right: 1px solid #e5e7eb;
+  margin-right: 0.75rem;
+  user-select: none;
+}
+
+details.codeblock code .ln-code {
+  flex: 1 1 auto;
+}
+
 /* Utskrift: visa allt utan fälten */
 @media print {
   details.codeblock,
