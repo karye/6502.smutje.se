@@ -92,7 +92,7 @@
       el.innerHTML = lines.map(function (line, i) {
         var content = line === '' ? '\u00A0' : line;        // tom rad → håll höjden
         return '<span class="ln-row"><span class="ln">' + (i + 1) + '</span><span class="ln-code">' + content + '</span></span>';
-      }).join('\n');                                       // radbrytningar mellan raderna
+      }).join('');                                       // ln-row är block — inga radbrytningar behövs
     });
   }
   var firstCode = document.querySelector('details.codeblock code');
