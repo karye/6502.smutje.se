@@ -127,7 +127,7 @@ details.wiring > summary:hover {
 details.codeblock > summary .chev,
 details.wiring > summary .chev {
   color: #eab308;   /* gul accent — samma som pin-dot i SVG:erna */
-  font-size: 1.15rem;   /* större chevron */
+  font-size: 1.4rem;   /* stor chevron */
   line-height: 1;
   transition: transform 0.15s ease;
 }
