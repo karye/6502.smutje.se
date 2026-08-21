@@ -81,15 +81,24 @@
   }
 
   // Radnummer i de kollapsbara kodblocken
-  // Körs efter hljs.highlightAll() (toc.js laddas sist). Varje rad i
-  // details.codeblock får en <span class="ln"> med radnumret.
-  Array.prototype.slice.call(document.querySelectorAll('details.codeblock code')).forEach(function (el) {
-    var txt = el.innerHTML;
-    if (txt.slice(-1) === '\n') txt = txt.slice(0, -1);   // sista tomma raden
-    var lines = txt.split('\n');
-    el.innerHTML = lines.map(function (line, i) {
-      var content = line === '' ? '\u00A0' : line;        // tom rad → håll höjden
-      return '<span class="ln-row"><span class="ln">' + (i + 1) + '</span><span class="ln-code">' + content + '</span></span>';
-    }).join('');
-  });
+  // hljs 11:s highlightAll() är asynkron — vänta tills koden är färgad,
+  // annars slukar hljs våra span:ar och radbrytningarna försvinner.
+  function addCodeLineNumbers() {
+    Array.prototype.slice.call(document.querySelectorAll('details.codeblock code')).forEach(function (el) {
+      if (el.querySelector('.ln-row')) return;      // redan gjort
+      var txt = el.innerHTML;
+      if (txt.slice(-1) === '\n') txt = txt.slice(0, -1);   // sista tomma raden
+      var lines = txt.split('\n');
+      el.innerHTML = lines.map(function (line, i) {
+        var content = line === '' ? '\u00A0' : line;        // tom rad → håll höjden
+        return '<span class="ln-row"><span class="ln">' + (i + 1) + '</span><span class="ln-code">' + content + '</span></span>';
+      }).join('\n');                                       // radbrytningar mellan raderna
+    });
+  }
+  var firstCode = document.querySelector('details.codeblock code');
+  if (firstCode && firstCode.classList.contains('hljs')) {
+    addCodeLineNumbers();      // hljs hann färga klart
+  } else {
+    window.addEventListener('load', addCodeLineNumbers);   // vänta på hljs
+  }
 })();
