@@ -27,6 +27,7 @@
       <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
         <a href="step10.html" class="hover:text-blue-300 transition">Steg 10</a>
         <a href="step11.html" class="hover:text-blue-300 transition">Steg 11</a>
+        <a href="begrepp.html" class="hover:text-blue-300 transition">Begrepp</a>
     </div>
   </div>
 </nav>
@@ -45,6 +46,8 @@
 
 
   <h1>Eget 6502-program</h1>
+
+  <p class="text-gray-600 italic mb-6">Det är en speciell känsla första gången en dator du byggt själv kör ett program du skrivit själv. Nio bytes räcker för att få den känslan.</p>
 
   <!-- Mål -->
   <section class="mb-8 text-gray-700 space-y-3">
@@ -184,7 +187,8 @@
         <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
       </div>
     </div>
-    <p><strong><code>0xEA</code> = <code>NOP</code></strong> — ofarlig fallback. <strong>CPU</strong>:n hoppar över oanvända adresser.</p>
+    <p class="text-xs text-gray-500 mt-2 font-mono"><span class="inline-block w-3 h-3 bg-blue-100 border border-blue-300 align-middle"></span> Arduino-emulerat minne &nbsp; <span class="inline-block w-3 h-3 bg-green-100 border border-green-400 align-middle"></span> RAM/SRAM &nbsp; <span class="inline-block w-3 h-3 bg-yellow-100 border border-yellow-400 align-middle"></span> VIA (I/O) &nbsp; <span class="inline-block w-3 h-3 bg-purple-100 border border-purple-400 align-middle"></span> EEPROM/ROM &nbsp; <span class="inline-block w-3 h-3 bg-gray-100 border border-gray-300 align-middle"></span> oanvänt</p>
+      <p><strong><code>0xEA</code> = <code>NOP</code></strong> — ofarlig fallback. <strong>CPU</strong>:n hoppar över oanvända adresser.</p>
   </section>
 
   <!-- Kod -->
@@ -391,6 +395,11 @@ R $8002  ← tillbaka till INX
 
       <p>För första gången ser du ett <strong>W</strong> i loggen! <strong>CPU</strong>:n <em>skriver</em> till adress <code>$0200</code> — det är <code>STX $0200</code> som sparar X-registrets värde. På <strong>LCD</strong>:ns rad 1 ser du <code>D:$01</code>, <code>D:$02</code>, <code>D:$03</code>… räknaren ökar för varje varv. När den når <code>D:$FF</code> (255) wrappar den till <code>D:$00</code> — X-registret är bara 8 bitar brett.</p>
       <p>Programmet är ynka 9 bytes, men det innehåller redan alla mönster du behöver för att skriva större program: initiering (<code>LDX</code>), beräkning (<code>INX</code>), lagring (<code>STX</code>) och kontrollflöde (<code>JMP</code>). Du har just skrivit ditt första <strong>6502</strong>-program!</p>
+      <h3>Prova själv</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>Låt räknaren börja på 5: ändra <code>LDX #$00</code> till <code>LDX #$05</code> i <code>step6.inc</code> och ladda om.</li>
+        <li>Byt <code>INX</code> mot <code>DEX</code> och se räknaren gå baklänges — den wrappar till 255 efter noll.</li>
+      </ul>
     
   </section>
 
@@ -406,6 +415,11 @@ R $8002  ← tillbaka till INX
       </ul>
     
 
+  </section>
+
+  <section class="mb-8 text-gray-700 space-y-3">
+    <h2>Vad händer härnäst?</h2>
+    <p>Nu har du skrivit maskinkod som datorn verkligen kör. I nästa steg tar processorn över LCD:n helt själv — vi kopplar in en VIA.</p>
   </section>
 
   <div class="flex gap-4 mt-8">

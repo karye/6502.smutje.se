@@ -189,14 +189,14 @@ Kriterium (tillagt av projektägaren): sidorna ska se ut som en serie — samma 
 6. ✅ Print-CSS tillagd i style.css (@media print). SVG:erna hade redan role="img" — ingen ändring behövdes där.
 
 **Innehållsarbete (större insats):**
-7. Jämna ut steg 7: "Så här fungerar en VIA"-sektion + "vad är nytt"-checklista + chunkad maskinkodstabell.
-8. Jämna ut steg 9: tabell över nya instruktioner + spårat exempel (t.ex. 144 → "144").
-9. "Prova själv"-förslag i slutet av varje steg.
-10. Ordlista/begreppssida + "vad du lär dig per steg"-karta + "verktyg och programvara" på index.
-11. Legend för färgkodningen på alla sidor som använder den.
-12. Personlig öppningsrad överst på varje stegsida — samma "jag"-röst som på index.
-13. Framåtblickande avslut (”Vad händer härnäst”) före prev/next-länkarna på varje sida.
-14. Steg 8: sektionsordning så byggkedjan följer berättelsen; steg 7: övergångsmeningar mellan referensblocken.
+7. ✅ Steg 7: ny sektion ”Så här fungerar en VIA” (register = brevlådor, DDR, minnesmappad I/O, chip select, fallande flank) + ”Vad är nytt i det här steget?”-checklista. Maskinkodstabellen var redan chunkad med delrubriker.
+8. ✅ Steg 9: tabell över nya instruktioner (CLC/ADC/BCC/SBC/CMP/PHA/PLA/TXA/DEX/DEY/BNE/zero page) + spårat exempel ”Så här visas 144”.
+9. ✅ ”Prova själv”-förslag i slutet av varje steg (h3 i Exempel på körning) — 11 sidor.
+10. ✅ Ny begrepp.html (5 grupper, ~30 begrepp) + ”Vad du lär dig per steg”-karta och ”Verktyg och programvara” på index; begreppslänk i navet på alla sidor.
+11. ✅ Enhetlig färglegend (blå/grön/gul/lila/grå) i minneskartorna på steg 6–11.
+12. ✅ Personlig öppningsrad överst på varje stegsida — samma ”jag”-röst som på index.
+13. ✅ Framåtblickande avslut (”Vad händer härnäst?”) före prev/next-länkarna på varje sida.
+14. ✅ Steg 8: sektionsordning omstrukturerad så byggkedjan följer berättelsen (”Så här använder du det” fick också sin saknade section-wrapper). Steg 7: förbättrat med två nya sektioner; övergångsmeningar mellan varje enskilt referensblock återstår som kosmetisk finputs.
 15. ✅ Seriellog-blocken i step2/5/8 → standardstilen (text-green-400, rounded-lg, overflow-x-auto).
 16. ✅ ”Om det inte fungerar”-boxen borttagen på step10/11 (nu som övriga sidor, med inledningen ”Här är några saker att kontrollera:”). Konvention: standardsektioner utan box; färgade rutor reserveras för ⚠-varningar (steg 3), byggkedjekort (steg 8) och gammal/ny-jämförelser (steg 11).
 17. ✅ step8: RS/E signal-spans i löptexten. step11:s ”Arduinon” verifierad — bestämd form fetas inte någonstans (samma praxis som steg 3), ingen ändring behövdes.

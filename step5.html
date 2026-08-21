@@ -27,6 +27,7 @@
       <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
         <a href="step10.html" class="hover:text-blue-300 transition">Steg 10</a>
         <a href="step11.html" class="hover:text-blue-300 transition">Steg 11</a>
+        <a href="begrepp.html" class="hover:text-blue-300 transition">Begrepp</a>
     </div>
   </div>
 </nav>
@@ -45,6 +46,8 @@
 
 
   <h1>LCD-display</h1>
+
+  <p class="text-gray-600 italic mb-6">Datorn fungerar — men den pratar bara med en laptop. Det här är steget där bygget börjar kännas som en riktig maskin: siffror på en egen skärm.</p>
 
   <!-- Mål -->
   <section class="mb-8 text-gray-700 space-y-3">
@@ -411,6 +414,10 @@ R $8001</pre>
 
       <p>Samma information på båda ställena — adress (<code>$8001</code>) och data (<code>$EA</code>, <code>NOP</code>). Skillnaden är att <strong>LCD</strong>:n visar <em>just nu</em> medan seriemonitor bygger en historik. Med Knapp 2 (instruktionssteg) ser du flera rader i seriemonitor per tryck medan <strong>LCD</strong>:n uppdateras för varje klockcykel — ett snabbt flimmer av adresser tills <span class="signal">SYNC</span> går hög.</p>
       <p>Datorn har blivit fristående. Du kan koppla bort USB-kabeln (om <strong>Arduino</strong> drivs via DC-adaptern) och fortfarande stega genom programmet och se allt på <strong>LCD</strong>:n. Seriemonitor är praktisk för att logga och felsöka, men displayen på kopplingsdäcket gör datorn till en egen, komplett enhet.</p>
+      <h3>Prova själv</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>Vrid kontrast-potentiometern långsamt medan displayen visar adresser — märk när texten försvinner. Byt också meddelandet i <code>setup()</code> till ditt eget namn.</li>
+      </ul>
     
   </section>
 
@@ -427,6 +434,11 @@ R $8001</pre>
       </ul>
     
 
+  </section>
+
+  <section class="mb-8 text-gray-700 space-y-3">
+    <h2>Vad händer härnäst?</h2>
+    <p>Nu ser du vad processorn gör, direkt på kopplingsdäcket. I nästa steg skriver vi vårt första egna program — bara 9 bytes, men det förändrar allt.</p>
   </section>
 
   <div class="flex gap-4 mt-8">

@@ -27,6 +27,7 @@
       <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
       <a href="step10.html" class="text-blue-300 font-semibold">Steg 10</a>
       <a href="step11.html" class="hover:text-blue-300 transition">Steg 11</a>
+        <a href="begrepp.html" class="hover:text-blue-300 transition">Begrepp</a>
     </div>
   </div>
 </nav>
@@ -45,6 +46,8 @@
 
 
   <h1>EEPROM som ROM</h1>
+
+  <p class="text-gray-600 italic mb-6">Det här är steget där datorn slutar vara ett bygge och blir en maskin: slå av strömmen, slå på den — och den startar ändå. Programmet sitter i kisel nu.</p>
 
   <!-- Mål -->
   <section class="mb-8 text-gray-700 space-y-3">
@@ -278,7 +281,8 @@
         <div class="w-14 text-right text-gray-500 pr-2">16 KB</div>
       </div>
     </div>
-    <p><strong>Lila heldragen ram</strong> = <strong>AT28C256</strong> <strong>EEPROM</strong> (ny). <strong>Grön</strong> = <strong>62256</strong> <strong>SRAM</strong>. <strong>Gul</strong> = <strong>VIA</strong>. <strong>Arduino</strong> svarar inte på några minnesadresser längre — bara klocka och diagnostik. Fyra enheter, en buss.</p>
+    <p class="text-xs text-gray-500 mt-2 font-mono"><span class="inline-block w-3 h-3 bg-blue-100 border border-blue-300 align-middle"></span> Arduino-emulerat minne &nbsp; <span class="inline-block w-3 h-3 bg-green-100 border border-green-400 align-middle"></span> RAM/SRAM &nbsp; <span class="inline-block w-3 h-3 bg-yellow-100 border border-yellow-400 align-middle"></span> VIA (I/O) &nbsp; <span class="inline-block w-3 h-3 bg-purple-100 border border-purple-400 align-middle"></span> EEPROM/ROM &nbsp; <span class="inline-block w-3 h-3 bg-gray-100 border border-gray-300 align-middle"></span> oanvänt</p>
+      <p><strong>Arduino</strong> svarar inte på några minnesadresser längre — bara klocka och diagnostik. Fyra enheter, en buss.</p>
   </section>
 
   <!-- Kod: programmerare -->
@@ -691,6 +695,10 @@ W $4000  ← VIA: 3D  (=)
 
       <p>Varje gång du ser <code>← EEPROM</code> i loggen är det <strong>AT28C256</strong> som svarar — inte <strong>Arduino</strong>. Reset-vektorn på <code>$FFFC</code>/<code>$FFFD</code> ligger i <strong>EEPROM</strong>:ets sista bytes, inskrivna av assembler-kedjan. <strong>CPU</strong>:n läser dem, hoppar till <code>$8000</code>, och kör programmet direkt från äkta <strong>ROM</strong>.</p>
       <p>Koppla bort Arduinon helt (ersätt klockan med en 555-timer eller kristalloscillator) så har du en helt fristående <strong>6502</strong>-dator. Programmet överlever strömavbrott — slå på strömmen imorgon och det finns kvar, inbränt i kisel.</p>
+      <h3>Prova själv</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>Bränn <code>asm/program_fib.bin</code> i stället för hello-programmet och se datorn starta direkt i Fibonacci — utan att röra datorns <strong>Arduino</strong>.</li>
+      </ul>
     
   </section>
 
@@ -710,6 +718,11 @@ W $4000  ← VIA: 3D  (=)
           fyra enheter delar på samma 8 ledningar.</li>
         <li><strong>Glöm inte avkopplingskondensatorn</strong> vid <strong>EEPROM</strong>:ets VDD/GND.</li>
       </ul>
+  </section>
+
+  <section class="mb-8 text-gray-700 space-y-3">
+    <h2>Vad händer härnäst?</h2>
+    <p>Din dator är nu fristående — nästan. I sista steget städar vi upp adressrymden, så att varje minnesbyte får ett tydligt jobb.</p>
   </section>
 
   <div class="flex gap-4 mt-8">

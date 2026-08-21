@@ -26,6 +26,7 @@
           <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
           <a href="step10.html" class="hover:text-blue-300 transition">Steg 10</a>
           <a href="step11.html" class="hover:text-blue-300 transition">Steg 11</a>
+        <a href="begrepp.html" class="hover:text-blue-300 transition">Begrepp</a>
         </div>
       </div>
     </nav>
@@ -251,6 +252,48 @@
           Tre registerläsningar, en villkorssats, och vi vet exakt vad processorn vill göra — redo
           att svara inom samma klockcykel.
         </p>
+      </div>
+    </section>
+
+    <!-- Vad du lär dig per steg -->
+    <section class="mb-8">
+      <h2>Vad du lär dig per steg</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+          <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Steg</th><th class="p-2 text-left">Du lär dig</th><th class="p-2 text-left">Svårighet</th></tr></thead>
+          <tbody class="divide-y">
+            <tr><td class="p-2">1 · Ström och klocka</td><td class="p-2">5V, GND, klocka, lysdiod</td><td class="p-2">Lugn</td></tr>
+            <tr><td class="p-2">2 · Adressbuss</td><td class="p-2">Hex, reset-vektorn, portregister</td><td class="p-2">Lugn</td></tr>
+            <tr><td class="p-2">3 · Databuss</td><td class="p-2">R/W, tri-state, minnesemulering</td><td class="p-2">Medel</td></tr>
+            <tr><td class="p-2">4 · Knappar</td><td class="p-2">SYNC, enstegning, debounce</td><td class="p-2">Lugn</td></tr>
+            <tr><td class="p-2">5 · LCD</td><td class="p-2">Parallell kommunikation, kontrast</td><td class="p-2">Lugn</td></tr>
+            <tr><td class="p-2">6 · Eget program</td><td class="p-2">Maskinkod, opcode/operand, little-endian</td><td class="p-2">Medel</td></tr>
+            <tr><td class="p-2">7 · VIA + LCD</td><td class="p-2">I/O-krets, minnesmappad I/O, adressavkodning</td><td class="p-2">Brant — seriens största kliv</td></tr>
+            <tr><td class="p-2">8 · Assembler</td><td class="p-2">ca65/ld65, labels, subrutiner</td><td class="p-2">Brant</td></tr>
+            <tr><td class="p-2">9 · SRAM</td><td class="p-2">Riktigt minne, chip enable, zero page, carry-aritmetik</td><td class="p-2">Medel–Brant</td></tr>
+            <tr><td class="p-2">10 · EEPROM</td><td class="p-2">ROM, programmering, bränning</td><td class="p-2">Medel</td></tr>
+            <tr><td class="p-2">11 · Adressrymd</td><td class="p-2">Chip select, spegling, minimal avkodning</td><td class="p-2">Brant</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-gray-500 mt-2">Fastnar du på ett ord? Se <a href="begrepp.html" class="text-blue-600 hover:underline">Begrepp och förkortningar</a>.</p>
+    </section>
+
+    <!-- Verktyg och programvara -->
+    <section class="mb-8">
+      <h2>Verktyg och programvara</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+          <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Verktyg</th><th class="p-2 text-left">Används till</th><th class="p-2 text-left">Från steg</th></tr></thead>
+          <tbody class="divide-y">
+            <tr><td class="p-2">Multimeter</td><td class="p-2">Mäta spänningar och kontrollera signaler — felsökningens viktigaste verktyg</td><td class="p-2">1</td></tr>
+            <tr><td class="p-2">Kopplingsdäck + trådar</td><td class="p-2">Bygga kretsen utan lödning</td><td class="p-2">1</td></tr>
+            <tr><td class="p-2">PlatformIO + VS Code</td><td class="p-2">Bygga och ladda upp Arduino-koden</td><td class="p-2">1</td></tr>
+            <tr><td class="p-2">ca65 + ld65</td><td class="p-2">Assemblera 6502-program till binärer</td><td class="p-2">8</td></tr>
+            <tr><td class="p-2">Python + pyserial</td><td class="p-2">Skicka .bin-filer till EEPROM-programmeraren</td><td class="p-2">10</td></tr>
+            <tr><td class="p-2">Arduino IDE</td><td class="p-2">Ladda upp EEPROM-programmeraren (andra Arduinon)</td><td class="p-2">10</td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
 

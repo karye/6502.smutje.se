@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="sv" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Begrepp och förkortningar | W65C02</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/monokai.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+<header class="sticky top-0 z-50 shadow">
+  <nav class="bg-gray-900 text-white">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
+      <a href="index.html" class="font-bold text-lg">W65C02</a>
+      <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+        <a href="index.html" class="hover:text-blue-300 transition">Översikt</a>
+        <a href="step1.html" class="hover:text-blue-300 transition">Steg 1</a>
+        <a href="step2.html" class="hover:text-blue-300 transition">Steg 2</a>
+        <a href="step3.html" class="hover:text-blue-300 transition">Steg 3</a>
+        <a href="step4.html" class="hover:text-blue-300 transition">Steg 4</a>
+        <a href="step5.html" class="hover:text-blue-300 transition">Steg 5</a>
+        <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
+        <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
+        <a href="step8.html" class="hover:text-blue-300 transition">Steg 8</a>
+        <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
+        <a href="step10.html" class="hover:text-blue-300 transition">Steg 10</a>
+        <a href="step11.html" class="hover:text-blue-300 transition">Steg 11</a>
+        <a href="begrepp.html" class="text-blue-300 font-semibold">Begrepp</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="max-w-5xl mx-auto px-4 py-8 lg:flex lg:gap-8">
+
+  <aside class="lg:w-56 lg:shrink-0">
+    <nav aria-label="Innehållsförteckning" class="lg:sticky lg:top-20">
+      <p class="font-semibold text-sm text-gray-700 mb-2">Innehåll</p>
+    </nav>
+  </aside>
+
+  <main class="flex-1 min-w-0">
+    <article>
+
+    <h1>Begrepp och förkortningar</h1>
+
+    <p class="text-gray-600 italic mb-6">En uppslagsplats för alla ord du möter i serien — förklaringar som är korta nog att slå upp mitt i bygget, och tillräckligt djupa för att du ska förstå varför.</p>
+
+    <!-- Bussar och signaler -->
+    <section class="mb-8 text-gray-700 space-y-2">
+      <h2>Bussar och signaler</h2>
+      <p><strong>Adressbuss</strong> — 16 ledningar (A0–A15) som talar om var processorn vill läsa eller skriva. Värdet på bussen är en adress, t.ex. <code>$8000</code>.</p>
+      <p><strong>Databuss</strong> — 8 dubbelriktade ledningar (D0–D7) som bär själva datan mellan kretsarna.</p>
+      <p><strong>R/W (Read/Write)</strong> — signalen som talar om ifall processorn läser (HÖG) eller skriver (LÅG). Pinnen på processorn heter <span class="signal">RWB</span>.</p>
+      <p><strong>Klocka (<span class="signal">PHI2</span>)</strong> — pulsen som driver processorn. W65C02S är <em>statisk CMOS</em>: klockan kan stoppas hur länge som helst utan att tillståndet försvinner.</p>
+      <p><strong>Tri-state</strong> — ett läge där en krets inte driver en ledning alls (hög impedans), så att någon annan kan göra det i stället.</p>
+      <p><strong>Pull-up / pull-down</strong> — ett motstånd till +5V (pull-up) eller GND (pull-down) som håller en signal på en känd nivå när inget annat driver den.</p>
+      <p><strong>Fallande flank</strong> — ögonblicket då en signal går från HÖG till LÅG. LCD:n läser databussen just då.</p>
+      <p><strong>Chip select</strong> — en ingång som talar om för en krets om just den ska svara på bussen just nu.</p>
+    </section>
+
+    <!-- Minne -->
+    <section class="mb-8 text-gray-700 space-y-2">
+      <h2>Minne</h2>
+      <p><strong>Adressrymd</strong> — alla 65 536 möjliga adresser (<code>$0000</code>–<code>$FFFF</code>) som processorn kan nå.</p>
+      <p><strong>Reset-vektor</strong> — adresserna <code>$FFFC</code>/<code>$FFFD</code> där processorn efter reset läser var programmet börjar.</p>
+      <p><strong>Hex</strong> — hexadecimala tal, bas 16, med prefixet <code>$</code>. <code>$FF</code> = 255, <code>$8000</code> = 32 768.</p>
+      <p><strong>Little-endian</strong> — ordningen där en 16-bitars adress lagras med låg byte först (<code>$8000</code> skrivs <code>00 80</code>).</p>
+      <p><strong>Zero page</strong> — minnesområdet <code>$0000</code>–<code>$00FF</code>; nås med kortare och snabbare instruktioner.</p>
+      <p><strong>Stacken</strong> — minnesområdet <code>$0100</code>–<code>$01FF</code> där <code>JSR</code>/<code>PHA</code>/<code>RTS</code> automatiskt sparar och hämtar data.</p>
+      <p><strong>RAM / SRAM</strong> — arbetsminne som försvinner när strömmen bryts. <strong>62256</strong> är 32 KB SRAM.</p>
+      <p><strong>ROM / EEPROM</strong> — beständigt minne. <strong>AT28C256</strong> är 32 KB EEPROM som kan raderas och skrivas om elektriskt.</p>
+      <p><strong>Minnesmappad I/O</strong> — när en I/O-krets svarar på adresser som om den vore minne: att skriva till adressen styr en pinne.</p>
+      <p><strong>Spegling (mirroring)</strong> — när en krets svarar på fler adresser än den behöver, eftersom chip select bara tittar på ett fåtal adressbitar.</p>
+    </section>
+
+    <!-- Program -->
+    <section class="mb-8 text-gray-700 space-y-2">
+      <h2>Program</h2>
+      <p><strong>Opcode</strong> — den första byten i en instruktion; talet som talar om vad processorn ska göra.</p>
+      <p><strong>Operand</strong> — de följande 0–2 byten; data eller adress som instruktionen behöver.</p>
+      <p><strong>Assembler</strong> — mänskligt läsbar 6502-kod (<code>LDX</code>, <code>STA</code>…) som översätts till maskinkod.</p>
+      <p><strong>ca65 / ld65</strong> — assembler och länkare från cc65-verktygslådan; bygger <code>.asm</code> till <code>.bin</code>.</p>
+      <p><strong>Label</strong> — ett namn på en minnesadress i assembler, t.ex. <code>reset:</code> eller <code>fib_loop</code>.</p>
+      <p><strong>Subrutin</strong> — ett namngivet kodblock som anropas med <code>JSR</code> och återvänder med <code>RTS</code>.</p>
+      <p><strong>Carry-flagga</strong> — en minnesbit som minns om förra additionen rymdes; grunden för 16-bitars räkning i en 8-bitars CPU.</p>
+      <p><strong>Branch</strong> — ett villkorligt hopp som beror på en flagga (<code>BEQ</code>, <code>BCC</code>, <code>BNE</code>…).</p>
+    </section>
+
+    <!-- Kretsar -->
+    <section class="mb-8 text-gray-700 space-y-2">
+      <h2>Kretsar</h2>
+      <p><strong>VIA (W65C22)</strong> — I/O-krets med två 8-bitars portar (PA, PB) och kontrollpinnar; sitter på processorns bussar.</p>
+      <p><strong>DDR</strong> — Data Direction Register; bestämmer om varje portpinne är utgång (1) eller ingång (0).</p>
+      <p><strong>Port</strong> — en grupp pinnar som kretsen styr eller avläser som en byte.</p>
+      <p><strong>74HC00</strong> — krets med fyra NAND-grindar (14 pinnar); används här som adressavkodare.</p>
+      <p><strong>LCD</strong> — flytande kristall-display (HD44780-kontroller) med parallell databuss och RS/E-signaler.</p>
+      <p><strong>Avkopplingskondensator</strong> — en liten kondensator (100 nF) nära varje krets som filtrerar bort brus på strömförsörjningen.</p>
+    </section>
+
+    <!-- Bygget -->
+    <section class="mb-8 text-gray-700 space-y-2">
+      <h2>Bygget</h2>
+      <p><strong>Kopplingsdäck</strong> — plåtar med förbundna hål som kopplar ihop komponenter utan lödning.</p>
+      <p><strong>Kopplingstråd</strong> — trådar som förbinder hål på kopplingsdäcket.</p>
+      <p><strong>Multimeter</strong> — instrument för att mäta spänning, ström och resistans; felsökningens viktigaste verktyg.</p>
+    </section>
+
+    <div class="flex gap-4 mt-8">
+      <a href="index.html" class="text-blue-600 hover:underline">← Översikt</a>
+    </div>
+    </article>
+  </main>
+
+</div>
+
+<footer class="border-t bg-white py-6 text-center text-sm text-gray-500">
+  <p><strong>W65C02</strong> 8-bitarsdator · <a href="https://github.com/karye/6502.smutje.se"
+      class="underline hover:text-gray-700">GitHub</a></p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="toc.js"></script>
+</body>
+</html>

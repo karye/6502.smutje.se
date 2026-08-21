@@ -27,6 +27,7 @@
       <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
         <a href="step10.html" class="hover:text-blue-300 transition">Steg 10</a>
         <a href="step11.html" class="hover:text-blue-300 transition">Steg 11</a>
+        <a href="begrepp.html" class="hover:text-blue-300 transition">Begrepp</a>
     </div>
   </div>
 </nav>
@@ -45,6 +46,8 @@
 
 
   <h1>Manuell stegning</h1>
+
+  <p class="text-gray-600 italic mb-6">Att se en processor arbeta i ultrarapid är som att titta på en myrstack: först bara rörelse, sedan mönstret. Med två knappar får du pausknappen på hela datorn.</p>
 
   <!-- Mål -->
   <section class="mb-8 text-gray-700 space-y-3">
@@ -278,6 +281,10 @@ R $8004</pre>
       </div>
         <p>Med <strong>Knapp 1</strong> får du en rad per tryck. Du kan se reset-vektorn hämtas — <code>$FFFC</code>, <code>$FFFD</code> — och sedan följa <strong>CPU</strong>:n när den läser <code>NOP</code>-instruktioner. Med <strong>Knapp 2</strong> körs flera rader samtidigt tills <span class="signal">SYNC</span> går hög, vilket för en <code>NOP</code> (<code>$EA</code>) betyder 2 klockcykler.</p>
       <p>Känslan av att trycka på en knapp och se <strong>CPU</strong>:n ta ett enda steg är svår att beskriva. Du har full kontroll. Du kan stanna hur länge du vill, mäta spänningar, fundera på vad som händer — och sedan trycka igen.</p>
+      <h3>Prova själv</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>Stega genom reset-sekvensen med <strong>Knapp 1</strong> och räkna klockcyklerna — jämför med <strong>Knapp 2</strong>, som stannar vid varje ny opcode (<span class="signal">SYNC</span>).</li>
+      </ul>
     
   </section>
 
@@ -293,6 +300,11 @@ R $8004</pre>
       </ul>
     
 
+  </section>
+
+  <section class="mb-8 text-gray-700 space-y-3">
+    <h2>Vad händer härnäst?</h2>
+    <p>Nu kan du stega genom vilket program som helst. I nästa steg får datorn ett eget ansikte — en LCD-display, så du slipper laptopen.</p>
   </section>
 
   <div class="flex gap-4 mt-8">

@@ -27,6 +27,7 @@
         <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
         <a href="step10.html" class="hover:text-blue-300 transition">Steg 10</a>
         <a href="step11.html" class="text-blue-300 font-semibold">Steg 11</a>
+        <a href="begrepp.html" class="hover:text-blue-300 transition">Begrepp</a>
       </div>
     </div>
   </nav>
@@ -44,6 +45,8 @@
     <article>
 
     <h1>Städad adressrymd</h1>
+
+    <p class="text-gray-600 italic mb-6">En dator som fungerar men har en stökig adressrymd stör mig. Att se hela 64 KB falla på plats — RAM nedtill, I/O i mitten, ROM upptill — är det snyggaste avslut ett bygge kan få.</p>
 
     <!-- Mål -->
     <section class="mb-8 text-gray-700 space-y-3">
@@ -196,7 +199,8 @@
           <div class="w-14 text-right text-gray-500 pr-2">32 KB</div>
         </div>
       </div>
-      <p><strong>Lila</strong> = <strong>EEPROM</strong> (<strong>ROM</strong>). <strong>Gul</strong> = <strong>VIA</strong> (I/O). <strong>Grön</strong> = <strong>SRAM</strong> (<strong>RAM</strong>). Inget oanvänt utrymme — hela 64 KB har ett syfte, och bara en NAND-grind behövdes.</p>
+      <p class="text-xs text-gray-500 mt-2 font-mono"><span class="inline-block w-3 h-3 bg-blue-100 border border-blue-300 align-middle"></span> Arduino-emulerat minne &nbsp; <span class="inline-block w-3 h-3 bg-green-100 border border-green-400 align-middle"></span> RAM/SRAM &nbsp; <span class="inline-block w-3 h-3 bg-yellow-100 border border-yellow-400 align-middle"></span> VIA (I/O) &nbsp; <span class="inline-block w-3 h-3 bg-purple-100 border border-purple-400 align-middle"></span> EEPROM/ROM &nbsp; <span class="inline-block w-3 h-3 bg-gray-100 border border-gray-300 align-middle"></span> oanvänt</p>
+      <p>Inget oanvänt utrymme — hela 64 KB har ett syfte, och bara en NAND-grind behövdes.</p>
     </section>
 
     <!-- Arduino-kod -->
@@ -396,6 +400,11 @@ W $8000  ← VIA: 3D         (tecknet "=")
         </div>
 
         <p>Lägg märke till skillnaden mot steg 10: <strong>SRAM</strong>-skrivningar kan nu ske var som helst i <code>$0000</code>–<code>$7FFF</code>, <strong>VIA</strong>:n svarar på <code>$8000</code> och <strong>EEPROM</strong> på <code>$C000</code>. Bussloggen visar tydligt vilken enhet som pratar.</p>
+      <h3>Prova själv</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>Mät <span class="signal">/CE</span> på <strong>SRAM</strong> (pin 20) och <strong>EEPROM</strong> (pin 20) samt <span class="signal">CS1</span>/<span class="signal">/CS2</span> på <strong>VIA</strong>:n medan du stegar — exakt en enhet ska vara aktiv varje klockcykel.</li>
+        <li>Prova att byta plats på <span class="signal">CS1</span> och <span class="signal">/CS2</span> (A15 och A14) och se hur avkodningen bryts.</li>
+      </ul>
       
     </section>
 
@@ -410,6 +419,11 @@ W $8000  ← VIA: 3D         (tecknet "=")
           <li><strong>Busskrockar?</strong> Två enheter kan svara samtidigt om avkodningen är fel. Mät <span class="signal">/CE</span> och <span class="signal">/CS2</span> medan <strong>CPU</strong>:n läser — exakt en ska vara LÅG.</li>
           <li><strong>Programmet kraschar vid <code>$8000</code>?</strong> Länkskriptet placerade kod i <strong>VIA</strong>-fönstret. Kontrollera <code>program.cfg</code> — <strong>ROM</strong> ska börja på <code>$C000</code>, inte tidigare.</li>
         </ul>
+    </section>
+
+    <section class="mb-8 text-gray-700 space-y-3">
+      <h2>Vad händer härnäst?</h2>
+      <p>Där står den: en dator du byggt och förstår från första pulsen till sista adressen. Härifrån finns bara nya vägar — avbrott, fler minneskretsar, ett eget operativsystem… eller en helt egen maskin, från grunden.</p>
     </section>
 
     <div class="flex gap-4 mt-8">

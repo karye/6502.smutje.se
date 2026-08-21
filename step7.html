@@ -27,6 +27,7 @@
       <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
         <a href="step10.html" class="hover:text-blue-300 transition">Steg 10</a>
         <a href="step11.html" class="hover:text-blue-300 transition">Steg 11</a>
+        <a href="begrepp.html" class="hover:text-blue-300 transition">Begrepp</a>
     </div>
   </div>
 </nav>
@@ -45,6 +46,8 @@
 
 
   <h1>VIA + LCD, styrd av 6502</h1>
+
+  <p class="text-gray-600 italic mb-6">Det här är det stora steget: från att Arduino sköter allt till att processorn själv styr sina egna pinnar. Ta det lugnt och gå steg för steg — när LCD:n vaknar är det värt varenda tråd.</p>
 
   <!-- Mål -->
   <section class="mb-8 text-gray-700 space-y-3">
@@ -77,6 +80,30 @@
         </tbody>
       </table>
     </div>
+  </section>
+
+  <!-- Vad är nytt i detta steg -->
+  <section class="mb-8 text-gray-700 space-y-3">
+    <h2>Vad är nytt i det här steget?</h2>
+    <ul class="list-disc pl-5 space-y-1">
+      <li><strong>VIAn</strong> — en W65C22 som ger processorn 20 egna I/O-pinnar, på samma buss som minnet.</li>
+      <li><strong>Minnesmappad I/O</strong> — att skriva till en adress (<code>$4000</code>) är samma sak som att styra pinnar.</li>
+      <li><strong>Adressavkodning</strong> — 74HC00:ns grindar väljer ut VIAn:s fönster (<code>$4000</code>–<code>$7FFF</code>).</li>
+      <li><strong>LCD direkt från 6502</strong> — processorn styr displayen själv; Arduino är bara minne + klocka.</li>
+      <li><strong>Ett mycket längre program</strong> — LCD-initieringen kräver en hel kommandosekvens, så programmet är tiotals gånger större än i steg 6.</li>
+    </ul>
+  </section>
+
+  <!-- Så här fungerar en VIA -->
+  <section class="mb-8 text-gray-700 space-y-3">
+    <h2>Så här fungerar en VIA</h2>
+    <p>En <strong>VIA</strong> är som ett litet arkiv av brevlådor för elektriska signaler. Processorn skriver och läser på 16 registeradresser (<code>$4000</code>–<code>$400F</code>), och kretsen översätter varje värde till verkliga spänningar på sina pinnar. Tre saker räcker för att förstå allt vi gör här:</p>
+    <ul class="list-disc pl-5 space-y-1">
+      <li><strong>Register = brevlådor.</strong> <code>$4000</code> (PORTB) och <code>$4001</code> (PORTA) är portarna — det värde processorn skriver dit läggs ut på pinnarna. <code>$4002</code>/<code>$4003</code> (DDRB/DDRA) bestämmer riktningen: 1 = utgång, 0 = ingång. Vi sätter <code>$FF</code> = alla 8 pinnar som utgångar.</li>
+      <li><strong>Minnesmappad I/O.</strong> VIAn har inga egna adressbegrepp — den tittar bara på sina chip-select-pinnar (<span class="signal">CS1</span> = HÖG, <span class="signal">/CS2</span> = LÅG). När 74HC00:an gör <span class="signal">/CS2</span> låg vid <code>$4000</code>–<code>$7FFF</code> svarar VIAn på alla adresser i fönstret, som om den vore 16 bytes minne (registren speglas).</li>
+      <li><strong>Skriv = styr, läs = avläs.</strong> När processorn skriver till PORTB läggs värdet ut på LCD:ns datapinnar. När den läser PORTB avläses pinnarnas spänningar.</li>
+    </ul>
+    <p>LCD:ns <em>fallande flank</em> är den sista pusselbiten: displayen läser databussen i ögonblicket då <span class="signal">E</span> (PA2) går från HÖG till LÅG. Därför skriver varje tecken- eller kommandosekvens alltid i tre steg: data till PORTB → <span class="signal">E</span>=1 → <span class="signal">E</span>=0.</p>
   </section>
 
   <!-- Kopplingsschema -->
@@ -436,7 +463,8 @@
         <div class="w-14 text-right text-gray-500 pr-2">256 B</div>
       </div>
     </div>
-    <p><strong><code>0xEA</code> = <code>NOP</code></strong> — ofarlig fallback. <strong>CPU</strong>:n hoppar över oanvända adresser. <strong>Gul markering</strong> = <strong>Arduino</strong> rör inte dessa adresser, den fysiska <strong>VIA</strong>-kretsen svarar.</p>
+    <p class="text-xs text-gray-500 mt-2 font-mono"><span class="inline-block w-3 h-3 bg-blue-100 border border-blue-300 align-middle"></span> Arduino-emulerat minne &nbsp; <span class="inline-block w-3 h-3 bg-green-100 border border-green-400 align-middle"></span> RAM/SRAM &nbsp; <span class="inline-block w-3 h-3 bg-yellow-100 border border-yellow-400 align-middle"></span> VIA (I/O) &nbsp; <span class="inline-block w-3 h-3 bg-purple-100 border border-purple-400 align-middle"></span> EEPROM/ROM &nbsp; <span class="inline-block w-3 h-3 bg-gray-100 border border-gray-300 align-middle"></span> oanvänt</p>
+      <p><strong><code>0xEA</code> = <code>NOP</code></strong> — ofarlig fallback. På VIA-adresserna svarar den fysiska <strong>VIA</strong>-kretsen, inte <strong>Arduino</strong>.</p>
   </section>
 
   <!-- Programmering -->
@@ -862,6 +890,11 @@ W $4000  ← VIA: 3D  (=)
 
       <p>Varje <code>W $4000</code> eller <code>W $4001</code> är <strong>CPU</strong>:n som skriver till <strong>VIA</strong>:ns register — <strong>Arduino</strong> gör ingenting, den fysiska <strong>VIA</strong>-kretsen fångar upp skrivningen och styr <strong>LCD</strong>:n. Texten rullar fram på displayen, tecken för tecken, styrd helt av <strong>6502</strong>-processorn.</p>
       <p>När programmet når slutet hoppar det tillbaka till början och skriver om alltihop. Clear display, skriv text, clear display — i en oändlig loop. Datorn är nu självförsörjande: <strong>CPU</strong>:n styr I/O, <strong>Arduino</strong> levererar bara programkoden och klockan.</p>
+      <h3>Prova själv</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>Ändra rad-strängarna i <code>step7.inc</code> till ditt eget namn och ladda om — <strong>LCD</strong>:n visar din text.</li>
+        <li>Mät <span class="signal">/CS2</span> (VIA pin 23) medan du stegar — den ska vara låg vid <code>$4000</code>–<code>$7FFF</code>.</li>
+      </ul>
     
   </section>
 
@@ -891,6 +924,11 @@ W $4000  ← VIA: 3D  (=)
         </ul>
       
     </section>
+
+  <section class="mb-8 text-gray-700 space-y-3">
+    <h2>Vad händer härnäst?</h2>
+    <p>Nu pratar processorn direkt med omvärlden. I nästa steg lär vi oss skriva programmen på ett riktigt språk — assembler.</p>
+  </section>
 
   <div class="flex gap-4 mt-8">
     <a href="step6.html" class="text-blue-600 hover:underline">← Steg 6</a>
