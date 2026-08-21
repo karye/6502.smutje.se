@@ -14,7 +14,7 @@ import sys, re, os
 from html.parser import HTMLParser
 from html import unescape
 
-PAGES = ['index'] + ['step%d' % i for i in range(1, 12)] + ['begrepp']
+PAGES = ['index'] + ['step%d' % i for i in range(1, 13)] + ['begrepp']
 SKIP = ('header', 'aside', 'footer', 'nav', 'script', 'style')
 VOID = ('img', 'br', 'hr', 'meta', 'input', 'link')
 

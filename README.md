@@ -25,6 +25,11 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 | 1 | 100 nF keramisk kondensator (avkoppling CPU) |
 | 1 | 10 µF elektrolytisk kondensator (strömstabilisering) |
 | 2 | Tryckknappar (klocksteg, instruktionssteg) |
+| 1 | 16 MHz-oscillator (DIL-14) — steg 12 |
+| 1 | 74HC393 (dubbel 4-bitars ripple-räknare) — steg 12 |
+| 1 | Tryckknapp (till) — reset, steg 12 |
+| 1 | 10 kΩ motstånd (till) — reset pull-up, steg 12 |
+| 1 | 10 µF elektrolytisk kondensator (till) — reset-RC, steg 12 |
 | — | Kopplingsdäck + kopplingstråd |
 
 ---
@@ -156,6 +161,7 @@ Steg 7–10 använde VIA på $4000 (register speglas i $4000–$7FFF). Steg 9–
 | 9 | Riktigt RAM (62256 SRAM) | 62256 SRAM |
 | 10 | EEPROM som ROM (AT28C256) | AT28C256 EEPROM, 2:a 74HC00, 2:a Arduino (programmerare) |
 | 11 | Städad adressrymd | — (omkoppling, ingen ny krets) |
+| 12 | Fristående klocka | 16 MHz-oscillator, 74HC393 |
 
 ---
 
@@ -178,7 +184,7 @@ Steg 7–10 använde VIA på $4000 (register speglas i $4000–$7FFF). Steg 9–
 
 ## PlatformIO — växla mellan steg
 
-Alla elva steg finns som separata `.inc`-filer i `src/`. `main.cpp` är en dispatcher som inkluderar rätt fil baserat på `-DSTEPx`.
+Steg 1–11 finns som separata `.inc`-filer i `src/`. `main.cpp` är en dispatcher som inkluderar rätt fil baserat på `-DSTEPx`. Steg 12 är helt fristående — ingen Arduino-kod, programmet bränns i EEPROM:en.
 
 ### I VS Code
 Välj aktiv miljö i PlatformIO-fliken: `env:step1` … `env:step11`, klicka sedan Upload.

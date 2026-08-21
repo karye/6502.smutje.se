@@ -154,4 +154,4 @@ Här är några saker att kontrollera:
 
 ## Vad händer härnäst?
 
-Där står den: en dator du byggt och förstår från första pulsen till sista adressen. Härifrån finns bara nya vägar — avbrott, fler minneskretsar, ett eget operativsystem… eller en helt egen maskin, från grunden.
+Där står den: en dator du byggt och förstår från första pulsen till sista adressen. Men en tråd återstår att klippa — Arduino levererar fortfarande klockan. I steg 12 ersätter vi den med en riktig kristall och låter datorn stå helt på egna ben. Därefter finns bara nya vägar: avbrott, fler minneskretsar, ett eget operativsystem…

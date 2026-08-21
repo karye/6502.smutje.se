@@ -26,7 +26,8 @@
         <a href="step8.html" class="hover:text-blue-300 transition">Steg 8</a>
         <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
         <a href="step10.html" class="hover:text-blue-300 transition">Steg 10</a>
-        <a href="step11.html" class="text-blue-300 font-semibold">Steg 11</a>
+        <a href="step11.html" class="hover:text-blue-300 transition">Steg 11</a>
+        <a href="step12.html" class="hover:text-blue-300 transition">Steg 12</a>
         <a href="begrepp.html" class="hover:text-blue-300 transition">Begrepp</a>
       </div>
     </div>
@@ -356,13 +357,13 @@ void loop() {
       </ol>
       <details class="codeblock"><summary><span class="chev">&#9656;</span> Länkskript — program.cfg <span class="lines">· 16 rader</span></summary>
 <pre class="bg-white text-gray-900 rounded-lg overflow-x-auto text-sm border"><code class="language-cfg">
-; program.cfg — steg 11
-; Kod placeras i $C000–$FFFF (övre 16 KB).
+# program.cfg — steg 11
+# Kod placeras i $C000–$FFFF (övre 16 KB).
 
 MEMORY {
-    ZP:    start = $0000, size = $0100, type = rw;  ; zero page
-    RAM:   start = $0200, size = $7E00, type = rw;  ; ledigt RAM
-    ROM:   start = $C000, size = $4000, type = ro;  ; $C000–$FFFF
+    ZP:    start = $0000, size = $0100, type = rw;  # zero page
+    RAM:   start = $0200, size = $7E00, type = rw;  # ledigt RAM
+    ROM:   start = $C000, size = $4000, type = ro, file = %O, fill = yes;  # $C000–$FFFF (EEPROM)
 }
 
 SEGMENTS {
@@ -435,7 +436,7 @@ W $8000  ← VIA: 3D         (tecknet "=")
 
     <section class="mb-8 text-gray-700 space-y-3">
       <h2>Vad händer härnäst?</h2>
-      <p>Där står den: en dator du byggt och förstår från första pulsen till sista adressen. Härifrån finns bara nya vägar — avbrott, fler minneskretsar, ett eget operativsystem… eller en helt egen maskin, från grunden.</p>
+      <p>Där står den: en dator du byggt och förstår från första pulsen till sista adressen. Men en tråd återstår att klippa — <strong>Arduino</strong> levererar fortfarande klockan. I <strong>steg 12</strong> ersätter vi den med en riktig kristall och låter datorn stå helt på egna ben. Därefter finns bara nya vägar: avbrott, fler minneskretsar, ett eget operativsystem…</p>
     </section>
 
     <div class="flex gap-4 mt-8">

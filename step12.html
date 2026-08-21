@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="sv" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fristående klocka | W65C02</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/monokai.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+<header class="sticky top-0 z-50 shadow">
+  <nav class="bg-gray-900 text-white">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-6">
+      <a href="index.html" class="font-bold text-lg">W65C02</a>
+      <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+        <a href="index.html" class="hover:text-blue-300 transition">Översikt</a>
+        <a href="step1.html" class="hover:text-blue-300 transition">Steg 1</a>
+        <a href="step2.html" class="hover:text-blue-300 transition">Steg 2</a>
+        <a href="step3.html" class="hover:text-blue-300 transition">Steg 3</a>
+        <a href="step4.html" class="hover:text-blue-300 transition">Steg 4</a>
+        <a href="step5.html" class="hover:text-blue-300 transition">Steg 5</a>
+        <a href="step6.html" class="hover:text-blue-300 transition">Steg 6</a>
+        <a href="step7.html" class="hover:text-blue-300 transition">Steg 7</a>
+        <a href="step8.html" class="hover:text-blue-300 transition">Steg 8</a>
+        <a href="step9.html" class="hover:text-blue-300 transition">Steg 9</a>
+        <a href="step10.html" class="hover:text-blue-300 transition">Steg 10</a>
+        <a href="step11.html" class="hover:text-blue-300 transition">Steg 11</a>
+        <a href="step12.html" class="text-blue-300 font-semibold">Steg 12</a>
+        <a href="begrepp.html" class="hover:text-blue-300 transition">Begrepp</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="max-w-5xl mx-auto px-4 py-8 lg:flex lg:gap-8">
+
+  <aside class="lg:w-56 lg:shrink-0">
+    <nav aria-label="Innehållsförteckning" class="lg:sticky lg:top-20">
+      <p class="font-semibold text-sm text-gray-700 mb-2">Innehåll</p>
+    </nav>
+  </aside>
+
+  <main class="flex-1 min-w-0">
+    <article>
+
+    <h1>Fristående klocka</h1>
+
+    <p class="text-gray-600 italic mb-6">Det sista som påminner om Arduino är klockan. Nu byter vi ut den mot en riktig kristall — när datorn sedan startar med strömmen behöver den ingen hjälp alls.</p>
+
+    <!-- Mål -->
+    <section class="mb-8 text-gray-700 space-y-3">
+      <h2>Mål</h2>
+      <p>Sedan steg 10 levererar <strong>EEPROM</strong>:et programmet och <strong>SRAM</strong>:et minnet — men <strong>Arduino</strong> har fortfarande skött <em>klockan</em>. Nu kopplar vi in en riktig klockgenerator: en <strong>16 MHz-oscillator</strong> vars frekvens vi delar ner med en <strong>74HC393</strong> till 1 MHz. En enkel RC-krets sköter reset.</p>
+      <p>När det här steget är klart kan du <strong>koppla bort Arduinon helt</strong>. Slå på strömmen och datorn startar på egen hand — programmet ur <strong>EEPROM</strong>:en, minnet i <strong>SRAM</strong>:en, texten på <strong>LCD</strong>:n. En riktig, fristående <strong>6502</strong>-dator.</p>
+      <p>Men hastigheten förändrar en sak: vid <strong>1 MHz</strong> tar varje instruktion bara några mikrosekunder, och <strong>LCD</strong>:n hinner inte med om programmet inte själv väntar. Därför lär vi oss också <em>tidshantering</em> — delay-subrutiner som ger displayen de pauser den kräver.</p>
+    </section>
+
+    <!-- Nya komponenter -->
+    <section class="mb-8 text-gray-700 space-y-3">
+      <h2>Nya komponenter</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+          <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Antal</th><th class="p-2 text-left">Komponent</th><th class="p-2 text-left">Används till</th></tr></thead>
+          <tbody class="divide-y">
+            <tr><td class="p-2">1</td><td class="p-2">16 MHz-oscillator (DIL-14, 5V)</td><td class="p-2">Klockans källa — ren 16 MHz fyrkantsvåg direkt på utgången</td></tr>
+            <tr><td class="p-2">1</td><td class="p-2"><strong>74HC393</strong> (dubbel 4-bitars ripple-räknare, DIP-14)</td><td class="p-2">Delar 16 MHz → 1 MHz (÷16) för <span class="signal">PHI2</span></td></tr>
+            <tr><td class="p-2">1</td><td class="p-2">Tryckknapp</td><td class="p-2">Manuell reset</td></tr>
+            <tr><td class="p-2">1</td><td class="p-2">10 µF elektrolytisk kondensator</td><td class="p-2">Reset-RC — håller <span class="signal">/RESET</span> låg en stund vid start</td></tr>
+            <tr><td class="p-2">1</td><td class="p-2">10 kΩ motstånd</td><td class="p-2">Pull-up till <span class="signal">/RESET</span></td></tr>
+            <tr><td class="p-2">1</td><td class="p-2">100 nF keramisk kondensator</td><td class="p-2">Avkoppling vid 74HC393:ns VCC/GND</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Kopplingsschema -->
+    <section class="mb-8">
+      <h2>Kopplingsschema</h2>
+      <p>Schemat visar klockkedjan: <strong>oscillatorn</strong> längst till vänster, <strong>74HC393</strong>:an i mitten som delare, och <span class="signal">PHI2</span> ut till <strong>CPU</strong>:n. Resten av datorn (SRAM, VIA, EEPROM) är oförändrad från steg 11.</p>
+      <div class="schematic bg-white rounded-lg shadow p-4">
+        <p class="text-gray-500 italic text-sm">Schema kommer snart — se klockkedjan och kopplingstabellerna nedan så länge.</p>
+      </div>
+    </section>
+
+    <!-- Klockkedjan -->
+    <section class="mb-8 text-gray-700 space-y-3">
+      <h2>Klockkedjan — från 16 MHz till 1 MHz</h2>
+      <p>En <strong>oscillator</strong> är en komplett klockkrets i en kapsel: kristallen och förstärkaren sitter inbyggda, och utgången ger en ren fyrkantsvåg direkt — inget att bygga runt. 16 MHz är för snabbt för <strong>W65C02S</strong> (max 14 MHz), så vi delar ner frekvensen med en <strong>74HC393</strong>.</p>
+      <p>74HC393:an innehåller <em>två</em> oberoende 4-bitars räknare. Varje steg halverar frekvensen, och alla utgångar har 50% arbetscykel — perfekt för <span class="signal">PHI2</span>:</p>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+          <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Utgång</th><th class="p-2 text-left">Delning</th><th class="p-2 text-left">Frekvens</th><th class="p-2 text-left">Användning</th></tr></thead>
+          <tbody class="divide-y">
+            <tr><td class="p-2 font-mono">1Q0 (pin 3)</td><td class="p-2">÷2</td><td class="p-2 font-mono">8 MHz</td><td class="p-2">Snabbast som är säker — men LCD-timing kräver många delay-loopar</td></tr>
+            <tr><td class="p-2 font-mono">1Q1 (pin 4)</td><td class="p-2">÷4</td><td class="p-2 font-mono">4 MHz</td><td class="p-2">Mellanfart</td></tr>
+            <tr><td class="p-2 font-mono">1Q2 (pin 5)</td><td class="p-2">÷8</td><td class="p-2 font-mono">2 MHz</td><td class="p-2">Mellanfart</td></tr>
+            <tr class="bg-yellow-50"><td class="p-2 font-mono">1Q3 (pin 6)</td><td class="p-2">÷16</td><td class="p-2 font-mono">1 MHz</td><td class="p-2"><strong>Vi använder denna</strong> — klassisk 6502-fart, snäll mot LCD:n</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>1 MHz är samma fart som original-Apple II:n — snabbt nog att kännas som en riktig dator, långsamt nog att följa med i vad som händer.</p>
+    </section>
+
+    <!-- Kopplingar -->
+    <section class="mb-8">
+      <h2>Kopplingar</h2>
+      <p>Tre små kretsar att koppla: oscillatorn, delaren och reset-kretsen. Allt annat — ström, bussar, <strong>SRAM</strong>, <strong>VIA</strong>, <strong>EEPROM</strong> — är oförändrat från steg 11.</p>
+
+      <h3>Oscillator (DIL-14, 5V, 16 MHz)</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+          <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+          <tbody class="divide-y">
+            <tr><td class="p-2">14</td><td class="p-2"><span class="signal">VCC</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning — glöm inte 100 nF avkoppling</td></tr>
+            <tr><td class="p-2">7</td><td class="p-2"><span class="signal">GND</span></td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
+            <tr><td class="p-2">8</td><td class="p-2"><span class="signal">OUT</span></td><td class="p-2"><strong>74HC393</strong> pin 1 (<span class="signal">1CLK</span>)</td><td class="p-2">16 MHz fyrkantsvåg till räknaren</td></tr>
+            <tr><td class="p-2">1</td><td class="p-2"><span class="signal">ENA</span></td><td class="p-2">— (lämnas oansluten)</td><td class="p-2">Enable — de flesta moduler kör alltid</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>74HC393 — frekvensdelare</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+          <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+          <tbody class="divide-y">
+            <tr><td class="p-2">1</td><td class="p-2"><span class="signal">1CLK</span></td><td class="p-2">Oscillatorns ut (pin 8)</td><td class="p-2">16 MHz in — räknaren tickar på varje fallande flank</td></tr>
+            <tr><td class="p-2">2</td><td class="p-2"><span class="signal">1MR</span></td><td class="p-2">GND</td><td class="p-2">Master reset — LÅG = räknaren räknar</td></tr>
+            <tr class="bg-yellow-50"><td class="p-2">6</td><td class="p-2"><span class="signal">1Q3</span></td><td class="p-2"><strong>CPU</strong> <span class="signal">PHI2</span> (pin 37)</td><td class="p-2">16 MHz ÷16 = <strong>1 MHz</strong> — datorns nya hjärtslag</td></tr>
+            <tr><td class="p-2">14</td><td class="p-2"><span class="signal">VCC</span></td><td class="p-2">+5V</td><td class="p-2">Strömmatning — 100 nF avkoppling till GND</td></tr>
+            <tr><td class="p-2">7</td><td class="p-2"><span class="signal">GND</span></td><td class="p-2">GND</td><td class="p-2">Systemjord</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Reset-RC — start utan Arduino</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
+          <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Komponent</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
+          <tbody class="divide-y">
+            <tr><td class="p-2">10 kΩ</td><td class="p-2">+5V → <strong>CPU</strong> <span class="signal">/RESET</span> (pin 40)</td><td class="p-2">Pull-up — håller <span class="signal">/RESET</span> HÖG i drift</td></tr>
+            <tr><td class="p-2">10 µF</td><td class="p-2"><strong>CPU</strong> <span class="signal">/RESET</span> → GND</td><td class="p-2">Laddas långsamt vid start → <span class="signal">/RESET</span> hålls LÅG några ms, sedan HÖG</td></tr>
+            <tr><td class="p-2">Knapp</td><td class="p-2"><strong>CPU</strong> <span class="signal">/RESET</span> → GND</td><td class="p-2">Manuell reset — tryck så startar datorn om</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Programmet -->
+    <section class="mb-8 text-gray-700 space-y-3">
+      <h2>Programmet — nu med tidshantering</h2>
+      <p>Programmet är samma LCD-hello som tidigare, men med en viktig skillnad: vid 1 MHz tar en instruktion bara ~2–3 µs, och <strong>HD44780</strong>-displayen kräver pauser mellan kommandon (klartext-rensning tar t.ex. 1,64 ms). Förut, vid 500 Hz, hanns allt med av sig själv — nu måste <strong>6502</strong>-programmet <em>självt</em> vänta.</p>
+      <p>Lösningen är en <code>delay_ms</code>-subrutin med nästlade loopar. Varje varv i den inre loopen tar ~4 cykler ≈ 4 µs; 250 varv ≈ 1 ms. <code>lcd_cmd</code> väntar ~2 ms efter varje kommando, <code>lcd_data</code> ~1 ms efter varje tecken. Displayen får alltid den paus den behöver.</p>
+      <details class="codeblock"><summary><span class="chev">&#9656;</span> Programmet — program_standalone.asm <span class="lines">· 144 rader</span></summary>
+<pre class="bg-white text-gray-900 rounded-lg overflow-x-auto text-sm border"><code class="language-x86asm">
+; ==============================================================
+; Steg 12 — Fristående dator: LCD-hello med tidshantering
+; ==============================================================
+; Körs direkt ur EEPROM:en med riktig kristallklocka (1 MHz).
+; Vid 1 MHz måste programmet själv vänta mellan LCD-kommandona —
+; förut var klockan så långsam (500 Hz) att allt hanns med av sig själv.
+;
+; Adresser (steg 11-minneskartan):
+;   $8000 = VIA PORTB — LCD:ns 8 datapinnar
+;   $8001 = VIA PORTA — bit 0 = RS, bit 2 = E
+;   $8002 = VIA DDRB
+;   $8003 = VIA DDRA
+
+VIA_ORB  = $8000
+VIA_ORA  = $8001
+VIA_DDRB = $8002
+VIA_DDRA = $8003
+
+DELAY_TMP = $10     ; temporär räknare (i SRAM:en, zero page)
+
+.segment &quot;CODE&quot;
+.org $C000
+
+; ================================================================
+; RESET — processorns startpunkt
+; ================================================================
+reset:
+    ; --- Gör VIA-portarna till utgångar ---
+    lda #$FF
+    sta VIA_DDRB
+    sta VIA_DDRA
+
+    ; --- LCD-initiering (8-bitarsläge) ---
+    lda #$30
+    jsr lcd_cmd
+    lda #$30
+    jsr lcd_cmd
+    lda #$30
+    jsr lcd_cmd
+    lda #$38          ; Function set: 8-bit, 2 rader, 5x8
+    jsr lcd_cmd
+    lda #$0C          ; Display ON, cursor OFF
+    jsr lcd_cmd
+    lda #$01          ; Clear display
+    jsr lcd_cmd
+    lda #$06          ; Entry mode: höger, inget skift
+    jsr lcd_cmd
+
+; ================================================================
+; HUVUDLOOP — skriv två rader, rensa, börja om
+; ================================================================
+hello:
+    ; --- Rad 1: &quot;6502 FRISTAENDE&quot; ---
+    lda #$80          ; DDRAM-adress 0 (rad 1)
+    jsr lcd_cmd
+    lda #$01          ; RS = 1 (dataläge)
+    sta VIA_ORA
+    ldx #0
+@l1:
+    lda line1,x
+    beq @l1done
+    jsr lcd_data
+    inx
+    jmp @l1
+@l1done:
+
+    ; --- Rad 2: &quot;1 MHz KRISTALL&quot; ---
+    lda #$C0          ; DDRAM-adress $40 (rad 2)
+    jsr lcd_cmd
+    lda #$01
+    sta VIA_ORA
+    ldx #0
+@l2:
+    lda line2,x
+    beq @l2done
+    jsr lcd_data
+    inx
+    jmp @l2
+@l2done:
+
+    ; --- Vänta, rensa och börja om ---
+    lda #250
+    jsr delay_ms      ; visa texten en stund
+    lda #$01          ; Clear display
+    jsr lcd_cmd
+    jmp hello
+
+; ================================================================
+; SUBRUTIN: lcd_cmd — skicka kommando (RS=0) med väntan
+; ================================================================
+lcd_cmd:
+    sta VIA_ORB       ; kommandobyte → PORTB
+    lda #$04          ; RS=0, E=1
+    sta VIA_ORA
+    lda #$00          ; E=0 — fallande flank → LCD läser
+    sta VIA_ORA
+    lda #2
+    jsr delay_ms      ; ~2 ms — HD44780 kräver paus mellan kommandon
+    rts
+
+; ================================================================
+; SUBRUTIN: lcd_data — skicka tecken (RS=1) med väntan
+; ================================================================
+lcd_data:
+    sta VIA_ORB       ; tecken → PORTB
+    lda #$05          ; RS=1, E=1
+    sta VIA_ORA
+    lda #$01          ; RS=1, E=0 — fallande flank
+    sta VIA_ORA
+    lda #1
+    jsr delay_ms      ; ~1 ms — displayen hinner bearbeta tecknet
+    rts
+
+; ================================================================
+; SUBRUTIN: delay_ms — vänta ungefär A millisekunder vid 1 MHz
+; ================================================================
+; Vid 1 MHz tar varje instruktion ~2–3 cykler ≈ 2–3 µs. Den inre
+; loopen (~4 cykler per varv, 250 varv) ger ~1 ms per yttervarv.
+delay_ms:
+    sta DELAY_TMP
+@outer:
+    lda #250          ; inre räknare
+@inner:
+    sec
+    sbc #1            ; 2 cykler
+    bne @inner        ; 2 cykler — ~4 cykler per varv ≈ 1 ms totalt
+    dec DELAY_TMP
+    bne @outer
+    rts
+
+; ================================================================
+; Strängdata (ren ASCII — HD44780 har inga å/ä/ö)
+; ================================================================
+line1: .byte &quot;6502 FRISTAENDE&quot;, 0
+line2: .byte &quot;1 MHz KRISTALL&quot;, 0
+
+; ================================================================
+; RESET-VEKTOR — processorns startadress ($C000)
+; ================================================================
+.segment &quot;VECTORS&quot;
+.org $FFFA
+    .word $0000       ; NMI — oanvänd
+    .word reset       ; RESET → $C000
+    .word $0000       ; IRQ — oanvänd
+</code></pre>
+</details>
+
+<p>Programmet byggs med ca65 + ld65 och <strong>bränns om i EEPROM:en</strong> med steg 10-programmeraren:</p>
+      <pre class="bg-gray-900 text-green-400 p-3 rounded-lg overflow-x-auto text-sm font-mono">cd Mega_2560_6502
+ca65 -o asm/standalone/program_standalone.o asm/standalone/program_standalone.asm
+ld65 -C asm/standalone/program_standalone.cfg -o asm/standalone/program_standalone.bin asm/standalone/program_standalone.o
+python3 scripts/upload_eeprom.py asm/standalone/program_standalone.bin /dev/ttyACM1</pre>
+      <p>Binären är 16 KB och ligger på EEPROM-adress 0 (= CPU <code>$C000</code>) med vektorer på <code>$3FFA</code> (= <code>$FFFA</code>) — samma minneskarta som steg 11. Länkskriptet <code>program_standalone.cfg</code> finns i <code>asm/standalone/</code>.</p>
+    </section>
+
+    <!-- Arduino-kod -->
+    <section class="mb-8 text-gray-700 space-y-3">
+      <h2>Ingen Arduino-kod</h2>
+      <p>Det här steget har ingen <strong>Arduino</strong>-kod — <strong>Arduino</strong> finns inte med på kopplingsdäcket längre. Allt som återstår av den gamla startmotorn är minnet av hur den hjälpte oss: klockan sköter kristallen nu, reset sköter RC-kretsen, och programmet ligger i <strong>EEPROM</strong>:en.</p>
+    </section>
+
+    <!-- Exempel -->
+    <section class="mb-8 text-gray-700 space-y-3">
+      <h2>Exempel på körning</h2>
+      <p>Slå på strömmen. Inget att ladda upp, inget att ansluta — datorn bara startar. Efter en kort stund (LCD-initieringen) visas:</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <p class="text-xs text-gray-500 mb-1 font-semibold">LCD 16×2 — efter start</p>
+          <div class="bg-green-700 text-green-200 p-3 rounded-lg font-mono text-center shadow-inner">
+            <div class="bg-green-900 text-green-300 px-2 py-0.5 rounded inline-block mb-2 text-xs">LCD 16×2</div>
+            <div class="bg-green-950 rounded p-2">
+              <div>6502 FRISTAENDE</div>
+              <div>1 MHz KRISTALL&nbsp;&nbsp;</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>Texten skrivs om i en loop: visa en stund, rensa, börja om.</li>
+            <li><strong>Stäng av strömmen och slå på igen</strong> — datorn startar direkt ur <strong>EEPROM</strong>:en.</li>
+            <li>Tryck på reset-knappen — datorn startar om utan att strömmen bryts.</li>
+            <li>Koppla bort <strong>Arduino</strong> helt om den fortfarande sitter i — den behövs inte.</li>
+          </ul>
+        </div>
+      </div>
+      <p>Ingen seriemonitor längre: <strong>LCD</strong>:n är datorns enda ansikte utåt.</p>
+      <h3>Prova själv</h3>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>Koppla en lysdiod (med 220 Ω) från <span class="signal">PHI2</span> (pin 37) till <span class="signal">GND</span> — den lyser svagt, eftersom den är på halva tiden (50% arbetscykel vid 1 MHz).</li>
+        <li>Mät <span class="signal">1Q0</span>–<span class="signal">1Q3</span> med multimetern — medelspänningen halveras för varje delningssteg (≈2,5 V, ≈1,25 V, ≈0,6 V, ≈0,3 V).</li>
+        <li>Flytta klockan från <span class="signal">1Q3</span> till <span class="signal">1Q0</span> (8 MHz) — se vad som händer med <strong>LCD</strong>:n: programmets delay-loopar är räknade för 1 MHz, så displayen hinner inte med.</li>
+        <li>Mät <span class="signal">/RESET</span> (pin 40) med multimetern strax efter start — den ska ligga nära 0 V direkt, sedan stiga mot 5 V.</li>
+      </ul>
+    </section>
+
+    <!-- Om det inte fungerar -->
+    <section class="mb-8 text-gray-700 space-y-3">
+      <h2>Om det inte fungerar</h2>
+      <p>Här är några saker att kontrollera:</p>
+      <ul class="list-disc pl-5 space-y-1">
+        <li><strong>Ingen klocka?</strong> Mät oscillatorns ut (pin 8) — en multimeter visar ~2,5 V medel om 16 MHz-pulsen finns. Kontrollera VCC (pin 14) och GND (pin 7).</li>
+        <li><strong>CPU:n startar inte?</strong> Mät <span class="signal">PHI2</span> (pin 37) — ska vara 1 MHz, och <span class="signal">/RESET</span> (pin 40) — ska vara HÖG efter start. Kontrollera reset-RC: 10 kΩ till +5V, 10 µF till GND.</li>
+        <li><strong>LCD:n blank?</strong> Programmet i <strong>EEPROM</strong>:en måste vara rätt version — med delay-loopar. Bränn om med <code>program_standalone.bin</code> (inte hello-programmet från steg 10).</li>
+        <li><strong>Texten skakig eller felaktig?</strong> Kontrollera avkopplingen (100 nF) vid <strong>74HC393</strong>:ns VCC/GND och att <span class="signal">1MR</span> (pin 2) är GND.</li>
+        <li><strong>Busskrockar?</strong> Samma som tidigare: exakt en enhet ska vara aktiv per klockcykel — mät chip-selects medan du stegar.</li>
+      </ul>
+    </section>
+
+    <!-- Vad händer härnäst -->
+    <section class="mb-8 text-gray-700 space-y-3">
+      <h2>Vad händer härnäst?</h2>
+      <p>Datorn står nu helt på egna ben: egen klocka, eget minne, eget program, egen I/O. Härifrån finns bara nya vägar — avbrott (<span class="signal">IRQ</span>), fler minneskretsar, ett tangentbord, eller ett litet operativsystem som du skriver själv. Från en blinkande lysdiod till en fristående dator — hela resan, steg för steg.</p>
+    </section>
+
+    <div class="flex gap-4 mt-8">
+      <a href="step11.html" class="text-blue-600 hover:underline">← Steg 11</a>
+      <a href="index.html" class="text-blue-600 hover:underline">Översikt</a>
+    </div>
+    </article>
+  </main>
+
+</div>
+
+<footer class="border-t bg-white py-6 text-center text-sm text-gray-500">
+  <p><strong>W65C02</strong> 8-bitarsdator · <a href="https://github.com/karye/6502.smutje.se"
+      class="underline hover:text-gray-700">GitHub</a></p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script src="toc.js"></script>
+</body>
+</html>

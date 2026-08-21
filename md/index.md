@@ -68,6 +68,7 @@ Varje gång processorn startar en ny instruktion tänder den SYNC-pinnen. Det ä
 | 9 · SRAM | Riktigt minne, chip enable, zero page, carry-aritmetik | Medel–Brant |
 | 10 · EEPROM | ROM, programmering, bränning | Medel |
 | 11 · Adressrymd | Chip select, spegling, minimal avkodning | Brant |
+| 12 · Fristående klocka | Oscillator, frekvensdelning, tidshantering (delay-loopar) | Medel |
 
 Fastnar du på ett ord? Se [Begrepp och förkortningar](begrepp.html).
 

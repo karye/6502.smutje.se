@@ -74,6 +74,10 @@ LCD — flytande kristall-display (HD44780-kontroller) med parallell databuss oc
 
 Avkopplingskondensator — en liten kondensator (100 nF) nära varje krets som filtrerar bort brus på strömförsörjningen.
 
+Kristalloscillator — en komplett klockkrets i en kapsel (kristall + förstärkare): matning in, ren fyrkantsvåg ut. Här en 16 MHz-oscillator i DIL-14.
+
+Ripple-räknare — en räknare där varje utsteg halverar ingångsfrekvensen (74HC393): 16 MHz → 8, 4, 2 och 1 MHz. Alla utgångar har 50% arbetscykel.
+
 ## Bygget
 
 Kopplingsdäck — plåtar med förbundna hål som kopplar ihop komponenter utan lödning.
