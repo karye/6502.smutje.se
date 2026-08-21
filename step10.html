@@ -200,7 +200,8 @@
     <p>Först programmeraren — en enkel 1:1-koppling. Sedan datorn — fyra enheter på samma buss.</p>
 
     <h3>Programmeraren — Arduino till AT28C256</h3>
-    <div class="overflow-x-auto">
+    <details class="wiring"><summary><span class="chev">&#9656;</span> Programmeraren — Arduino till AT28C256 <span class="lines">· 8 rader</span></summary>
+<div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Arduino</th><th class="p-2 text-left">AT28C256</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
@@ -214,9 +215,11 @@
         </tbody>
       </table>
     </div>
+</details>
 
     <h3>Datorn — EEPROM på bussen</h3>
-    <div class="overflow-x-auto">
+    <details class="wiring"><summary><span class="chev">&#9656;</span> Datorn — EEPROM på bussen <span class="lines">· 7 rader</span></summary>
+<div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Ansluts till</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
@@ -229,11 +232,13 @@
         </tbody>
       </table>
     </div>
+</details>
 
     <h3>74HC00 — EEPROM-avkodning (ny grind)</h3>
     <p>En extra <strong>74HC00</strong> vid sidan av den från steg 7/9. En enda grind används som inverterare för <span class="signal">A15</span>.</p>
     <p><span class="signal">A15</span> NAND <span class="signal">A15</span> = NOT <span class="signal">A15</span>. <strong>EEPROM</strong>:ets <span class="signal">/CE</span> är aktiv LÅG. När <span class="signal">A15</span>=1 (adress <code>$8000</code> eller högre) blir grindens utgång LÅG → <strong>EEPROM</strong> aktiverat. När <span class="signal">A15</span>=0 (under <code>$8000</code>) är utgången HÖG → <strong>EEPROM</strong> är bortkopplat, <strong>SRAM</strong> eller <strong>VIA</strong> tar över.</p>
-    <div class="overflow-x-auto">
+    <details class="wiring"><summary><span class="chev">&#9656;</span> 74HC00 — EEPROM-avkodning (ny grind) <span class="lines">· 5 rader</span></summary>
+<div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
@@ -244,6 +249,7 @@
         </tbody>
       </table>
     </div>
+</details>
   </section>
 
   <!-- Minneskarta -->

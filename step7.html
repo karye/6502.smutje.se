@@ -314,7 +314,8 @@
 
     <!-- W65C02S -->
     <h3>W65C02S CPU</h3>
-    <div class="overflow-x-auto">
+    <details class="wiring"><summary><span class="chev">&#9656;</span> W65C02S CPU <span class="lines">· 13 rader</span></summary>
+<div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
@@ -333,10 +334,12 @@
         </tbody>
       </table>
     </div>
+</details>
 
     <!-- W65C22 -->
     <h3>W65C22 VIA</h3>
-    <div class="overflow-x-auto">
+    <details class="wiring"><summary><span class="chev">&#9656;</span> W65C22 VIA <span class="lines">· 13 rader</span></summary>
+<div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
@@ -355,10 +358,12 @@
         </tbody>
       </table>
     </div>
+</details>
 
     <!-- 74HC00 -->
     <h3>74HC00 (adressavkodning)</h3>
-    <div class="overflow-x-auto">
+    <details class="wiring"><summary><span class="chev">&#9656;</span> 74HC00 (adressavkodning) <span class="lines">· 8 rader</span></summary>
+<div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
@@ -372,11 +377,13 @@
         </tbody>
       </table>
     </div>
+</details>
     <p><strong>Logik:</strong> <span class="signal">A15</span> inverteras av U4A. U4B gör (NOT <span class="signal">A15</span>) NAND <span class="signal">A14</span> → LÅG när <span class="signal">A15</span>=0 och <span class="signal">A14</span>=1. VIAn aktiveras alltså vid adress <code>$4000–$7FFF</code>. <strong>CPU</strong>:ns <span class="signal">A0–A3</span> går till VIAns <span class="signal">RS0–RS3</span> vilket ger 16 register på <code>$4000–$400F</code>.</p>
 
     <!-- LCD -->
     <h3>LCD 16×2 (parallell)</h3>
-    <div class="overflow-x-auto">
+    <details class="wiring"><summary><span class="chev">&#9656;</span> LCD 16×2 (parallell) <span class="lines">· 10 rader</span></summary>
+<div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
         <tbody class="divide-y">
@@ -392,6 +399,7 @@
         </tbody>
       </table>
     </div>
+</details>
   </section>
 
   <!-- Minneskarta -->

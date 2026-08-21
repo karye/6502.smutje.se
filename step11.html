@@ -123,7 +123,8 @@
       <p>Här är vad som ändras jämfört med steg 10. Allt annat — ström, klocka, reset, adress-/databuss till <strong>SRAM</strong> och <strong>EEPROM</strong> — är oförändrat.</p>
 
       <h3>SRAM — nu med <span class="signal">A14</span></h3>
-      <div class="overflow-x-auto">
+      <details class="wiring"><summary><span class="chev">&#9656;</span> SRAM — nu med A14 <span class="lines">· 3 rader</span></summary>
+<div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
           <tbody class="divide-y">
@@ -132,9 +133,11 @@
           </tbody>
         </table>
       </div>
+</details>
 
       <h3>VIA — flyttad till <code>$8000</code></h3>
-      <div class="overflow-x-auto">
+      <details class="wiring"><summary><span class="chev">&#9656;</span> VIA — flyttad till $8000 <span class="lines">· 4 rader</span></summary>
+<div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
           <tbody class="divide-y">
@@ -144,9 +147,11 @@
           </tbody>
         </table>
       </div>
+</details>
 
       <h3>EEPROM — övre halvan (<code>$C000</code>–<code>$FFFF</code>)</h3>
-      <div class="overflow-x-auto">
+      <details class="wiring"><summary><span class="chev">&#9656;</span> EEPROM — övre halvan ($C000–$FFFF) <span class="lines">· 3 rader</span></summary>
+<div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
           <tbody class="divide-y">
@@ -155,10 +160,12 @@
           </tbody>
         </table>
       </div>
+</details>
 
             <h3>Adressavkodning — en enda NAND-grind</h3>
       <p>Här är tricket: kretsarnas egna chip-select-pinnar gör avkodningen. <strong>SRAM</strong>:s <span class="signal">/CE</span> är aktivt låg, och <strong>VIA</strong>:n har <em>två</em> chip-selects med motsatt polaritet — <span class="signal">CS1</span> (pin 24, aktivt hög) och <span class="signal">/CS2</span> (pin 23, aktivt låg). Då matchar adressbitarna kretsarna direkt, och bara <strong>EEPROM</strong>:s <span class="signal">/CE</span> behöver en NAND-grind. Aktiveringslogiken finns i sanningstabellen i Adressavkodning-sektionen ovan, och de fyra direktanslutningarna — SRAM <span class="signal">/CE</span>, VIA <span class="signal">CS1</span>/<span class="signal">/CS2</span> och EEPROM <span class="signal">A14</span> — står i kretstabellerna ovan. Här visas bara NAND-grinden. Samma väg som <em>Steve Wozniak</em> använde i Apple II och som <em>Ben Eater</em> visade i sin klassiska 6502-serie.</p>
-      <div class="overflow-x-auto">
+      <details class="wiring"><summary><span class="chev">&#9656;</span> Adressavkodning — en enda NAND-grind <span class="lines">· 5 rader</span></summary>
+<div class="overflow-x-auto">
         <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
           <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Pin</th><th class="p-2 text-left">Signal</th><th class="p-2 text-left">Kopplas till</th><th class="p-2 text-left">Varför</th></tr></thead>
           <tbody class="divide-y">
@@ -169,6 +176,7 @@
           </tbody>
         </table>
       </div>
+</details>
     </section>
 
 <h2>Minneskarta</h2>

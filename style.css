@@ -86,15 +86,17 @@ span.signal {
   }
 }
 
-/* --- Kollapsbara kodrutor (details/summary) --- */
-details.codeblock {
+/* --- Kollapsbara block (kodrutor + kopplingstabeller) --- */
+details.codeblock,
+details.wiring {
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
   background: #fff;
   margin-bottom: 1rem;
 }
 
-details.codeblock > summary {
+details.codeblock > summary,
+details.wiring > summary {
   cursor: pointer;
   list-style: none;
   display: flex;
@@ -109,24 +111,29 @@ details.codeblock > summary {
   user-select: none;
 }
 
-details.codeblock > summary::-webkit-details-marker {
+details.codeblock > summary::-webkit-details-marker,
+details.wiring > summary::-webkit-details-marker {
   display: none;
 }
 
-details.codeblock > summary:hover {
+details.codeblock > summary:hover,
+details.wiring > summary:hover {
   background: #1f2937;   /* grå-800 vid hover */
 }
 
-details.codeblock > summary .chev {
+details.codeblock > summary .chev,
+details.wiring > summary .chev {
   color: #eab308;   /* gul accent — samma som pin-dot i SVG:erna */
   transition: transform 0.15s ease;
 }
 
-details.codeblock[open] > summary .chev {
+details.codeblock[open] > summary .chev,
+details.wiring[open] > summary .chev {
   transform: rotate(90deg);
 }
 
-details.codeblock > summary .lines {
+details.codeblock > summary .lines,
+details.wiring > summary .lines {
   margin-left: auto;
   color: #9ca3af;
   font-size: 0.75rem;
@@ -138,12 +145,25 @@ details.codeblock pre {
   border-radius: 0 0 0.5rem 0.5rem !important;
 }
 
-/* Utskrift: visa all kod utan fältet */
+details.wiring .overflow-x-auto {
+  margin: 0;
+}
+
+details.wiring table {
+  margin: 0;
+  border: none !important;
+  border-radius: 0 0 0.5rem 0.5rem !important;
+  box-shadow: none !important;
+}
+
+/* Utskrift: visa allt utan fälten */
 @media print {
-  details.codeblock {
+  details.codeblock,
+  details.wiring {
     border: none !important;
   }
-  details.codeblock > summary {
+  details.codeblock > summary,
+  details.wiring > summary {
     display: none !important;
   }
 }

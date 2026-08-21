@@ -76,7 +76,7 @@
   // Öppna alla kollapsbara kodrutor vid utskrift
   if ('onbeforeprint' in window) {
     window.addEventListener('beforeprint', function () {
-      document.querySelectorAll('details.codeblock').forEach(function (d) { d.open = true; });
+      document.querySelectorAll('details.codeblock, details.wiring').forEach(function (d) { d.open = true; });
     });
   }
 })();
