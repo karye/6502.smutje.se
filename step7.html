@@ -508,7 +508,8 @@
 
     <h3>Programmet i maskinkod</h3>
     <p>Tabellen nedan visar hur <strong>Arduino</strong> bygger <strong>6502</strong>-programmet i minnet, byte för byte. Första delen initierar <strong>VIA</strong>-portarna och <strong>LCD</strong>-displayen (8-bitarsläge, 2 rader, 5&times;8 font). Därefter skrivs en textrad i taget: cursor-positionering (&rarr; rad 1), <span class="signal">RS</span>=1 (teckenläge), och så varje ASCII-tecken med en enable-puls. Efter sista tecknet kommer clear display och ett <code>JMP</code>-hopp tillbaka till början.</p>
-    <div class="overflow-x-auto mt-3">
+    <details class="wiring"><summary><span class="chev">&#9656;</span> Programmet i maskinkod <span class="lines">· 23 rader</span></summary>
+<div class="overflow-x-auto mt-3">
       <table class="w-full text-sm border-collapse bg-white rounded-lg shadow">
         <thead class="bg-gray-900 text-white"><tr><th class="p-2 text-left">Steg</th><th class="p-2 text-left">Assembler</th><th class="p-2 text-left">Bytes</th><th class="p-2 text-left">Förklaring</th></tr></thead>
         <tbody class="divide-y">
@@ -537,6 +538,7 @@
         </tbody>
       </table>
     </div>
+</details>
     <div class="text-gray-700 space-y-3">
       <p>Det här är projektets mest komplexa kod — och den största milstolpen. Vi introducerar <em>två nya kretsar</em> (<strong>W65C22</strong> <strong>VIA</strong> och <strong>74HC00</strong>) och låter <strong>CPU</strong>:n själv styra <strong>LCD</strong>-displayen via minnesmappad I/O. <strong>Arduino</strong> reduceras till det den gör bäst: emulera <strong>ROM</strong> och generera klocka. Allt annat sköter <strong>6502</strong>-processorn.</p>
 
