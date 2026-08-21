@@ -302,7 +302,7 @@
       <p>Verifieringen läser tillbaka varje byte och jämför med originaldatan. Om något inte stämmer rapporteras adressen och de två värdena. Annars: "OK — 32768 bytes verifierade".</p>
     
     <details class="codeblock"><summary><span class="chev">&#9656;</span> EEPROM-programmeraren — EEPROM_programmer.ino <span class="lines">· 139 rader</span></summary>
-<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
+<pre class="bg-white text-gray-900 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 10 — EEPROM-programmerare (andra Arduino Mega)
 // ==============================================================
@@ -450,7 +450,7 @@ void loop() {
     <h2>Python-skript — skicka .bin-fil till programmeraren</h2>
     <p>Ett enkelt Python 3-skript som läser <code>program.bin</code> och skickar det sida för sida över serieporten. Kräver <code>pyserial</code> (<code>pip install pyserial</code>).</p>
     <details class="codeblock"><summary><span class="chev">&#9656;</span> Python-skript — upload_eeprom.py <span class="lines">· 59 rader</span></summary>
-<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-python">#!/usr/bin/env python3
+<pre class="bg-white text-gray-900 rounded-lg overflow-x-auto text-sm border"><code class="language-python">#!/usr/bin/env python3
 """upload_eeprom.py — skicka .bin-fil till AT28C256 EEPROM-programmerare."""
 
 import serial
@@ -522,7 +522,7 @@ if __name__ == '__main__':
       <p>Koden nedan är baserad på steg 9 men med <code>is_eeprom()</code> istället för <code>program[]</code>. <code>read_mem()</code> returnerar 0 för <strong>EEPROM</strong>-adresser — <strong>Arduino</strong> rör dem inte.</p>
     
     <details class="codeblock"><summary><span class="chev">&#9656;</span> Datorns Arduino — step10.inc <span class="lines">· 124 rader</span></summary>
-<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
+<pre class="bg-white text-gray-900 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 10 — EEPROM som ROM
 // ==============================================================

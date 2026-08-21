@@ -221,7 +221,7 @@
       <p>När programmet körs kan du med Knapp 2 (instruktionssteg) följa programflödet: <code>$8000</code> (<code>LDX</code>) → <code>$8002</code> (<code>INX</code>) → <code>$8003</code> (<code>STX</code>) → <code>$8006</code> (<code>JMP</code>) → <code>$8002</code> (<code>INX</code> igen). Varje varv genom loopen ökar värdet på adress <code>$0200</code> — och du kan se det på <strong>LCD</strong>:ns rad 1 som <code>D:$01</code>, <code>D:$02</code>, <code>D:$03</code>… hela vägen upp till <code>D:$FF</code> (255). Sedan wrappar X-registret till 0 och loopen börjar om.</p>
     
     <details class="codeblock"><summary><span class="chev">&#9656;</span> Arduino-kod — step6.inc <span class="lines">· 131 rader</span></summary>
-<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
+<pre class="bg-white text-gray-900 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 6 — Första egna 6502-programmet (räknare)
 // ==============================================================

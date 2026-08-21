@@ -218,7 +218,7 @@
         <p>Ändringarna i Arduinon är minimala — bara tre konstanter och en villkorsändring i <code>is_eeprom()</code>. Koden vet nu att <strong>SRAM</strong> täcker <code>$0000</code>–<code>$7FFF</code>, <strong>VIA</strong> bor på <code>$8000</code> och <strong>EEPROM</strong> på <code>$C000</code>. Allt annat är tri-state för fysiska kretsar.</p>
       
       <details class="codeblock"><summary><span class="chev">&#9656;</span> Arduino-kod — step11.inc <span class="lines">· 121 rader</span></summary>
-<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
+<pre class="bg-white text-gray-900 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 11 — städad adressrymd
 // ==============================================================
@@ -355,7 +355,7 @@ void loop() {
         <li>Assembler-filen behöver inga ändringar — segmenten nedan matchar den.</li>
       </ol>
       <details class="codeblock"><summary><span class="chev">&#9656;</span> Länkskript — program.cfg <span class="lines">· 16 rader</span></summary>
-<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-cfg">
+<pre class="bg-white text-gray-900 rounded-lg overflow-x-auto text-sm border"><code class="language-cfg">
 ; program.cfg — steg 11
 ; Kod placeras i $C000–$FFFF (övre 16 KB).
 

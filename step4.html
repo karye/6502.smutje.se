@@ -146,7 +146,7 @@
       <p><span class="signal">SYNC</span>-pinnen kopplas in på <span class="signal">D13</span>. <code>loop()</code> ändras från en enkel <code>pulse()</code>-loop till knappläsning med debounce. Instruktionsstegningen (<code>do { pulse(); } while (!digitalRead(SYNC))</code>) är en av de smartaste kodraderna i hela projektet — den låter dig kliva genom ditt program instruktion för instruktion, precis som en debugger, fast i hårdvara.</p>
     
     <details class="codeblock"><summary><span class="chev">&#9656;</span> Arduino-kod — step4.inc <span class="lines">· 111 rader</span></summary>
-<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
+<pre class="bg-white text-gray-900 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // ==============================================================
 // Steg 4 — manuell stegning med knappar
 // ==============================================================

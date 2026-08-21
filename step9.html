@@ -422,7 +422,7 @@
       <p><strong>62256</strong> <strong>SRAM</strong>-chip, utökad <strong>74HC00</strong>-avkodning (U4C+U4D för <strong>SRAM</strong>). I koden: <code>is_sram()</code>, utökade villkor i <code>pulse()</code>/<code>read_mem()</code>/<code>write_mem()</code>, tvåfasigt programflöde i <code>setup()</code>, och Fibonacci-programmet byggt med ca65. <code>ram[1024]</code> från tidigare steg är borta — den har ersatts av äkta kisel.</p>
     
     <details class="codeblock"><summary><span class="chev">&#9656;</span> Arduino-kod — step9.inc <span class="lines">· 304 rader</span></summary>
-<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
+<pre class="bg-white text-gray-900 rounded-lg overflow-x-auto text-sm border"><code class="language-c">
 // Steg 9 — Riktigt RAM (62256 32KB SRAM)
 // Baserat på steg 7: först visa 4-raders text via VIA/LCD,
 // sedan vänta på knapptryck, kör RAM-test.
@@ -767,7 +767,7 @@ void loop() {
       </div>
     
     <details class="codeblock"><summary><span class="chev">&#9656;</span> 6502-programmet — program_fib.asm <span class="lines">· 235 rader</span></summary>
-<pre class="bg-white text-gray-900 p-4 rounded-lg overflow-x-auto text-sm border"><code class="language-x86asm">; ================================================================
+<pre class="bg-white text-gray-900 rounded-lg overflow-x-auto text-sm border"><code class="language-x86asm">; ================================================================
 ; Fibonacci-program för 6502 — VIA LCD
 ; ================================================================
 ; Räkna ut Fibonacci-sekvensen och visa varje tal på LCD.
