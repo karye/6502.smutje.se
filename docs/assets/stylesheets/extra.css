@@ -6,7 +6,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   margin: 1rem 0;
-  font-size: 0.6rem;
+  font-size: 0.7rem;
 }
 
 @media (max-width: 720px) {
