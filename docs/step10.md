@@ -140,7 +140,7 @@ Ett enkelt Python 3-skript som läser `program.bin` och skickar det sida för si
 ??? note "📦 Python-skript"
 
     ```python
-    --8<-- "scripts/upload_eeprom.py"
+    --8<-- "Mega_2560_6502/scripts/upload_eeprom.py"
     ```
 
 ## Arduino-kod — datorn

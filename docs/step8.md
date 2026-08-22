@@ -39,7 +39,7 @@ extra_scripts = pre:scripts/build_asm.py
 ??? note "📦 Byggskriptet — build_asm.py"
 
     ```python
-    --8<-- "scripts/build_asm.py"
+    --8<-- "Mega_2560_6502/scripts/build_asm.py"
     ```
 
 ### bin2h.py — binär till C-header
@@ -49,7 +49,7 @@ Konverterar `program_hello.bin` till `PROGRAM[]` (en `PROGMEM`-array) som `main.
 ??? note "📦 Byggskriptet — bin2h.py"
 
     ```python
-    --8<-- "scripts/bin2h.py"
+    --8<-- "Mega_2560_6502/scripts/bin2h.py"
     ```
 
 ## Så här använder jag det
