@@ -32,7 +32,7 @@ Så här går min assembler-kod från en textfil till körbar kod i processorn. 
 
 `scripts/build_asm.py` är en *pre-build hook* som PlatformIO kör före C++-kompileringen. Den anropar ca65, ld65 och bin2h.py i sekvens, konfigurerad i `platformio.ini`:
 
-```
+``` title="Terminal"
 extra_scripts = pre:scripts/build_asm.py
 ```
 
@@ -230,7 +230,7 @@ Program + vektorer laddat.
     === 6502 VIA LCD ===
     Hello from W65C02!
     ```
-    
+
 Seriemonitor visar samma VIA- och LCD-aktivitet som i steg 7 — men med en avgörande skillnad: jag har inte skrivit en enda `write_mem()`. Programmet kommer från `program_hello.asm`, en ren assembler-fil med labels, subrutiner och kommentarer.
 
 Jag gör ett test: jag ändrar texten i `line1:` från "=== 6502 VIA LCD ===" till "Hej varlden!" och kör `pio run -e step8 -t upload -t monitor` igen. Hela kedjan körs om — ca65, ld65, bin2h, kompilering, uppladdning — och LCD:n visar min nya text. Iterationstiden är sekunder, inte minuter. Första gången kedjan rullade ihop på egen hand kändes det som att få en assistent.
