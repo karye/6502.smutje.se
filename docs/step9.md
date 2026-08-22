@@ -265,7 +265,7 @@ Komplett assembler-kod: `Mega_2560_6502/asm/program_fib.asm`. Byggs med `ca65 + 
 
 När jag laddat upp koden körs två faser efter varandra. Först VIA/LCD-programmet, sedan — efter ett knapptryck — Fibonacci-programmet som använder det fysiska SRAM-chippet.
 
-```text title="Seriemonitor — fas 1"
+```text title="Terminal"
 Steg 9 — 62256 SRAM
 Fas 1: Laddar 4-raders VIA/LCD-program...
 Kor 1000 cykler (tyst)...
@@ -281,7 +281,7 @@ LCD-displayen — fas 1
 
 Jag trycker på valfri knapp för att gå vidare till Fibonacci:
 
-```text title="Seriemonitor — fas 2"
+```text title="Terminal"
 >>> Knapp 1 tryckt! <<<
 Laddar Fibonacci-program...
 Fibonacci-program kört.

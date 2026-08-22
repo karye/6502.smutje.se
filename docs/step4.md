@@ -88,7 +88,7 @@ När jag trycker på en mekanisk knapp studsar metallkontakterna mikroskopiskt �
 
 Efter uppladdning händer ingenting förrän jag trycker på en knapp. CPU:n har precis lämnat reset och står stilla — klockan genereras bara när jag ber om det. Här är vad jag ser vid olika tryck:
 
-```text title="Seriemonitor"
+```text title="Terminal"
 Steg 4 — Knappstegning
 Knapp 1 = klocksteg, Knapp 2 = instruktionssteg
 

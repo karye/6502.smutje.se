@@ -302,7 +302,7 @@ Komplett Arduino-kod för steg 7:
 
 När jag laddat upp koden och öppnar seriemonitor ser jag programmet genomlöpa alla faser. Samtidigt vaknar LCD-displayen till liv — styrd helt av 6502-processorn via VIA-kretsen:
 
-```text title="Seriemonitor"
+```text title="Terminal"
 ══════ RESET-SEKVENS — CPU lämnar reset ══════
 R $FFFC  ← RESET-VEKTOR LÅG
 R $FFFD  ← RESET-VEKTOR HÖG

@@ -85,7 +85,7 @@ Klockan har höjts från 1 Hz till 500 Hz — för snabbt för att se med ögat,
 
 När jag öppnar seriemonitor efter uppladdning ser jag ungefär detta:
 
-```text title="Seriemonitor"
+```text title="Terminal"
 Steg 2 — adressbuss och reset
 R $FFFC
 R $FFFD

@@ -95,7 +95,7 @@ Tre stora nyheter:
 
 När jag öppnar seriemonitor (115200 baud) ser jag CPU:n läsa reset-vektorn och sedan loopa på `NOP`:
 
-```text title="Seriemonitor (115200 baud)"
+```text title="Terminal"
 Steg 3 — databuss och minnesemulering
 R $FFFC
 R $FFFD

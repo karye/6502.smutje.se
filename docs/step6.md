@@ -171,7 +171,7 @@ När programmet körs kan jag med Knapp 2 (instruktionssteg) följa programflöd
 
 När jag laddat upp koden och trycker på Knapp 2 (instruktionssteg) ser jag programmet rulla genom adresserna — både i seriemonitor och på LCD-displayen:
 
-```text title="Seriemonitor — efter ett varv i loopen"
+```text title="Terminal"
 Steg 6 — Räknarprogram
 Program: LDX #$00 · INX · STX $0200 · JMP $8002
 

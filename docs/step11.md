@@ -164,7 +164,7 @@ Koden läggs i `$C000`–`$FFFF` (ROM, 16 KB). Reset-vektorn ligger som alltid p
 
 När jag laddat upp koden och startat datorn ser jag i seriemonitorn att enheterna svarar på sina nya adresser:
 
-```text title="Seriemonitor (115200 baud)"
+```text title="Terminal"
 Steg 11 — städad adressrymd
 SRAM 32 KB ($0000-$7FFF), VIA ($8000), EEPROM ($C000+)
 CPU startad.

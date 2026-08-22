@@ -195,7 +195,7 @@ Totalt brända bytes: 2054
 
 Koppla bort programmerings-Arduinon. Flytta **AT28C256**-chippet till datorns kopplingsdäck och anslut enligt kopplingstabellen ovan. Slå på strömmen.
 
-```text title="Seriemonitor — datorn startar"
+```text title="Terminal"
 Steg 10 — EEPROM som ROM
 Programmet ligger i AT28C256 — inte i Arduino.
 CPU startad. EEPROM levererar programkoden.

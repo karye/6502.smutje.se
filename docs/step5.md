@@ -115,7 +115,7 @@ I koden: `#include <LiquidCrystal.h>`, LCD-objektet, och `lcd.print()`-anropen i
 
 Direkt efter uppladdning visar både seriemonitor och LCD-displayen att allt är redo:
 
-```text title="Seriemonitor"
+```text title="Terminal"
 Steg 5 — LCD-display
 ```
 
@@ -130,7 +130,7 @@ När jag trycker på Knapp 1 (klocksteg) uppdateras båda vyerna samtidigt. Seri
 
 <div class="xmon-wrap">
 <div>
-```text title="Seriemonitor — efter 4 tryck på Knapp 1"
+```text title="Terminal"
 Steg 5 — LCD-display
 R $FFFC
 R $FFFD

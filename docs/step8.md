@@ -212,7 +212,7 @@ Programstorlek: 2054 bytes
 Program + vektorer laddat.
 ```
 
-```text title="Seriemonitor — VIA-aktivitet"
+```text title="Terminal"
 W $4002  ← VIA: FF  (DDRB)
 W $4003  ← VIA: FF  (DDRA)
 ...
