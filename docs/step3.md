@@ -96,9 +96,8 @@ Tre stora nyheter:
 När jag öppnar seriemonitor (115200 baud) ser jag CPU:n läsa reset-vektorn och sedan loopa på `NOP`:
 
 <div class="xmon-wrap">
-<p class="xlabel"><strong>Seriemonitor (115200 baud)</strong></p>
 
-```text
+```text title="Seriemonitor (115200 baud)"
 Steg 3 — databuss och minnesemulering
 R $FFFC
 R $FFFD

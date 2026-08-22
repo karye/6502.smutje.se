@@ -86,9 +86,8 @@ Klockan har höjts från 1 Hz till 500 Hz — för snabbt för att se med ögat,
 När jag öppnar seriemonitor efter uppladdning ser jag ungefär detta:
 
 <div class="xmon-wrap">
-<p class="xlabel"><strong>Seriemonitor</strong></p>
 
-```text
+```text title="Seriemonitor"
 Steg 2 — adressbuss och reset
 R $FFFC
 R $FFFD

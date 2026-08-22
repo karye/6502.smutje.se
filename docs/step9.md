@@ -267,9 +267,7 @@ När jag laddat upp koden körs två faser efter varandra. Först VIA/LCD-progra
 
 <div class="monlcd">
 <div>
-<p class="xlabel"><strong>Seriemonitor — fas 1</strong></p>
-
-```text
+```text title="Seriemonitor — fas 1"
 Steg 9 — 62256 SRAM
 Fas 1: Laddar 4-raders VIA/LCD-program...
 Kor 1000 cykler (tyst)...
@@ -291,9 +289,7 @@ Jag trycker på valfri knapp för att gå vidare till Fibonacci:
 
 <div class="monlcd">
 <div>
-<p class="xlabel"><strong>Seriemonitor — fas 2</strong></p>
-
-```text
+```text title="Seriemonitor — fas 2"
 >>> Knapp 1 tryckt! <<<
 Laddar Fibonacci-program...
 Fibonacci-program kört.

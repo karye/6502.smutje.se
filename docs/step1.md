@@ -96,9 +96,8 @@ När jag laddat upp koden och öppnar seriemonitor ser jag texten "Steg 1 — Kl
 När jag öppnar seriemonitor i **VS Code** eller **PlatformIO** ser jag:
 
 <div class="xmon-wrap">
-<p class="xlabel"><strong>Seriemonitor</strong></p>
 
-```text
+```text title="Seriemonitor"
 Steg 1 — Klocka och ström
 Lysdioden på PHI2 ska blinka 1 Hz
 ```

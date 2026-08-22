@@ -173,9 +173,7 @@ När jag laddat upp koden och trycker på Knapp 2 (instruktionssteg) ser jag pro
 
 <div class="monlcd">
 <div>
-<p class="xlabel"><strong>Seriemonitor — efter ett varv i loopen</strong></p>
-
-```text
+```text title="Seriemonitor — efter ett varv i loopen"
 Steg 6 — Räknarprogram
 Program: LDX #$00 · INX · STX $0200 · JMP $8002
 

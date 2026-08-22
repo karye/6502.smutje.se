@@ -176,7 +176,7 @@ Bygga programmet med **ca65** som vanligt, köra Python-skriptet för att bränn
 <div>
 <p class="xlabel"><strong>Terminal — bränna EEPROM</strong></p>
 
-```text
+```text title="Terminal"
 $ pio run -e step10 -t upload    # Ladda upp dator-Arduinon
 $ python3 scripts/upload_eeprom.py asm/program_hello.bin /dev/ttyACM1
 
@@ -201,9 +201,7 @@ Koppla bort programmerings-Arduinon. Flytta **AT28C256**-chippet till datorns ko
 
 <div class="monlcd">
 <div>
-<p class="xlabel"><strong>Seriemonitor — datorn startar</strong></p>
-
-```text
+```text title="Seriemonitor — datorn startar"
 Steg 10 — EEPROM som ROM
 Programmet ligger i AT28C256 — inte i Arduino.
 CPU startad. EEPROM levererar programkoden.

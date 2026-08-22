@@ -166,9 +166,7 @@ När jag laddat upp koden och startat datorn ser jag i seriemonitorn att enheter
 
 <div class="monlcd">
 <div>
-<p class="xlabel"><strong>Seriemonitor (115200 baud)</strong></p>
-
-```text
+```text title="Seriemonitor (115200 baud)"
 Steg 11 — städad adressrymd
 SRAM 32 KB ($0000-$7FFF), VIA ($8000), EEPROM ($C000+)
 CPU startad.

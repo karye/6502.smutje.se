@@ -56,13 +56,13 @@ Konverterar `program_hello.bin` till `PROGRAM[]` (en `PROGMEM`-array) som `main.
 
 1. Redigera assembler-koden:
 
-```
+``` title="Terminal"
 nano asm/program_hello.asm
 ```
 
 2. Bygg och ladda upp (Windows-maskinen):
 
-```
+``` title="Terminal"
 pio run -e step8 -t upload -t monitor
 ```
 
@@ -199,10 +199,10 @@ Ingen ny hårdvara. I koden: `#include "program_hello.h"`, `PROGRAM[]`, `PROGRAM
 
 När jag bygger och laddar upp ser jag byggkedjan arbeta i terminalen:
 
-```
+``` title="Terminal"
 pio run -e step8 -t upload -t monitor
 ```
-```
+``` title="Terminal"
 [build_asm] Assemblerar .../asm/program_hello.asm …
 [build_asm] OK — 2054 bytes → .../program_hello.h
 Processing step8 (platform: ...)
@@ -214,9 +214,7 @@ Program + vektorer laddat.
 
 <div class="monlcd">
 <div>
-<p class="xlabel"><strong>Seriemonitor — VIA-aktivitet</strong></p>
-
-```text
+```text title="Seriemonitor — VIA-aktivitet"
 W $4002  ← VIA: FF  (DDRB)
 W $4003  ← VIA: FF  (DDRA)
 ...
@@ -244,13 +242,13 @@ Jag gör ett test: jag ändrar texten i `line1:` från "=== 6502 VIA LCD ===" ti
 
 Här är några saker jag kontrollerar:
 
-```
+``` title="Terminal"
 sudo apt install cc65
 ```
 
 - ca65: command not found? Då installerar jag cc65:
 
-```
+``` title="Terminal"
 pio run -e step8
 ```
 

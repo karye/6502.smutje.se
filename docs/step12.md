@@ -104,7 +104,7 @@ Lösningen är en `delay_ms`-subrutin med nästlade loopar. Varje varv i den inr
 
 Programmet byggs med ca65 + ld65 och bränns om i EEPROM:en med steg 10-programmeraren:
 
-```
+``` title="Terminal"
 cd Mega_2560_6502
 ca65 -o asm/standalone/program_standalone.o asm/standalone/program_standalone.asm
 ld65 -C asm/standalone/program_standalone.cfg -o asm/standalone/program_standalone.bin asm/standalone/program_standalone.o

@@ -117,9 +117,7 @@ Direkt efter uppladdning visar både seriemonitor och LCD-displayen att allt är
 
 <div class="monlcd">
 <div>
-<p class="xlabel"><strong>Seriemonitor</strong></p>
-
-```text
+```text title="Seriemonitor"
 Steg 5 — LCD-display
 ```
 
@@ -138,9 +136,7 @@ När jag trycker på Knapp 1 (klocksteg) uppdateras båda vyerna samtidigt. Seri
 
 <div class="xmon-wrap">
 <div>
-<p class="xlabel"><strong>Seriemonitor — efter 4 tryck på Knapp 1</strong></p>
-
-```text
+```text title="Seriemonitor — efter 4 tryck på Knapp 1"
 Steg 5 — LCD-display
 R $FFFC
 R $FFFD

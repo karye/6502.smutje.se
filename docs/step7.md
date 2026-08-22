@@ -304,9 +304,7 @@ När jag laddat upp koden och öppnar seriemonitor ser jag programmet genomlöpa
 
 <div class="monlcd">
 <div>
-<p class="xlabel"><strong>Seriemonitor</strong></p>
-
-```text
+```text title="Seriemonitor"
 ══════ RESET-SEKVENS — CPU lämnar reset ══════
 R $FFFC  ← RESET-VEKTOR LÅG
 R $FFFD  ← RESET-VEKTOR HÖG

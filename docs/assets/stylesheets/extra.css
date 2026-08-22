@@ -70,8 +70,10 @@
 
 .monlcd .highlight .filename,
 .xmon-wrap .highlight .filename {
-  display: none;
-  /* xlabel ovanför visar redan "Seriemonitor" */
+  display: block;
+  background-color: #1f2937;
+  color: #9ca3af;
+  border-bottom: 1px solid #374151;
 }
 
 .monlcd .highlighttable,
