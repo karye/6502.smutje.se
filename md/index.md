@@ -8,9 +8,9 @@
 
 ## En Arduino som startmotor
 
- En 6502-dator från 1970-talet behövde ROM och RAM som fysiska chips — och för att testa ett nytt program fick man bränna ett nytt EPROM under UV-ljus, en process som tog 20 minuter per försök. Här använder vi en Arduino Mega 2560 som startmotor: den står för klocka, minne och diagnostik i början, så att vi kan fokusera på processorn och se varje signal på kopplingsdäcket. 
+ En 6502-dator från 1970-talet behövde ROM och RAM som fysiska chips — och för att testa ett nytt program fick man bränna ett nytt EPROM under UV-ljus, en process som tog 20 minuter per försök. Här använder jag en Arduino Mega 2560 som startmotor: den står för klocka, minne och diagnostik i början, så att jag kan fokusera på processorn och se varje signal på kopplingsdäcket. 
 
- Steg för steg ersätter vi Arduinons uppgifter med riktiga kretsar. SRAM-chippet tar över minnet, EEPROM:et tar över programkoden, VIA-kretsen tar över I/O till LCD-displayen. Till slut är Arduino reducerad till klocka och seriell diagnostik — och datorn fungerar helt på egen hand. 
+ Steg för steg ersätter jag Arduinons uppgifter med riktiga kretsar. SRAM-chippet tar över minnet, EEPROM:et tar över programkoden, VIA-kretsen tar över I/O till LCD-displayen. Till slut är Arduino reducerad till klocka och seriell diagnostik — och datorn fungerar helt på egen hand. 
 
  Det här är inte en emulator i mjukvara — processorn kör på riktigt, med riktiga elektriska signaler. Allt du lär dig om 6502:ans instruktionsuppsättning, timing och bussprotokoll gäller på riktigt. 
 

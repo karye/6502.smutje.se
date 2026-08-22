@@ -1,3 +1,4 @@
 .history/
+.obsidian/
 *.lck
 __pycache__/
