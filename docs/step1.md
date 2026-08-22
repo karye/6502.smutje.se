@@ -45,18 +45,20 @@ Så här ser den kompletta kopplingen ut när allt ligger på kopplingsdäcket: 
 
 Här är varenda koppling i steg 1, pinne för pinne. Avkopplingskondensatorn är markerad separat längst ner.
 
-| Pin | Signal | Kopplas till | Varför |
-|---|---|---|---|
-| 8 | `VDD` | +5V | Strömmatning — CPU:ns driftspänning |
-| 21 | `VSS` | GND | Systemjord — sluten krets |
-| 37 | `PHI2` | Arduino D2 | Klockingång — Arduino skickar fyrkantsvåg |
-| 2 | `RDY` | +5V via 10kΩ | Ready — HÖG = CPU får köra. Utan denna stannar CPU:n |
-| 4 | `/IRQ` | +5V via 10kΩ | Interrupt request — HÖG = inget avbrott (jag använder ej avbrott än) |
-| 6 | `/NMI` | +5V via 10kΩ | Non-maskable interrupt — måste vara HÖG, annars kraschar CPU:n |
-| 36 | `BE` | +5V via 10kΩ | Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad! |
-| 38 | `/SO` | +5V via 10kΩ | Set Overflow — HÖG = avaktiverad |
-| 40 | `/RESET` | Arduino D4 | Hålls låg av Arduino — CPU:n ligger i reset |
-| — | 100nF | Mellan VDD (pin 8) och VSS (pin 21) | Avkopplingskondensator — filtrerar bort brus på strömmatningen. Sätt den så nära CPU:n som möjligt! |
+??? note "📦 Kopplingar — CPU, klocka och ström"
+
+    | Pin | Signal | Kopplas till | Varför |
+    |---|---|---|---|
+    | 8 | `VDD` | +5V | Strömmatning — CPU:ns driftspänning |
+    | 21 | `VSS` | GND | Systemjord — sluten krets |
+    | 37 | `PHI2` | Arduino D2 | Klockingång — Arduino skickar fyrkantsvåg |
+    | 2 | `RDY` | +5V via 10kΩ | Ready — HÖG = CPU får köra. Utan denna stannar CPU:n |
+    | 4 | `/IRQ` | +5V via 10kΩ | Interrupt request — HÖG = inget avbrott (jag använder ej avbrott än) |
+    | 6 | `/NMI` | +5V via 10kΩ | Non-maskable interrupt — måste vara HÖG, annars kraschar CPU:n |
+    | 36 | `BE` | +5V via 10kΩ | Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad! |
+    | 38 | `/SO` | +5V via 10kΩ | Set Overflow — HÖG = avaktiverad |
+    | 40 | `/RESET` | Arduino D4 | Hålls låg av Arduino — CPU:n ligger i reset |
+    | — | 100nF | Mellan VDD (pin 8) och VSS (pin 21) | Avkopplingskondensator — filtrerar bort brus på strömmatningen. Sätt den så nära CPU:n som möjligt! |
 
 ## Arduino-kod
 

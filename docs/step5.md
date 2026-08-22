@@ -45,44 +45,46 @@ Schemat visar LCD-displayen ansluten i 4-bitarsläge: `RS` till `D5`, E till `D6
 
 ## Kopplingar
 
-Här är hela kopplingen inklusive LCD:ns 16 pinnar, markerade med egen radgrupp i tabellen. Datapinnarna `DB4–DB7` går i omvänd ordning (`D10`→`DB4`, `D9`→`DB5`…) — en klassisk fallgrop när jag kopplar, så jag dubbelkollar varje ledning mot tabellen.
+Här är varenda koppling i steg 5, pinne för pinne.
 
-| Pin | Signal | Kopplas till | Varför |
-|---|---|---|---|
-| 8 | `VDD` | +5V | Strömmatning — CPU:ns driftspänning |
-| 21 | `VSS` | GND | Systemjord — sluten krets |
-| 37 | `PHI2` | Arduino D2 | Klockingång — Arduino skickar fyrkantsvåg |
-| 2 | `RDY` | +5V via 10kΩ | Ready — HÖG = CPU får köra. Utan denna stannar CPU:n |
-| 4 | `/IRQ` | +5V via 10kΩ | Interrupt request — HÖG = inget avbrott |
-| 6 | `/NMI` | +5V via 10kΩ | Non-maskable interrupt — måste vara HÖG |
-| 36 | `BE` | +5V via 10kΩ | Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad! |
-| 38 | `/SO` | +5V via 10kΩ | Set Overflow — avaktiverad |
-| 40 | `/RESET` | Arduino D4 | Kontrollerad reset — Arduino håller CPU:n i reset tills jag är redo |
-| 9–16 | `A0–A7` | Arduino A0–A7 | Låga adressbyte — läses via PORTF |
-| 17–20, 22–25 | `A8–A15` | Arduino A8–A15 | Höga adressbyte — läses via PORTK |
-| 34 | `R/W` | Arduino D3 | HÖG = CPU läser, LÅG = CPU skriver. Arduino måste veta detta |
-| 33 | `D0` | Arduino D22 via 100Ω | Databit 0 (LSB) |
-| 32 | `D1` | Arduino D23 via 100Ω | Databit 1 |
-| 31 | `D2` | Arduino D24 via 100Ω | Databit 2 |
-| 30 | `D3` | Arduino D25 via 100Ω | Databit 3 |
-| 29 | `D4` | Arduino D26 via 100Ω | Databit 4 |
-| 28 | `D5` | Arduino D27 via 100Ω | Databit 5 |
-| 27 | `D6` | Arduino D28 via 100Ω | Databit 6 |
-| 26 | `D7` | Arduino D29 via 100Ω | Databit 7 (MSB) |
-| 7 | `SYNC` | Arduino D13 | HÖG = CPU:n hämtar första byten av ny instruktion |
-| LCD 16×2 (parallell 4-bit) |  |  |  |
-| 1 | `VSS` | GND | Jord |
-| 2 | `VDD` | +5V | Strömmatning |
-| 3 | `VO` | Potentiometer mittben | Kontrast — sidoben till +5V och GND |
-| 4 | `RS` | Arduino D5 | Register Select — 0 = kommando, 1 = data |
-| 5 | `R/W` | GND | Alltid skrivläge — jag läser aldrig från LCD:n |
-| 6 | `E` | Arduino D6 | Enable — Arduino pulserar för att skicka data |
-| 11 | `DB4` | Arduino D10 | Data bit 4 — omvänd ordning! |
-| 12 | `DB5` | Arduino D9 | Data bit 5 |
-| 13 | `DB6` | Arduino D8 | Data bit 6 |
-| 14 | `DB7` | Arduino D7 | Data bit 7 |
-| 15 | `A` | +5V via 220Ω | Bakgrundsbelysning + |
-| 16 | `K` | GND | Bakgrundsbelysning − |
+??? note "📦 Kopplingar — CPU, klocka, ström, adressbuss, reset, databuss och LCD"
+
+    | Pin | Signal | Kopplas till | Varför |
+    |---|---|---|---|
+    | 8 | `VDD` | +5V | Strömmatning — CPU:ns driftspänning |
+    | 21 | `VSS` | GND | Systemjord — sluten krets |
+    | 37 | `PHI2` | Arduino D2 | Klockingång — Arduino skickar fyrkantsvåg |
+    | 2 | `RDY` | +5V via 10kΩ | Ready — HÖG = CPU får köra. Utan denna stannar CPU:n |
+    | 4 | `/IRQ` | +5V via 10kΩ | Interrupt request — HÖG = inget avbrott |
+    | 6 | `/NMI` | +5V via 10kΩ | Non-maskable interrupt — måste vara HÖG |
+    | 36 | `BE` | +5V via 10kΩ | Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad! |
+    | 38 | `/SO` | +5V via 10kΩ | Set Overflow — avaktiverad |
+    | 40 | `/RESET` | Arduino D4 | Kontrollerad reset — Arduino håller CPU:n i reset tills jag är redo |
+    | 9–16 | `A0–A7` | Arduino A0–A7 | Låga adressbyte — läses via PORTF |
+    | 17–20, 22–25 | `A8–A15` | Arduino A8–A15 | Höga adressbyte — läses via PORTK |
+    | 34 | `R/W` | Arduino D3 | HÖG = CPU läser, LÅG = CPU skriver. Arduino måste veta detta |
+    | 33 | `D0` | Arduino D22 via 100Ω | Databit 0 (LSB) |
+    | 32 | `D1` | Arduino D23 via 100Ω | Databit 1 |
+    | 31 | `D2` | Arduino D24 via 100Ω | Databit 2 |
+    | 30 | `D3` | Arduino D25 via 100Ω | Databit 3 |
+    | 29 | `D4` | Arduino D26 via 100Ω | Databit 4 |
+    | 28 | `D5` | Arduino D27 via 100Ω | Databit 5 |
+    | 27 | `D6` | Arduino D28 via 100Ω | Databit 6 |
+    | 26 | `D7` | Arduino D29 via 100Ω | Databit 7 (MSB) |
+    | 7 | `SYNC` | Arduino D13 | HÖG = CPU:n hämtar första byten av ny instruktion |
+    | LCD 16×2 (parallell 4-bit) |  |  |  |
+    | 1 | `VSS` | GND | Jord |
+    | 2 | `VDD` | +5V | Strömmatning |
+    | 3 | `VO` | Potentiometer mittben | Kontrast — sidoben till +5V och GND |
+    | 4 | `RS` | Arduino D5 | Register Select — 0 = kommando, 1 = data |
+    | 5 | `R/W` | GND | Alltid skrivläge — jag läser aldrig från LCD:n |
+    | 6 | `E` | Arduino D6 | Enable — Arduino pulserar för att skicka data |
+    | 11 | `DB4` | Arduino D10 | Data bit 4 — omvänd ordning! |
+    | 12 | `DB5` | Arduino D9 | Data bit 5 |
+    | 13 | `DB6` | Arduino D8 | Data bit 6 |
+    | 14 | `DB7` | Arduino D7 | Data bit 7 |
+    | 15 | `A` | +5V via 220Ω | Bakgrundsbelysning + |
+    | 16 | `K` | GND | Bakgrundsbelysning − |
 
 ## Arduino-kod
 

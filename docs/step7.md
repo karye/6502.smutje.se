@@ -71,65 +71,79 @@ Kopplingarna är organiserade krets för krets, eftersom adress- och databussen 
 
 ### W65C02S CPU
 
-| Pin | Signal | Kopplas till | Varför |
-|---|---|---|---|
-| 8 | `VDD` | +5V | Strömmatning |
-| 21 | `VSS` | GND | Systemjord |
-| 37 | `PHI2` | Arduino D2 | Klocka — Arduino genererar 500 Hz fyrkantsvåg |
-| 34 | `R/W` | Arduino D3 + VIA pin 22 | Talar om för alla kretsar om CPU:n läser eller skriver |
-| 40 | `/RESET` | Arduino D4 + VIA pin 34 | Kontrollerad reset — båda kretsarna startar samtidigt |
-| 9–16, 17–20, 22–25 | `A0–A15` | Arduino A0–A15 + VIA + 74HC00 | Adressbuss — alla kretsar delar samma 16 linjer |
-| 26–33 | `D0–D7` | Arduino D22–D29 + VIA D0–D7 | Databuss — 100Ω seriemotstånd på varje ledning |
-| 2 | `RDY` | +5V via 10kΩ | Ready — HÖG = CPU kör, LÅG = paus |
-| 4 | `/IRQ` | +5V via 10kΩ | Interrupt — avaktiverad (HÖG = inget avbrott) |
-| 6 | `/NMI` | +5V via 10kΩ | Non-maskable interrupt — avaktiverad |
-| 36 | `BE` | +5V via 10kΩ | Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad! |
-| 38 | `/SO` | +5V via 10kΩ | Set Overflow — avaktiverad |
+Här är alla kopplingar för CPU:n. Den får klocka, `R/W` och reset från Arduino, och delar adress- och databussen med VIA:n och 74HC00:an. Avkopplingskondensatorn är markerad längst ner.
+
+??? note "📦 Kopplingar — CPU, klocka, ström, adressbuss, reset och databuss"
+
+    | Pin | Signal | Kopplas till | Varför |
+    |---|---|---|---|
+    | 8 | `VDD` | +5V | Strömmatning |
+    | 21 | `VSS` | GND | Systemjord |
+    | 37 | `PHI2` | Arduino D2 | Klocka — Arduino genererar 500 Hz fyrkantsvåg |
+    | 34 | `R/W` | Arduino D3 + VIA pin 22 | Talar om för alla kretsar om CPU:n läser eller skriver |
+    | 40 | `/RESET` | Arduino D4 + VIA pin 34 | Kontrollerad reset — båda kretsarna startar samtidigt |
+    | 9–16, 17–20, 22–25 | `A0–A15` | Arduino A0–A15 + VIA + 74HC00 | Adressbuss — alla kretsar delar samma 16 linjer |
+    | 26–33 | `D0–D7` | Arduino D22–D29 + VIA D0–D7 | Databuss — 100Ω seriemotstånd på varje ledning |
+    | 2 | `RDY` | +5V via 10kΩ | Ready — HÖG = CPU kör, LÅG = paus |
+    | 4 | `/IRQ` | +5V via 10kΩ | Interrupt — avaktiverad (HÖG = inget avbrott) |
+    | 6 | `/NMI` | +5V via 10kΩ | Non-maskable interrupt — avaktiverad |
+    | 36 | `BE` | +5V via 10kΩ | Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad! |
+    | 38 | `/SO` | +5V via 10kΩ | Set Overflow — avaktiverad |
 
 ### W65C22 VIA
 
-| Pin | Signal | Kopplas till | Varför |
-|---|---|---|---|
-| 20 | `VDD` | +5V | Strömmatning — glöm inte avkoppling 100nF till GND |
-| 1 | `VSS` | GND | Systemjord |
-| 25 | `PHI2` | CPU PHI2 (pin 37) | Samma klocka som CPU — VIAn synkroniseras med bussen |
-| 22 | `R/W` | CPU R/W (pin 34) | VIAn behöver veta om CPU:n läser eller skriver |
-| 34 | `/RESET` | CPU /RESET (pin 40) | VIAns interna register nollställs vid reset |
-| 26–33 | `D0–D7` | CPU D0–D7 | Databuss — VIAn läser/skriver data här |
-| 38–35 | `RS0–RS3` | CPU A0–A3 | Registerväljare — vilket av VIAns 16 register som adresseras |
-| 24 | `CS1` | +5V | Chip Select 1 — aktiv HÖG. Permanent aktiverad |
-| 23 | `/CS2` | 74HC00 pin 6 (utgång) | Chip Select 2 — aktiv LÅG. 74HC00 drar denna LÅG när A15=0, A14=1 |
-| 2 | `PA0` | LCD RS (pin 4) | Register Select: LÅG = kommando, HÖG = data |
-| 4 | `PA2` | LCD E (pin 6) | Enable — fallande flank får LCD:n att läsa databussen |
-| 10–17 | `PB0–PB7` | LCD DB0–DB7 | 8-bitars parallell data till LCD:n |
+Här är alla kopplingar för VIAn. Den får klocka, `R/W` och reset från CPU:n, och styr LCD:n via port A/B. Avkopplingskondensatorn är markerad längst ner.
+
+??? note "📦 Kopplingar — W65C22 VIA"
+
+    | Pin | Signal | Kopplas till | Varför |
+    |---|---|---|---|
+    | 20 | `VDD` | +5V | Strömmatning — glöm inte avkoppling 100nF till GND |
+    | 1 | `VSS` | GND | Systemjord |
+    | 25 | `PHI2` | CPU PHI2 (pin 37) | Samma klocka som CPU — VIAn synkroniseras med bussen |
+    | 22 | `R/W` | CPU R/W (pin 34) | VIAn behöver veta om CPU:n läser eller skriver |
+    | 34 | `/RESET` | CPU /RESET (pin 40) | VIAns interna register nollställs vid reset |
+    | 26–33 | `D0–D7` | CPU D0–D7 | Databuss — VIAn läser/skriver data här |
+    | 38–35 | `RS0–RS3` | CPU A0–A3 | Registerväljare — vilket av VIAns 16 register som adresseras |
+    | 24 | `CS1` | +5V | Chip Select 1 — aktiv HÖG. Permanent aktiverad |
+    | 23 | `/CS2` | 74HC00 pin 6 (utgång) | Chip Select 2 — aktiv LÅG. 74HC00 drar denna LÅG när A15=0, A14=1 |
+    | 2 | `PA0` | LCD RS (pin 4) | Register Select: LÅG = kommando, HÖG = data |
+    | 4 | `PA2` | LCD E (pin 6) | Enable — fallande flank får LCD:n att läsa databussen |
+    | 10–17 | `PB0–PB7` | LCD DB0–DB7 | 8-bitars parallell data till LCD:n |
 
 ### 74HC00 (adressavkodning)
 
-| Pin | Signal | Kopplas till | Varför |
-|---|---|---|---|
-| 1, 2 | `A15` (in) | CPU `A15` | Båda ingångarna till A15 → ut = NOT A15 (inverterare) |
-| 3 | NOT `A15` (ut) | U4B pin 4 | NOT A15 → grind B ingång 1 |
-| 4 | NOT `A15` | U4A pin 3 | NOT A15 |
-| 5 | `A14` (in) | CPU `A14` | (NOT A15) NAND A14 → LÅG när A15=0, A14=1 |
-| 6 | VIA `/CS2` (ut) | VIA `/CS2` (pin 23) | LÅG vid $4000–$7FFF → VIA aktiverad |
-| 14 | `VCC` | +5V | Strömmatning |
-| 7 | `GND` | GND | Systemjord |
+Här är kopplingarna för U4A + U4B i **74HC00**:an. De avgör när VIAn ska svara på CPU:ns läs- och skrivförfrågningar.
 
-Logik: `A15` inverteras av U4A. U4B gör (NOT `A15`) NAND `A14` → LÅG när `A15`=0 och `A14`=1. VIAn aktiveras alltså vid adress `$4000–$7FFF`. CPU:ns `A0–A3` går till VIAns `RS0–RS3` vilket ger 16 register på `$4000–$400F`.
+??? note "📦 Kopplingar — 74HC00 (adressavkodning för VIA)"
+
+    | Pin | Signal | Kopplas till | Varför |
+    |---|---|---|---|
+    | 1, 2 | `A15` (in) | CPU `A15` | Båda ingångarna till A15 → ut = NOT A15 (inverterare) |
+    | 3 | NOT `A15` (ut) | U4B pin 4 | NOT A15 → grind B ingång 1 |
+    | 4 | NOT `A15` | U4A pin 3 | NOT A15 |
+    | 5 | `A14` (in) | CPU `A14` | (NOT A15) NAND A14 → LÅG när A15=0, A14=1 |
+    | 6 | VIA `/CS2` (ut) | VIA `/CS2` (pin 23) | LÅG vid $4000–$7FFF → VIA aktiverad |
+    | 14 | `VCC` | +5V | Strömmatning |
+    | 7 | `GND` | GND | Systemjord |
 
 ### LCD 16×2 (parallell)
 
-| Pin | Signal | Kopplas till | Varför |
-|---|---|---|---|
-| 1 | `VSS` | GND | Jord |
-| 2 | `VDD` | +5V | Strömmatning |
-| 3 | `VO` | Potentiometer (10kΩ) | Kontrast — mittbenet till VO, sidoben till +5V och GND |
-| 4 | `RS` | VIA PA0 (pin 2) | Register Select — 0 = instruktion, 1 = teckendata |
-| 5 | `R/W` | GND | Alltid skrivläge — jag läser aldrig från LCD:n |
-| 6 | `E` | VIA PA2 (pin 4) | Enable — VIAn pulserar denna för att skicka data |
-| 7–14 | `DB0–DB7` | VIA PB0–PB7 | 8-bitars data — teckenkod eller kommando |
-| 15 | `A` | +5V via 220Ω | Bakgrundsbelysning anod (+) |
-| 16 | `K` | GND | Bakgrundsbelysning katod (−) |
+Här är kopplingarna för LCD:n, som nu styrs av VIAn istället för Arduino. Datapinnarna `DB0–DB7` går till VIA:ns port B, och kontrollpinnarna `RS` och `E` går till port A. Jag läser aldrig från LCD:n, så `R/W` är alltid LÅG.
+
+??? note "📦 Kopplingar — LCD 16×2"
+
+    | Pin | Signal | Kopplas till | Varför |
+    |---|---|---|---|
+    | 1 | `VSS` | GND | Jord |
+    | 2 | `VDD` | +5V | Strömmatning |
+    | 3 | `VO` | Potentiometer (10kΩ) | Kontrast — mittbenet till VO, sidoben till +5V och GND |
+    | 4 | `RS` | VIA PA0 (pin 2) | Register Select — 0 = instruktion, 1 = teckendata |
+    | 5 | `R/W` | GND | Alltid skrivläge — jag läser aldrig från LCD:n |
+    | 6 | `E` | VIA PA2 (pin 4) | Enable — VIAn pulserar denna för att skicka data |
+    | 7–14 | `DB0–DB7` | VIA PB0–PB7 | 8-bitars data — teckenkod eller kommando |
+    | 15 | `A` | +5V via 220Ω | Bakgrundsbelysning anod (+) |
+    | 16 | `K` | GND | Bakgrundsbelysning katod (−) |
 
 ## Minneskarta
 
@@ -230,30 +244,32 @@ Programmet ligger på `$8000`:
 
 Tabellen nedan visar hur Arduino bygger 6502-programmet i minnet, byte för byte. Första delen initierar VIA-portarna och LCD-displayen (8-bitarsläge, 2 rader, 5×8 font). Därefter skrivs en textrad i taget: cursor-positionering (→ rad 1), `RS`=1 (teckenläge), och så varje ASCII-tecken med en enable-puls. Efter sista tecknet kommer clear display och ett `JMP`-hopp tillbaka till början.
 
-| Steg | Assembler | Bytes | Förklaring |
-|---|---|---|---|
-| VIA-init — sätt portar som utgångar |  |  |  |
-| 1 | LDA #$FF | A9 FF | Alla pinnar = utgång |
-| 2 | STA $4002 | 8D 02 40 | DDRB = $FF (LCD data) |
-| 3 | STA $4003 | 8D 03 40 | DDRA = $FF (RS + E) |
-| LCD-init — tvinga 8-bitarsläge ($30 × 3) |  |  |  |
-| 4–6 | LDA #$30 STA $4000 LDA #$04 · STA $4001 LDA #$00 · STA $4001 | A9 30 8D 00 40 A9 04 8D 01 40 A9 00 8D 01 40 | $30 till PORTB, pulsa E (RS=0). Upprepas 3 gånger för att garantera 8-bit |
-| Function Set: 8-bit, 2 rader, 5×8 font |  |  |  |
-| 7 | LDA #$38 STA $4000 LDA #$04 · STA $4001 LDA #$00 · STA $4001 | A9 38 8D 00 40 A9 04 8D 01 40 A9 00 8D 01 40 | $38 = 8-bit, 2 rader, 5×8 — pulsa E |
-| Display ON/OFF: display on, cursor off, blink off |  |  |  |
-| 8 | LDA #$0C STA $4000 LDA #$04 · STA $4001 LDA #$00 · STA $4001 | A9 0C 8D 00 40 A9 04 8D 01 40 A9 00 8D 01 40 | Display ON, cursor OFF |
-| Clear display + Entry mode: increment, no shift |  |  |  |
-| 9 | LDA #$01 STA $4000 LDA #$04 · STA $4001 LDA #$00 · STA $4001 | A9 01 8D 00 40 A9 04 8D 01 40 A9 00 8D 01 40 | Clear display |
-| 10 | LDA #$06 STA $4000 LDA #$04 · STA $4001 LDA #$00 · STA $4001 | A9 06 8D 00 40 A9 04 8D 01 40 A9 00 8D 01 40 | Entry mode: increment, no shift |
-| Rad 1: "=== 6502 VIA LCD ===" (cursor till $00) |  |  |  |
-| 11 | LDA #$80 · STA $4000 LDA #$04 · STA $4001 LDA #$00 · STA $4001 | A9 80 8D 00 40 … | Kommando $80 = sätt DDRAM-adress 0 (rad 1, pos 0) |
-| 12 | LDA #$01 · STA $4001 | A9 01 8D 01 40 | RS=1 (data-läge) |
-| 13 | För varje tecken: LDA #tecken · STA $4000 LDA #$05 · STA $4001 LDA #$01 · STA $4001 | A9 xx 8D 00 40 A9 05 8D 01 40 A9 01 8D 01 40 | Data + RS=1,E=1 → RS=1,E=0 (fallande flank). 19 tecken |
-| Rad 2: "W65C02" (cursor $C0) |  |  |  |
-| 14 | LDA #$C0 … | Cursor till rad 2 → "W65C02" |  |
-| Clear + loop |  |  |  |
-| 17 | LDA #$01 · STA $4000 LDA #$04 · STA $4001 LDA #$00 · STA $4001 | A9 01 8D 00 40 … | Clear display |
-| 18 | JMP hello_start | 4C xx xx | Hoppa tillbaka till rad 1 — oändlig loop |
+??? note "6502-programmet i maskinkod"
+
+    | Steg | Assembler | Bytes | Förklaring |
+    |---|---|---|---|
+    | VIA-init — sätt portar som utgångar |  |  |  |
+    | 1 | LDA #$FF | A9 FF | Alla pinnar = utgång |
+    | 2 | STA $4002 | 8D 02 40 | DDRB = $FF (LCD data) |
+    | 3 | STA $4003 | 8D 03 40 | DDRA = $FF (RS + E) |
+    | LCD-init — tvinga 8-bitarsläge ($30 × 3) |  |  |  |
+    | 4–6 | LDA #$30 STA $4000 LDA #$04 · STA $4001 LDA #$00 · STA $4001 | A9 30 8D 00 40 A9 04 8D 01 40 A9 00 8D 01 40 | $30 till PORTB, pulsa E (RS=0). Upprepas 3 gånger för att garantera 8-bit |
+    | Function Set: 8-bit, 2 rader, 5×8 font |  |  |  |
+    | 7 | LDA #$38 STA $4000 LDA #$04 · STA $4001 LDA #$00 · STA $4001 | A9 38 8D 00 40 A9 04 8D 01 40 A9 00 8D 01 40 | $38 = 8-bit, 2 rader, 5×8 — pulsa E |
+    | Display ON/OFF: display on, cursor off, blink off |  |  |  |
+    | 8 | LDA #$0C STA $4000 LDA #$04 · STA $4001 LDA #$00 · STA $4001 | A9 0C 8D 00 40 A9 04 8D 01 40 A9 00 8D 01 40 | Display ON, cursor OFF |
+    | Clear display + Entry mode: increment, no shift |  |  |  |
+    | 9 | LDA #$01 STA $4000 LDA #$04 · STA $4001 LDA #$00 · STA $4001 | A9 01 8D 00 40 A9 04 8D 01 40 A9 00 8D 01 40 | Clear display |
+    | 10 | LDA #$06 STA $4000 LDA #$04 · STA $4001 LDA #$00 · STA $4001 | A9 06 8D 00 40 A9 04 8D 01 40 A9 00 8D 01 40 | Entry mode: increment, no shift |
+    | Rad 1: "=== 6502 VIA LCD ===" (cursor till $00) |  |  |  |
+    | 11 | LDA #$80 · STA $4000 LDA #$04 · STA $4001 LDA #$00 · STA $4001 | A9 80 8D 00 40 … | Kommando $80 = sätt DDRAM-adress 0 (rad 1, pos 0) |
+    | 12 | LDA #$01 · STA $4001 | A9 01 8D 01 40 | RS=1 (data-läge) |
+    | 13 | För varje tecken: LDA #tecken · STA $4000 LDA #$05 · STA $4001 LDA #$01 · STA $4001 | A9 xx 8D 00 40 A9 05 8D 01 40 A9 01 8D 01 40 | Data + RS=1,E=1 → RS=1,E=0 (fallande flank). 19 tecken |
+    | Rad 2: "W65C02" (cursor $C0) |  |  |  |
+    | 14 | LDA #$C0 … | Cursor till rad 2 → "W65C02" |  |
+    | Clear + loop |  |  |  |
+    | 17 | LDA #$01 · STA $4000 LDA #$04 · STA $4001 LDA #$00 · STA $4001 | A9 01 8D 00 40 … | Clear display |
+    | 18 | JMP hello_start | 4C xx xx | Hoppa tillbaka till rad 1 — oändlig loop |
 
 ### `is_via()` — Arduinons sätt att kliva ur vägen
 

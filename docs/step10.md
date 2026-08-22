@@ -44,40 +44,50 @@ EEPROM:et sitter nu på datorns adress- och databuss tillsammans med SRAM, VIA o
 ## Kopplingar
 
 Först programmeraren — en enkel 1:1-koppling. Sedan datorn — fyra enheter på samma buss.
+
 ### Programmeraren — Arduino till AT28C256
-| Signal       | Arduino         | AT28C256               | Varför                                         |
-| ------------ | --------------- | ---------------------- | ---------------------------------------------- |
-| `VDD`, `VSS` | 5V, GND         | `VDD` (28), `VSS` (14) | Strömmatning — glöm inte 100nF avkoppling      |
-| `A0–A7`      | A0–A7 (PORTF)   | `A0–A7`                | Låga adressbyte — vilken byte som ska brännas  |
-| `A8–A14`     | A8–A14 (PORTK)  | `A8–A14`               | Höga adressbyte — 15 bitar = 32 768 adresser   |
-| `D0–D7`      | D22–D29 (PORTA) | `D0–D7` via 100Ω       | Data — samma portregister som alltid           |
-| `/WE`        | D2              | `/WE` (27)             | Write Enable — pulsas LÅG för att bränna       |
-| `/OE`        | D3              | `/OE` (22)             | Output Enable — LÅG vid läsning/verifiering    |
-| `/CE`        | GND             | `/CE` (20)             | Chip Enable — alltid aktiv under programmering |
+
+Här är kopplingarna när den extra Arduinon programmerar EEPROM:et.
+
+??? note "📦 Kopplingar — Arduino och EEPROM"
+
+    | Signal       | Arduino         | AT28C256               | Varför                                         |
+    | ------------ | --------------- | ---------------------- | ---------------------------------------------- |
+    | `VDD`, `VSS` | 5V, GND         | `VDD` (28), `VSS` (14) | Strömmatning — glöm inte 100nF avkoppling      |
+    | `A0–A7`      | A0–A7 (PORTF)   | `A0–A7`                | Låga adressbyte — vilken byte som ska brännas  |
+    | `A8–A14`     | A8–A14 (PORTK)  | `A8–A14`               | Höga adressbyte — 15 bitar = 32 768 adresser   |
+    | `D0–D7`      | D22–D29 (PORTA) | `D0–D7` via 100Ω       | Data — samma portregister som alltid           |
+    | `/WE`        | D2              | `/WE` (27)             | Write Enable — pulsas LÅG för att bränna       |
+    | `/OE`        | D3              | `/OE` (22)             | Output Enable — LÅG vid läsning/verifiering    |
+    | `/CE`        | GND             | `/CE` (20)             | Chip Enable — alltid aktiv under programmering |
 
 ### Datorn — EEPROM på bussen
 
-| Pin | Signal | Ansluts till | Varför |
-|---|---|---|---|
-| 28, 14 | `VDD`, `VSS` | +5V, GND | Strömmatning |
-| 1–10, 21–26 | `A0–A14` | CPU `A0–A14` | Delad adressbuss med SRAM, VIA, Arduino |
-| 11–13, 15–19 | `D0–D7` | CPU `D0–D7` via 100Ω | Delad databuss |
-| 20 | `/CE` | 74HC00-utgång | Aktiveras vid $8000–$FFFF (A15=1) |
-| 22 | `/OE` | GND | Alltid läs ut — EEPROM är read-only i datorn |
-| 27 | `/WE` | +5V | Aldrig skriva — ROM-läge |
+Här är kopplingarna när EEPROM:et sitter på datorns adress- och databuss tillsammans med SRAM, VIA och Arduino. 
+
+??? note "📦 Kopplingar — CPU, VIA, SRAM, Arduino och EEPROM"
+
+    | Pin | Signal | Ansluts till | Varför |
+    |---|---|---|---|
+    | 28, 14 | `VDD`, `VSS` | +5V, GND | Strömmatning |
+    | 1–10, 21–26 | `A0–A14` | CPU `A0–A14` | Delad adressbuss med SRAM, VIA, Arduino |
+    | 11–13, 15–19 | `D0–D7` | CPU `D0–D7` via 100Ω | Delad databuss |
+    | 20 | `/CE` | 74HC00-utgång | Aktiveras vid $8000–$FFFF (A15=1) |
+    | 22 | `/OE` | GND | Alltid läs ut — EEPROM är read-only i datorn |
+    | 27 | `/WE` | +5V | Aldrig skriva — ROM-läge |
 
 ### 74HC00 — EEPROM-avkodning (ny grind)
 
 En extra 74HC00 vid sidan av den från steg 7/9. En enda grind används som inverterare för `A15`.
 
-`A15` NAND `A15` = NOT `A15`. EEPROM:ets `/CE` är aktiv LÅG. När `A15`=1 (adress `$8000` eller högre) blir grindens utgång LÅG → EEPROM aktiverat. När `A15`=0 (under `$8000`) är utgången HÖG → EEPROM är bortkopplat, SRAM eller VIA tar över.
+??? note "📦 Kopplingar — 74HC00 för EEPROM"
 
-| Pin | Signal | Kopplas till | Varför |
-|---|---|---|---|
-| 1, 2 | `A15` (in) | CPU `A15` | Båda ingångarna till A15 → NAND = NOT A15 |
-| 3 | NOT `A15` (ut) | EEPROM `/CE` (pin 20) | LÅG när A15=1 → EEPROM aktivt vid $8000–$FFFF |
-| 14 | `VCC` | +5V | Strömmatning |
-| 7 | `GND` | GND | Systemjord |
+    | Pin | Signal | Kopplas till | Varför |
+    |---|---|---|---|
+    | 1, 2 | `A15` (in) | CPU `A15` | Båda ingångarna till A15 → NAND = NOT A15 |
+    | 3 | NOT `A15` (ut) | EEPROM `/CE` (pin 20) | LÅG när A15=1 → EEPROM aktivt vid $8000–$FFFF |
+    | 14 | `VCC` | +5V | Strömmatning |
+    | 7 | `GND` | GND | Systemjord |
 
 ## Minneskarta
 

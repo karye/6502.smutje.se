@@ -13,6 +13,7 @@ Hastigheten förändrar en sak: vid 1 MHz tar varje instruktion bara några mikr
 1 MHz är samma fart som original-Apple II:n — snabbt nog att kännas som en riktig dator, långsamt nog att följa med i vad som händer.
 
 ## Nya komponenter
+
 | Antal | Komponent | Används till |
 |---|---|---|
 | 1 | 16 MHz-oscillator (DIL-14, 5V) | Klockans källa — ren 16 MHz fyrkantsvåg direkt på utgången |
@@ -49,31 +50,45 @@ DIP-14-kapsel. Två oberoende 4-bitars ripple-räknare (1 och 2). `1Q3` är den 
 ## Kopplingar
 
 Tre små kretsar att koppla: oscillatorn, delaren och reset-kretsen. Allt annat — ström, bussar, SRAM, VIA, EEPROM — är oförändrat från steg 11.
+
 ### Oscillator (DIL-14, 5V, 16 MHz)
-| Pin | Signal | Kopplas till | Varför |
-|---|---|---|---|
-| 14 | `VCC` | +5V | Strömmatning — glöm inte 100 nF avkoppling |
-| 7 | `GND` | GND | Systemjord |
-| 8 | `OUT` | 74HC393 pin 1 (`1CLK`) | 16 MHz fyrkantsvåg till räknaren |
-| 1 | `ENA` | — (lämnas oansluten) | Enable — de flesta moduler kör alltid |
+
+Här är kopplingarna för 16 MHz-oscillatorn. Den har inbyggd kristall och förstärkare, och utgången ger en ren fyrkantsvåg direkt.
+
+??? note "📦 Kopplingar — 16 MHz-oscillator"
+
+    | Pin | Signal | Kopplas till | Varför |
+    |---|---|---|---|
+    | 14 | `VCC` | +5V | Strömmatning — glöm inte 100 nF avkoppling |
+    | 7 | `GND` | GND | Systemjord |
+    | 8 | `OUT` | 74HC393 pin 1 (`1CLK`) | 16 MHz fyrkantsvåg till räknaren |
+    | 1 | `ENA` | — (lämnas oansluten) | Enable — de flesta moduler kör alltid |
 
 ### 74HC393 — frekvensdelare
 
-| Pin | Signal | Kopplas till | Varför |
-|---|---|---|---|
-| 1 | `1CLK` | Oscillatorns ut (pin 8) | 16 MHz in — räknaren tickar på varje fallande flank |
-| 2 | `1MR` | GND | Master reset — LÅG = räknaren räknar |
-| 6 | `1Q3` | CPU `PHI2` (pin 37) | 16 MHz ÷16 = 1 MHz — datorns nya hjärtslag |
-| 14 | `VCC` | +5V | Strömmatning — 100 nF avkoppling till GND |
-| 7 | `GND` | GND | Systemjord |
+Här är kopplingarna för 74HC393:an som delar ner 16 MHz → 1 MHz. Jag använder bara den ena räknaren (1) och utgången `1Q3` (pin 6) till CPU:n.
+
+??? note "📦 Kopplingar — 74HC393"
+
+    | Pin | Signal | Kopplas till | Varför |
+    |---|---|---|---|
+    | 1 | `1CLK` | Oscillatorns ut (pin 8) | 16 MHz in — räknaren tickar på varje fallande flank |
+    | 2 | `1MR` | GND | Master reset — LÅG = räknaren räknar |
+    | 6 | `1Q3` | CPU `PHI2` (pin 37) | 16 MHz ÷16 = 1 MHz — datorns nya hjärtslag |
+    | 14 | `VCC` | +5V | Strömmatning — 100 nF avkoppling till GND |
+    | 7 | `GND` | GND | Systemjord |
 
 ### Reset-RC — start utan Arduino
 
-| Komponent | Kopplas till | Varför |
-|---|---|---|
-| 10 kΩ | +5V → CPU `/RESET` (pin 40) | Pull-up — håller `/RESET` HÖG i drift |
-| 10 µF | CPU `/RESET` → GND | Laddas långsamt vid start → `/RESET` hålls LÅG några ms, sedan HÖG |
-| Knapp | CPU `/RESET` → GND | Manuell reset — tryck så startar datorn om |
+Här är den enkla RC-kretsen som håller `/RESET` låg en stund vid start. När strömmen slås på laddas kondensatorn långsamt upp via motståndet, och `/RESET` hålls LÅG tills kondensatorn är fulladdad. Sedan stiger spänningen till +5V och datorn börjar köra.
+
+??? note "📦 Kopplingar — reset-RC"
+
+    | Komponent | Kopplas till | Varför |
+    |---|---|---|
+    | 10 kΩ | +5V → CPU `/RESET` (pin 40) | Pull-up — håller `/RESET` HÖG i drift |
+    | 10 µF | CPU `/RESET` → GND | Laddas långsamt vid start → `/RESET` hålls LÅG några ms, sedan HÖG |
+    | Knapp | CPU `/RESET` → GND | Manuell reset — tryck så startar datorn om |
 
 ## Programmet — nu med tidshantering
 

@@ -89,12 +89,14 @@ Här är vad som ändras jämfört med steg 10. Allt annat — ström, klocka, r
 
 Här är tricket: kretsarnas egna chip-select-pinnar gör avkodningen. SRAM:s `/CE` är aktivt låg, och VIA:n har *två* chip-selects med motsatt polaritet — `CS1` (pin 24, aktivt hög) och `/CS2` (pin 23, aktivt låg). Då matchar adressbitarna kretsarna direkt, och bara EEPROM:s `/CE` behöver en NAND-grind. Aktiveringslogiken finns i sanningstabellen i Adressavkodning-sektionen ovan, och de fyra direktanslutningarna — SRAM `/CE`, VIA `CS1`/`/CS2` och EEPROM `A14` — står i kretstabellerna ovan. Här visas bara NAND-grinden. 
 
-| Pin | Signal | Kopplas till | Varför |
-|---|---|---|---|
-| 74HC00 — endast en NAND-grind |  |  |  |
-| 1, 2 | `A15`, `A14` (in) | CPU `A15`, CPU `A14` | NAND(`A15`, `A14`) — HÖG när någon är 0 |
-| 3 | EEPROM `/CE` (ut) | AT28C256 pin 20 | LÅG när A15=1 och A14=1 → $C000–$FFFF |
-| 14, 7 | VCC, GND | +5V, GND | Strömmatning |
+??? note "📦 Kopplingar — 74HC00 NAND-grind"
+
+    | Pin | Signal | Kopplas till | Varför |
+    |---|---|---|---|
+    | 74HC00 — endast en NAND-grind |  |  |  |
+    | 1, 2 | `A15`, `A14` (in) | CPU `A15`, CPU `A14` | NAND(`A15`, `A14`) — HÖG när någon är 0 |
+    | 3 | EEPROM `/CE` (ut) | AT28C256 pin 20 | LÅG när A15=1 och A14=1 → $C000–$FFFF |
+    | 14, 7 | VCC, GND | +5V, GND | Strömmatning |
 
 ## Minneskarta
 
@@ -105,7 +107,7 @@ Nu används hela 64 KB, varje enhet på sin egen tydliga region: **SRAM** nedtil
         <div style="height:100px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #a855f7">
           <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
             <span style="color:#6b7280">$FFFF</span>
-            <small>$C000</small>
+            <span>$C000</span>
           </div>
           <div style="flex:1 1 0%;background-color:#f3e8ff;border-left:1px solid #a78bfa;border-right:1px solid #a78bfa;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">AT28C256 EEPROM — program + vektorer</div>
           <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">16 KB</div>
@@ -113,7 +115,7 @@ Nu används hela 64 KB, varje enhet på sin egen tydliga region: **SRAM** nedtil
         <div style="height:100px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #eab308">
           <div style="min-height:16px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
             <span style="color:#6b7280">$BFFF</span>
-            <small>$8000</small>
+            <span>$8000</span>
           </div>
           <div style="flex:1 1 0%;background-color:#fef9c3;border-left:1px solid #facc15;border-right:1px solid #facc15;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;font-weight:700">W65C22 VIA — I/O-fönster</div>
           <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">16 KB</div>
@@ -121,7 +123,7 @@ Nu används hela 64 KB, varje enhet på sin egen tydliga region: **SRAM** nedtil
         <div style="height:200px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #22c55e">
           <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
             <span style="color:#6b7280">$7FFF</span>
-            <small>$0000</small>
+            <span>$0000</span>
           </div>
           <div style="flex:1 1 0%;background-color:#dcfce7;border-left:1px solid #4ade80;border-right:1px solid #4ade80;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;font-weight:700">62256 SRAM — 32 KB (hela chippet)</div>
           <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">32 KB</div>

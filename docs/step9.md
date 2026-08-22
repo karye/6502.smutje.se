@@ -45,6 +45,8 @@ Tabellerna täcker nu fyra kretsar plus LCD:n, uppdelade efter funktion: ström 
 
 ### 62256 SRAM
 
+Här är alla kopplingar för SRAM-chippet. Avkopplingskondensatorn är markerad längst ner.
+
 ??? note "📦 Kopplingar — SRAM"
 
     | Pin | Signal | Kopplas till | Varför |
@@ -59,9 +61,7 @@ Tabellerna täcker nu fyra kretsar plus LCD:n, uppdelade efter funktion: ström 
 
 ### 74HC00 — adressavkodning för SRAM
 
-U4A (NOT `A15`) och U4B (NAND för VIA) är oförändrade från steg 7. U4C blir NOT `A14`. U4D gör (NOT `A14`) NAND (NOT `A15`) → LÅG endast vid `$0000`–`$3FFF`.
-
-U4A inverterar `A15`, U4C inverterar `A14`. U4D gör (NOT `A14`) NAND (NOT `A15`) → LÅG endast när `A14`=0 OCH `A15`=0. SRAM aktiveras alltså vid `$0000`–`$3FFF` och ingen annanstans. VIAn (U4B) aktiveras vid `$4000`–`$7FFF`. 
+Här är kopplingarna för U4C + U4D i **74HC00**:an. De avgör när SRAM ska svara på CPU:ns läs- och skrivförfrågningar.
 
 ??? note "📦 Kopplingar — SRAM-avkodning"
 
@@ -84,7 +84,7 @@ U4A inverterar `A15`, U4C inverterar `A14`. U4D gör (NOT `A14`) NAND (NOT `A15`
 
 ### CPU, VIA och LCD
 
-CPU, VIA och LCD är oförändrade från steg 7. Här är den kompletta kopplingslistan.
+Här är kopplingarna för CPU, VIA och LCD — oförändrat från steg 7–8.
 
 ??? note "📦 Kopplingar — CPU, VIA, LCD"
 

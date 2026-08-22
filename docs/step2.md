@@ -26,21 +26,23 @@ Schemat visar den nya kopplingen: 16 adresslinjer som löper från CPU:ns `A0–
 
 ## Kopplingar
 
-Tabellen visar alla kopplingar från steg 1 plus de nya: adressbussens 16 linjer och reset-signalen. 
+Här är varenda koppling i steg 2, pinne för pinne. 
 
-| Pin | Signal | Kopplas till | Varför |
-|---|---|---|---|
-| 8 | `VDD` | +5V | Strömmatning — CPU:ns driftspänning |
-| 21 | `VSS` | GND | Systemjord — sluten krets |
-| 37 | `PHI2` | Arduino D2 | Klockingång — Arduino skickar fyrkantsvåg |
-| 2 | `RDY` | +5V via 10kΩ | Ready — HÖG = CPU får köra. Utan denna stannar CPU:n |
-| 4 | `/IRQ` | +5V via 10kΩ | Interrupt request — HÖG = inget avbrott |
-| 6 | `/NMI` | +5V via 10kΩ | Non-maskable interrupt — måste vara HÖG |
-| 36 | `BE` | +5V via 10kΩ | Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad! |
-| 38 | `/SO` | +5V via 10kΩ | Set Overflow — avaktiverad |
-| 40 | `/RESET` | Arduino D4 | Kontrollerad reset — Arduino håller CPU:n i reset tills jag är redo |
-| 9–16 | `A0–A7` | Arduino A0–A7 | Låga adressbyte — läses via PORTF |
-| 17–20, 22–25 | `A8–A15` | Arduino A8–A15 | Höga adressbyte — läses via PORTK |
+??? note "📦 Kopplingar — CPU, klocka, ström, adressbuss och reset"
+
+    | Pin | Signal | Kopplas till | Varför |
+    |---|---|---|---|
+    | 8 | `VDD` | +5V | Strömmatning — CPU:ns driftspänning |
+    | 21 | `VSS` | GND | Systemjord — sluten krets |
+    | 37 | `PHI2` | Arduino D2 | Klockingång — Arduino skickar fyrkantsvåg |
+    | 2 | `RDY` | +5V via 10kΩ | Ready — HÖG = CPU får köra. Utan denna stannar CPU:n |
+    | 4 | `/IRQ` | +5V via 10kΩ | Interrupt request — HÖG = inget avbrott |
+    | 6 | `/NMI` | +5V via 10kΩ | Non-maskable interrupt — måste vara HÖG |
+    | 36 | `BE` | +5V via 10kΩ | Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad! |
+    | 38 | `/SO` | +5V via 10kΩ | Set Overflow — avaktiverad |
+    | 40 | `/RESET` | Arduino D4 | Kontrollerad reset — Arduino håller CPU:n i reset tills jag är redo |
+    | 9–16 | `A0–A7` | Arduino A0–A7 | Låga adressbyte — läses via PORTF |
+    | 17–20, 22–25 | `A8–A15` | Arduino A8–A15 | Höga adressbyte — läses via PORTK |
 
 ## Arduino-kod
 
