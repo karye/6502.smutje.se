@@ -232,18 +232,20 @@ Jag följer `show_num` när A-registret innehåller 144 — talet som visas efte
 
 Från steg 8 känner jag redan `LDA`, `STA`, `JSR`, `RTS`, `LDX`, `INX`, `BEQ` och `JMP`. Det här är vad som är nytt:
 
-| Instruktion | Exempel i programmet | Vad CPU:n gör |
-|---|---|---|
-| CLC / SEC | före ADC / SBC | Rensar/sätter carry-flaggan — förbereder addition respektive subtraktion. |
-| ADC $01 | F(n) = F(n-2) + F(n-1) | Adderar ett minnesvärde till A *inklusive* carry — grunden i Fibonacci-loopen. |
-| BCC no_wrap | efter ADC | Hoppar om carry = 0, dvs om summan rymdes i 8 bitar. Annars börjar serien om. |
-| SBC #100 | hundratal i show_num | Subtraherar 100 från A (med carry) — upprepas tills resten < 100. |
-| CMP #100 | "är A >= 100?" | Jämför A med ett värde utan att ändra A — flaggorna avgör sedan om jag hoppar. |
-| PHA / PLA | spara resten i show_num | Stacken: sparar A för att komma ihåg den och tar tillbaka den senare. |
-| TXA | räknaren → A | Kopierar X-registret till A så att räknaren kan skrivas ut. |
-| DEX / DEY | loopräknare | Minskar X/Y med 1 — i delay och i tiotal-uträkningen. |
-| BNE | loopar i show_num | Hoppar om resultatet inte är noll — avslutar räknar-looparna. |
-| LDA $00 / STA $02 | F-variablerna | Zero page-adressering — variabler i $00–$02 nås med bara en byte. |
+??? note "📦 Instruktioner i Fibonacci-programmet"
+
+    | Instruktion | Exempel i programmet | Vad CPU:n gör |
+    |---|---|---|
+    | CLC / SEC | före ADC / SBC | Rensar/sätter carry-flaggan — förbereder addition respektive subtraktion. |
+    | ADC $01 | F(n) = F(n-2) + F(n-1) | Adderar ett minnesvärde till A *inklusive* carry — grunden i Fibonacci-loopen. |
+    | BCC no_wrap | efter ADC | Hoppar om carry = 0, dvs om summan rymdes i 8 bitar. Annars börjar serien om. |
+    | SBC #100 | hundratal i show_num | Subtraherar 100 från A (med carry) — upprepas tills resten < 100. |
+    | CMP #100 | "är A >= 100?" | Jämför A med ett värde utan att ändra A — flaggorna avgör sedan om jag hoppar. |
+    | PHA / PLA | spara resten i show_num | Stacken: sparar A för att komma ihåg den och tar tillbaka den senare. |
+    | TXA | räknaren → A | Kopierar X-registret till A så att räknaren kan skrivas ut. |
+    | DEX / DEY | loopräknare | Minskar X/Y med 1 — i delay och i tiotal-uträkningen. |
+    | BNE | loopar i show_num | Hoppar om resultatet inte är noll — avslutar räknar-looparna. |
+    | LDA $00 / STA $02 | F-variablerna | Zero page-adressering — variabler i $00–$02 nås med bara en byte. |
 
 ??? note "📦 6502-programmet — program_fib.asm"
 
