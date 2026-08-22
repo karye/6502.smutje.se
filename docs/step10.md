@@ -151,7 +151,10 @@ Arduinon är nu reducerad till *klockgenerator, reset-kontroll och seriell diagn
 
 Koden nedan är baserad på steg 9 men med `is_eeprom()` istället för `program[]`. `read_mem()` returnerar 0 för EEPROM-adresser — Arduino rör dem inte.
 
-> [!NOTE] 📦 Datorns Arduino — step10.inc · 124 rader · se step10.html
+???+ note "📦 Datorns Arduino — step10.inc · 124 rader"
+    ```cpp
+    --8<-- "Mega_2560_6502/src/step10.inc"
+    ```
 
 ## Exempel på körning
 
