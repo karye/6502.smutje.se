@@ -1,22 +1,22 @@
 # Adressbuss och reset
 
-Första gången jag såg en 6502 leta upp sin egen startadress i seriemonitorn var ögonblicket då allt föll på plats. Den här processorn vet exakt var den ska börja — jag ska bara få se det hända.
+Första gången jag såg en **6502** leta upp sin egen startadress i seriemonitorn var ögonblicket då allt föll på plats.
 
 ## Mål
 
 I steg 1 gav jag processorn ström och klocka. Nu ska jag ge den kontroll över adressbussen — 16 ledningar som talar om *var* i minnet CPU:n vill läsa eller skriva.
 
-Alla 6502-processorer startar på samma sätt: efter reset läses den sk reset-vektorn på adress `$FFFC` och `$FFFD` för att få reda på var programmet börjar. Det är inbyggt i kisel — ingen mjukvara, ingen konfiguration. 
+Alla **6502**-processorer startar på samma sätt: efter reset läses den sk reset-vektorn på adress `$FFFC` och `$FFFD` för att få reda på var programmet börjar. Det är inbyggt i kisel — ingen mjukvara, ingen konfiguration. 
 
 Jag kopplar också in `/RESET` (pin 40) till Arduino `D4`. När jag håller `RESB` låg i minst 2 klockcykler nollställs CPU:ns interna register. När jag sedan släpper den (HÖG) börjar CPU:n köra från reset-vektorn.
 
 ## Nya komponenter
 
-Det här steget kräver inga nya elektroniska komponenter — bara kopplingstrådar. Sexton för adresslinjerna `A0–A15` och en extra för reset-signalen, eftersom jag nu tar kontroll över CPU:ns uppstart via `/RESET`.
+Det här steget kräver inga nya elektroniska komponenter bara kopplingstrådar. Sexton stycken för adresslinjerna `A0–A15` och en extra för reset-signalen, eftersom jag nu tar kontroll över CPU:ns uppstart via `/RESET`.
 
 | Antal | Komponent |
 |---|---|
-| 17 | Kopplingstrådar (16 adress + 1 RESB) |
+| 17 | Kopplingstrådar (16 adress + 1 `RESB`) |
 
 ## Kopplingsschema
 
@@ -106,7 +106,7 @@ Lägg märke till att `$FFFC` och `$FFFD` bara dyker upp en gång — efter rese
 
 ## Så här felsöker man
 
-Här är några saker jag kontrollerar:
+Här är några saker att kontrollera om koden inte beter sig som förväntat:
 
 - Ser jag bara `0` eller `1`? Då är CPU:n fortfarande i reset eller `BE` är LÅG. Jag kontrollerar att `RESB` går HÖG efter reset-sekvensen, och att `BE` har +`5V`.
 - Ser jag `FFFC` men inte `FFFD`? Då är någon adresslinje felkopplad. Jag dubbelkollar `A0–A15` en och en.
