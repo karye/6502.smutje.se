@@ -88,7 +88,10 @@ När jag trycker på en mekanisk knapp studsar metallkontakterna mikroskopiskt �
 
 Efter uppladdning händer ingenting förrän jag trycker på en knapp. CPU:n har precis lämnat reset och står stilla — klockan genereras bara när jag ber om det. Här är vad jag ser vid olika tryck:
 
-``` title="Seriemonitor"
+<div class="xmon-wrap">
+<p class="xlabel"><strong>Seriemonitor</strong></p>
+
+```text
 Steg 4 — Knappstegning
 Knapp 1 = klocksteg, Knapp 2 = instruktionssteg
 
@@ -104,6 +107,8 @@ R $8002
 R $8003
 R $8004
 ```
+
+</div>
 
 Med Knapp 1 får jag en rad per tryck. Jag kan se reset-vektorn hämtas — `$FFFC`, `$FFFD` — och sedan följa CPU:n när den läser `NOP`-instruktioner. Med Knapp 2 körs flera rader samtidigt tills `SYNC` går hög, vilket för en `NOP` (`$EA`) betyder 2 klockcykler.
 

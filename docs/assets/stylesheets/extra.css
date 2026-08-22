@@ -62,55 +62,69 @@
 }
 
 /* Seriemonitor-rutor i "Exempel på körning": mörk terminal-stil */
-.monlcd .highlight {
+.monlcd .highlight,
+.xmon-wrap .highlight {
   background-color: #111827;
   border-radius: .5rem;
 }
 
-.monlcd .highlight .filename {
+.monlcd .highlight .filename,
+.xmon-wrap .highlight .filename {
   display: none;
   /* xlabel ovanför visar redan "Seriemonitor" */
 }
 
-.monlcd .highlighttable {
+.monlcd .highlighttable,
+.xmon-wrap .highlighttable {
   width: 100%;
 }
 
-.monlcd .highlight .linenos {
+.monlcd .highlight .linenos,
+.xmon-wrap .highlight .linenos {
   background-color: #111827;
 }
 
-.monlcd .highlight .linenos pre {
+.monlcd .highlight .linenos pre,
+.xmon-wrap .highlight .linenos pre {
   color: #4b5563;
   background-color: #111827;
 }
 
 .monlcd .highlight .code,
 .monlcd .highlight .code pre,
-.monlcd .highlight .code pre code {
+.monlcd .highlight .code pre code,
+.xmon-wrap .highlight .code,
+.xmon-wrap .highlight .code pre,
+.xmon-wrap .highlight .code pre code {
   background-color: #111827;
   color: #4ade80;
 }
 
-.monlcd .highlight .md-code__nav {
+.monlcd .highlight .md-code__nav,
+.xmon-wrap .highlight .md-code__nav {
   background-color: #1f2937;
 }
 
-.monlcd .highlight .md-code__button {
+.monlcd .highlight .md-code__button,
+.xmon-wrap .highlight .md-code__button {
   color: #9ca3af;
 }
 
 .monlcd .highlight .code a,
-.monlcd .highlight .code a:visited {
+.xmon-wrap .highlight .code a,
+.monlcd .highlight .code a:visited,
+.xmon-wrap .highlight .code a:visited {
   color: inherit;
 }
 
-.monlcd .highlight .copy {
+.monlcd .highlight .copy,
+.xmon-wrap .highlight .copy {
   color: #6b7280;
   opacity: 1;
 }
 
-.monlcd .highlight .copy:hover {
+.monlcd .highlight .copy:hover,
+.xmon-wrap .highlight .copy:hover {
   color: #9ca3af;
 }
 
