@@ -131,7 +131,7 @@ Nu har vi tre enheter som svarar på olika adressområden. **SRAM** tar den läg
       <div style="min-height:8px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
         <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
           <span style="color:#6b7280">$FFFF</span>
-          <small>$FFFA</small>
+          <span style="color:#6b7280">$FFFA</small>
         </div>
         <div style="min-height:8px;flex:1 1 0%;background-color:#f3e8ff;border-left:1px solid #c4b5fd;border-right:1px solid #c4b5fd;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">vectors[6] — NMI, RESET, IRQ (Arduino)</div>
         <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">6 B</div>
@@ -144,7 +144,7 @@ Nu har vi tre enheter som svarar på olika adressområden. **SRAM** tar den läg
       <div style="min-height:16px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
         <div style="min-height:16px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
           <span style="color:#6b7280">$8800</span>
-          <small>$8000</small>
+          <span style="color:#6b7280">$8000</span>
         </div>
         <div style="flex:1 1 0%;background-color:#dbeafe;border-left:1px solid #93c5fd;border-right:1px solid #93c5fd;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">program[2048] — 6502-program (Arduino)</div>
         <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">2 KB</div>
@@ -157,7 +157,7 @@ Nu har vi tre enheter som svarar på olika adressområden. **SRAM** tar den läg
       <div style="min-height:8px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #eab308">
         <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
           <span style="color:#6b7280">$4010</span>
-          <small>$4000</small>
+          <span style="color:#6b7280">$4000</span>
         </div>
         <div style="min-height:8px;flex:1 1 0%;background-color:#fef9c3;border-left:1px solid #facc15;border-right:1px solid #facc15;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;font-weight:700">W65C22 VIA — fysisk I/O (steg 7)</div>
         <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">16 B</div>
@@ -165,7 +165,7 @@ Nu har vi tre enheter som svarar på olika adressområden. **SRAM** tar den läg
       <div style="height:100px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #22c55e">
         <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
           <span style="color:#6b7280">$3FFF</span>
-          <small>$0000</small>
+          <span style="color:#6b7280">$0000</span>
         </div>
         <div style="flex:1 1 0%;background-color:#dcfce7;border-left:1px solid #4ade80;border-right:1px solid #4ade80;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;font-weight:700">62256 SRAM — 16 KB riktigt RAM</div>
         <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">16 KB</div>

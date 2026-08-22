@@ -154,7 +154,7 @@ Här är kopplingarna för LCD:n, som nu styrs av VIAn istället för Arduino. D
       <div style="min-height:8px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
         <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
           <span style="color:#6b7280">$FFFF</span>
-          <small>$FFFA</small>
+          <span style="color:#6b7280">$FFFA</small>
         </div>
         <div style="min-height:8px;flex:1 1 0%;background-color:#f3e8ff;border-left:1px solid #c4b5fd;border-right:1px solid #c4b5fd;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">vectors[6] — NMI, RESET, IRQ</div>
         <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">6 B</div>
@@ -167,7 +167,7 @@ Här är kopplingarna för LCD:n, som nu styrs av VIAn istället för Arduino. D
       <div style="min-height:16px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
         <div style="min-height:16px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
           <span style="color:#6b7280">$8800</span>
-          <small>$8000</small>
+          <span style="color:#6b7280">$8000</span>
         </div>
         <div style="flex:1 1 0%;background-color:#dbeafe;border-left:1px solid #93c5fd;border-right:1px solid #93c5fd;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">program[2048] — 6502-program</div>
         <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">2 KB</div>
@@ -180,7 +180,7 @@ Här är kopplingarna för LCD:n, som nu styrs av VIAn istället för Arduino. D
       <div style="min-height:8px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #eab308">
         <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
           <span style="color:#6b7280">$4010</span>
-          <small>$4000</small>
+          <span style="color:#6b7280">$4000</span>
         </div>
         <div style="min-height:8px;flex:1 1 0%;background-color:#fef9c3;border-left:1px solid #facc15;border-right:1px solid #facc15;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;font-weight:700">W65C22 VIA (fysisk krets)</div>
         <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">16 B</div>
@@ -193,7 +193,7 @@ Här är kopplingarna för LCD:n, som nu styrs av VIAn istället för Arduino. D
       <div style="min-height:8px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
         <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
           <span style="color:#6b7280">$0400</span>
-          <small>$0200</small>
+          <span style="color:#6b7280">$0200</span>
         </div>
         <div style="min-height:8px;flex:1 1 0%;background-color:#dcfce7;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">ram[1024] — ledigt RAM</div>
         <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">512 B</div>
@@ -201,7 +201,7 @@ Här är kopplingarna för LCD:n, som nu styrs av VIAn istället för Arduino. D
       <div style="min-height:8px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
         <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
           <span style="color:#6b7280">$0200</span>
-          <small>$0100</small>
+          <span style="color:#6b7280">$0100</span>
         </div>
         <div style="min-height:8px;flex:1 1 0%;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">Stack (JSR/RTS, PHA/PLA)</div>
         <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">256 B</div>
@@ -209,7 +209,7 @@ Här är kopplingarna för LCD:n, som nu styrs av VIAn istället för Arduino. D
       <div style="min-height:8px;display:flex;align-items:stretch">
         <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
           <span style="color:#6b7280">$0100</span>
-          <small>$0000</small>
+          <span style="color:#6b7280">$0000</span>
         </div>
         <div style="min-height:8px;flex:1 1 0%;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">Zero page (snabbast)</div>
         <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">256 B</div>

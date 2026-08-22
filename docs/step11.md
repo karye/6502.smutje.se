@@ -107,7 +107,7 @@ Nu används hela 64 KB, varje enhet på sin egen tydliga region: **SRAM** nedtil
         <div style="height:100px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #a855f7">
           <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
             <span style="color:#6b7280">$FFFF</span>
-            <span>$C000</span>
+            <span style="color:#6b7280">$C000</span>
           </div>
           <div style="flex:1 1 0%;background-color:#f3e8ff;border-left:1px solid #a78bfa;border-right:1px solid #a78bfa;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">AT28C256 EEPROM — program + vektorer</div>
           <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">16 KB</div>
@@ -115,7 +115,7 @@ Nu används hela 64 KB, varje enhet på sin egen tydliga region: **SRAM** nedtil
         <div style="height:100px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #eab308">
           <div style="min-height:16px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
             <span style="color:#6b7280">$BFFF</span>
-            <span>$8000</span>
+            <span style="color:#6b7280">$8000</span>
           </div>
           <div style="flex:1 1 0%;background-color:#fef9c3;border-left:1px solid #facc15;border-right:1px solid #facc15;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;font-weight:700">W65C22 VIA — I/O-fönster</div>
           <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">16 KB</div>
@@ -123,7 +123,7 @@ Nu används hela 64 KB, varje enhet på sin egen tydliga region: **SRAM** nedtil
         <div style="height:200px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #22c55e">
           <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
             <span style="color:#6b7280">$7FFF</span>
-            <span>$0000</span>
+            <span style="color:#6b7280">$0000</span>
           </div>
           <div style="flex:1 1 0%;background-color:#dcfce7;border-left:1px solid #4ade80;border-right:1px solid #4ade80;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;font-weight:700">62256 SRAM — 32 KB (hela chippet)</div>
           <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">32 KB</div>
