@@ -2,6 +2,43 @@
 
 En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minnesemulator och klockgenerator. Projektet byggs stegvis — från en blinkande LED till en fullt fungerande dator med I/O-expansion (W65C22 VIA) och LCD-display styrd direkt av 6502-processorn.
 
+---
+
+## Webbplatsen (Material for MkDocs)
+
+Sajten (6502.smutje.se) byggs från markdown-filerna i `docs/` med **Material for MkDocs**. `docs/` är källan — du redigerar bara markdown, aldrig `site/`.
+
+### Bygga
+
+```bash
+cd /var/www/6502.smutje.se
+.venv/bin/mkdocs build      # bygger site/ — Apache servear site/ direkt
+.venv/bin/mkdocs serve      # lokal förhandsvisning på http://localhost:8000
+```
+
+### Arbetsflöde
+
+1. Redigera `docs/*.md` (text, tabeller, bildreferenser)
+2. Kör `mkdocs build`
+3. Sajten är omedelbart uppdaterad — inget mer behövs
+
+### Regler att hålla
+
+- **Blankrader kring tabeller** — en tabell måste ha tomrad före och efter. Utan tomrad efter tabellen slukar tabellen nästa rubrik som tabellrad.
+- **Kodrutorna är live** — kod visas via snippets (`--8<--`) direkt från `Mega_2560_6502/src/*.inc`, `asm/*.asm` och `scripts/*.py`. Ändra källfilen → nästa bygge visar nya koden, utan att röra md.
+- **`site/` rörs aldrig** — genereras vid varje bygge och skrivs över.
+- **`legacy/`** — arkiv av den gamla handskrivna HTML-sajten (stepX.html, style.css).
+- Nya sidor läggs till i `nav:` i `mkdocs.yml`.
+
+### Installation på ny maskin
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install mkdocs-material mdx-truly-sane-lists
+```
+
+---
+
 ## Komponenter (alla steg)
 
 | Antal | Komponent |
@@ -36,7 +73,7 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 
 ## W65C02S — pinout  
 
-![W65C02S pinout](docs/w65c02s-pinout.png)
+![W65C02S pinout](docs/assets/w65c02s-pinout.png)
 
 | Pin | Namn | I/O | Beskrivning |
 |-----|------|-----|-------------|
@@ -85,11 +122,11 @@ En hembyggd 8-bitarsdator med **W65C02S** CPU och **Arduino Mega 2560** som minn
 
 ## W65C22 VIA — pinout
 
-![W65C22 VIA pinout](docs/w65c22s-pinout.png)
+![W65C22 VIA pinout](docs/assets/w65c22s-pinout.png)
 
 ## 74HC00 — pinout
 
-![74HC00 pinout](docs/74hc00-pinout.png)
+![74HC00 pinout](docs/assets/74hc00-pinout.png)
 
 ---
 
