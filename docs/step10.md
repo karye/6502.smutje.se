@@ -172,7 +172,11 @@ Koden nedan är baserad på steg 9 men med `is_eeprom()` istället för `program
 
 Bygga programmet med **ca65** som vanligt, köra Python-skriptet för att bränna:
 
-```
+<div class="monlcd">
+<div>
+<p class="xlabel"><strong>Terminal — bränna EEPROM</strong></p>
+
+```text
 $ pio run -e step10 -t upload    # Ladda upp dator-Arduinon
 $ python3 scripts/upload_eeprom.py asm/program_hello.bin /dev/ttyACM1
 
@@ -187,6 +191,9 @@ Verifierar...
 KLAR
 Totalt brända bytes: 2054
 ```
+
+</div>
+</div>
 
 ### Fas 2 — flytta EEPROM till datorn
 

@@ -41,8 +41,6 @@ Schemat visar LCD-displayen ansluten i 4-bitarsläge: `RS` till `D5`, E till `D6
 16-pin SIL (single in-line). Pin 1 är närmast kanten på de flesta moduler. Justera kontrasten med potentiometern på `VO` (pin 3).
 ![LCD 16×2 pinout](pinouts/lcd16x2.svg)
 
-■ Kontroll ■ Data ■ Ström ■ Kontrast. I 4-bitarsläge används endast `DB4–DB7` (pin 11–14).
-
 ## Kopplingar
 
 Här är varenda koppling i steg 5, pinne för pinne.
@@ -138,7 +136,7 @@ LCD-displayen
 
 När jag trycker på Knapp 1 (klocksteg) uppdateras båda vyerna samtidigt. Seriemonitor loggar varje minnesaccess, LCD:n visar adress och data i realtid:
 
-<div class="monlcd">
+<div class="xmon-wrap">
 <div>
 <p class="xlabel"><strong>Seriemonitor — efter 4 tryck på Knapp 1</strong></p>
 

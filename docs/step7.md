@@ -56,14 +56,10 @@ Schemat visar hur fyra kretsar nu delar på adress- och databussen: CPU, Arduino
 DIP-40-kapsel. Två 8-bitars I/O-portar (PA, PB), 4 kontrollpinnar (`CA1–CB2`), bussanslutning. Samma kapsel som CPU:n — var noga med orienteringen.
 ![W65C22 VIA pinout](pinouts/w65c22.svg)
 
-■ Port A/B ■ Kontroll/buss ■ Ström.
-
 ## 74HC00 — pinout
 
 DIP-14-kapsel. Fyra 2-ingångars NAND-grindar. U4A+U4B används för VIA-avkodning, U4C+U4D är lediga (används för SRAM i steg 9).
 ![74HC00 pinout](pinouts/74hc00.svg)
-
-■ U4A (NAND) ■ U4B (NAND) ■ U4C+U4D (lediga) ■ Ström.
 
 ## Kopplingar — krets för krets
 
