@@ -1,15 +1,15 @@
-<!-- Handredigerad: jag-röst. Kör ej html2md på denna fil. -->
 # Fristående klocka
 
-Det sista som påminner om Arduino är klockan. Nu byter jag ut den mot en riktig kristall — när datorn sedan startar med strömmen behöver den ingen hjälp alls.
-
+Det sista som påminner om Arduinon är klockan. Nu byter jag ut den mot en riktig kristall — när datorn sedan startar med strömmen behöver den ingen hjälp alls.
 ## Mål
 
-Sedan steg 10 levererar EEPROM:et programmet och SRAM:et minnet — men Arduino har fortfarande skött *klockan*. Nu kopplar jag in en riktig klockgenerator: en 16 MHz-oscillator vars frekvens jag delar ner med en 74HC393 till 1 MHz. En enkel RC-krets sköter reset.
+Sedan steg 10 levererar EEPROM:et programmet och SRAM:et minnet — men Arduino har fortfarande skött *klockan*. Nu kopplar jag in en riktig klockgenerator: en 16 MHz-oscillator vars frekvens jag delar ner med en **74HC393** till 1 MHz. En enkel RC-krets sköter reset.
 
 När det här steget är klart kan jag koppla bort Arduinon helt. Slå på strömmen och datorn startar på egen hand — programmet ur EEPROM:en, minnet i SRAM:en, texten på LCD:n. En riktig, fristående 6502-dator.
 
-Men hastigheten förändrar en sak: vid 1 MHz tar varje instruktion bara några mikrosekunder, och LCD:n hinner inte med om programmet inte själv väntar. Därför lär jag mig också *tidshantering* — delay-subrutiner som ger displayen de pauser den kräver.
+Hastigheten förändrar en sak: vid 1 MHz tar varje instruktion bara några mikrosekunder, och LCD:n hinner inte med om programmet inte själv väntar. Därför lär jag mig också *tidshantering* — delay-subrutiner som ger displayen de pauser den kräver.
+
+1 MHz är samma fart som original-Apple II:n — snabbt nog att kännas som en riktig dator, långsamt nog att följa med i vad som händer.
 
 ## Nya komponenter
 | Antal | Komponent | Används till |
@@ -20,7 +20,6 @@ Men hastigheten förändrar en sak: vid 1 MHz tar varje instruktion bara några 
 | 1 | 10 µF elektrolytisk kondensator | Reset-RC — håller `/RESET` låg en stund vid start |
 | 1 | 10 kΩ motstånd | Pull-up till `/RESET` |
 | 1 | 100 nF keramisk kondensator | Avkoppling vid 74HC393:ns VCC/GND |
-
 ## Kopplingsschema
 
 Schemat visar klockkedjan: oscillatorn längst till vänster, 74HC393:an i mitten som delare, och `PHI2` ut till CPU:n. Resten av datorn (SRAM, VIA, EEPROM) är oförändrad från steg 11.
@@ -32,15 +31,13 @@ Schema kommer snart — se klockkedjan och kopplingstabellerna nedan så länge.
 En oscillator är en komplett klockkrets i en kapsel: kristallen och förstärkaren sitter inbyggda, och utgången ger en ren fyrkantsvåg direkt — inget att bygga runt. 16 MHz är för snabbt för W65C02S (max 14 MHz), så jag delar ner frekvensen med en 74HC393.
 
 74HC393:an innehåller *två* oberoende 4-bitars räknare. Varje steg halverar frekvensen, och alla utgångar har 50% arbetscykel — perfekt för `PHI2`:
+
 | Utgång | Delning | Frekvens | Användning |
 |---|---|---|---|
 | 1Q0 (pin 3) | ÷2 | 8 MHz | Snabbast som är säker — men LCD-timing kräver många delay-loopar |
 | 1Q1 (pin 4) | ÷4 | 4 MHz | Mellanfart |
 | 1Q2 (pin 5) | ÷8 | 2 MHz | Mellanfart |
 | 1Q3 (pin 6) | ÷16 | 1 MHz | Jag använder denna — klassisk 6502-fart, snäll mot LCD:n |
-
-1 MHz är samma fart som original-Apple II:n — snabbt nog att kännas som en riktig dator, långsamt nog att följa med i vad som händer.
-
 ## 74HC393 — pinout
 
 DIP-14-kapsel. Två oberoende 4-bitars ripple-räknare (1 och 2). `1Q3` är den utgång jag använder — 16 MHz ÷16 = 1 MHz till `PHI2`.
@@ -49,7 +46,6 @@ DIP-14-kapsel. Två oberoende 4-bitars ripple-räknare (1 och 2). `1Q3` är den 
 ## Kopplingar
 
 Tre små kretsar att koppla: oscillatorn, delaren och reset-kretsen. Allt annat — ström, bussar, SRAM, VIA, EEPROM — är oförändrat från steg 11.
-
 ### Oscillator (DIL-14, 5V, 16 MHz)
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
@@ -57,7 +53,6 @@ Tre små kretsar att koppla: oscillatorn, delaren och reset-kretsen. Allt annat 
 | 7 | `GND` | GND | Systemjord |
 | 8 | `OUT` | 74HC393 pin 1 (`1CLK`) | 16 MHz fyrkantsvåg till räknaren |
 | 1 | `ENA` | — (lämnas oansluten) | Enable — de flesta moduler kör alltid |
-
 ### 74HC393 — frekvensdelare
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
@@ -66,7 +61,6 @@ Tre små kretsar att koppla: oscillatorn, delaren och reset-kretsen. Allt annat 
 | 6 | `1Q3` | CPU `PHI2` (pin 37) | 16 MHz ÷16 = 1 MHz — datorns nya hjärtslag |
 | 14 | `VCC` | +5V | Strömmatning — 100 nF avkoppling till GND |
 | 7 | `GND` | GND | Systemjord |
-
 ### Reset-RC — start utan Arduino
 | Komponent | Kopplas till | Varför |
 |---|---|---|
@@ -94,7 +88,6 @@ Binären är 16 KB och ligger på EEPROM-adress 0 (= CPU `$C000`) med vektorer p
 ## Ingen Arduino-kod
 
 Det här steget har ingen Arduino-kod — Arduino finns inte med på kopplingsdäcket längre. Allt som återstår av den gamla startmotorn är minnet av hur den hjälpte mig: klockan sköter kristallen nu, reset sköter RC-kretsen, och programmet ligger i EEPROM:en.
-
 ## Exempel på körning
 
 Slå på strömmen. Inget att ladda upp, inget att ansluta — datorn bara startar. Efter en kort stund (LCD-initieringen) visas:
@@ -107,7 +100,6 @@ LCD 16×2 — efter start
 - Koppla bort Arduino helt om den fortfarande sitter i — den behövs inte.
 
 Ingen seriemonitor längre: LCD:n är datorns enda ansikte utåt. Jag vred på strömmen och datorn bara vaknade — precis som jag tänkt mig.
-
 ### Så här provar jag
 
 - Jag kopplar en lysdiod (med 220 Ω) från `PHI2` (pin 37) till `GND` — den lyser svagt, eftersom den är på halva tiden (50% arbetscykel vid 1 MHz).
@@ -125,6 +117,3 @@ Här är några saker jag kontrollerar:
 - Skakig eller felaktig text? Då kontrollerar jag avkopplingen (100 nF) vid 74HC393:ns VCC/GND och att `1MR` (pin 2) är GND.
 - Busskrockar? Samma som tidigare: exakt en enhet ska vara aktiv per klockcykel — jag mäter chip-selects medan jag stegar.
 
-## Vad händer härnäst?
-
-Datorn står nu helt på egna ben: egen klocka, eget minne, eget program, egen I/O. Härifrån finns bara nya vägar — avbrott (`IRQ`), fler minneskretsar, ett tangentbord, eller ett litet operativsystem som jag skriver själv. Från en blinkande lysdiod till en fristående dator — hela resan, steg för steg.

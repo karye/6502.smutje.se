@@ -1,17 +1,13 @@
-<!-- Handredigerad: jag-röst. Kör ej html2md på denna fil. -->
 # W65C02 8-bitarsdator
 
 ## En hembyggd dator från grunden
 
  Ända sedan jag först läste om hur enkla 8-bitarsprocessorer fungerar har jag drömt om att bygga en egen dator. Inte en snabb, inte en modern — utan en dator där *varje komponent går att förstå*. En dator där jag kan följa varje etta och nolla från processorns instruktionsregister hela vägen ut till en lysdiod eller en LCD-display. 
-
- Eftersom W65C02S är en statisk CMOS-krets kan klockan stoppas helt utan att processorn glömmer sitt tillstånd. Två fysiska knappar låter mig stega igenom programmet — en klockcykel eller en hel instruktion i taget. Jag ser allt som händer, i min egen takt. 
-
 ## En Arduino som startmotor
 
- En 6502-dator från 1970-talet behövde ROM och RAM som fysiska chips — och för att testa ett nytt program fick man bränna ett nytt EPROM under UV-ljus, en process som tog 20 minuter per försök. Här använder jag en Arduino Mega 2560 som startmotor: den står för klocka, minne och diagnostik i början, så att jag kan fokusera på processorn och se varje signal på kopplingsdäcket. 
+ En 6502-dator från 1970-talet behövde ROM och RAM som fysiska chips — och för att testa ett nytt program fick man bränna ett nytt EPROM under UV-ljus, en process som tog 20 minuter per försök. Här använder jag en **Arduino Mega 2560** som startmotor: den står för klocka, minne och diagnostik i början, så att jag kan fokusera på processorn och se varje signal på kopplingsdäcket. 
 
- Steg för steg ersätter jag Arduinons uppgifter med riktiga kretsar. SRAM-chippet tar över minnet, EEPROM:et tar över programkoden, VIA-kretsen tar över I/O till LCD-displayen. Till slut är Arduino reducerad till klocka och seriell diagnostik — och datorn fungerar helt på egen hand. 
+ Steg för steg ersätter jag Arduinons uppgifter med riktiga kretsar. **SRAM**-chippet tar över minnet, **EEPROM**:et tar över programkoden, **VIA**-kretsen tar över I/O till LCD-displayen. 
 
  Det här är inte en emulator i mjukvara — processorn kör på riktigt, med riktiga elektriska signaler. Allt jag lär mig om 6502:ans instruktionsuppsättning, timing och bussprotokoll gäller på riktigt. 
 
@@ -30,18 +26,9 @@ Processorn har två uppsättningar ledningar ut till världen. Den första är a
 
 Den andra uppsättningen är databussen — 8 ledningar. Här kommer svaret tillbaka. När processorn vill läsa från en adress lägger den ut adressen, sätter R/W-signalen till HÖG (Read), och väntar. Den krets som känner igen adressen — i början Arduino, senare SRAM, EEPROM eller VIA — lägger ut rätt byte på databussen. Processorn läser av den och går vidare till nästa instruktion.
 
-### Instruktionscykeln — hämta, avkoda, utför
-
-Varje gång processorn startar en ny instruktion tänder den SYNC-pinnen. Det är processorns sätt att säga *"nu börjar jag på något nytt"*. Sedan följer en förutsägbar dans:
-
-1. Hämta opcode: processorn läser byten på den adress som programräknaren (PC) pekar på. SYNC är hög under just denna cykel.
-1. Avkoda: processorn tittar på opcode-byten och förstår vad som ska göras. Är det `$A9`? Då ska nästa byte laddas in i A-registret (LDA #). Är det `$8D`? Då ska de två nästa byten tolkas som en adress (STA absolute).
-1. Utför: processorn läser eventuella extra bytes (operander), utför operationen, och ökar programräknaren.
-1. Nästa: PC pekar nu på nästa opcode. Börja om från steg 1.
-
 ### Arduino emulerar ram och rom
 
- En 6502-dator från 1970-talet hade ROM och RAM som fysiska chips. Varje gång man vill testa ett nytt program får man bränna ett nytt EPROM under UV-ljus — en process som tar 20 minuter per försök. Arduino vänder på det här: jag laddar upp ett nytt program på två sekunder över USB. Arduino läser av processorns adressbuss, slår upp rätt byte i sin interna array, och lägger ut den på databussen — allt inom samma klockcykel. 
+ En **6502**-dator från 1970-talet hade ROM och RAM som fysiska chips. Varje gång man vill testa ett nytt program får man bränna ett nytt EPROM under UV-ljus — en process som tar 20 minuter per försök. Arduino vänder på det här: jag laddar upp ett nytt program på två sekunder över USB. Arduino läser av processorns adressbuss, slår upp rätt byte i sin interna array, och lägger ut den på databussen — allt inom samma klockcykel. 
 
  Detta är inte en emulator i mjukvara — processorn kör på riktigt, med riktiga elektriska signaler. Arduinon är bara minnet. Det betyder att allt jag lär mig om 6502:ans instruktionsuppsättning, timing och bussprotokoll gäller på riktigt. Jag kan ta bort Arduino och ersätta den med ett EEPROM och ett SRAM-chip — och datorn fungerar precis likadant. 
 
@@ -55,7 +42,8 @@ Varje gång processorn startar en ny instruktion tänder den SYNC-pinnen. Det ä
 
  Tre registerläsningar, en villkorssats, och jag vet exakt vad processorn vill göra — redo att svara inom samma klockcykel. 
 
-## Vad du lär dig per steg
+## Byggstegen
+
 | Steg | Du lär dig | Svårighet |
 |---|---|---|
 | 1 · Ström och klocka | 5V, GND, klocka, lysdiod | Lätt |

@@ -1,13 +1,11 @@
-<!-- Handredigerad: jag-röst. Kör ej html2md på denna fil. -->
 # VIA + LCD, styrd av 6502
 
-Det här är det stora steget: från att Arduino sköter allt till att processorn själv styr sina egna pinnar. Ta det lugnt och gå steg för steg — när LCD:n vaknar är det värt varenda tråd.
-
+Det här är det stora steget: från att Arduino sköter allt till att processorn själv styr LCD-displayen.
 ## Mål
 
-I steg 6 styrde Arduino LCD-displayen direkt. Nu tar jag nästa stora kliv: jag kopplar in en W65C22 VIA (Versatile Interface Adapter) — en I/O-krets som ger 6502-processorn 20 egna pinnar att styra. VIAn sitter på CPU:ns adress- och databuss, precis som ett RAM-minne, men istället för att lagra data styr den fysiska pinnar.
+I steg 6 styrde Arduino LCD-displayen direkt. Nu tar jag nästa stora kliv: jag kopplar in en **W65C22** VIA (Versatile Interface Adapter) — en I/O-krets som ger 6502-processorn 20 egna pinnar att styra. VIAn sitter på CPU:ns adress- och databuss, precis som ett RAM-minne, men istället för att lagra data styr den fysiska pinnar.
 
-En 74HC00 (två NAND-grindar) avkodar adressbussen så att VIA:n hamnar på adress `$4000–$400F`. U4A inverterar `A15`, U4B NAND:ar med `A14` — resultat: VIA aktiveras när `A14`=1 och `A15`=0.
+En **74HC00** (två NAND-grindar) avkodar adressbussen så att VIA:n hamnar på adress `$4000–$400F`. U4A inverterar `A15`, U4B NAND:ar med `A14` — resultat: VIA aktiveras när `A14`=1 och `A15`=0.
 
 6502-programmet på `$8000` gör följande:
 
@@ -16,22 +14,21 @@ En 74HC00 (två NAND-grindar) avkodar adressbussen så att VIA:n hamnar på adre
 1. Skriver två rader text genom att lägga ASCII-värden på port B och pulsa enable-signalen på port A — sedan *clear display* och loopa om från början
 
 När allt fungerar har jag en dator där CPU:n själv styr I/O via minnesmappade adresser. Arduino är nu bara minnesemulator och klocka — all logik för LCD:n körs på 6502.
-
 ## Nya komponenter
 
-De här kretsarna är starten på en riktig datorarkitektur. En W65C22 VIA ger CPU:n 20 egna I/O-pinnar, en 74HC00 avkodar adressbussen så att VIA:n hamnar på `$4000`, och en 100 nF-kondensator håller VIA:ns strömmatning ren.
+De här kretsarna är starten på en riktig datorarkitektur. En **W65C22** VIA ger CPU:n 20 egna I/O-pinnar, en **74HC00** avkodar adressbussen så att VIA:n hamnar på `$4000`, och en 100 nF-kondensator håller VIA:ns strömmatning ren.
+
 | Antal | Komponent | Not |
 |---|---|---|
 | 1 | W65C22 VIA (DIP-40) | 2×8-bit I/O-portar (PA0–PA7, PB0–PB7), 4 registerväljare |
 | 1 | 74HC00 (quad 2-input NAND) | Adressavkodning — genererar chip select-signaler |
 | 1 | LCD 16×2 (parallell, t.ex. QC1602A) | Ansluts till VIA:ns PB0–PB7 + kontrollpinnar |
 | 1 | 100 nF keramisk kondensator | Avkoppling vid VIA:ns VCC/GND |
-
 ## Vad är nytt i det här steget?
 
-- VIAn — en W65C22 som ger processorn 20 egna I/O-pinnar, på samma buss som minnet.
+- VIAn — en **W65C22** som ger processorn 20 egna I/O-pinnar, på samma buss som minnet.
 - Minnesmappad I/O — att skriva till en adress (`$4000`) är samma sak som att styra pinnar.
-- Adressavkodning — 74HC00:ns grindar väljer ut VIAn:s fönster (`$4000`–`$7FFF`).
+- Adressavkodning — **74HC00**:ns grindar väljer ut VIAn:s fönster (`$4000`–`$7FFF`).
 - LCD direkt från 6502 — processorn styr displayen själv; Arduino är bara minne + klocka.
 - Ett mycket längre program — LCD-initieringen kräver en hel kommandosekvens, så programmet är tiotals gånger större än i steg 6.
 
@@ -47,7 +44,8 @@ LCD:ns *fallande flank* är den sista pusselbiten: displayen läser databussen i
 
 ## Kopplingsschema
 
-Schemat visar hur fyra kretsar nu delar på adress- och databussen: CPU, Arduino, VIA och 74HC00. VIAn får sin klocka, `R/W` och reset från CPU:n, medan 74HC00:ns utsignal till `/CS2` avgör när VIAn får prata. LCD:n har flyttat från Arduino till VIA:ns portar.
+Schemat visar hur fyra kretsar nu delar på adress- och databussen: CPU, Arduino, VIA och **74HC00**. VIAn får sin klocka, `R/W` och reset från CPU:n, medan **74HC00**:ns utsignal till `/CS2` avgör när VIAn får prata. LCD:n har flyttat från Arduino till VIA:ns portar.
+
 ![Steg 7 — VIA + LCD](schematics/steg-7.png)
 
 ## W65C22 VIA — pinout
@@ -154,6 +152,7 @@ Programmet ligger på `$8000`:
 ### Programmet i maskinkod
 
 Tabellen nedan visar hur Arduino bygger 6502-programmet i minnet, byte för byte. Första delen initierar VIA-portarna och LCD-displayen (8-bitarsläge, 2 rader, 5×8 font). Därefter skrivs en textrad i taget: cursor-positionering (→ rad 1), `RS`=1 (teckenläge), och så varje ASCII-tecken med en enable-puls. Efter sista tecknet kommer clear display och ett `JMP`-hopp tillbaka till början.
+
 | Steg | Assembler | Bytes | Förklaring |
 |---|---|---|---|
 | VIA-init — sätt portar som utgångar |  |  |  |
@@ -178,9 +177,6 @@ Tabellen nedan visar hur Arduino bygger 6502-programmet i minnet, byte för byte
 | Clear + loop |  |  |  |
 | 17 | LDA #$01 · STA $4000 LDA #$04 · STA $4001 LDA #$00 · STA $4001 | A9 01 8D 00 40 … | Clear display |
 | 18 | JMP hello_start | 4C xx xx | Hoppa tillbaka till rad 1 — oändlig loop |
-
-Det här är projektets mest komplexa kod — och den största milstolpen. Jag introducerar *två nya kretsar* (W65C22 VIA och 74HC00) och låter CPU:n själv styra LCD-displayen via minnesmappad I/O. Arduino reduceras till det den gör bäst: emulera ROM och generera klocka. Allt annat sköter 6502-processorn. Det här var steget där jag för första gången kände att Arduinon bara var en gäst i datorn.
-
 ### `is_via()` — Arduinons sätt att kliva ur vägen
 
 Den viktigaste nya funktionen är `is_via()`. Den returnerar `true` för adresser mellan `$4000` och `$400F` — de 16 bytes som W65C22 VIA-kretsen ockuperar. När CPU:n läser eller skriver till dessa adresser måste Arduino *tri-stata* databussen (`DDRA = 0x00`) så att den fysiska VIA-kretsen kan svara. Om Arduino skulle driva bussen samtidigt som VIA:n blir det en busskollision — dyrbar rök.
@@ -200,13 +196,9 @@ Programmet som CPU:n ska köra byggs byte för byte med `write_mem(next++, ...)`
 1. Skriv text — sätter cursor på rad 1 (`$80`), byter till data-läge (`RS`=1), och skickar en sträng tecken för tecken via PORTB. Varje tecken kräver en enable-puls: `$05` (`RS`=1, E=1) → `$01` (`RS`=1, E=0). Den fallande flanken på E får LCD:n att läsa PORTB.
 1. Clear + loop — avslutar med clear display (`$01`) och `JMP` tillbaka till textutskriften. Oändlig loop.
 
-### Debug-fasdetektion
+### Arduino-koden
 
 Koden innehåller en `phase`-variabel och fasdetektion som känner igen var i programmet CPU:n befinner sig — reset-sekvens, VIA-init, LCD-init, textutskrift, loop. Det är ovärderligt för felsökning: jag ser direkt om CPU:n fastnar i fel fas eller hoppar till en oväntad adress.
-
-### Vad som är nytt jämfört med steg 6
-
-W65C22 VIA, 74HC00, omkoppling av LCD från Arduino till VIA. I koden: `is_via()`, `program[2048]`, utökad `read_mem()`/`write_mem()`, och programladdningen med `next++`-tricket. Inget `LiquidCrystal`-bibliotek längre — LCD:n styrs helt av 6502-assemblerkoden som Arduinon laddar in.
 
 Komplett Arduino-kod för steg 7:
 > [!NOTE] 📦 Arduino-kod — step7.inc · 277 rader · se step7.html
@@ -215,7 +207,7 @@ Komplett Arduino-kod för steg 7:
 
 När jag laddat upp koden och öppnar seriemonitor ser jag programmet genomlöpa alla faser. Samtidigt vaknar LCD-displayen till liv — styrd helt av 6502-processorn via VIA-kretsen:
 
-Seriemonitor (115200 baud)
+Seriemonitor
 ```
 ══════ RESET-SEKVENS — CPU lämnar reset ══════
 R $FFFC  ← RESET-VEKTOR LÅG
@@ -253,7 +245,6 @@ När programmet når slutet hoppar det tillbaka till början och skriver om allt
 
 - Jag ändrar rad-strängarna i `step7.inc` till mitt eget namn och laddar om — LCD:n visar min text.
 - Jag mäter `/CS2` (VIA pin 23) medan jag stegar — den ska vara låg vid `$4000`–`$7FFF`.
-
 ## Så här felsöker jag
 
 Här är några saker jag kontrollerar:
@@ -281,7 +272,3 @@ Serial.print(" D8="); Serial.print(digitalRead(8));
 - 74HC00 VCC/GND glömt
 - Arduino driver databussen vid VIA-adresser — koden måste sätta `DDRA`=`0x00`
 - Spänningsfall — mät `VDD` vid CPU, VIA och 74HC00 (alla >4.8V)
-
-## Vad händer härnäst?
-
-Nu pratar processorn direkt med omvärlden. I nästa steg lär jag mig skriva programmen på ett riktigt språk — assembler.

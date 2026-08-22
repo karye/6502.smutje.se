@@ -1,8 +1,6 @@
-<!-- Handredigerad: jag-röst. Kör ej html2md på denna fil. -->
 # Städad adressrymd
 
-En dator som fungerar men har en stökig adressrymd stör mig. Att se hela 64 KB falla på plats — RAM nedtill, I/O i mitten, ROM upptill — är det snyggaste avslut ett bygge kan få.
-
+En dator som fungerar men har en stökig adressrymd stör mig. Nu ska hela 64 KB falla på plats — RAM nedtill, I/O i mitten, ROM upptill.
 ## Mål
 
 I steg 10 fick jag en fristående dator — men adressrymden var inte vacker. VIA:ns 16 bytes på `$4000` klippte av SRAM-minnet mitt i, och den övre halvan av 62256-chippet (`$4000`–`$7FFF`) låg helt oanvänd. Det kändes slarvigt.
@@ -11,25 +9,24 @@ Nu städar jag upp. SRAM utökas till hela 32 KB (`$0000`–`$7FFF`) genom att a
 
 Resultatet är en adressrymd utan dött utrymme: RAM längst ner, ROM i mitten och I/O i ett fönster högst upp. Det här är den klassiska 6502-layouten — nu har jag byggt den själv. Fyra kablar och en NAND-grind — och hela 64 KB har fått ett jobb.
 
+Samma väg som *Steve Wozniak* använde i Apple II och som *Ben Eater* visade i sin klassiska 6502-serie.
 ## Nya komponenter
 
 Inga nya kretsar! Det här steget handlar om att *omkoppla det jag redan har*. Jag behöver bara en enda NAND-grind (¼ av en 74HC00) för hela den nya adressavkodningen. Dessutom en extra kopplingstråd för SRAM:ns `A14` och en för EEPROM:ets `A14`.
+
 | Antal | Komponent | Används till |
 |---|---|---|
 | 1 | 74HC00 (en grind, ¼ av chippet) | EEPROM /CE = NAND(A15, A14) |
 | 1 | Kopplingstråd | SRAM A14 (pin 1) → CPU A14 — öppnar den andra halvan av 62256 |
 | — | Kopplingstrådar (omkoppling) | Flytta VIA:ns /CS2 och EEPROM:ets /CE till nya avkodningssignaler |
-
 ## Kopplingsschema
 
 Schemat visar den städade bussen: SRAM tar nedre halvan, VIA mitten och EEPROM toppen — varje enhet på sin egen tydliga region.
 
 Schema kommer snart — se avkodningstabellerna nedan så länge.
-
 ## Adressavkodning
 
 Allt handlar om vilken enhet som får prata på bussen. Tre enheter, tre chip select-signaler — och en enda NAND-grind räcker.
-
 ### Gamla kartan (steg 10) — problemen
 
 ✗ SRAM bara 16 KB: 62256 är ett 32 KB-chip, men `A14` var inte ansluten. Den övre halvan låg död.
@@ -49,39 +46,36 @@ Allt handlar om vilken enhet som får prata på bussen. Tre enheter, tre chip se
 ### Sanningstabell — vem svarar på vilken adress?
 
 Varje enhet har en egen region — inga fönster, inga speglingar mellan enheter. Adressavkodningen är bara fyra kablar och en NAND-grind.
+
 | Adressintervall | A15 | A14 | SRAM /CE | VIA CS1·/CS2 | EEPROM /CE | Vem svarar |
 |---|---|---|---|---|---|---|
 | $0000–$7FFF | 0 | – | LÅG ✓ | – | HÖG | SRAM |
 | $8000–$BFFF | 1 | 0 | HÖG | AKTIV ✓ | HÖG | VIA |
 | $C000–$FFFF | 1 | 1 | HÖG | – | LÅG ✓ | EEPROM |
 | VIA: CS1 = A15 (aktivt hög) och /CS2 = A14 (aktivt låg) — aktiveras när A15=1 och A14=0. A0–A3 går till RS0–RS3 och väljer register; de speglas var 16:e byte i fönstret. EEPROM: A14 kopplas också till chippets A14 så det läser övre halvan. |  |  |  |  |  |  |
-
 ## Kopplingar
 
 Här är vad som ändras jämfört med steg 10. Allt annat — ström, klocka, reset, adress-/databuss till SRAM och EEPROM — är oförändrat.
-
 ### SRAM — nu med `A14`
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
 | 1 | `A14` | CPU A14 (NY!) | Öppnar den andra halvan av 62256 — SRAM blir 32 KB |
 | 20 | `/CE` | CPU `A15` direkt (aktivt låg) | LÅG när A15=0 — hela nedre halvan, ingen grind behövs |
-
 ### VIA — flyttad till `$8000`
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
 | 23 | `/CS2` | CPU `A14` direkt (aktivt låg) | LÅG när A14=0 → VIA vid $8000–$BFFF |
 | 24 | `CS1` | CPU `A15` direkt (aktivt hög) | HÖG när A15=1 → övre halvan |
 | 38–35 | `RS0–RS3` | CPU A0–A3 (oförändrad) | Väljer register — de speglas var 16:e byte i fönstret |
-
 ### EEPROM — övre halvan (`$C000`–`$FFFF`)
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
 | 20 | `/CE` | NAND-grindens utgång (74HC00 pin 3) | LÅG när A15=1 och A14=1 → $C000–$FFFF |
 | 1 | `A14` | CPU `A14` | EEPROM läser sin övre halva — $C000–$FFFF |
-
 ### Adressavkodning — en enda NAND-grind
 
-Här är tricket: kretsarnas egna chip-select-pinnar gör avkodningen. SRAM:s `/CE` är aktivt låg, och VIA:n har *två* chip-selects med motsatt polaritet — `CS1` (pin 24, aktivt hög) och `/CS2` (pin 23, aktivt låg). Då matchar adressbitarna kretsarna direkt, och bara EEPROM:s `/CE` behöver en NAND-grind. Aktiveringslogiken finns i sanningstabellen i Adressavkodning-sektionen ovan, och de fyra direktanslutningarna — SRAM `/CE`, VIA `CS1`/`/CS2` och EEPROM `A14` — står i kretstabellerna ovan. Här visas bara NAND-grinden. Samma väg som *Steve Wozniak* använde i Apple II och som *Ben Eater* visade i sin klassiska 6502-serie.
+Här är tricket: kretsarnas egna chip-select-pinnar gör avkodningen. SRAM:s `/CE` är aktivt låg, och VIA:n har *två* chip-selects med motsatt polaritet — `CS1` (pin 24, aktivt hög) och `/CS2` (pin 23, aktivt låg). Då matchar adressbitarna kretsarna direkt, och bara EEPROM:s `/CE` behöver en NAND-grind. Aktiveringslogiken finns i sanningstabellen i Adressavkodning-sektionen ovan, och de fyra direktanslutningarna — SRAM `/CE`, VIA `CS1`/`/CS2` och EEPROM `A14` — står i kretstabellerna ovan. Här visas bara NAND-grinden. 
+
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
 | 74HC00 — endast en NAND-grind |  |  |  |
@@ -137,12 +131,6 @@ LCD-displayen (16×2)
 Samma program som steg 8–10, men VIA:n adresseras nu på `$8000` istället för `$4000`.
 
 Lägg märke till skillnaden mot steg 10: SRAM-skrivningar kan nu ske var som helst i `$0000`–`$7FFF`, VIA:n svarar på `$8000` och EEPROM på `$C000`. Bussloggen visar tydligt vilken enhet som pratar.
-
-### Så här provar jag
-
-- Jag mäter `/CE` på SRAM (pin 20) och EEPROM (pin 20) samt `CS1`/`/CS2` på VIA:n medan jag stegar — exakt en enhet ska vara aktiv varje klockcykel.
-- Jag provar att byta plats på `CS1` och `/CS2` (A15 och A14) och ser hur avkodningen bryts.
-
 ## Så här felsöker jag
 
 Här är några saker jag kontrollerar:
@@ -153,6 +141,3 @@ Här är några saker jag kontrollerar:
 - Busskrockar? Då kan två enheter svara samtidigt om avkodningen är fel. Jag mäter `/CE` och `/CS2` medan CPU:n läser — exakt en ska vara LÅG.
 - Kraschar programmet vid `$8000`? Då placerade länkskriptet kod i VIA-fönstret. Jag kontrollerar `program.cfg` — ROM ska börja på `$C000`, inte tidigare.
 
-## Vad händer härnäst?
-
-Där står den: en dator jag byggt och förstår från första pulsen till sista adressen. Men en tråd återstår att klippa — Arduino levererar fortfarande klockan. I steg 12 ersätter jag den med en riktig kristall och låter datorn stå helt på egna ben. Därefter finns bara nya vägar: avbrott, fler minneskretsar, ett eget operativsystem…

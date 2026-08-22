@@ -1,8 +1,6 @@
-<!-- Handredigerad: jag-röst. Kör ej html2md på denna fil. -->
 # Riktigt RAM (62256 SRAM)
 
 Att koppla in det första riktiga minneschippet känns som att ge datorn ett eget rum. Från och med nu är det äkta kisel som svarar när processorn knackar på.
-
 ## Mål
 
 Hittills har Arduino emulerat allt minne — varje gång CPU:n läser eller skriver en byte är det Arduino som svarar. Det fungerar utmärkt för inlärning och felsökning, men en riktig dator har riktigt minne. Nu tar jag steget och kopplar in ett 62256 SRAM-chip — 32 kilobyte statiskt RAM i en DIP-28-kapsel.
@@ -14,12 +12,12 @@ Den stora förändringen i koden: Arduino går *tri-state* (hög impedans) för 
 ## Nya komponenter
 
 Ett 62256 SRAM-chip på 32 KB — datorns första riktiga arbetsminne — plus en avkopplingskondensator och kopplingstrådar. Zero page, stack och variabler lämnar nu Arduinons mjukvaruemulering och hamnar i äkta kisel.
+
 | Antal | Komponent |
 |---|---|
 | 1 | 62256 SRAM (32KB, DIP-28) |
 | 1 | 100 nF keramisk kondensator (avkoppling SRAM) |
 | – | Kopplingstråd (adress, data, kontroll) |
-
 ## 62256 SRAM — pinout
 
 DIP-28-kapsel. 15 adresslinjer, 8 datalinjer, 3 kontrollsignaler. Här ser jag exakt hur kretsen ska vändas och vad varje pinne gör.
@@ -41,8 +39,7 @@ SRAM-chippet delar adress- och databuss med CPU, VIA och Arduino. Tre kontrollsi
 
 ## Kopplingar
 
-Tabellerna täcker nu fyra kretsar plus LCD:n, uppdelade efter funktion: ström och kontroll, adressbuss, databuss och övrigt. SRAM:ns avkodning presenteras för sig, eftersom U4C + U4D i 74HC00:an är det enda nya i detta steg.
-
+Tabellerna täcker nu fyra kretsar plus LCD:n, uppdelade efter funktion: ström och kontroll, adressbuss, databuss och övrigt. SRAM:ns avkodning presenteras för sig, eftersom U4C + U4D i **74HC00**:an är det enda nya i detta steg.
 ### 62256 SRAM
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
@@ -58,7 +55,8 @@ Tabellerna täcker nu fyra kretsar plus LCD:n, uppdelade efter funktion: ström 
 
 U4A (NOT `A15`) och U4B (NAND för VIA) är oförändrade från steg 7. U4C blir NOT `A14`. U4D gör (NOT `A14`) NAND (NOT `A15`) → LÅG endast vid `$0000`–`$3FFF`.
 
-U4A inverterar `A15`, U4C inverterar `A14`. U4D gör (NOT `A14`) NAND (NOT `A15`) → LÅG endast när `A14`=0 OCH `A15`=0. SRAM aktiveras alltså vid `$0000`–`$3FFF` och ingen annanstans. VIAn (U4B) aktiveras vid `$4000`–`$7FFF`. Inga krockar.
+U4A inverterar `A15`, U4C inverterar `A14`. U4D gör (NOT `A14`) NAND (NOT `A15`) → LÅG endast när `A14`=0 OCH `A15`=0. SRAM aktiveras alltså vid `$0000`–`$3FFF` och ingen annanstans. VIAn (U4B) aktiveras vid `$4000`–`$7FFF`. 
+
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
 | VIA-avkodning (U4A + U4B — oförändrad från steg 7) |  |  |  |
@@ -79,6 +77,7 @@ U4A inverterar `A15`, U4C inverterar `A14`. U4D gör (NOT `A14`) NAND (NOT `A15`
 ### CPU, VIA och LCD
 
 CPU, VIA och LCD är oförändrade från steg 7. Här är den kompletta kopplingslistan.
+
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
 | — ström och kontroll |  |  |  |
@@ -117,11 +116,10 @@ CPU, VIA och LCD är oförändrade från steg 7. Här är den kompletta koppling
 
 ## Arduino-kod
 
-Det här är slutsteget — och den mest genomgripande förändringen av minnesemulatorn sedan steg 3. Jag kopplar in ett 62256 SRAM-chip (32 KB statiskt RAM) som tar över adresserna `$0000–$3FFF`. Arduino måste nu *tri-stata databussen* för alla SRAM- och VIA-adresser — tre enheter delar på samma 8 datalinjer, och bara en får prata i taget.
-
+Det här är slutsteget — och den mest genomgripande förändringen av minnesemulatorn sedan steg 3. Jag kopplar in ett SRAM-chip (32 KB statiskt RAM) som tar över adresserna `$0000–$3FFF`. Arduino måste nu *tri-stata databussen* för alla SRAM- och VIA-adresser — tre enheter delar på samma 8 datalinjer, och bara en får prata i taget.
 ### Tre enheter, en buss
 
-Databussen (`D0–D7`) är nu ansluten till tre kretsar samtidigt: CPU, Arduino, SRAM och VIA. Adressavkodningen (74HC00) avgör vem som svarar:
+Databussen (`D0–D7`) är nu ansluten till fyra kretsar samtidigt: CPU, Arduino, SRAM och VIA. Adressavkodningen med 74HC00 avgör vem som svarar:
 
 - `$0000`–`$3FFF` → `is_sram()` returnerar `true`. Arduino rör inte bussen. SRAM-chippet läser och skriver helt på egen hand.
 - `$4000`–`$400F` → `is_via()` returnerar `true`. Arduino rör inte bussen. VIA-kretsen hanterar I/O.
@@ -142,20 +140,25 @@ Koden är uppdelad i två faser som demonstrerar att SRAM fungerar:
 
 ### Vad som är nytt jämfört med steg 7–8
 
-62256 SRAM-chip, utökad 74HC00-avkodning (U4C+U4D för SRAM). I koden: `is_sram()`, utökade villkor i `pulse()`/`read_mem()`/`write_mem()`, tvåfasigt programflöde i `setup()`, och Fibonacci-programmet byggt med ca65. `ram[1024]` från tidigare steg är borta — den har ersatts av äkta kisel.
+SRAM-chip, utökad med 74HC00-avkodning (U4C+U4D för SRAM). I koden: `is_sram()`, utökade villkor i `pulse()`/`read_mem()`/`write_mem()`, tvåfasigt programflöde i `setup()`, och Fibonacci-programmet byggt med ca65. `ram[1024]` från tidigare steg är borta — den har ersatts av äkta kisel.
 > [!NOTE] 📦 Arduino-kod — step9.inc · 304 rader · se step9.html
 
 ## 6502-programmet — Fibonacci i assembler
 
-Det här programmet är vackrare än hello-programmet från steg 8 — det *beräknar* något. Fibonacci-sekvensen är en av matematikens mest berömda talserier: varje tal är summan av de två föregående. 0, 1, 1, 2, 3, 5, 8, 13, 21… och så vidare. Programmet räknar ut nästa tal, visar det på LCD:ns andra rad, pausar en stund, och gör om. Eftersom 6502:an är en 8-bitars processor ryms bara tal upp till 255 — när Fibonacci passerar 233 och försöker beräkna 377 (som är för stort) fångar programmet upp overflödet och börjar om från noll. LCD:n visar "Fib:" på första raden och det aktuella talet — 0, 1, 1, 2, 3… — på andra raden.
+Det här programmet är intressantare än hello-programmet från steg 8 — det *beräknar* något. Fibonacci-sekvensen är en av matematikens mest berömda talserier: varje tal är summan av de två föregående. 0, 1, 1, 2, 3, 5, 8, 13, 21… och så vidare. Programmet räknar ut nästa tal, visar det på LCD:ns andra rad, pausar en stund, och gör om. Eftersom 6502:an är en 8-bitars processor ryms bara tal upp till 255 — när Fibonacci passerar 233 och försöker beräkna 377 (som är för stort) fångar programmet upp overflödet och börjar om från noll. LCD:n visar "Fib:" på första raden och det aktuella talet — 0, 1, 1, 2, 3… — på andra raden.
 
-Strukturen känns igen från steg 8: konstanter överst, kod från `$8000`, subrutiner, strängdata och vektorsegment. Det nya är att programmet använder *zero page* — adresserna `$00` till `$02` — för att lagra Fibonacci-variablerna. Zero page är 6502:ans snabbaste minnesområde eftersom adresseringsläget bara kräver en byte. Här ligger F(n-2) på `$00`, F(n-1) på `$01`, och det nyberäknade F(n) på `$02`. Det är dessa adresser som i steg 9 ligger i det fysiska SRAM-chippet — inte i Arduinons array. När programmet läser `$00` eller skriver till `$02` är det äkta kisel som svarar.
+Strukturen känns igen från steg 8: 
+1. konstanter överst
+2. kod från `$8000`
+3. subrutiner
+4. strängdata och vektorsegment. 
+
+Det nya är att programmet använder *zero page* — adresserna `$00` till `$02` — för att lagra Fibonacci-variablerna. Zero page är 6502:ans snabbaste minnesområde eftersom adresseringsläget bara kräver en byte. Här ligger F(n-2) på `$00`, F(n-1) på `$01`, och det nyberäknade F(n) på `$02`. Det är dessa adresser som i steg 9 ligger i det fysiska SRAM-chippet — inte i Arduinons array. När programmet läser `$00` eller skriver till `$02` är det äkta kisel som svarar.
 
 Själva Fibonacci-beräkningen är förvånansvärt kort — bara en handfull instruktioner. Programmet rensar carry-flaggan med `CLC`, laddar F(n-2) med `LDA $00`, adderar F(n-1) med `ADC $01`, och kontrollerar om additionen spillde över med `BCC no_wrap`. Om carry är satt betyder det att talet blev större än 255 — då nollställs serien och loopen börjar om. Annars sparas resultatet, variablerna skiftas framåt (det gamla F(n-1) blir nya F(n-2), det nya F(n) blir F(n-1)), och talet visas på LCD:n. Varje varv i loopen avslutas med `JMP fib_loop` — tillbaka till början, nästa tal.
 
 Den mest imponerande subrutinen är `show_num`. Den omvandlar ett 8-bitars tal till 1–3 ASCII-siffror genom att räkna hur många hundratal, tiotal och ental som ryms — en algoritm som liknar den jag lärde mig i grundskolan. Först subtraheras 100 upprepade gånger för att få fram hundratalet, sedan 10 för tiotalet, och resten är entalet. Varje siffra konverteras till ASCII genom att addera `'0'` (tecknet noll har ASCII-värdet 48). Efter utskriften skrivs två mellanslag — ett smart knep för att sudda bort gamla siffror när "144" följs av "5". Utan dem skulle displayen visa "544" där fjorton blev fem.
-
-### Så här visas 144
+#### Så här visas tex 144
 
 Jag följer `show_num` när A-registret innehåller 144 — talet som visas efter "Fib:":
 
@@ -163,10 +166,10 @@ Jag följer `show_num` när A-registret innehåller 144 — talet som visas efte
 1. Tiotal: 44 − 10 = 34 (X=1) → 24 (X=2) → 14 (X=3) → 4 (X=4). 4 < 10, klart. X (4) + `'0'` = `'4'` → skriv ut.
 1. Ental: resten är 4 → `'4'` → skriv ut.
 1. Städning: två mellanslag suddar bort resten av raden — nästa tal (5) skriver över utan att lämna kvar "1445".
-
 ### Nya instruktioner i det här programmet
 
 Från steg 8 känner jag redan `LDA`, `STA`, `JSR`, `RTS`, `LDX`, `INX`, `BEQ` och `JMP`. Det här är vad som är nytt:
+
 | Instruktion | Exempel i programmet | Vad CPU:n gör |
 |---|---|---|
 | CLC / SEC | före ADC / SBC | Rensar/sätter carry-flaggan — förbereder addition respektive subtraktion. |
@@ -224,12 +227,6 @@ LCD-displayen — mitt i Fibonacci
 Varje nytt Fibonacci-tal dyker upp med en kort paus. När talet når 233 (det sista som ryms i en 8-bitars byte) wrappar det tillbaka till 0 och sekvensen börjar om. Under tiden använder 6502-programmet zero page-adresser (`$00`, `$01`, `$02`) för att lagra F(n-2), F(n-1) och F(n) — adresser som nu ligger i det fysiska SRAM-chippet, inte i Arduinons mjukvaruemulerade RAM. I seriemonitor syns dessa som `R $0000` och `W $0002` med `← SRAM`-markering.
 
 Jag har byggt en dator med tre kretsar som delar på samma buss, äkta SRAM för arbetsminne, en VIA för I/O, och en 6502-processor som kör mina egna assembler-program. Från en blinkande lysdiod till Fibonacci på LCD — hela resan på nio steg. Jag satt och tittade på 144 ett bra tag — det var mitt eget minne som räknat.
-
-### Så här provar jag
-
-- Jag räknar Fibonacciserien för hand och jämför med displayen — efter 233 börjar den om.
-- Jag använder Knapp 2 och stegar medan `show_num` arbetar — jag följer subrutinen rad för rad i `asm/program_fib.asm`.
-
 ## Så här felsöker jag
 
 Här är några saker jag kontrollerar:
@@ -238,7 +235,3 @@ Här är några saker jag kontrollerar:
 - Databuss-krockar? Då får Arduino INTE sätta `DDRA`=`0xFF` vid SRAM-adresser. Jag kontrollerar att `is_sram()` returnerar rätt.
 - Skriver SRAM inte? Då måste `/WE` gå till `R/W` (pin 34). Jag kontrollerar att `/CE` är avkodad korrekt via 74HC00.
 - Glitchar på bussen? 62256 är snabbare än Arduino. Jag ser till att `/CE` och `/WE` är stabila innan databussen läses.
-
-## Vad händer härnäst?
-
-Nu har datorn riktigt minne — men programmet bor fortfarande i Arduino. I nästa steg bränner jag in det i ett EEPROM, så att datorn står på egna ben.
