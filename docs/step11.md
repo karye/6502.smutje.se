@@ -1,6 +1,7 @@
 # Städad adressrymd
 
 En dator som fungerar men har en stökig adressrymd stör mig. Nu ska hela 64 KB falla på plats — RAM nedtill, I/O i mitten, ROM upptill.
+
 ## Mål
 
 I steg 10 fick jag en fristående dator — men adressrymden var inte vacker. VIA:ns 16 bytes på `$4000` klippte av SRAM-minnet mitt i, och den övre halvan av 62256-chippet (`$4000`–`$7FFF`) låg helt oanvänd. Det kändes slarvigt.
@@ -10,6 +11,7 @@ Nu städar jag upp. SRAM utökas till hela 32 KB (`$0000`–`$7FFF`) genom att a
 Resultatet är en adressrymd utan dött utrymme: RAM längst ner, ROM i mitten och I/O i ett fönster högst upp. Det här är den klassiska 6502-layouten — nu har jag byggt den själv. Fyra kablar och en NAND-grind — och hela 64 KB har fått ett jobb.
 
 Samma väg som *Steve Wozniak* använde i Apple II och som *Ben Eater* visade i sin klassiska 6502-serie.
+
 ## Nya komponenter
 
 Inga nya kretsar! Det här steget handlar om att *omkoppla det jag redan har*. Jag behöver bara en enda NAND-grind (¼ av en 74HC00) för hela den nya adressavkodningen. Dessutom en extra kopplingstråd för SRAM:ns `A14` och en för EEPROM:ets `A14`.
@@ -25,24 +27,26 @@ Inga nya kretsar! Det här steget handlar om att *omkoppla det jag redan har*. J
 Schemat visar den städade bussen: SRAM tar nedre halvan, VIA mitten och EEPROM toppen — varje enhet på sin egen tydliga region.
 
 Schema kommer snart — se avkodningstabellerna nedan så länge.
+
 ## Adressavkodning
 
 Allt handlar om vilken enhet som får prata på bussen. Tre enheter, tre chip select-signaler — och en enda NAND-grind räcker.
-### Gamla kartan (steg 10) — problemen
 
-✗ SRAM bara 16 KB: 62256 är ett 32 KB-chip, men `A14` var inte ansluten. Den övre halvan låg död.
+??? Gamla kartan (steg 10) — problemen
 
-✗ VIA klippte av minnet: 16 bytes på `$4000` mitt i adressrymden delade RAM:et i två — `$0000`–`$3FFF` använt, `$4000`–`$7FFF` dött.
+    ✗ SRAM bara 16 KB: 62256 är ett 32 KB-chip, men `A14` var inte ansluten. Den övre halvan låg död.
 
-✗ EEPROM-avkodning enkel: bara NOT `A15` — fungerade, men kunde inte samexistera med VIA på samma sida.
+    ✗ VIA klippte av minnet: 16 bytes på `$4000` mitt i adressrymden delade RAM:et i två — `$0000`–`$3FFF` använt, `$4000`–`$7FFF` dött.
 
-### Nya kartan (steg 11)
+    ✗ EEPROM-avkodning enkel: bara NOT `A15` — fungerade, men kunde inte samexistera med VIA på samma sida.
 
-✓ SRAM 32 KB (`$0000`–`$7FFF`): `A14` ansluts, `/CE` = `A15` direkt (aktivt låg) — hela chippet aktivt när `A15`=0.
+??? Nya kartan (steg 11)
 
-✓ VIA på `$8000`–`$BFFF`: `A15` → `CS1` (aktivt hög), `A14` → `/CS2` (aktivt låg) — *inga grindar alls*, kretsens egna chip-selects gör jobbet.
+    ✓ SRAM 32 KB (`$0000`–`$7FFF`): `A14` ansluts, `/CE` = `A15` direkt (aktivt låg) — hela chippet aktivt när `A15`=0.
 
-✓ EEPROM på `$C000`–`$FFFF`: `/CE` = NAND(`A15`, `A14`) — en enda grind, och `A14` kopplas även till EEPROM:ets `A14` så chippet läser sin övre halva.
+    ✓ VIA på `$8000`–`$BFFF`: `A15` → `CS1` (aktivt hög), `A14` → `/CS2` (aktivt låg) — *inga grindar alls*, kretsens egna chip-selects gör jobbet.
+
+    ✓ EEPROM på `$C000`–`$FFFF`: `/CE` = NAND(`A15`, `A14`) — en enda grind, och `A14` kopplas även till EEPROM:ets `A14` så chippet läser sin övre halva.
 
 ### Sanningstabell — vem svarar på vilken adress?
 
@@ -58,13 +62,16 @@ Varje enhet har en egen region — inga fönster, inga speglingar mellan enheter
 ## Kopplingar
 
 Här är vad som ändras jämfört med steg 10. Allt annat — ström, klocka, reset, adress-/databuss till SRAM och EEPROM — är oförändrat.
+
 ### SRAM — nu med `A14`
+
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
 | 1 | `A14` | CPU A14 (NY!) | Öppnar den andra halvan av 62256 — SRAM blir 32 KB |
 | 20 | `/CE` | CPU `A15` direkt (aktivt låg) | LÅG när A15=0 — hela nedre halvan, ingen grind behövs |
 
 ### VIA — flyttad till `$8000`
+
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
 | 23 | `/CS2` | CPU `A14` direkt (aktivt låg) | LÅG när A14=0 → VIA vid $8000–$BFFF |
@@ -72,6 +79,7 @@ Här är vad som ändras jämfört med steg 10. Allt annat — ström, klocka, r
 | 38–35 | `RS0–RS3` | CPU A0–A3 (oförändrad) | Väljer register — de speglas var 16:e byte i fönstret |
 
 ### EEPROM — övre halvan (`$C000`–`$FFFF`)
+
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
 | 20 | `/CE` | NAND-grindens utgång (74HC00 pin 3) | LÅG när A15=1 och A14=1 → $C000–$FFFF |
@@ -189,7 +197,8 @@ LCD-displayen (16×2)
 Samma program som steg 8–10, men VIA:n adresseras nu på `$8000` istället för `$4000`.
 
 Lägg märke till skillnaden mot steg 10: SRAM-skrivningar kan nu ske var som helst i `$0000`–`$7FFF`, VIA:n svarar på `$8000` och EEPROM på `$C000`. Bussloggen visar tydligt vilken enhet som pratar.
-## Så här felsöker jag
+
+## Så här felsöker man
 
 Här är några saker jag kontrollerar:
 

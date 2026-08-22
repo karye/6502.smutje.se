@@ -1,6 +1,7 @@
 # Riktigt RAM (62256 SRAM)
 
 Att koppla in det första riktiga minneschippet känns som att ge datorn ett eget rum. Från och med nu är det äkta kisel som svarar när processorn knackar på.
+
 ## Mål
 
 Hittills har Arduino emulerat allt minne — varje gång CPU:n läser eller skriver en byte är det Arduino som svarar. Det fungerar utmärkt för inlärning och felsökning, men en riktig dator har riktigt minne. Nu tar jag steget och kopplar in ett 62256 SRAM-chip — 32 kilobyte statiskt RAM i en DIP-28-kapsel.
@@ -41,7 +42,9 @@ SRAM-chippet delar adress- och databuss med CPU, VIA och Arduino. Tre kontrollsi
 ## Kopplingar
 
 Tabellerna täcker nu fyra kretsar plus LCD:n, uppdelade efter funktion: ström och kontroll, adressbuss, databuss och övrigt. SRAM:ns avkodning presenteras för sig, eftersom U4C + U4D i **74HC00**:an är det enda nya i detta steg.
+
 ### 62256 SRAM
+
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
 | 28 | `VDD` | +5V | Strömmatning — glöm inte 100nF avkoppling till GND |
@@ -167,6 +170,7 @@ Nu har vi tre enheter som svarar på olika adressområden. **SRAM** tar den läg
 ## Arduino-kod
 
 Det här är slutsteget — och den mest genomgripande förändringen av minnesemulatorn sedan steg 3. Jag kopplar in ett SRAM-chip (32 KB statiskt RAM) som tar över adresserna `$0000–$3FFF`. Arduino måste nu *tri-stata databussen* för alla SRAM- och VIA-adresser — tre enheter delar på samma 8 datalinjer, och bara en får prata i taget.
+
 ### Tre enheter, en buss
 
 Databussen (`D0–D7`) är nu ansluten till fyra kretsar samtidigt: CPU, Arduino, SRAM och VIA. Adressavkodningen med 74HC00 avgör vem som svarar:
@@ -214,6 +218,7 @@ Det nya är att programmet använder *zero page* — adresserna `$00` till `$02`
 Själva Fibonacci-beräkningen är förvånansvärt kort — bara en handfull instruktioner. Programmet rensar carry-flaggan med `CLC`, laddar F(n-2) med `LDA $00`, adderar F(n-1) med `ADC $01`, och kontrollerar om additionen spillde över med `BCC no_wrap`. Om carry är satt betyder det att talet blev större än 255 — då nollställs serien och loopen börjar om. Annars sparas resultatet, variablerna skiftas framåt (det gamla F(n-1) blir nya F(n-2), det nya F(n) blir F(n-1)), och talet visas på LCD:n. Varje varv i loopen avslutas med `JMP fib_loop` — tillbaka till början, nästa tal.
 
 Den mest imponerande subrutinen är `show_num`. Den omvandlar ett 8-bitars tal till 1–3 ASCII-siffror genom att räkna hur många hundratal, tiotal och ental som ryms — en algoritm som liknar den jag lärde mig i grundskolan. Först subtraheras 100 upprepade gånger för att få fram hundratalet, sedan 10 för tiotalet, och resten är entalet. Varje siffra konverteras till ASCII genom att addera `'0'` (tecknet noll har ASCII-värdet 48). Efter utskriften skrivs två mellanslag — ett smart knep för att sudda bort gamla siffror när "144" följs av "5". Utan dem skulle displayen visa "544" där fjorton blev fem.
+
 #### Så här visas tex 144
 
 Jag följer `show_num` när A-registret innehåller 144 — talet som visas efter "Fib:":
@@ -222,6 +227,7 @@ Jag följer `show_num` när A-registret innehåller 144 — talet som visas efte
 1. Tiotal: 44 − 10 = 34 (X=1) → 24 (X=2) → 14 (X=3) → 4 (X=4). 4 < 10, klart. X (4) + `'0'` = `'4'` → skriv ut.
 1. Ental: resten är 4 → `'4'` → skriv ut.
 1. Städning: två mellanslag suddar bort resten av raden — nästa tal (5) skriver över utan att lämna kvar "1445".
+
 ### Nya instruktioner i det här programmet
 
 Från steg 8 känner jag redan `LDA`, `STA`, `JSR`, `RTS`, `LDX`, `INX`, `BEQ` och `JMP`. Det här är vad som är nytt:
@@ -311,7 +317,8 @@ LCD-displayen — mitt i Fibonacci
 Varje nytt Fibonacci-tal dyker upp med en kort paus. När talet når 233 (det sista som ryms i en 8-bitars byte) wrappar det tillbaka till 0 och sekvensen börjar om. Under tiden använder 6502-programmet zero page-adresser (`$00`, `$01`, `$02`) för att lagra F(n-2), F(n-1) och F(n) — adresser som nu ligger i det fysiska SRAM-chippet, inte i Arduinons mjukvaruemulerade RAM. I seriemonitor syns dessa som `R $0000` och `W $0002` med `← SRAM`-markering.
 
 Jag har byggt en dator med tre kretsar som delar på samma buss, äkta SRAM för arbetsminne, en VIA för I/O, och en 6502-processor som kör mina egna assembler-program. Från en blinkande lysdiod till Fibonacci på LCD — hela resan på nio steg. Jag satt och tittade på 144 ett bra tag — det var mitt eget minne som räknat.
-## Så här felsöker jag
+
+## Så här felsöker man
 
 Här är några saker jag kontrollerar:
 

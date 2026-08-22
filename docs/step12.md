@@ -1,6 +1,7 @@
 # Fristående klocka
 
 Det sista som påminner om Arduinon är klockan. Nu byter jag ut den mot en riktig kristall — när datorn sedan startar med strömmen behöver den ingen hjälp alls.
+
 ## Mål
 
 Sedan steg 10 levererar EEPROM:et programmet och SRAM:et minnet — men Arduino har fortfarande skött *klockan*. Nu kopplar jag in en riktig klockgenerator: en 16 MHz-oscillator vars frekvens jag delar ner med en **74HC393** till 1 MHz. En enkel RC-krets sköter reset.
@@ -57,6 +58,7 @@ Tre små kretsar att koppla: oscillatorn, delaren och reset-kretsen. Allt annat 
 | 1 | `ENA` | — (lämnas oansluten) | Enable — de flesta moduler kör alltid |
 
 ### 74HC393 — frekvensdelare
+
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
 | 1 | `1CLK` | Oscillatorns ut (pin 8) | 16 MHz in — räknaren tickar på varje fallande flank |
@@ -66,6 +68,7 @@ Tre små kretsar att koppla: oscillatorn, delaren och reset-kretsen. Allt annat 
 | 7 | `GND` | GND | Systemjord |
 
 ### Reset-RC — start utan Arduino
+
 | Komponent | Kopplas till | Varför |
 |---|---|---|
 | 10 kΩ | +5V → CPU `/RESET` (pin 40) | Pull-up — håller `/RESET` HÖG i drift |
@@ -121,6 +124,7 @@ Slå på strömmen. Inget att ladda upp, inget att ansluta — datorn bara start
 - Koppla bort Arduino helt om den fortfarande sitter i — den behövs inte.
 
 Ingen seriemonitor längre: LCD:n är datorns enda ansikte utåt. Jag vred på strömmen och datorn bara vaknade — precis som jag tänkt mig.
+
 ### Så här provar jag
 
 - Jag kopplar en lysdiod (med 220 Ω) från `PHI2` (pin 37) till `GND` — den lyser svagt, eftersom den är på halva tiden (50% arbetscykel vid 1 MHz).
@@ -128,7 +132,7 @@ Ingen seriemonitor längre: LCD:n är datorns enda ansikte utåt. Jag vred på s
 - Jag flyttar klockan från `1Q3` till `1Q0` (8 MHz) — jag ser vad som händer med LCD:n: programmets delay-loopar är räknade för 1 MHz, så displayen hinner inte med.
 - Jag mäter `/RESET` (pin 40) med multimetern strax efter start — den ska ligga nära 0 V direkt, sedan stiga mot 5 V.
 
-## Så här felsöker jag
+## Så här felsöker man
 
 Här är några saker jag kontrollerar:
 

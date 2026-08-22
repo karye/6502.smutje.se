@@ -1,6 +1,7 @@
 # Eget 6502-program
 
 Det är en speciell känsla första gången en dator jag byggt själv kör ett program jag skrivit själv. Nio bytes räcker för att få den känslan.
+
 ## Mål
 
 Datorn är nu komplett — CPU, minne, LCD, knappar. Men den kör bara `NOP`:ar. Dags att skriva mitt första egna 6502-program!
@@ -14,9 +15,11 @@ Jag skriver en enkel räknare: öka X-registret från 0 till 255, spara värdet 
 - `STX $0200` är tre bytes (`$8E $00 $02`)
 
 Jag skriver in dessa bytes direkt i Arduinons minnesarray, och CPU:n exekverar dem som ett riktigt program.
+
 ## Nya komponenter
 
 Inga nya komponenter — samma koppling som steg 5. 
+
 ## Kopplingar
 
 Samma fysiska koppling som steg 5 — ingenting har flyttats. Tabellen är med för fullständighet så att jag kan följa varje signal, men det enda som ändras i detta steg är programmet i `setup()`.
@@ -133,6 +136,7 @@ Samma hårdvara som steg 5. LCD:n kopplas direkt till Arduino — `RS`→`D5`, E
 Datorn fungerar — men den har hittills bara kört `NOP`:ar. Nu skriver jag mitt första egna 6502-program. Det är bara 9 bytes stort, men det innehåller allt ett riktigt program behöver: initiering, beräkning, minnesskrivning och en loop. CPU:n kommer att räkna från 0 till 255 i en oändlig loop — och jag kommer att kunna följa varje steg.
 
 Lägg märke till: programmet körs på 6502-processorn — Arduino laddar bara in byten i sin minnesarray och genererar klockan. Precis som tidigare är Arduino minnesemulator, inte exekverare.
+
 ### 6502-maskinkod — så här ser ett program ut
 
 En 6502-instruktion är 1–3 bytes lång. Första byten är alltid *opcode* — en siffra som talar om för CPU:n vad den ska göra. Resten är *operander* — data eller adresser som instruktionen behöver. Vårt program har fyra instruktioner:
@@ -150,6 +154,7 @@ En 6502-instruktion är 1–3 bytes lång. Första byten är alltid *opcode* —
 
 - Istället för en enda `write_mem(0x8000, 0xEA)` skriver jag nu 9 bytes — en i taget, på stigande adresser från `$8000`. 
 - Varje `write_mem()` placerar en byte i Arduinons `program[]`-array, och CPU:n kommer att läsa dem som instruktioner.
+
 ### Vad jag ser på LCD:n
 
 När programmet körs kan jag med Knapp 2 (instruktionssteg) följa programflödet: `$8000` (`LDX`) → `$8002` (`INX`) → `$8003` (`STX`) → `$8006` (`JMP`) → `$8002` (`INX` igen). Varje varv genom loopen ökar värdet på adress `$0200` — och jag kan se det på LCD:ns rad 1 som `D:$01`, `D:$02`, `D:$03`… hela vägen upp till `D:$FF` (255). Sedan wrappar X-registret till 0 och loopen börjar om.
@@ -202,7 +207,8 @@ LCD-displayen — mitt i loopen
 Adress `$0200` håller räknarens värde. Efter 5 varv genom loopen visar `D:$05`.
 
 För första gången ser jag ett W i loggen! CPU:n *skriver* till adress `$0200` — det är `STX $0200` som sparar X-registrets värde. På LCD:ns rad 1 ser jag `D:$01`, `D:$02`, `D:$03`… räknaren ökar för varje varv. När den når `D:$FF` (255) wrappar den till `D:$00` — X-registret är bara 8 bitar brett.
-## Så här felsöker jag
+
+## Så här felsöker man
 
 Här är några saker jag kontrollerar:
 

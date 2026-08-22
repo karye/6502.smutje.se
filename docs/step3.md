@@ -1,6 +1,7 @@
 # Databuss och minne
 
 Utan databuss är processorn blind — den pekar på saker den aldrig får se. Det här steget är datorns födelse: nu svarar någon på frågorna.
+
 ## Mål
 
 Hittills har CPU:n kunnat tala om *var* den vill läsa mha adressbussen. Nu kopplar jag in databussen — 8 ledningar som bär den faktiska informationen mellan CPU:n och minnet. Utan databuss kan CPU:n inte hämta instruktioner och är helt blind.
@@ -56,21 +57,25 @@ Alla kopplingar från steg 2 finns kvar; tabellen lägger till databussens åtta
 ## Arduino-kod
 
 Det här är det största kodsteget hittills och det viktigaste. Arduino går från att vara en passiv observatör till att bli en *fullvärdig minnesemulator*. CPU:n kommer att ställa frågor via adressbussen, och Arduino måste svara med rätt byte på databussen — allt inom loppet av en enda klockcykel. När det fungerar har jag en dator som faktiskt kör ett program.
+
 ### Databussen — 8 ledningar som bär information
 
 Adressbussen talar om *var* CPU:n vill läsa. Databussen bär *vad* som ska läsas eller skrivas. Det är 8 ledningar — `D0` till `D7` — och de är *dubbelriktade*. Ibland driver CPU:n dem (vid skrivning), ibland Arduino (vid läsning). 
+
 ### `R/W`-signalen — vem som pratar
 
 CPU:ns pin 34 (`R/W`) är trafikljuset på bussen. 
 
 - När `R/W` är HÖG vill CPU:n läsa — Arduino ska då sätta `DDRA = 0xFF` (alla pinnar som utgångar) och lägga ut rätt byte på `PORTA`. 
 - När `R/W` är LÅG vill CPU:n skriva — Arduino måste omedelbart sätta `DDRA = 0x00` (tri-state, hög impedans) så att CPU:n kan driva ledningarna utan motstånd. Det här skiftet sker i *varje klockcykel*, mitt i `pulse()`.
+
 ### Kodens fyra lager
 
 1. `read_mem()` och `write_mem()` — två enkla funktioner som slår upp eller sparar en byte i rätt array. Vektorer hamnar i `vectors[6]`, arbetsminne i `ram[1024]`. Allt annat returnerar `$EA` (`NOP`) — en ofarlig fallback som gör att CPU:n bara hoppar vidare om den läser från en oanvänd adress. 
 1. `pulse()` — datorns hjärta — samma struktur som tidigare men nu med ett avgörande tillägg: efter att ha läst adress och `R/W` bestämmer den om Arduino ska driva databussen (`DDRA = 0xFF`) eller gå ur vägen (`DDRA = 0x00`). Allt detta sker medan `PHI2` är låg. När `PHI2` sedan går hög läser CPU:n av databussen — eller skriver till den.
 1. `setup()` — ladda programmet — här skrivs reset-vektorn (`$8000`) och en enda `NOP`-instruktion (`$EA`) in i minnet. Det är mitt första 6502-program: CPU:n startar på `$8000`, läser `$EA`, gör ingenting, går till `$8001`, läser `$EA` (minnet returnerar `NOP` överallt), och loopar för evigt.
 1. `loop()` — anropar bara `pulse()`. En klockcykel per varv, med fullständig loggning i seriemonitor.
+
 ### Vad som är nytt jämfört med steg 2
 
 Tre stora nyheter: 
@@ -104,7 +109,7 @@ Alla rader börjar med `R` — CPU:n gör inget annat än att läsa, eftersom `N
 
 Det ser kanske händelselöst ut, men varje rad i loggen är ett mirakel: Arduino har läst adressbussen, kollat `R/W`, slagit upp rätt byte i minnet, och lagt ut den på databussen — allt innan CPU:n hann märka någon fördröjning. Jag tittar på en fungerande dator vars program är att göra ingenting — och det är ögonblicket jag förstår att jag byggt en riktig dator.
 
-## Så här felsöker jag
+## Så här felsöker man
 
 Här är några saker jag kontrollerar:
 

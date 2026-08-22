@@ -1,6 +1,7 @@
 # VIA + LCD, styrd av 6502
 
 Det här är det stora steget: från att Arduino sköter allt till att processorn själv styr LCD-displayen.
+
 ## Mål
 
 I steg 6 styrde Arduino LCD-displayen direkt. Nu tar jag nästa stora kliv: jag kopplar in en **W65C22** VIA (Versatile Interface Adapter) — en I/O-krets som ger 6502-processorn 20 egna pinnar att styra. VIAn sitter på CPU:ns adress- och databuss, precis som ett RAM-minne, men istället för att lagra data styr den fysiska pinnar.
@@ -14,6 +15,7 @@ En **74HC00** (två NAND-grindar) avkodar adressbussen så att VIA:n hamnar på 
 1. Skriver två rader text genom att lägga ASCII-värden på port B och pulsa enable-signalen på port A — sedan *clear display* och loopa om från början
 
 När allt fungerar har jag en dator där CPU:n själv styr I/O via minnesmappade adresser. Arduino är nu bara minnesemulator och klocka — all logik för LCD:n körs på 6502.
+
 ## Nya komponenter
 
 De här kretsarna är starten på en riktig datorarkitektur. En **W65C22** VIA ger CPU:n 20 egna I/O-pinnar, en **74HC00** avkodar adressbussen så att VIA:n hamnar på `$4000`, och en 100 nF-kondensator håller VIA:ns strömmatning ren.
@@ -68,6 +70,7 @@ DIP-14-kapsel. Fyra 2-ingångars NAND-grindar. U4A+U4B används för VIA-avkodni
 Kopplingarna är organiserade krets för krets, eftersom adress- och databussen nu delas av fyra enheter. För varje krets finns en egen tabell: vad varje pinne heter, vart den går, och varför. Börja med CPU:n, följ sedan VIA:n och 74HC00:ns avkodning, och avsluta med LCD:n.
 
 ### W65C02S CPU
+
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
 | 8 | `VDD` | +5V | Strömmatning |
@@ -84,6 +87,7 @@ Kopplingarna är organiserade krets för krets, eftersom adress- och databussen 
 | 38 | `/SO` | +5V via 10kΩ | Set Overflow — avaktiverad |
 
 ### W65C22 VIA
+
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
 | 20 | `VDD` | +5V | Strömmatning — glöm inte avkoppling 100nF till GND |
@@ -100,6 +104,7 @@ Kopplingarna är organiserade krets för krets, eftersom adress- och databussen 
 | 10–17 | `PB0–PB7` | LCD DB0–DB7 | 8-bitars parallell data till LCD:n |
 
 ### 74HC00 (adressavkodning)
+
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
 | 1, 2 | `A15` (in) | CPU `A15` | Båda ingångarna till A15 → ut = NOT A15 (inverterare) |
@@ -113,6 +118,7 @@ Kopplingarna är organiserade krets för krets, eftersom adress- och databussen 
 Logik: `A15` inverteras av U4A. U4B gör (NOT `A15`) NAND `A14` → LÅG när `A15`=0 och `A14`=1. VIAn aktiveras alltså vid adress `$4000–$7FFF`. CPU:ns `A0–A3` går till VIAns `RS0–RS3` vilket ger 16 register på `$4000–$400F`.
 
 ### LCD 16×2 (parallell)
+
 | Pin | Signal | Kopplas till | Varför |
 |---|---|---|---|
 | 1 | `VSS` | GND | Jord |
@@ -334,7 +340,8 @@ När programmet når slutet hoppar det tillbaka till början och skriver om allt
 
 - Jag ändrar rad-strängarna i `step7.inc` till mitt eget namn och laddar om — LCD:n visar min text.
 - Jag mäter `/CS2` (VIA pin 23) medan jag stegar — den ska vara låg vid `$4000`–`$7FFF`.
-## Så här felsöker jag
+
+## Så här felsöker man
 
 Här är några saker jag kontrollerar:
 

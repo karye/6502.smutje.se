@@ -1,6 +1,7 @@
 # Assembler-bygge med ca65
 
 Att skriva 6502-kod i hex-bytes fungerar, men det är supersegt. Nu skriver jag i assembler.
+
 ## Mål
 
 Hittills har jag skrivit 6502-program som hårdkodade hex-bytes direkt i Arduinons `setup()`. Det fungerar — men det är inte hållbart i längden. Nu tar jag steget till *riktig assembler* med **ca65**, en professionell 6502-assembler från **cc65**-verktygslådan.
@@ -86,9 +87,11 @@ Det fina med att ha programmet i en separat `.asm`-fil är att jag kan ändra oc
     ```
 
 Komplett assembler-kod: `Mega_2560_6502/asm/program_hello.asm`.
+
 ## Arduino-kod
 
 Steg 7:s största svaghet var att 6502-programmet byggdes som hundratals `write_mem()`-anrop i C++-koden. Det fungerar — men det är plågsamt att redigera, svårt att läsa, och omöjligt att felsöka. Steg 8 löser detta med en *professionell assembler-kedja*: jag skriver läsbar 6502-kod i en `.asm`-fil, och PlatformIO bygger om den automatiskt vid varje uppladdning.
+
 ### Från assembler till header — byggkedjan i detalj
 
 När jag kör `pio run` händer tre saker innan C++-koden kompileras:
@@ -98,15 +101,18 @@ När jag kör `pio run` händer tre saker innan C++-koden kompileras:
 1. bin2h.py — konverterar binärfilen till en C-header med en `PROGMEM`-array. Arduinons flash-minne är begränsat — `PROGMEM` gör att programmet ligger kvar i flash och inte kopieras till RAM.
 
 Hela kedjan styrs av `scripts/build_asm.py`, en pre-build hook som PlatformIO anropar automatiskt. Ändrar jag `.asm`-filen byggs allt om.
+
 ### Arduino-koden — bara `setup()` ändras
 
 `pulse()`, `loop()` och hela minnesemulatorn är oförändrade från steg 7. Skillnaden sitter i `setup()`: istället för hundratals `write_mem()` loopar jag nu igenom `PROGRAM[]` och kopierar:
 
 - Kod: `PROGRAM_SIZE - 6` bytes kopieras till `$8000` och uppåt. `pgm_read_byte()` läser från PROGMEM (flash).
 - Vektorer: de sista 6 byten kopieras till `$FFFA`–`$FFFF`. Där finns reset-vektorn som talar om att programmet börjar på `$8000`.
+
 ### 6502-programmet — läsbar assembler
 
 `program_hello.asm` är samma 2-radersprogram som steg 7, men nu med labels (`reset:`, `hello:`), subrutiner (`lcd_command:`, `lcd_data:`), och nollterminerade strängar (`.byte "...", 0`). `JSR` (Jump to Subroutine) och `RTS` (Return from Subroutine) använder stacken för att hålla reda på återhoppsadressen — precis som funktionsanrop i högnivåspråk.
+
 ### Vad som är nytt jämfört med steg 7
 
 Ingen ny hårdvara. I koden: `#include "program_hello.h"`, `PROGRAM[]`, `PROGRAM_SIZE`, och `pgm_read_byte()`. I byggkedjan: `ca65`, `ld65`, `bin2h.py`, `build_asm.py`. Det här är samma verktyg som användes för att bygga spel till NES och program till Apple II — professionella verktyg för en hobbyprocessor.
@@ -233,7 +239,8 @@ LCD-displayen — två rader text
 Seriemonitor visar samma VIA- och LCD-aktivitet som i steg 7 — men med en avgörande skillnad: jag har inte skrivit en enda `write_mem()`. Programmet kommer från `program_hello.asm`, en ren assembler-fil med labels, subrutiner och kommentarer.
 
 Jag gör ett test: jag ändrar texten i `line1:` från "=== 6502 VIA LCD ===" till "Hej varlden!" och kör `pio run -e step8 -t upload -t monitor` igen. Hela kedjan körs om — ca65, ld65, bin2h, kompilering, uppladdning — och LCD:n visar min nya text. Iterationstiden är sekunder, inte minuter. Första gången kedjan rullade ihop på egen hand kändes det som att få en assistent.
-## Så här felsöker jag
+
+## Så här felsöker man
 
 Här är några saker jag kontrollerar:
 

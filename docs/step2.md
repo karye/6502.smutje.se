@@ -1,6 +1,7 @@
 # Adressbuss och reset
 
 Första gången jag såg en 6502 leta upp sin egen startadress i seriemonitorn var ögonblicket då allt föll på plats. Den här processorn vet exakt var den ska börja — jag ska bara få se det hända.
+
 ## Mål
 
 I steg 1 gav jag processorn ström och klocka. Nu ska jag ge den kontroll över adressbussen — 16 ledningar som talar om *var* i minnet CPU:n vill läsa eller skriva.
@@ -8,6 +9,7 @@ I steg 1 gav jag processorn ström och klocka. Nu ska jag ge den kontroll över 
 Alla 6502-processorer startar på samma sätt: efter reset läses den sk reset-vektorn på adress `$FFFC` och `$FFFD` för att få reda på var programmet börjar. Det är inbyggt i kisel — ingen mjukvara, ingen konfiguration. 
 
 Jag kopplar också in `/RESET` (pin 40) till Arduino `D4`. När jag håller `RESB` låg i minst 2 klockcykler nollställs CPU:ns interna register. När jag sedan släpper den (HÖG) börjar CPU:n köra från reset-vektorn.
+
 ## Nya komponenter
 
 Det här steget kräver inga nya elektroniska komponenter — bara kopplingstrådar. Sexton för adresslinjerna `A0–A15` och en extra för reset-signalen, eftersom jag nu tar kontroll över CPU:ns uppstart via `/RESET`.
@@ -43,6 +45,7 @@ Tabellen visar alla kopplingar från steg 1 plus de nya: adressbussens 16 linjer
 ## Arduino-kod
 
 I steg 1 gav jag processorn liv. Nu ska jag lyssna på vad den säger. Koden i detta steg gör något fundamentalt: den *läser av processorns adressbuss* — 16 ledningar som tillsammans talar om var i minnet CPU:n vill läsa — och skriver ut adressen i seriemonitor. Det är som att koppla in en logikanalysator, fast gratis.
+
 ### Portregister — att läsa 8 pinnar på en gång
 
 **Arduino Mega 2560** har 54 digitala pinnar, men att läsa dem en och en med `digitalRead()` är alldeles för långsamt. Varje anrop tar flera mikrosekunder — och med 16 adresslinjer skulle jag tappa synkroniseringen med processorn direkt. Lösningen är *portregister* — specialregister som läser eller skriver 8 pinnar samtidigt i en enda maskininstruktion:
@@ -58,6 +61,7 @@ uint16_t addr = (PINF << 0) | (PINK << 8);
 ```
 
 Resultatet är ett tal mellan 0 och 65 535 — processorns fullständiga adressrymd.
+
 ### Reset-sekvensen — vad som händer när CPU:n vaknar
 
 Koden gör tre saker i `setup()`:
@@ -97,7 +101,8 @@ R $8006
 Varje rad börjar med `R` (Read — CPU:n läser) följt av `$` och en hexadecimal adress. De två första raderna är alltid `$FFFC` och `$FFFD` — reset-vektorn. Processorn frågar "var ska jag börja?" och svaret (som just nu är skräp eftersom databussen inte är inkopplad) leder den till någon adress — ofta `$8000` eller `$0000` beroende på vad som ligger på de flytande datalinjerna.
 
 Lägg märke till att `$FFFC` och `$FFFD` bara dyker upp en gång — efter reset. Sedan räknar adresserna uppåt när CPU:n hämtar instruktioner. Utan databuss (steg 3) kan CPU:n inte hämta riktiga opcodes, men adressbussen fungerar redan — och det är precis vad jag ville bevisa.
-## Så här felsöker jag
+
+## Så här felsöker man
 
 Här är några saker jag kontrollerar:
 

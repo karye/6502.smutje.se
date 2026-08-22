@@ -1,6 +1,7 @@
 # LCD-display
 
 Datorn fungerar — men den pratar bara med en laptop. Det här är steget där bygget börjar kännas som en riktig maskin: tecken visas på en egen skärm.
+
 ## Mål
 
 Datorn fungerar — men all feedback går via seriemonitorn på en laptopen. Nu kopplar jag in en LCD-display (16×2 tecken) som visar vad CPU:n gör direkt på kopplingsdäcket. Ingen datorskärm behövs egentligen längre.
@@ -86,9 +87,11 @@ Här är hela kopplingen inklusive LCD:ns 16 pinnar, markerade med egen radgrupp
 ## Arduino-kod
 
 Hittills har all feedback från datorn gått via seriemonitor på en laptop. Det fungerar, men det känns inte som en riktig dator. Nu kopplar jag in en LCD-display direkt på kopplingsdäcket — och vips är datorn fristående. Ingen PC krävs för att se vad CPU:n gör.
+
 ### LCD i 4-bitarsläge — att prata med displayen
 
 LCD-displayer med **HD44780**-kontroller (standard för 16×2 och 20×4) kan köras i två lägen: 8-bitars (alla 8 datapinnar används) eller 4-bitars (endast `DB4–DB7`). Jag använder 4-bitarsläget för att spara pinnar på Arduino. Arduino-biblioteket `LiquidCrystal` hanterar all kommunikation — jag behöver bara tala om vilka pinnar som används, och som jag såg i Mål-avsnittet speglar konstruktorn den omvända pin-ordningen.
+
 ### LCD-uppdatering inuti `pulse()`
 
 Den stora kodändringen sitter i `pulse()`. Efter varje klockcykel uppdateras LCD:n:
@@ -97,6 +100,7 @@ Den stora kodändringen sitter i `pulse()`. Efter varje klockcykel uppdateras LC
 - Rad 1: visar data på databussen i formatet `D:$EA`. Enstaka hex-siffror paddas med en nolla för jämn bredd.
 
 `setup()` initierar LCD:n med `lcd.begin(16, 2)` och skriver en välkomsttext. `loop()` är oförändrad från steg 4 — knapparna fungerar precis som tidigare, men nu ser jag resultatet både i seriemonitor och på displayen.
+
 ### Vad som är nytt jämfört med steg 4
 
 I koden: `#include <LiquidCrystal.h>`, LCD-objektet, och `lcd.print()`-anropen i `pulse()`. Det är allt — resten är samma beprövade minnesemulator som tidigare.
@@ -158,7 +162,8 @@ LCD-displayen — efter 4 tryck
 Samma information på båda ställena — adress (`$8001`) och data (`$EA`, `NOP`). Skillnaden är att LCD:n visar *just nu* medan seriemonitor bygger en historik. Med Knapp 2 (instruktionssteg) ser jag flera rader i seriemonitor per tryck medan LCD:n uppdateras för varje klockcykel — ett snabbt flimmer av adresser tills `SYNC` går hög.
 
 Datorn har blivit fristående. Jag kan koppla bort USB-kabeln (om Arduino drivs via DC-adaptern) och fortfarande stega genom programmet och se allt på LCD:n. Seriemonitor är praktisk för att logga och felsöka, men displayen på kopplingsdäcket gör datorn till en egen, komplett enhet. 
-## Så här felsöker jag
+
+## Så här felsöker man
 
 Här är några saker jag kontrollerar:
 

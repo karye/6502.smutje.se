@@ -3,6 +3,7 @@
 ## En hembyggd dator från grunden
 
  Ända sedan jag först läste om hur enkla 8-bitarsprocessorer fungerar har jag drömt om att bygga en egen dator. Inte en snabb, inte en modern — utan en dator där *varje komponent går att förstå*. En dator där jag kan följa varje etta och nolla från processorns instruktionsregister hela vägen ut till en lysdiod eller en LCD-display. 
+
 ## En Arduino som startmotor
 
  En 6502-dator från 1970-talet behövde ROM och RAM som fysiska chips — och för att testa ett nytt program fick man bränna ett nytt EPROM under UV-ljus, en process som tog 20 minuter per försök. Här använder jag en **Arduino Mega 2560** som startmotor: den står för klocka, minne och diagnostik i början, så att jag kan fokusera på processorn och se varje signal på kopplingsdäcket. 
@@ -28,19 +29,19 @@ Den andra uppsättningen är databussen — 8 ledningar. Här kommer svaret till
 
 ### Arduino emulerar ram och rom
 
- En **6502**-dator från 1970-talet hade ROM och RAM som fysiska chips. Varje gång man vill testa ett nytt program får man bränna ett nytt EPROM under UV-ljus — en process som tar 20 minuter per försök. Arduino vänder på det här: jag laddar upp ett nytt program på två sekunder över USB. Arduino läser av processorns adressbuss, slår upp rätt byte i sin interna array, och lägger ut den på databussen — allt inom samma klockcykel. 
+En **6502**-dator från 1970-talet hade ROM och RAM som fysiska chips. Varje gång man vill testa ett nytt program får man bränna ett nytt EPROM under UV-ljus — en process som tar 20 minuter per försök. Arduino vänder på det här: jag laddar upp ett nytt program på två sekunder över USB. Arduino läser av processorns adressbuss, slår upp rätt byte i sin interna array, och lägger ut den på databussen — allt inom samma klockcykel. 
 
- Detta är inte en emulator i mjukvara — processorn kör på riktigt, med riktiga elektriska signaler. Arduinon är bara minnet. Det betyder att allt jag lär mig om 6502:ans instruktionsuppsättning, timing och bussprotokoll gäller på riktigt. Jag kan ta bort Arduino och ersätta den med ett EEPROM och ett SRAM-chip — och datorn fungerar precis likadant. 
+Detta är inte en emulator i mjukvara — processorn kör på riktigt, med riktiga elektriska signaler. Arduinon är bara minnet. Det betyder att allt jag lär mig om 6502:ans instruktionsuppsättning, timing och bussprotokoll gäller på riktigt. Jag kan ta bort Arduino och ersätta den med ett EEPROM och ett SRAM-chip — och datorn fungerar precis likadant. 
 
 ### Arduino läser adressbussen
 
- Arduino Mega har 54 digitala I/O-pinnar — nästan tillräckligt för att täcka 16 adresslinjer + 8 datalinjer + kontrollsignaler. Men den har också något bättre: portregister. Istället för att läsa en pinne i taget med `digitalRead()` (långsamt!) läser jag hela 8-bitarsportar på en gång: 
+Arduino Mega har 54 digitala I/O-pinnar — nästan tillräckligt för att täcka 16 adresslinjer + 8 datalinjer + kontrollsignaler. Men den har också något bättre: portregister. Istället för att läsa en pinne i taget med `digitalRead()` (långsamt!) läser jag hela 8-bitarsportar på en gång: 
 
 - PORTF — 8 bitar, läser CPU:ns A0–A7 i en enda maskininstruktion
 - PORTK — 8 bitar, läser CPU:ns A8–A15
 - PORTA — 8 bitar, driver databussen D0–D7 (eller går tri-state)
 
- Tre registerläsningar, en villkorssats, och jag vet exakt vad processorn vill göra — redo att svara inom samma klockcykel. 
+Tre registerläsningar, en villkorssats, och jag vet exakt vad processorn vill göra — redo att svara inom samma klockcykel. 
 
 ## Byggstegen
 

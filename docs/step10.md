@@ -1,6 +1,7 @@
 # EEPROM som ROM
 
 Det här är steget där datorn slutar vara ett bygge och blir en maskin: slå av strömmen, slå på den — och den startar ändå. Programmet sitter i kisel nu.
+
 ## Mål
 
 Hittills har Arduino levererat 6502-programmet — varje gång CPU:n läser från `$8000` och uppåt är det Arduinons minnesarray som svarar. Det fungerar utmärkt, men en riktig dator har sitt program i ROM — icke-flyktigt minne som överlever strömavbrott. Nu tar jag det sista stora klivet: jag bränner in programmet på en **AT28C256** EEPROM och låter den ersätta Arduino som ROM.
@@ -8,6 +9,7 @@ Hittills har Arduino levererat 6502-programmet — varje gång CPU:n läser frå
 En *andra Arduino Mega* används som EEPROM-programmerare. Via USB tar den emot en `.bin`-fil från datorn, bränner den på **AT28C256**, och verifierar att varje byte sitter rätt. Sedan flyttar jag EEPROM-chippet till datorns kopplingsdäck — och datorn startar direkt från äkta ROM, precis som en Commodore 64 eller Apple II.
 
 Arduinon på kopplingsdäcket finns kvar som klocka och diagnostikverktyg.
+
 ## Nya komponenter
 
 En **AT28C256** EEPROM på 32 KB blir datorns ROM, en extra Arduino Mega agerar programmerare som bränner programmet, en extra 74HC00 avkodar `$8000`–`$FFFF` för EEPROM:et, och en kondensator avkopplar strömmen.
@@ -54,6 +56,7 @@ Först programmeraren — en enkel 1:1-koppling. Sedan datorn — fyra enheter p
 | `/CE`        | GND             | `/CE` (20)             | Chip Enable — alltid aktiv under programmering |
 
 ### Datorn — EEPROM på bussen
+
 | Pin | Signal | Ansluts till | Varför |
 |---|---|---|---|
 | 28, 14 | `VDD`, `VSS` | +5V, GND | Strömmatning |
@@ -117,6 +120,7 @@ En extra 74HC00 vid sidan av den från steg 7/9. En enda grind används som inve
 ## Arduino-kod — programmeraren
 
 Det här programmet laddas upp på den andra Arduino Mega — den som tillfälligt kopplas in som EEPROM-programmerare. Koden är enkel: ta emot 32 768 bytes över serieporten, bränn dem på AT28C256, och verifiera. Programmet körs en gång i `setup()` och rapporterar resultatet — `loop()` är tom.
+
 ### Hur EEPROM-bränning går till
 
 **AT28C256** har inbyggd själv-timing. För att bränna en byte sätter jag adress och data, drar `/WE` låg, väntar minst 10 millisekunder (jag använder 10 för marginal), och drar `/WE` hög igen. Kretsen sköter resten internt. För att läsa tillbaka drar jag `/OE` låg och läser `PINA` — precis som med SRAM.
@@ -210,7 +214,8 @@ LCD-displayen (16×2)
 Varje gång jag ser `← EEPROM` i loggen är det AT28C256 som svarar — inte Arduino. Reset-vektorn på `$FFFC`/`$FFFD` ligger i EEPROM:ets sista bytes, inskrivna av assembler-kedjan. CPU:n läser dem, hoppar till `$8000`, och kör programmet direkt från äkta ROM.
 
 Kopplar jag bort Arduinon helt (ersätter klockan med kristalloscillator) så har jag en helt fristående 6502-dator. Programmet överlever strömavbrott — slå på strömmen imorgon och det finns kvar, inbränt i kisel. Jag stängde av, satte på, stängde av, satte på — bara för att se den starta varje gång.
-## Så här felsöker jag
+
+## Så här felsöker man
 
 Här är några saker jag kontrollerar:
 
