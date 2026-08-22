@@ -212,8 +212,6 @@ Programstorlek: 2054 bytes
 Program + vektorer laddat.
 ```
 
-<div class="monlcd">
-<div>
 ```text title="Seriemonitor — VIA-aktivitet"
 W $4002  ← VIA: FF  (DDRB)
 W $4003  ← VIA: FF  (DDRA)
@@ -223,14 +221,10 @@ W $4000  ← VIA: 3D  (=)
 ...
 ```
 
-</div>
-<div>
 <p class="xlabel"><strong>LCD-displayen — två rader text</strong></p>
 
 <div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>=== 6502 VIA LCD ===</div><div>Hello from W65C02!</div></div></div>
 
-</div>
-</div>
 
 LCD-displayen — två rader text
 

@@ -1,20 +1,6 @@
 /* 6502.smutje.se — anpassade komponenter */
 
-/* Sida vid sida: seriemonitor + LCD-mockup */
-.monlcd {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 1rem;
-  margin: 1rem 0;
-  font-size: 0.8rem;
-}
-
-@media (max-width: 720px) {
-  .monlcd {
-    grid-template-columns: 1fr;
-  }
-}
-
+/* Etikett ovanför LCD-mockup (i "Exempel på körning") */
 .xlabel {
   font-size: .75rem;
   color: #6b7280;
@@ -22,19 +8,7 @@
   margin: 0 0 .3rem;
 }
 
-.xmon {
-  background: #111827;
-  color: #4ade80;
-  padding: .75rem;
-  border-radius: .5rem;
-  overflow-x: auto;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: .8rem;
-  line-height: 1.5;
-  white-space: pre;
-  margin: 0;
-}
-
+/* LCD-mockup */
 .lcd {
   background: #15803d;
   color: #bbf7d0;
@@ -43,8 +17,8 @@
   font-family: ui-monospace, Menlo, Consolas, monospace;
   text-align: center;
   min-width: 250px;
+  font-size: 0.6rem;
 }
-
 .lcd-badge {
   background: #14532d;
   color: #86efac;
@@ -54,66 +28,10 @@
   font-size: .7rem;
   margin-bottom: .5rem;
 }
-
 .lcd-screen {
   background: #052e16;
   border-radius: .25rem;
   padding: .5rem;
-}
-
-/* Seriemonitor-rutor i "Exempel på körning": mörk terminal-stil */
-.monlcd .highlight {
-  background-color: #111827;
-  border-radius: .5rem;
-}
-
-.monlcd .highlight .filename .filename {
-  display: block;
-  background-color: #1f2937;
-  color: #9ca3af;
-  border-bottom: 1px solid #374151;
-}
-
-.monlcd .highlighttabletable {
-  width: 100%;
-}
-
-.monlcd .highlight .linenos .linenos {
-  background-color: #111827;
-}
-
-.monlcd .highlight .linenos pre .linenos pre {
-  color: #4b5563;
-  background-color: #111827;
-}
-
-.monlcd .highlight .code,
-.monlcd .highlight .code pre,
-.monlcd .highlight .code pre code .code .code pre .code pre code {
-  background-color: #111827;
-  color: #4ade80;
-}
-
-.monlcd .highlight .md-code__nav .md-code__nav {
-  background-color: #1f2937;
-}
-
-.monlcd .highlight .md-code__button .md-code__button {
-  color: #9ca3af;
-}
-
-.monlcd .highlight .code a .code a,
-.monlcd .highlight .code a:visited .code a:visited {
-  color: inherit;
-}
-
-.monlcd .highlight .copy .copy {
-  color: #6b7280;
-  opacity: 1;
-}
-
-.monlcd .highlight .copy:hover .copy:hover {
-  color: #9ca3af;
 }
 
 /* Minnestarta — staplade regioner */
@@ -126,17 +44,14 @@
   line-height: 1.25;
   margin: 1rem 0;
 }
-
 .memrow {
   display: flex;
   align-items: center;
   border-bottom: 1px solid #f3f4f6;
 }
-
 .memrow:last-child {
   border-bottom: none;
 }
-
 .mem-addr {
   width: 4.75rem;
   flex-shrink: 0;
@@ -148,19 +63,16 @@
   flex-direction: column;
   justify-content: space-between;
 }
-
 .mem-addr small {
   color: #9ca3af;
   font-size: .65rem;
 }
-
 .mem-label {
   flex: 1;
   padding: .4rem .6rem;
   border-left: 1px solid #e5e7eb;
   border-right: 1px solid #e5e7eb;
 }
-
 .mem-size {
   width: 3.5rem;
   flex-shrink: 0;

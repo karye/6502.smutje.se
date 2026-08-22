@@ -164,8 +164,6 @@ Koden läggs i `$C000`–`$FFFF` (ROM, 16 KB). Reset-vektorn ligger som alltid p
 
 När jag laddat upp koden och startat datorn ser jag i seriemonitorn att enheterna svarar på sina nya adresser:
 
-<div class="monlcd">
-<div>
 ```text title="Seriemonitor (115200 baud)"
 Steg 11 — städad adressrymd
 SRAM 32 KB ($0000-$7FFF), VIA ($8000), EEPROM ($C000+)
@@ -183,14 +181,10 @@ W $8000  ← VIA: 3D         (tecknet "=")
 ...
 ```
 
-</div>
-<div>
 <p class="xlabel"><strong>LCD-displayen (16×2)</strong></p>
 
 <div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>=== 6502 VIA LCD ===</div><div>Hello from W65C02!</div></div></div>
 
-</div>
-</div>
 
 LCD-displayen (16×2)
 

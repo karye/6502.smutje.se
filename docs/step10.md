@@ -172,8 +172,6 @@ Koden nedan är baserad på steg 9 men med `is_eeprom()` istället för `program
 
 Bygga programmet med **ca65** som vanligt, köra Python-skriptet för att bränna:
 
-<div class="monlcd">
-<div>
 <p class="xlabel"><strong>Terminal — bränna EEPROM</strong></p>
 
 ```text title="Terminal"
@@ -192,15 +190,11 @@ KLAR
 Totalt brända bytes: 2054
 ```
 
-</div>
-</div>
 
 ### Fas 2 — flytta EEPROM till datorn
 
 Koppla bort programmerings-Arduinon. Flytta **AT28C256**-chippet till datorns kopplingsdäck och anslut enligt kopplingstabellen ovan. Slå på strömmen.
 
-<div class="monlcd">
-<div>
 ```text title="Seriemonitor — datorn startar"
 Steg 10 — EEPROM som ROM
 Programmet ligger i AT28C256 — inte i Arduino.
@@ -218,14 +212,10 @@ W $4000  ← VIA: 3D  (=)
 ...
 ```
 
-</div>
-<div>
 <p class="xlabel"><strong>LCD-displayen (16×2)</strong></p>
 
 <div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>=== 6502 VIA LCD ===</div><div>Hello from W65C02!</div></div></div>
 
-</div>
-</div>
 
 LCD-displayen (16×2)
 

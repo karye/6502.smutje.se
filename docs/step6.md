@@ -171,8 +171,6 @@ När programmet körs kan jag med Knapp 2 (instruktionssteg) följa programflöd
 
 När jag laddat upp koden och trycker på Knapp 2 (instruktionssteg) ser jag programmet rulla genom adresserna — både i seriemonitor och på LCD-displayen:
 
-<div class="monlcd">
-<div>
 ```text title="Seriemonitor — efter ett varv i loopen"
 Steg 6 — Räknarprogram
 Program: LDX #$00 · INX · STX $0200 · JMP $8002
@@ -193,14 +191,10 @@ R $8002  ← tillbaka till INX
 ...
 ```
 
-</div>
-<div>
 <p class="xlabel"><strong>LCD-displayen — mitt i loopen</strong></p>
 
 <div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>A:$0200</div><div>D:$05</div></div></div>
 
-</div>
-</div>
 
 LCD-displayen — mitt i loopen
 

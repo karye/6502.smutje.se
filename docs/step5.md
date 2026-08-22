@@ -115,20 +115,14 @@ I koden: `#include <LiquidCrystal.h>`, LCD-objektet, och `lcd.print()`-anropen i
 
 Direkt efter uppladdning visar både seriemonitor och LCD-displayen att allt är redo:
 
-<div class="monlcd">
-<div>
 ```text title="Seriemonitor"
 Steg 5 — LCD-display
 ```
 
-</div>
-<div>
 <p class="xlabel"><strong>LCD-displayen — direkt efter uppladdning</strong></p>
 
 <div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>W65C02S Steg 5</div><div> </div></div></div>
 
-</div>
-</div>
 
 LCD-displayen
 
@@ -144,14 +138,10 @@ R $8000
 R $8001
 ```
 
-</div>
-<div>
 <p class="xlabel"><strong>LCD-displayen — efter 4 tryck</strong></p>
 
 <div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>A:$8001</div><div>D:$EA</div></div></div>
 
-</div>
-</div>
 
 LCD-displayen — efter 4 tryck
 

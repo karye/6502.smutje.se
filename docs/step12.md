@@ -120,18 +120,12 @@ Det här steget har ingen Arduino-kod — Arduino finns inte med på kopplingsd�
 
 Slå på strömmen. Inget att ladda upp, inget att ansluta — datorn bara startar. Efter en kort stund (LCD-initieringen) visas:
 
-<div class="monlcd">
-<div>
 <p class="xlabel"><strong>LCD 16×2 — efter start</strong></p>
 
 <div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>6502 FRISTAENDE</div><div>1 MHz KRISTALL</div></div></div>
 
-</div>
-<div>
 
 
-</div>
-</div>
 
 - Texten skrivs om i en loop: visa en stund, rensa, börja om.
 - Stäng av strömmen och slå på igen — datorn startar direkt ur EEPROM:en.

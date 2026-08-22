@@ -265,8 +265,6 @@ Komplett assembler-kod: `Mega_2560_6502/asm/program_fib.asm`. Byggs med `ca65 + 
 
 När jag laddat upp koden körs två faser efter varandra. Först VIA/LCD-programmet, sedan — efter ett knapptryck — Fibonacci-programmet som använder det fysiska SRAM-chippet.
 
-<div class="monlcd">
-<div>
 ```text title="Seriemonitor — fas 1"
 Steg 9 — 62256 SRAM
 Fas 1: Laddar 4-raders VIA/LCD-program...
@@ -274,21 +272,15 @@ Kor 1000 cykler (tyst)...
 Fas 1 klar — vantar pa knapptryck...
 ```
 
-</div>
-<div>
 <p class="xlabel"><strong>LCD-displayen — fas 1</strong></p>
 
 <div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>=== Steg 9 SRAM ===</div><div>Tryck pa knapp...</div></div></div>
 
-</div>
-</div>
 
 LCD-displayen — fas 1
 
 Jag trycker på valfri knapp för att gå vidare till Fibonacci:
 
-<div class="monlcd">
-<div>
 ```text title="Seriemonitor — fas 2"
 >>> Knapp 1 tryckt! <<<
 Laddar Fibonacci-program...
@@ -305,14 +297,10 @@ W $4000  ← VIA: 34  (siffran 4)
 W $4000  ← VIA: 34  (siffran 4)
 ```
 
-</div>
-<div>
 <p class="xlabel"><strong>LCD-displayen — mitt i Fibonacci</strong></p>
 
 <div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>Fib:</div><div>144</div></div></div>
 
-</div>
-</div>
 
 LCD-displayen — mitt i Fibonacci
 

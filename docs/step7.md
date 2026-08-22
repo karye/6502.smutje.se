@@ -302,8 +302,6 @@ Komplett Arduino-kod för steg 7:
 
 När jag laddat upp koden och öppnar seriemonitor ser jag programmet genomlöpa alla faser. Samtidigt vaknar LCD-displayen till liv — styrd helt av 6502-processorn via VIA-kretsen:
 
-<div class="monlcd">
-<div>
 ```text title="Seriemonitor"
 ══════ RESET-SEKVENS — CPU lämnar reset ══════
 R $FFFC  ← RESET-VEKTOR LÅG
@@ -329,14 +327,10 @@ W $4000  ← VIA: 3D  (=)
 ══════ KLAR — JMP loop ══════
 ```
 
-</div>
-<div>
 <p class="xlabel"><strong>LCD-displayen — efter hello-utskriften</strong></p>
 
 <div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>=== 6502 VIA LCD ===</div><div>Hello from W65C02!</div></div></div>
 
-</div>
-</div>
 
 LCD-displayen — efter hello-utskriften
 
