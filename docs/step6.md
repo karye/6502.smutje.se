@@ -171,33 +171,34 @@ När programmet körs kan jag med Knapp 2 (instruktionssteg) följa programflöd
 
 När jag laddat upp koden och trycker på Knapp 2 (instruktionssteg) ser jag programmet rulla genom adresserna — både i seriemonitor och på LCD-displayen:
 
-```text title="Terminal"
-Steg 6 — Räknarprogram
-Program: LDX #$00 · INX · STX $0200 · JMP $8002
+=== "Terminal"
 
-R $FFFC
-R $FFFD
-R $8000
-R $8001
-R $8002
-R $8003
-R $8004
-R $8005
-W $0200
-R $8006
-R $8007
-R $8008
-R $8002  ← tillbaka till INX
-...
-```
+    ```text
+    Steg 6 — Räknarprogram
+    Program: LDX #$00 · INX · STX $0200 · JMP $8002
 
-<p class="xlabel"><strong>LCD-displayen — mitt i loopen</strong></p>
+    R $FFFC
+    R $FFFD
+    R $8000
+    R $8001
+    R $8002
+    R $8003
+    R $8004
+    R $8005
+    W $0200
+    R $8006
+    R $8007
+    R $8008
+    R $8002  ← tillbaka till INX
+    ...
+    ```
 
-<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>A:$0200</div><div>D:$05</div></div></div>
+=== "LCD 16×2"
 
-
-LCD-displayen — mitt i loopen
-
+    ```text
+    A:$0200
+    D:$05
+    ```
 Adress `$0200` håller räknarens värde. Efter 5 varv genom loopen visar `D:$05`.
 
 För första gången ser jag ett W i loggen! CPU:n *skriver* till adress `$0200` — det är `STX $0200` som sparar X-registrets värde. På LCD:ns rad 1 ser jag `D:$01`, `D:$02`, `D:$03`… räknaren ökar för varje varv. När den når `D:$FF` (255) wrappar den till `D:$00` — X-registret är bara 8 bitar brett.

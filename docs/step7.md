@@ -302,38 +302,39 @@ Komplett Arduino-kod för steg 7:
 
 När jag laddat upp koden och öppnar seriemonitor ser jag programmet genomlöpa alla faser. Samtidigt vaknar LCD-displayen till liv — styrd helt av 6502-processorn via VIA-kretsen:
 
-```text title="Terminal"
-══════ RESET-SEKVENS — CPU lämnar reset ══════
-R $FFFC  ← RESET-VEKTOR LÅG
-R $FFFD  ← RESET-VEKTOR HÖG
+=== "Terminal"
 
-══════ PROGRAMSTART $8000 — LDA #$FF ══════
-R $8000  ← OPCODE
+    ```text
+    ══════ RESET-SEKVENS — CPU lämnar reset ══════
+    R $FFFC  ← RESET-VEKTOR LÅG
+    R $FFFD  ← RESET-VEKTOR HÖG
 
-══════ VIA INIT — Sätter portar som utgångar ══════
-W $4002  ← VIA: FF  (DDRB)
-W $4003  ← VIA: FF  (DDRA)
+    ══════ PROGRAMSTART $8000 — LDA #$FF ══════
+    R $8000  ← OPCODE
 
-══════ LCD INIT — Skickar init-kommandon ══════
-W $4000  ← VIA: 30  (×3 för 8-bit)
-W $4000  ← VIA: 38  (2 rader, 5×8)
-W $4000  ← VIA: 0C  (display on)
-W $4000  ← VIA: 01  (clear)
-W $4000  ← VIA: 06  (entry mode)
+    ══════ VIA INIT — Sätter portar som utgångar ══════
+    W $4002  ← VIA: FF  (DDRB)
+    W $4003  ← VIA: FF  (DDRA)
 
-══════ HELLO UTSKRIFT — Skriver text ══════
-W $4000  ← VIA: 3D  (=)
-...
-══════ KLAR — JMP loop ══════
-```
+    ══════ LCD INIT — Skickar init-kommandon ══════
+    W $4000  ← VIA: 30  (×3 för 8-bit)
+    W $4000  ← VIA: 38  (2 rader, 5×8)
+    W $4000  ← VIA: 0C  (display on)
+    W $4000  ← VIA: 01  (clear)
+    W $4000  ← VIA: 06  (entry mode)
 
-<p class="xlabel"><strong>LCD-displayen — efter hello-utskriften</strong></p>
+    ══════ HELLO UTSKRIFT — Skriver text ══════
+    W $4000  ← VIA: 3D  (=)
+    ...
+    ══════ KLAR — JMP loop ══════
+    ```
 
-<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>=== 6502 VIA LCD ===</div><div>Hello from W65C02!</div></div></div>
+=== "LCD 16×2"
 
-
-LCD-displayen — efter hello-utskriften
-
+    ```text
+    === 6502 VIA LCD ===
+    Hello from W65C02!
+    ```
 CPU:n har skrivit två rader text till LCD:n via VIA:ns portar. Varje tecken skickades som en `W $4000` i seriemonitor.
 
 Varje `W $4000` eller `W $4001` är CPU:n som skriver till VIA:ns register — Arduino gör ingenting, den fysiska VIA-kretsen fångar upp skrivningen och styr LCD:n. Texten rullar fram på displayen, tecken för tecken, styrd helt av 6502-processorn.

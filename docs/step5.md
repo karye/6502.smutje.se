@@ -115,36 +115,38 @@ I koden: `#include <LiquidCrystal.h>`, LCD-objektet, och `lcd.print()`-anropen i
 
 Direkt efter uppladdning visar både seriemonitor och LCD-displayen att allt är redo:
 
-```text title="Terminal"
-Steg 5 — LCD-display
-```
+=== "Terminal"
 
-<p class="xlabel"><strong>LCD-displayen — direkt efter uppladdning</strong></p>
+    ```text
+    Steg 5 — LCD-display
+    ```
 
-<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>W65C02S Steg 5</div><div> </div></div></div>
+=== "LCD 16×2"
 
+    ```text
+    W65C02S Steg 5
 
-LCD-displayen
-
+    ```
 När jag trycker på Knapp 1 (klocksteg) uppdateras båda vyerna samtidigt. Seriemonitor loggar varje minnesaccess, LCD:n visar adress och data i realtid:
 
 <div class="xmon-wrap">
 <div>
-```text title="Terminal"
-Steg 5 — LCD-display
-R $FFFC
-R $FFFD
-R $8000
-R $8001
-```
+=== "Terminal"
 
-<p class="xlabel"><strong>LCD-displayen — efter 4 tryck</strong></p>
+    ```text
+    Steg 5 — LCD-display
+    R $FFFC
+    R $FFFD
+    R $8000
+    R $8001
+    ```
 
-<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>A:$8001</div><div>D:$EA</div></div></div>
+=== "LCD 16×2"
 
-
-LCD-displayen — efter 4 tryck
-
+    ```text
+    A:$8001
+    D:$EA
+    ```
 Samma information på båda ställena — adress (`$8001`) och data (`$EA`, `NOP`). Skillnaden är att LCD:n visar *just nu* medan seriemonitor bygger en historik. Med Knapp 2 (instruktionssteg) ser jag flera rader i seriemonitor per tryck medan LCD:n uppdateras för varje klockcykel — ett snabbt flimmer av adresser tills `SYNC` går hög.
 
 Datorn har blivit fristående. Jag kan koppla bort USB-kabeln (om Arduino drivs via DC-adaptern) och fortfarande stega genom programmet och se allt på LCD:n. Seriemonitor är praktisk för att logga och felsöka, men displayen på kopplingsdäcket gör datorn till en egen, komplett enhet. 

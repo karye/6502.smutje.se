@@ -172,8 +172,6 @@ Koden nedan är baserad på steg 9 men med `is_eeprom()` istället för `program
 
 Bygga programmet med **ca65** som vanligt, köra Python-skriptet för att bränna:
 
-<p class="xlabel"><strong>Terminal — bränna EEPROM</strong></p>
-
 ```text title="Terminal"
 $ pio run -e step10 -t upload    # Ladda upp dator-Arduinon
 $ python3 scripts/upload_eeprom.py asm/program_hello.bin /dev/ttyACM1
@@ -195,29 +193,31 @@ Totalt brända bytes: 2054
 
 Koppla bort programmerings-Arduinon. Flytta **AT28C256**-chippet till datorns kopplingsdäck och anslut enligt kopplingstabellen ovan. Slå på strömmen.
 
-```text title="Terminal"
-Steg 10 — EEPROM som ROM
-Programmet ligger i AT28C256 — inte i Arduino.
-CPU startad. EEPROM levererar programkoden.
+=== "Terminal"
 
-R $FFFC  ← RESET-VEKTOR LÅG (EEPROM)
-R $FFFD  ← RESET-VEKTOR HÖG (EEPROM)
-R $8000  ← EEPROM
-R $8001  ← EEPROM
-W $4002  ← VIA: FF
-W $4003  ← VIA: FF
-W $4000  ← VIA: 30  (LCD-init)
-...
-W $4000  ← VIA: 3D  (=)
-...
-```
+    ```text
+    Steg 10 — EEPROM som ROM
+    Programmet ligger i AT28C256 — inte i Arduino.
+    CPU startad. EEPROM levererar programkoden.
 
-<p class="xlabel"><strong>LCD-displayen (16×2)</strong></p>
+    R $FFFC  ← RESET-VEKTOR LÅG (EEPROM)
+    R $FFFD  ← RESET-VEKTOR HÖG (EEPROM)
+    R $8000  ← EEPROM
+    R $8001  ← EEPROM
+    W $4002  ← VIA: FF
+    W $4003  ← VIA: FF
+    W $4000  ← VIA: 30  (LCD-init)
+    ...
+    W $4000  ← VIA: 3D  (=)
+    ...
+    ```
 
-<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>=== 6502 VIA LCD ===</div><div>Hello from W65C02!</div></div></div>
+=== "LCD 16×2"
 
-
-LCD-displayen (16×2)
+    ```text
+    === 6502 VIA LCD ===
+    Hello from W65C02!
+    ``` (16×2)
 
 Varje gång jag ser `← EEPROM` i loggen är det AT28C256 som svarar — inte Arduino. Reset-vektorn på `$FFFC`/`$FFFD` ligger i EEPROM:ets sista bytes, inskrivna av assembler-kedjan. CPU:n läser dem, hoppar till `$8000`, och kör programmet direkt från äkta ROM.
 

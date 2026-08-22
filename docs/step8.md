@@ -212,22 +212,23 @@ Programstorlek: 2054 bytes
 Program + vektorer laddat.
 ```
 
-```text title="Terminal"
-W $4002  ← VIA: FF  (DDRB)
-W $4003  ← VIA: FF  (DDRA)
-...
-W $4000  ← VIA: 3D  (=)
-W $4000  ← VIA: 3D  (=)
-...
-```
+=== "Terminal"
 
-<p class="xlabel"><strong>LCD-displayen — två rader text</strong></p>
+    ```text
+    W $4002  ← VIA: FF  (DDRB)
+    W $4003  ← VIA: FF  (DDRA)
+    ...
+    W $4000  ← VIA: 3D  (=)
+    W $4000  ← VIA: 3D  (=)
+    ...
+    ```
 
-<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>=== 6502 VIA LCD ===</div><div>Hello from W65C02!</div></div></div>
+=== "LCD 16×2"
 
-
-LCD-displayen — två rader text
-
+    ```text
+    === 6502 VIA LCD ===
+    Hello from W65C02!
+    ```
 Seriemonitor visar samma VIA- och LCD-aktivitet som i steg 7 — men med en avgörande skillnad: jag har inte skrivit en enda `write_mem()`. Programmet kommer från `program_hello.asm`, en ren assembler-fil med labels, subrutiner och kommentarer.
 
 Jag gör ett test: jag ändrar texten i `line1:` från "=== 6502 VIA LCD ===" till "Hej varlden!" och kör `pio run -e step8 -t upload -t monitor` igen. Hela kedjan körs om — ca65, ld65, bin2h, kompilering, uppladdning — och LCD:n visar min nya text. Iterationstiden är sekunder, inte minuter. Första gången kedjan rullade ihop på egen hand kändes det som att få en assistent.

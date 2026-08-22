@@ -265,45 +265,47 @@ Komplett assembler-kod: `Mega_2560_6502/asm/program_fib.asm`. Byggs med `ca65 + 
 
 När jag laddat upp koden körs två faser efter varandra. Först VIA/LCD-programmet, sedan — efter ett knapptryck — Fibonacci-programmet som använder det fysiska SRAM-chippet.
 
-```text title="Terminal"
-Steg 9 — 62256 SRAM
-Fas 1: Laddar 4-raders VIA/LCD-program...
-Kor 1000 cykler (tyst)...
-Fas 1 klar — vantar pa knapptryck...
-```
+=== "Terminal"
 
-<p class="xlabel"><strong>LCD-displayen — fas 1</strong></p>
+    ```text
+    Steg 9 — 62256 SRAM
+    Fas 1: Laddar 4-raders VIA/LCD-program...
+    Kor 1000 cykler (tyst)...
+    Fas 1 klar — vantar pa knapptryck...
+    ```
 
-<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>=== Steg 9 SRAM ===</div><div>Tryck pa knapp...</div></div></div>
+=== "LCD 16×2"
 
-
-LCD-displayen — fas 1
-
+    ```text
+    === Steg 9 SRAM ===
+    Tryck pa knapp...
+    ```
 Jag trycker på valfri knapp för att gå vidare till Fibonacci:
 
-```text title="Terminal"
->>> Knapp 1 tryckt! <<<
-Laddar Fibonacci-program...
-Fibonacci-program kört.
-R $FFFC
-R $FFFD
-R $8000  ← OPCODE
-...
-R $0000  ← SRAM (F(n-2))
-R $0001  ← SRAM (F(n-1))
-W $0002  ← SRAM (F(n))
-W $4000  ← VIA: 31  (siffran 1)
-W $4000  ← VIA: 34  (siffran 4)
-W $4000  ← VIA: 34  (siffran 4)
-```
+=== "Terminal"
 
-<p class="xlabel"><strong>LCD-displayen — mitt i Fibonacci</strong></p>
+    ```text
+    >>> Knapp 1 tryckt! <<<
+    Laddar Fibonacci-program...
+    Fibonacci-program kört.
+    R $FFFC
+    R $FFFD
+    R $8000  ← OPCODE
+    ...
+    R $0000  ← SRAM (F(n-2))
+    R $0001  ← SRAM (F(n-1))
+    W $0002  ← SRAM (F(n))
+    W $4000  ← VIA: 31  (siffran 1)
+    W $4000  ← VIA: 34  (siffran 4)
+    W $4000  ← VIA: 34  (siffran 4)
+    ```
 
-<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>Fib:</div><div>144</div></div></div>
+=== "LCD 16×2"
 
-
-LCD-displayen — mitt i Fibonacci
-
+    ```text
+    Fib:
+    144
+    ```
 `144` är det tolfte Fibonacci-talet. Strax därefter kommer `233` — det sista som ryms i 8 bitar — sedan wrappar det.
 
 Varje nytt Fibonacci-tal dyker upp med en kort paus. När talet når 233 (det sista som ryms i en 8-bitars byte) wrappar det tillbaka till 0 och sekvensen börjar om. Under tiden använder 6502-programmet zero page-adresser (`$00`, `$01`, `$02`) för att lagra F(n-2), F(n-1) och F(n) — adresser som nu ligger i det fysiska SRAM-chippet, inte i Arduinons mjukvaruemulerade RAM. I seriemonitor syns dessa som `R $0000` och `W $0002` med `← SRAM`-markering.

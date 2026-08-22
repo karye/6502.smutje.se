@@ -164,29 +164,31 @@ Koden läggs i `$C000`–`$FFFF` (ROM, 16 KB). Reset-vektorn ligger som alltid p
 
 När jag laddat upp koden och startat datorn ser jag i seriemonitorn att enheterna svarar på sina nya adresser:
 
-```text title="Terminal"
-Steg 11 — städad adressrymd
-SRAM 32 KB ($0000-$7FFF), VIA ($8000), EEPROM ($C000+)
-CPU startad.
+=== "Terminal"
 
-R $FFFC  ← RESET-VEKTOR LÅG (EEPROM)
-R $FFFD  ← RESET-VEKTOR HÖG (EEPROM)
-R $C000  ← EEPROM
-R $C001  ← EEPROM
-W $0200  ← SRAM            (variabel skrivning)
-W $8000  ← VIA: 01         (LCD-kommando via VIA)
-W $8001  ← VIA: 05         (registerval)
-...
-W $8000  ← VIA: 3D         (tecknet "=")
-...
-```
+    ```text
+    Steg 11 — städad adressrymd
+    SRAM 32 KB ($0000-$7FFF), VIA ($8000), EEPROM ($C000+)
+    CPU startad.
 
-<p class="xlabel"><strong>LCD-displayen (16×2)</strong></p>
+    R $FFFC  ← RESET-VEKTOR LÅG (EEPROM)
+    R $FFFD  ← RESET-VEKTOR HÖG (EEPROM)
+    R $C000  ← EEPROM
+    R $C001  ← EEPROM
+    W $0200  ← SRAM            (variabel skrivning)
+    W $8000  ← VIA: 01         (LCD-kommando via VIA)
+    W $8001  ← VIA: 05         (registerval)
+    ...
+    W $8000  ← VIA: 3D         (tecknet "=")
+    ...
+    ```
 
-<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>=== 6502 VIA LCD ===</div><div>Hello from W65C02!</div></div></div>
+=== "LCD 16×2"
 
-
-LCD-displayen (16×2)
+    ```text
+    === 6502 VIA LCD ===
+    Hello from W65C02!
+    ``` (16×2)
 
 Samma program som steg 8–10, men VIA:n adresseras nu på `$8000` istället för `$4000`.
 
