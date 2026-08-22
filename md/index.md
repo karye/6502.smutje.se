@@ -57,17 +57,17 @@ Varje gång processorn startar en ny instruktion tänder den SYNC-pinnen. Det ä
 ## Vad du lär dig per steg
 | Steg | Du lär dig | Svårighet |
 |---|---|---|
-| 1 · Ström och klocka | 5V, GND, klocka, lysdiod | Lugn |
-| 2 · Adressbuss | Hex, reset-vektorn, portregister | Lugn |
+| 1 · Ström och klocka | 5V, GND, klocka, lysdiod | Lätt |
+| 2 · Adressbuss | Hex, reset-vektorn, portregister | Lätt |
 | 3 · Databuss | R/W, tri-state, minnesemulering | Medel |
-| 4 · Knappar | SYNC, enstegning, debounce | Lugn |
-| 5 · LCD | Parallell kommunikation, kontrast | Lugn |
+| 4 · Knappar | SYNC, enstegning, debounce | Lätt |
+| 5 · LCD | Parallell kommunikation, kontrast | Lätt |
 | 6 · Eget program | Maskinkod, opcode/operand, little-endian | Medel |
-| 7 · VIA + LCD | I/O-krets, minnesmappad I/O, adressavkodning | Brant — seriens största kliv |
-| 8 · Assembler | ca65/ld65, labels, subrutiner | Brant |
-| 9 · SRAM | Riktigt minne, chip enable, zero page, carry-aritmetik | Medel–Brant |
+| 7 · VIA + LCD | I/O-krets, minnesmappad I/O, adressavkodning | Hög — seriens största kliv |
+| 8 · Assembler | ca65/ld65, labels, subrutiner | Hög |
+| 9 · SRAM | Riktigt minne, chip enable, zero page, carry-aritmetik | Medel |
 | 10 · EEPROM | ROM, programmering, bränning | Medel |
-| 11 · Adressrymd | Chip select, spegling, minimal avkodning | Brant |
+| 11 · Adressrymd | Chip select, spegling, minimal avkodning | Hög |
 | 12 · Fristående klocka | Oscillator, frekvensdelning, tidshantering (delay-loopar) | Medel |
 
 Fastnar du på ett ord? Se [Begrepp och förkortningar](begrepp.html).
