@@ -59,7 +59,7 @@ Den andra uppsättningen är databussen — 8 ledningar. Här kommer svaret till
 | 11 · Adressrymd | Chip select, spegling, minimal avkodning | Hög |
 | 12 · Fristående klocka | Oscillator, frekvensdelning, tidshantering (delay-loopar) | Medel |
 
-Fastnade jag på ett ord? Se [Begrepp och förkortningar](begrepp.html).
+Fastnade du på ett ord? Se [Begrepp och förkortningar](begrepp.html).
 
 ## Verktyg och programvara
 | Verktyg | Används till | Från steg |
