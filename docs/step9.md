@@ -21,14 +21,14 @@ Ett 62256 SRAM-chip på 32 KB — datorns första riktiga arbetsminne — plus e
 ## 62256 SRAM — pinout
 
 DIP-28-kapsel. 15 adresslinjer, 8 datalinjer, 3 kontrollsignaler. Här ser jag exakt hur kretsen ska vändas och vad varje pinne gör.
-> [!NOTE] 🧩 62256 SRAM · se step9.html
+![62256 SRAM pinout](pinouts/62256.svg)
 
 ■ Adressbuss ■ Databuss ■ Kontroll ■ Ström. Notch/pin 1-markering: uppåt. `/OE` = `GND` (alltid läs ut). `/CE` = U4D pin 11 (aktiv vid `$0000`–`$3FFF`).
 
 ## 74HC00 — pinout
 
 DIP-14-kapsel. Alla fyra grindar används nu: U4A+U4B för VIA (steg 7), U4C+U4D för SRAM (steg 9).
-> [!NOTE] 🧩 74HC00 · se step9.html
+![74HC00 pinout](pinouts/74hc00-sram.svg)
 
 ■ U4A (NOT `A15` → SRAM `/CE`) ■ U4B (`A15` NAND `A14` → VIA `/CS2`) ■ U4D (NAND) ■ U4C (NAND).
 
@@ -112,7 +112,56 @@ CPU, VIA och LCD är oförändrade från steg 7. Här är den kompletta koppling
 | 15 | `A` | +5V via 220Ω | Belysning + |
 | 16 | `K` | GND | Belysning − |
 
-> [!NOTE] 🗺️ Minnestarta · se step9.html
+## Minnestarta
+
+Nu har vi tre enheter som svarar på olika adressområden. **SRAM** tar den lägre halvan, **VIA** har sina 16 bytes, och **Arduino** levererar program och vektorer.
+
+<div class="memmap">
+
+      <div style="min-height:8px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$FFFF</span>
+          <small>$FFFA</small>
+        </div>
+        <div style="min-height:8px;flex:1 1 0%;background-color:#f3e8ff;border-left:1px solid #c4b5fd;border-right:1px solid #c4b5fd;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">vectors[6] — NMI, RESET, IRQ (Arduino)</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">6 B</div>
+      </div>
+      <div style="height:200px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="width:5rem;text-align:right;padding-right:.75rem;color:#9ca3af;align-self:flex-start;padding-top:.25rem">$FFF9</div>
+        <div style="flex:1 1 0%;background-color:#f3f4f6;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;color:#9ca3af">oanvänt</div>
+        <div style="width:3.5rem;text-align:right;color:#9ca3af;padding-right:.5rem;align-self:flex-start;padding-top:.25rem">~30 KB</div>
+      </div>
+      <div style="min-height:16px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="min-height:16px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$8800</span>
+          <small>$8000</small>
+        </div>
+        <div style="flex:1 1 0%;background-color:#dbeafe;border-left:1px solid #93c5fd;border-right:1px solid #93c5fd;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">program[2048] — 6502-program (Arduino)</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">2 KB</div>
+      </div>
+      <div style="height:100px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="width:5rem;text-align:right;padding-right:.75rem;color:#9ca3af;align-self:flex-start;padding-top:.25rem">$7FFF</div>
+        <div style="flex:1 1 0%;background-color:#f3f4f6;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;color:#9ca3af">oanvänt (Arduino NOP-fallback)</div>
+        <div style="width:3.5rem;text-align:right;color:#9ca3af;padding-right:.5rem;align-self:flex-start;padding-top:.25rem">~16 KB</div>
+      </div>
+      <div style="min-height:8px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #eab308">
+        <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$4010</span>
+          <small>$4000</small>
+        </div>
+        <div style="min-height:8px;flex:1 1 0%;background-color:#fef9c3;border-left:1px solid #facc15;border-right:1px solid #facc15;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;font-weight:700">W65C22 VIA — fysisk I/O (steg 7)</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">16 B</div>
+      </div>
+      <div style="height:100px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #22c55e">
+        <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$3FFF</span>
+          <small>$0000</small>
+        </div>
+        <div style="flex:1 1 0%;background-color:#dcfce7;border-left:1px solid #4ade80;border-right:1px solid #4ade80;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;font-weight:700">62256 SRAM — 16 KB riktigt RAM</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">16 KB</div>
+      </div>
+    
+</div>
 
 ## Arduino-kod
 
@@ -141,7 +190,10 @@ Koden är uppdelad i två faser som demonstrerar att SRAM fungerar:
 ### Vad som är nytt jämfört med steg 7–8
 
 SRAM-chip, utökad med 74HC00-avkodning (U4C+U4D för SRAM). I koden: `is_sram()`, utökade villkor i `pulse()`/`read_mem()`/`write_mem()`, tvåfasigt programflöde i `setup()`, och Fibonacci-programmet byggt med ca65. `ram[1024]` från tidigare steg är borta — den har ersatts av äkta kisel.
-> [!NOTE] 📦 Arduino-kod — step9.inc · 304 rader · se step9.html
+???+ note "📦 Arduino-kod"
+    ```cpp
+    --8<-- "Mega_2560_6502/src/step1.inc"
+    ```
 
 ## 6502-programmet — Fibonacci i assembler
 
@@ -183,7 +235,10 @@ Från steg 8 känner jag redan `LDA`, `STA`, `JSR`, `RTS`, `LDX`, `INX`, `BEQ` o
 | BNE | loopar i show_num | Hoppar om resultatet inte är noll — avslutar räknar-looparna. |
 | LDA $00 / STA $02 | F-variablerna | Zero page-adressering — variabler i $00–$02 nås med bara en byte. |
 
-> [!NOTE] 📦 6502-programmet — program_fib.asm · 235 rader · se step9.html
+???+ note "📦 6502-programmet — program_fib.asm"
+    ```asm
+    --8<-- "Mega_2560_6502/asm/program_fib.asm"
+    ```
 
 Komplett assembler-kod: `Mega_2560_6502/asm/program_fib.asm`. Byggs med `ca65 + ld65 → program_fib.h → inkluderas av step9.inc`.
 
@@ -191,20 +246,35 @@ Komplett assembler-kod: `Mega_2560_6502/asm/program_fib.asm`. Byggs med `ca65 + 
 
 När jag laddat upp koden körs två faser efter varandra. Först VIA/LCD-programmet, sedan — efter ett knapptryck — Fibonacci-programmet som använder det fysiska SRAM-chippet.
 
-Seriemonitor — fas 1
-```
+<div class="monlcd">
+<div>
+<p class="xlabel"><strong>Seriemonitor — fas 1</strong></p>
+
+```text
 Steg 9 — 62256 SRAM
 Fas 1: Laddar 4-raders VIA/LCD-program...
 Kor 1000 cykler (tyst)...
 Fas 1 klar — vantar pa knapptryck...
 ```
 
+</div>
+<div>
+<p class="xlabel"><strong>LCD-displayen — fas 1</strong></p>
+
+<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>=== Steg 9 SRAM ===</div><div>Tryck pa knapp...</div></div></div>
+
+</div>
+</div>
+
 LCD-displayen — fas 1
 
 Jag trycker på valfri knapp för att gå vidare till Fibonacci:
 
-Seriemonitor — fas 2
-```
+<div class="monlcd">
+<div>
+<p class="xlabel"><strong>Seriemonitor — fas 2</strong></p>
+
+```text
 >>> Knapp 1 tryckt! <<<
 Laddar Fibonacci-program...
 Fibonacci-program kört.
@@ -219,6 +289,15 @@ W $4000  ← VIA: 31  (siffran 1)
 W $4000  ← VIA: 34  (siffran 4)
 W $4000  ← VIA: 34  (siffran 4)
 ```
+
+</div>
+<div>
+<p class="xlabel"><strong>LCD-displayen — mitt i Fibonacci</strong></p>
+
+<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>Fib:</div><div>144</div></div></div>
+
+</div>
+</div>
 
 LCD-displayen — mitt i Fibonacci
 

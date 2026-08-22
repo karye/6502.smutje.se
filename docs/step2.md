@@ -66,14 +66,16 @@ Koden gör tre saker i `setup()`:
 
 Klockan har höjts från 1 Hz till 500 Hz — för snabbt för att se med ögat, men lagom för att läsa adressbussen i seriemonitor. `pulse()` har förenklats (ingen lysdiod denna gång) och `loop()` gör nu det tunga jobbet: läsa portregister, skifta ihop adressen, skriva ut. `setup()` har fått en reset-sekvens — den viktigaste nyheten i detta steg.
 
-> [!NOTE] 📦 Arduino-kod — step2.inc · 68 rader · se step2.html
+???+ note "📦 Arduino-kod"
+    ```cpp
+    --8<-- "Mega_2560_6502/src/step1.inc"
+    ```
 
 ## Exempel på körning
 
 När jag öppnar seriemonitor efter uppladdning ser jag ungefär detta:
 
-Seriemonitor
-```
+``` title="Seriemonitor"
 Steg 2 — adressbuss och reset
 R $FFFC
 R $FFFD

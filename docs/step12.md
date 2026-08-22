@@ -41,7 +41,7 @@ En oscillator är en komplett klockkrets i en kapsel: kristallen och förstärka
 ## 74HC393 — pinout
 
 DIP-14-kapsel. Två oberoende 4-bitars ripple-räknare (1 och 2). `1Q3` är den utgång jag använder — 16 MHz ÷16 = 1 MHz till `PHI2`.
-> [!NOTE] 🧩 74HC393 · se step12.html
+![74HC393 pinout](pinouts/74hc393.svg)
 
 ## Kopplingar
 
@@ -73,7 +73,10 @@ Tre små kretsar att koppla: oscillatorn, delaren och reset-kretsen. Allt annat 
 Programmet är samma LCD-hello som tidigare, men med en viktig skillnad: vid 1 MHz tar en instruktion bara ~2–3 µs, och HD44780-displayen kräver pauser mellan kommandon (klartext-rensning tar t.ex. 1,64 ms). Förut, vid 500 Hz, hanns allt med av sig själv — nu måste 6502-programmet *självt* vänta.
 
 Lösningen är en `delay_ms`-subrutin med nästlade loopar. Varje varv i den inre loopen tar ~4 cykler ≈ 4 µs; 250 varv ≈ 1 ms. `lcd_cmd` väntar ~2 ms efter varje kommando, `lcd_data` ~1 ms efter varje tecken. Displayen får alltid den paus den behöver.
-> [!NOTE] 📦 Programmet — program_standalone.asm · 144 rader · se step12.html
+???+ note "📦 Programmet"
+    ```asm
+    --8<-- "Mega_2560_6502/asm/standalone/program_standalone.asm"
+    ```
 
 Programmet byggs med ca65 + ld65 och bränns om i EEPROM:en med steg 10-programmeraren:
 ```
@@ -92,7 +95,18 @@ Det här steget har ingen Arduino-kod — Arduino finns inte med på kopplingsd�
 
 Slå på strömmen. Inget att ladda upp, inget att ansluta — datorn bara startar. Efter en kort stund (LCD-initieringen) visas:
 
-LCD 16×2 — efter start
+<div class="monlcd">
+<div>
+<p class="xlabel"><strong>LCD 16×2 — efter start</strong></p>
+
+<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>6502 FRISTAENDE</div><div>1 MHz KRISTALL</div></div></div>
+
+</div>
+<div>
+
+
+</div>
+</div>
 
 - Texten skrivs om i en loop: visa en stund, rensa, börja om.
 - Stäng av strömmen och slå på igen — datorn startar direkt ur EEPROM:en.

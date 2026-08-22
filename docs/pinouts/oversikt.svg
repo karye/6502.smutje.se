@@ -1,0 +1,101 @@
+<svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto" role="img" aria-label="Översikt över 6502-datorn: Arduino, CPU, VIA med LCD, SRAM och EEPROM i en rad, med adress- och databuss ovanför och nedanför">
+          <defs>
+            <marker id="arrowPurple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#d8b4fe"/>
+            </marker>
+            <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6"/>
+            </marker>
+            <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#22c55e"/>
+            </marker>
+            <style>
+              .c {
+                font-family: ui-monospace, monospace;
+              }
+              .chip {
+                fill: #111827;
+                stroke: #4b5563;
+                stroke-width: 2;
+                rx: 8;
+              }
+              .pin {
+                fill: #eab308;
+              }
+              .dev {
+                fill: #1f2937;
+                stroke-width: 2;
+                rx: 8;
+              }
+              .onramp {
+                stroke-width: 3;
+              }
+            </style>
+          </defs>
+
+          <!-- ==== ADRESSBUSS — tjock motorväg (blå) ==== -->
+          <rect x="40" y="30" width="820" height="16" rx="4" fill="#3b82f6"/>
+          <line x1="45" y1="38" x2="855" y2="38" stroke="#bfdbfe" stroke-width="2" stroke-dasharray="8 6"/>
+          <text class="c" x="52" y="22" fill="#93c5fd" font-size="12" font-weight="bold">Adressbuss A0–A15</text>
+
+          <!-- ==== DATABUSS — tjock motorväg (grön) ==== -->
+          <rect x="40" y="420" width="820" height="16" rx="4" fill="#22c55e"/>
+          <line x1="45" y1="428" x2="855" y2="428" stroke="#dcfce7" stroke-width="2" stroke-dasharray="8 6"/>
+          <text class="c" x="52" y="448" fill="#86efac" font-size="12" font-weight="bold">Databuss D0–D7</text>
+
+          <!-- ==== LCD (mellan adressbuss och VIA) ==== -->
+          <rect class="dev" x="400" y="300" width="130" height="55" stroke="#4ade80"/>
+          <text class="c" x="465" y="328" text-anchor="middle" fill="#4ade80" font-size="13" font-weight="bold">LCD 16×2</text>
+          <text class="c" x="465" y="344" text-anchor="middle" fill="#9ca3af" font-size="10">via VIA-portar</text>
+
+          <!-- ==== ARDUINO (startmotor, streckad) ==== -->
+          <line class="onramp" x1="105" y1="46" x2="105" y2="180" stroke="#3b82f6" marker-start="url(#arrowBlue)" marker-end="url(#arrowBlue)"/>
+          <line class="onramp" x1="105" y1="270" x2="105" y2="420" stroke="#22c55e" marker-start="url(#arrowGreen)" marker-end="url(#arrowGreen)"/>
+          <rect class="dev" x="40" y="180" width="130" height="90" stroke="#3b82f6" stroke-dasharray="6 4"/>
+          <text class="c" x="105" y="220" text-anchor="middle" fill="#93c5fd" font-size="13" font-weight="bold">Arduino</text>
+          <text class="c" x="105" y="238" text-anchor="middle" fill="#9ca3af" font-size="10">Mega 2560</text>
+          <text class="c" x="105" y="254" text-anchor="middle" fill="#3b82f6" font-size="10">startmotor</text>
+          <path d="M 135 180 L 135 135 L 250 135 L 250 180" stroke="#d8b4fe" stroke-width="2" fill="none" marker-end="url(#arrowPurple)"/>
+          <text class="c" x="192" y="127" text-anchor="middle" fill="#d8b4fe" font-size="9">klocka · R/W · SYNC</text>
+
+          <!-- ==== W65C02S CPU ==== -->
+          <line class="onramp" x1="265" y1="180" x2="265" y2="46" stroke="#3b82f6" marker-end="url(#arrowBlue)"/>
+          <line class="onramp" x1="265" y1="270" x2="265" y2="420" stroke="#22c55e" marker-start="url(#arrowGreen)" marker-end="url(#arrowGreen)"/>
+          <rect class="chip" x="190" y="180" width="150" height="90"/>
+          <text class="c" x="265" y="222" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="bold">W65C02S</text>
+          <text class="c" x="265" y="240" text-anchor="middle" fill="#9ca3af" font-size="11">8-bit CPU</text>
+          <rect class="signal" x="182" y="192" width="8" height="8"/>
+          <rect class="signal" x="182" y="208" width="8" height="8"/>
+          <rect class="signal" x="182" y="224" width="8" height="8"/>
+          <rect class="signal" x="182" y="240" width="8" height="8"/>
+          <rect class="signal" x="182" y="256" width="8" height="8"/>
+          <rect class="signal" x="340" y="192" width="8" height="8"/>
+          <rect class="signal" x="340" y="208" width="8" height="8"/>
+          <rect class="signal" x="340" y="224" width="8" height="8"/>
+          <rect class="signal" x="340" y="240" width="8" height="8"/>
+          <rect class="signal" x="340" y="256" width="8" height="8"/>
+
+          <!-- ==== VIA (enkelriktad data) ==== -->
+          <line class="onramp" x1="435" y1="46" x2="435" y2="180" stroke="#3b82f6" marker-end="url(#arrowBlue)"/>
+          <line class="onramp" x1="375" y1="270" x2="375" y2="420" stroke="#22c55e" marker-end="url(#arrowGreen)"/>
+          <rect class="dev" x="360" y="180" width="150" height="90" stroke="#facc15"/>
+          <text class="c" x="435" y="222" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="bold">VIA</text>
+          <text class="c" x="435" y="240" text-anchor="middle" fill="#facc15" font-size="11">W65C22 · I/O</text>
+          <!-- Pil VIA → LCD (uppåt, till LCD ovanför) -->
+          <line x1="465" y1="270" x2="465" y2="300" stroke="#facc15" stroke-width="2" stroke-dasharray="4 3"/>
+          <polygon points="465,312 460,302 470,302" fill="#facc15"/>
+
+          <!-- ==== SRAM ==== -->
+          <line class="onramp" x1="605" y1="46" x2="605" y2="180" stroke="#3b82f6" marker-end="url(#arrowBlue)"/>
+          <line class="onramp" x1="605" y1="270" x2="605" y2="420" stroke="#22c55e" marker-start="url(#arrowGreen)" marker-end="url(#arrowGreen)"/>
+          <rect class="dev" x="530" y="180" width="150" height="90" stroke="#4ade80"/>
+          <text class="c" x="605" y="222" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="bold">SRAM</text>
+          <text class="c" x="605" y="240" text-anchor="middle" fill="#4ade80" font-size="11">62256 · RAM</text>
+
+          <!-- ==== EEPROM ==== -->
+          <line class="onramp" x1="775" y1="46" x2="775" y2="180" stroke="#3b82f6" marker-end="url(#arrowBlue)"/>
+          <line class="onramp" x1="775" y1="270" x2="775" y2="420" stroke="#22c55e" marker-start="url(#arrowGreen)" marker-end="url(#arrowGreen)"/>
+          <rect class="dev" x="700" y="180" width="150" height="90" stroke="#c084fc"/>
+          <text class="c" x="775" y="222" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="bold">EEPROM</text>
+          <text class="c" x="775" y="240" text-anchor="middle" fill="#c084fc" font-size="11">AT28C256 · ROM</text>
+        </svg>

@@ -68,14 +68,16 @@ När jag trycker på en mekanisk knapp studsar metallkontakterna mikroskopiskt �
 
 `SYNC`-pinnen kopplas in på `D13`. `loop()` ändras från en enkel `pulse()`-loop till knappläsning med debounce. Instruktionsstegningen (`do { pulse(); } while (!digitalRead(SYNC))`) är en av de smartaste kodraderna i hela projektet — den låter mig kliva genom mitt program instruktion för instruktion, precis som en debugger, fast i hårdvara.
 
-> [!NOTE] 📦 Arduino-kod — step4.inc · 111 rader · se step4.html
+???+ note "📦 Arduino-kod"
+    ```cpp
+    --8<-- "Mega_2560_6502/src/step1.inc"
+    ```
 
 ## Exempel på körning
 
 Efter uppladdning händer ingenting förrän jag trycker på en knapp. CPU:n har precis lämnat reset och står stilla — klockan genereras bara när jag ber om det. Här är vad jag ser vid olika tryck:
 
-Seriemonitor
-```
+``` title="Seriemonitor"
 Steg 4 — Knappstegning
 Knapp 1 = klocksteg, Knapp 2 = instruktionssteg
 

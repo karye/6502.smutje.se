@@ -51,14 +51,14 @@ Schemat visar hur fyra kretsar nu delar på adress- och databussen: CPU, Arduino
 ## W65C22 VIA — pinout
 
 DIP-40-kapsel. Två 8-bitars I/O-portar (PA, PB), 4 kontrollpinnar (`CA1–CB2`), bussanslutning. Samma kapsel som CPU:n — var noga med orienteringen.
-> [!NOTE] 🧩 W65C22 VIA · se step7.html
+![W65C22 VIA pinout](pinouts/w65c22.svg)
 
 ■ Port A/B ■ Kontroll/buss ■ Ström.
 
 ## 74HC00 — pinout
 
 DIP-14-kapsel. Fyra 2-ingångars NAND-grindar. U4A+U4B används för VIA-avkodning, U4C+U4D är lediga (används för SRAM i steg 9).
-> [!NOTE] 🧩 74HC00 · se step7.html
+![74HC00 pinout](pinouts/74hc00.svg)
 
 ■ U4A (NAND) ■ U4B (NAND) ■ U4C+U4D (lediga) ■ Ström.
 
@@ -124,7 +124,77 @@ Logik: `A15` inverteras av U4A. U4B gör (NOT `A15`) NAND `A14` → LÅG när `A
 | 15 | `A` | +5V via 220Ω | Bakgrundsbelysning anod (+) |
 | 16 | `K` | GND | Bakgrundsbelysning katod (−) |
 
-> [!NOTE] 🗺️ Minnestarta · se step7.html
+## Minnestarta
+
+**6502**-processorn har 16 adresslinjer = 64 KB adressrymd. Arduinon svarar på adresser där den har data, och tri-statar vid **VIA**-adresser så den fysiska kretsen kan svara.
+
+<div class="memmap">
+
+      <div style="min-height:8px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$FFFF</span>
+          <small>$FFFA</small>
+        </div>
+        <div style="min-height:8px;flex:1 1 0%;background-color:#f3e8ff;border-left:1px solid #c4b5fd;border-right:1px solid #c4b5fd;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">vectors[6] — NMI, RESET, IRQ</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">6 B</div>
+      </div>
+      <div style="height:200px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="width:5rem;text-align:right;padding-right:.75rem;color:#9ca3af;align-self:flex-start;padding-top:.25rem">$FFF9</div>
+        <div style="flex:1 1 0%;background-color:#f3f4f6;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;color:#9ca3af">oanvänt (returnerar $EA = NOP)</div>
+        <div style="width:3.5rem;text-align:right;color:#9ca3af;padding-right:.5rem;align-self:flex-start;padding-top:.25rem">~30 KB</div>
+      </div>
+      <div style="min-height:16px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="min-height:16px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$8800</span>
+          <small>$8000</small>
+        </div>
+        <div style="flex:1 1 0%;background-color:#dbeafe;border-left:1px solid #93c5fd;border-right:1px solid #93c5fd;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">program[2048] — 6502-program</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">2 KB</div>
+      </div>
+      <div style="height:100px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="width:5rem;text-align:right;padding-right:.75rem;color:#9ca3af;align-self:flex-start;padding-top:.25rem">$7FFF</div>
+        <div style="flex:1 1 0%;background-color:#f3f4f6;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;color:#9ca3af">oanvänt</div>
+        <div style="width:3.5rem;text-align:right;color:#9ca3af;padding-right:.5rem;align-self:flex-start;padding-top:.25rem">~16 KB</div>
+      </div>
+      <div style="min-height:8px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #eab308">
+        <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$4010</span>
+          <small>$4000</small>
+        </div>
+        <div style="min-height:8px;flex:1 1 0%;background-color:#fef9c3;border-left:1px solid #facc15;border-right:1px solid #facc15;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;font-weight:700">W65C22 VIA (fysisk krets)</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">16 B</div>
+      </div>
+      <div style="height:100px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="width:5rem;text-align:right;padding-right:.75rem;color:#9ca3af;align-self:flex-start;padding-top:.25rem">$3FFF</div>
+        <div style="flex:1 1 0%;background-color:#f3f4f6;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;color:#9ca3af">oanvänt</div>
+        <div style="width:3.5rem;text-align:right;color:#9ca3af;padding-right:.5rem;align-self:flex-start;padding-top:.25rem">~15 KB</div>
+      </div>
+      <div style="min-height:8px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$0400</span>
+          <small>$0200</small>
+        </div>
+        <div style="min-height:8px;flex:1 1 0%;background-color:#dcfce7;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">ram[1024] — ledigt RAM</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">512 B</div>
+      </div>
+      <div style="min-height:8px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$0200</span>
+          <small>$0100</small>
+        </div>
+        <div style="min-height:8px;flex:1 1 0%;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">Stack (JSR/RTS, PHA/PLA)</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">256 B</div>
+      </div>
+      <div style="min-height:8px;display:flex;align-items:stretch">
+        <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$0100</span>
+          <small>$0000</small>
+        </div>
+        <div style="min-height:8px;flex:1 1 0%;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">Zero page (snabbast)</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">256 B</div>
+      </div>
+    
+</div>
 
 ## 6502-program — två rader via VIA
 
@@ -201,14 +271,20 @@ Programmet som CPU:n ska köra byggs byte för byte med `write_mem(next++, ...)`
 Koden innehåller en `phase`-variabel och fasdetektion som känner igen var i programmet CPU:n befinner sig — reset-sekvens, VIA-init, LCD-init, textutskrift, loop. Det är ovärderligt för felsökning: jag ser direkt om CPU:n fastnar i fel fas eller hoppar till en oväntad adress.
 
 Komplett Arduino-kod för steg 7:
-> [!NOTE] 📦 Arduino-kod — step7.inc · 277 rader · se step7.html
+???+ note "📦 Arduino-kod"
+    ```cpp
+    --8<-- "Mega_2560_6502/src/step1.inc"
+    ```
 
 ## Exempel på körning
 
 När jag laddat upp koden och öppnar seriemonitor ser jag programmet genomlöpa alla faser. Samtidigt vaknar LCD-displayen till liv — styrd helt av 6502-processorn via VIA-kretsen:
 
-Seriemonitor
-```
+<div class="monlcd">
+<div>
+<p class="xlabel"><strong>Seriemonitor</strong></p>
+
+```text
 ══════ RESET-SEKVENS — CPU lämnar reset ══════
 R $FFFC  ← RESET-VEKTOR LÅG
 R $FFFD  ← RESET-VEKTOR HÖG
@@ -232,6 +308,15 @@ W $4000  ← VIA: 3D  (=)
 ...
 ══════ KLAR — JMP loop ══════
 ```
+
+</div>
+<div>
+<p class="xlabel"><strong>LCD-displayen — efter hello-utskriften</strong></p>
+
+<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>=== 6502 VIA LCD ===</div><div>Hello from W65C02!</div></div></div>
+
+</div>
+</div>
 
 LCD-displayen — efter hello-utskriften
 

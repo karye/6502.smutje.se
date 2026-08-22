@@ -1,0 +1,126 @@
+<svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto" role="img" aria-label="W65C22 VIA pinout">
+<style>.p{font-family:ui-monospace,monospace;font-size:13px}.chip{font-family:ui-monospace,monospace;font-size:16px;font-weight:bold}.pn{font-family:ui-monospace,monospace;font-size:10px;fill:#6b7280}</style>
+<rect x="10" y="10" width="680" height="380" rx="12" fill="#1f2937"/>
+<rect x="300" y="25" width="120" height="350" rx="6" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+<text class="chip" x="360.0" y="205.0" text-anchor="middle" fill="#ffffff">W65C22 VIA</text>
+<path d="M300,30.25 L293.5,30.25 Q290,30.25 290,33.75 L290,33.75 Q290,37.25 293.5,37.25 L300,37.25 Z" fill="#eab308"/>
+<text class="pn" x="306" y="36.75">1</text>
+<text class="p" x="272" y="37.75" text-anchor="end" fill="#fca5a5">VSS</text>
+<path d="M300,47.75 L293.5,47.75 Q290,47.75 290,51.25 L290,51.25 Q290,54.75 293.5,54.75 L300,54.75 Z" fill="#eab308"/>
+<text class="pn" x="306" y="54.25">2</text>
+<text class="p" x="272" y="55.25" text-anchor="end" fill="#86efac">PA0</text>
+<path d="M300,65.25 L293.5,65.25 Q290,65.25 290,68.75 L290,68.75 Q290,72.25 293.5,72.25 L300,72.25 Z" fill="#eab308"/>
+<text class="pn" x="306" y="71.75">3</text>
+<text class="p" x="272" y="72.75" text-anchor="end" fill="#86efac">PA1</text>
+<path d="M300,82.75 L293.5,82.75 Q290,82.75 290,86.25 L290,86.25 Q290,89.75 293.5,89.75 L300,89.75 Z" fill="#eab308"/>
+<text class="pn" x="306" y="89.25">4</text>
+<text class="p" x="272" y="90.25" text-anchor="end" fill="#86efac">PA2</text>
+<path d="M300,100.25 L293.5,100.25 Q290,100.25 290,103.75 L290,103.75 Q290,107.25 293.5,107.25 L300,107.25 Z" fill="#eab308"/>
+<text class="pn" x="306" y="106.75">5</text>
+<text class="p" x="272" y="107.75" text-anchor="end" fill="#86efac">PA3</text>
+<path d="M300,117.75 L293.5,117.75 Q290,117.75 290,121.25 L290,121.25 Q290,124.75 293.5,124.75 L300,124.75 Z" fill="#eab308"/>
+<text class="pn" x="306" y="124.25">6</text>
+<text class="p" x="272" y="125.25" text-anchor="end" fill="#86efac">PA4</text>
+<path d="M300,135.25 L293.5,135.25 Q290,135.25 290,138.75 L290,138.75 Q290,142.25 293.5,142.25 L300,142.25 Z" fill="#eab308"/>
+<text class="pn" x="306" y="141.75">7</text>
+<text class="p" x="272" y="142.75" text-anchor="end" fill="#86efac">PA5</text>
+<path d="M300,152.75 L293.5,152.75 Q290,152.75 290,156.25 L290,156.25 Q290,159.75 293.5,159.75 L300,159.75 Z" fill="#eab308"/>
+<text class="pn" x="306" y="159.25">8</text>
+<text class="p" x="272" y="160.25" text-anchor="end" fill="#86efac">PA6</text>
+<path d="M300,170.25 L293.5,170.25 Q290,170.25 290,173.75 L290,173.75 Q290,177.25 293.5,177.25 L300,177.25 Z" fill="#eab308"/>
+<text class="pn" x="306" y="176.75">9</text>
+<text class="p" x="272" y="177.75" text-anchor="end" fill="#86efac">PA7</text>
+<path d="M300,187.75 L293.5,187.75 Q290,187.75 290,191.25 L290,191.25 Q290,194.75 293.5,194.75 L300,194.75 Z" fill="#eab308"/>
+<text class="pn" x="306" y="194.25">10</text>
+<text class="p" x="272" y="195.25" text-anchor="end" fill="#86efac">PB0</text>
+<path d="M300,205.25 L293.5,205.25 Q290,205.25 290,208.75 L290,208.75 Q290,212.25 293.5,212.25 L300,212.25 Z" fill="#eab308"/>
+<text class="pn" x="306" y="211.75">11</text>
+<text class="p" x="272" y="212.75" text-anchor="end" fill="#86efac">PB1</text>
+<path d="M300,222.75 L293.5,222.75 Q290,222.75 290,226.25 L290,226.25 Q290,229.75 293.5,229.75 L300,229.75 Z" fill="#eab308"/>
+<text class="pn" x="306" y="229.25">12</text>
+<text class="p" x="272" y="230.25" text-anchor="end" fill="#86efac">PB2</text>
+<path d="M300,240.25 L293.5,240.25 Q290,240.25 290,243.75 L290,243.75 Q290,247.25 293.5,247.25 L300,247.25 Z" fill="#eab308"/>
+<text class="pn" x="306" y="246.75">13</text>
+<text class="p" x="272" y="247.75" text-anchor="end" fill="#86efac">PB3</text>
+<path d="M300,257.75 L293.5,257.75 Q290,257.75 290,261.25 L290,261.25 Q290,264.75 293.5,264.75 L300,264.75 Z" fill="#eab308"/>
+<text class="pn" x="306" y="264.25">14</text>
+<text class="p" x="272" y="265.25" text-anchor="end" fill="#86efac">PB4</text>
+<path d="M300,275.25 L293.5,275.25 Q290,275.25 290,278.75 L290,278.75 Q290,282.25 293.5,282.25 L300,282.25 Z" fill="#eab308"/>
+<text class="pn" x="306" y="281.75">15</text>
+<text class="p" x="272" y="282.75" text-anchor="end" fill="#86efac">PB5</text>
+<path d="M300,292.75 L293.5,292.75 Q290,292.75 290,296.25 L290,296.25 Q290,299.75 293.5,299.75 L300,299.75 Z" fill="#eab308"/>
+<text class="pn" x="306" y="299.25">16</text>
+<text class="p" x="272" y="300.25" text-anchor="end" fill="#86efac">PB6</text>
+<path d="M300,310.25 L293.5,310.25 Q290,310.25 290,313.75 L290,313.75 Q290,317.25 293.5,317.25 L300,317.25 Z" fill="#eab308"/>
+<text class="pn" x="306" y="316.75">17</text>
+<text class="p" x="272" y="317.75" text-anchor="end" fill="#86efac">PB7</text>
+<path d="M300,327.75 L293.5,327.75 Q290,327.75 290,331.25 L290,331.25 Q290,334.75 293.5,334.75 L300,334.75 Z" fill="#eab308"/>
+<text class="pn" x="306" y="334.25">18</text>
+<text class="p" x="272" y="335.25" text-anchor="end" fill="#d8b4fe">CB1</text>
+<path d="M300,345.25 L293.5,345.25 Q290,345.25 290,348.75 L290,348.75 Q290,352.25 293.5,352.25 L300,352.25 Z" fill="#eab308"/>
+<text class="pn" x="306" y="351.75">19</text>
+<text class="p" x="272" y="352.75" text-anchor="end" fill="#d8b4fe">CB2</text>
+<path d="M300,362.75 L293.5,362.75 Q290,362.75 290,366.25 L290,366.25 Q290,369.75 293.5,369.75 L300,369.75 Z" fill="#eab308"/>
+<text class="pn" x="306" y="369.25">20</text>
+<text class="p" x="272" y="370.25" text-anchor="end" fill="#fca5a5">VDD</text>
+<path d="M420,30.25 L426.5,30.25 Q430,30.25 430,33.75 L430,33.75 Q430,37.25 426.5,37.25 L420,37.25 Z" fill="#eab308"/>
+<text class="pn" x="414" y="36.75" text-anchor="end">40</text>
+<text class="p" x="438" y="37.75" fill="#d8b4fe">CA1</text>
+<path d="M420,47.75 L426.5,47.75 Q430,47.75 430,51.25 L430,51.25 Q430,54.75 426.5,54.75 L420,54.75 Z" fill="#eab308"/>
+<text class="pn" x="414" y="54.25" text-anchor="end">39</text>
+<text class="p" x="438" y="55.25" fill="#d8b4fe">CA2</text>
+<path d="M420,65.25 L426.5,65.25 Q430,65.25 430,68.75 L430,68.75 Q430,72.25 426.5,72.25 L420,72.25 Z" fill="#eab308"/>
+<text class="pn" x="414" y="71.75" text-anchor="end">38</text>
+<text class="p" x="438" y="72.75" fill="#d8b4fe">RS0</text>
+<path d="M420,82.75 L426.5,82.75 Q430,82.75 430,86.25 L430,86.25 Q430,89.75 426.5,89.75 L420,89.75 Z" fill="#eab308"/>
+<text class="pn" x="414" y="89.25" text-anchor="end">37</text>
+<text class="p" x="438" y="90.25" fill="#d8b4fe">RS1</text>
+<path d="M420,100.25 L426.5,100.25 Q430,100.25 430,103.75 L430,103.75 Q430,107.25 426.5,107.25 L420,107.25 Z" fill="#eab308"/>
+<text class="pn" x="414" y="106.75" text-anchor="end">36</text>
+<text class="p" x="438" y="107.75" fill="#d8b4fe">RS2</text>
+<path d="M420,117.75 L426.5,117.75 Q430,117.75 430,121.25 L430,121.25 Q430,124.75 426.5,124.75 L420,124.75 Z" fill="#eab308"/>
+<text class="pn" x="414" y="124.25" text-anchor="end">35</text>
+<text class="p" x="438" y="125.25" fill="#d8b4fe">RS3</text>
+<path d="M420,135.25 L426.5,135.25 Q430,135.25 430,138.75 L430,138.75 Q430,142.25 426.5,142.25 L420,142.25 Z" fill="#eab308"/>
+<text class="pn" x="414" y="141.75" text-anchor="end">34</text>
+<text class="p" x="438" y="142.75" fill="#d8b4fe">/RESET</text>
+<path d="M420,152.75 L426.5,152.75 Q430,152.75 430,156.25 L430,156.25 Q430,159.75 426.5,159.75 L420,159.75 Z" fill="#eab308"/>
+<text class="pn" x="414" y="159.25" text-anchor="end">33</text>
+<text class="p" x="438" y="160.25" fill="#86efac">D0</text>
+<path d="M420,170.25 L426.5,170.25 Q430,170.25 430,173.75 L430,173.75 Q430,177.25 426.5,177.25 L420,177.25 Z" fill="#eab308"/>
+<text class="pn" x="414" y="176.75" text-anchor="end">32</text>
+<text class="p" x="438" y="177.75" fill="#86efac">D1</text>
+<path d="M420,187.75 L426.5,187.75 Q430,187.75 430,191.25 L430,191.25 Q430,194.75 426.5,194.75 L420,194.75 Z" fill="#eab308"/>
+<text class="pn" x="414" y="194.25" text-anchor="end">31</text>
+<text class="p" x="438" y="195.25" fill="#86efac">D2</text>
+<path d="M420,205.25 L426.5,205.25 Q430,205.25 430,208.75 L430,208.75 Q430,212.25 426.5,212.25 L420,212.25 Z" fill="#eab308"/>
+<text class="pn" x="414" y="211.75" text-anchor="end">30</text>
+<text class="p" x="438" y="212.75" fill="#86efac">D3</text>
+<path d="M420,222.75 L426.5,222.75 Q430,222.75 430,226.25 L430,226.25 Q430,229.75 426.5,229.75 L420,229.75 Z" fill="#eab308"/>
+<text class="pn" x="414" y="229.25" text-anchor="end">29</text>
+<text class="p" x="438" y="230.25" fill="#86efac">D4</text>
+<path d="M420,240.25 L426.5,240.25 Q430,240.25 430,243.75 L430,243.75 Q430,247.25 426.5,247.25 L420,247.25 Z" fill="#eab308"/>
+<text class="pn" x="414" y="246.75" text-anchor="end">28</text>
+<text class="p" x="438" y="247.75" fill="#86efac">D5</text>
+<path d="M420,257.75 L426.5,257.75 Q430,257.75 430,261.25 L430,261.25 Q430,264.75 426.5,264.75 L420,264.75 Z" fill="#eab308"/>
+<text class="pn" x="414" y="264.25" text-anchor="end">27</text>
+<text class="p" x="438" y="265.25" fill="#86efac">D6</text>
+<path d="M420,275.25 L426.5,275.25 Q430,275.25 430,278.75 L430,278.75 Q430,282.25 426.5,282.25 L420,282.25 Z" fill="#eab308"/>
+<text class="pn" x="414" y="281.75" text-anchor="end">26</text>
+<text class="p" x="438" y="282.75" fill="#86efac">D7</text>
+<path d="M420,292.75 L426.5,292.75 Q430,292.75 430,296.25 L430,296.25 Q430,299.75 426.5,299.75 L420,299.75 Z" fill="#eab308"/>
+<text class="pn" x="414" y="299.25" text-anchor="end">25</text>
+<text class="p" x="438" y="300.25" fill="#d8b4fe">PHI2</text>
+<path d="M420,310.25 L426.5,310.25 Q430,310.25 430,313.75 L430,313.75 Q430,317.25 426.5,317.25 L420,317.25 Z" fill="#eab308"/>
+<text class="pn" x="414" y="316.75" text-anchor="end">24</text>
+<text class="p" x="438" y="317.75" fill="#d8b4fe">CS1</text>
+<path d="M420,327.75 L426.5,327.75 Q430,327.75 430,331.25 L430,331.25 Q430,334.75 426.5,334.75 L420,334.75 Z" fill="#eab308"/>
+<text class="pn" x="414" y="334.25" text-anchor="end">23</text>
+<text class="p" x="438" y="335.25" fill="#d8b4fe">/CS2</text>
+<path d="M420,345.25 L426.5,345.25 Q430,345.25 430,348.75 L430,348.75 Q430,352.25 426.5,352.25 L420,352.25 Z" fill="#eab308"/>
+<text class="pn" x="414" y="351.75" text-anchor="end">22</text>
+<text class="p" x="438" y="352.75" fill="#d8b4fe">R/W</text>
+<path d="M420,362.75 L426.5,362.75 Q430,362.75 430,366.25 L430,366.25 Q430,369.75 426.5,369.75 L420,369.75 Z" fill="#eab308"/>
+<text class="pn" x="414" y="369.25" text-anchor="end">21</text>
+<text class="p" x="438" y="370.25" fill="#d8b4fe">/IRQ</text>
+</svg>

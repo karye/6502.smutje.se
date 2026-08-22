@@ -62,7 +62,69 @@ Samma hårdvara som steg 5. LCD:n kopplas direkt till Arduino — `RS`→`D5`, E
 
 ![Steg 6 — LCD kopplad till Arduino](schematics/steg-6.png)
 
-> [!NOTE] 🗺️ Minnestarta · se step6.html
+## Minnestarta
+
+**6502**-processorns 64 KB adressrymd, uppdelad i fyra områden:
+
+- **Lila** (`$FFFA`–`$FFFF`): vektorer — processorn läser här efter reset för att veta var programmet börjar
+- **Blå** (`$8000`–`$87FF`): vårt **6502**-program — 9 bytes maskinkod som **Arduino** laddar in från `setup()`
+- **Grön** (`$0000`–`$03FF`): arbetsminne — zero page (`$0000`–`$00FF`, snabbast åtkomst), stack (`$0100`–`$01FF`, `JSR`/`RTS`/`PHA`/`PLA`), och ledigt **RAM** (`$0200`–`$03FF`). Här kan **CPU**:n läsa och skriva fritt
+- **Grå**: oanvänt — **Arduino** returnerar `$EA` (`NOP`) så **CPU**:n hoppar bara vidare
+
+<div class="memmap">
+
+      <div style="min-height:8px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$FFFF</span>
+          <small>$FFFA</small>
+        </div>
+        <div style="min-height:8px;flex:1 1 0%;background-color:#f3e8ff;border-left:1px solid #c4b5fd;border-right:1px solid #c4b5fd;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">vectors[6] — NMI, RESET, IRQ</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">6 B</div>
+      </div>
+      <div style="height:200px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="width:5rem;text-align:right;padding-right:.75rem;color:#9ca3af;align-self:flex-start;padding-top:.25rem">$FFF9</div>
+        <div style="flex:1 1 0%;background-color:#f3f4f6;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;color:#9ca3af">oanvänt (returnerar $EA = NOP)</div>
+        <div style="width:3.5rem;text-align:right;color:#9ca3af;padding-right:.5rem;align-self:flex-start;padding-top:.25rem">~30 KB</div>
+      </div>
+      <div style="min-height:16px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="min-height:16px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$8800</span>
+          <small>$8000</small>
+        </div>
+        <div style="flex:1 1 0%;background-color:#dbeafe;border-left:1px solid #93c5fd;border-right:1px solid #93c5fd;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">program[2048] — 6502-program</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">2 KB</div>
+      </div>
+      <div style="height:100px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="width:5rem;text-align:right;padding-right:.75rem;color:#9ca3af;align-self:flex-start;padding-top:.25rem">$7FFF</div>
+        <div style="flex:1 1 0%;background-color:#f3f4f6;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;color:#9ca3af">oanvänt</div>
+        <div style="width:3.5rem;text-align:right;color:#9ca3af;padding-right:.5rem;align-self:flex-start;padding-top:.25rem">~16 KB</div>
+      </div>
+      <div style="min-height:8px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$0400</span>
+          <small>$0200</small>
+        </div>
+        <div style="min-height:8px;flex:1 1 0%;background-color:#dcfce7;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">ram[1024] — ledigt RAM</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">512 B</div>
+      </div>
+      <div style="min-height:8px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$0200</span>
+          <small>$0100</small>
+        </div>
+        <div style="min-height:8px;flex:1 1 0%;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">Stack (JSR/RTS, PHA/PLA)</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">256 B</div>
+      </div>
+      <div style="min-height:8px;display:flex;align-items:stretch">
+        <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$0100</span>
+          <small>$0000</small>
+        </div>
+        <div style="min-height:8px;flex:1 1 0%;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">Zero page (snabbast)</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">256 B</div>
+      </div>
+    
+</div>
 
 ## Arduino-kod
 
@@ -88,14 +150,20 @@ En 6502-instruktion är 1–3 bytes lång. Första byten är alltid *opcode* —
 
 När programmet körs kan jag med Knapp 2 (instruktionssteg) följa programflödet: `$8000` (`LDX`) → `$8002` (`INX`) → `$8003` (`STX`) → `$8006` (`JMP`) → `$8002` (`INX` igen). Varje varv genom loopen ökar värdet på adress `$0200` — och jag kan se det på LCD:ns rad 1 som `D:$01`, `D:$02`, `D:$03`… hela vägen upp till `D:$FF` (255). Sedan wrappar X-registret till 0 och loopen börjar om.
 
-> [!NOTE] 📦 Arduino-kod — step6.inc · 131 rader · se step6.html
+???+ note "📦 Arduino-kod"
+    ```cpp
+    --8<-- "Mega_2560_6502/src/step1.inc"
+    ```
 
 ## Exempel på körning
 
 När jag laddat upp koden och trycker på Knapp 2 (instruktionssteg) ser jag programmet rulla genom adresserna — både i seriemonitor och på LCD-displayen:
 
-Seriemonitor — efter ett varv i loopen
-```
+<div class="monlcd">
+<div>
+<p class="xlabel"><strong>Seriemonitor — efter ett varv i loopen</strong></p>
+
+```text
 Steg 6 — Räknarprogram
 Program: LDX #$00 · INX · STX $0200 · JMP $8002
 
@@ -114,6 +182,15 @@ R $8008
 R $8002  ← tillbaka till INX
 ...
 ```
+
+</div>
+<div>
+<p class="xlabel"><strong>LCD-displayen — mitt i loopen</strong></p>
+
+<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>A:$0200</div><div>D:$05</div></div></div>
+
+</div>
+</div>
 
 LCD-displayen — mitt i loopen
 

@@ -1,0 +1,68 @@
+site_name: W65C02 8-bitarsdator
+site_url: https://6502.smutje.se
+use_directory_urls: false
+
+theme:
+  name: material
+  language: sv
+  features:
+    # - navigation.instant  <-- Disabled due to menu duplication bug
+    - navigation.indexes
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.expand
+    - navigation.top
+    - navigation.footer
+    - content.tabs.link
+    - content.code.copy
+  palette:
+    - scheme: default
+  icon:
+    admonition:
+      file: octicons/file-16
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+markdown_extensions:
+  - tables
+  - mdx_truly_sane_lists
+  - admonition
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+      clickable_checkbox: true
+  - pymdownx.magiclink
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.snippets:
+      base_path: ["docs", "."]
+  - pymdownx.details
+  - pymdownx.highlight:
+      auto_title: true
+      linenums: true
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+      pygments_style: monokai
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+
+nav:
+  - Översikt: index.md
+  - Steg:
+    - Steg 1 — Ström och klocka: step1.md
+    - Steg 2 — Adressbuss och reset: step2.md
+    - Steg 3 — Databuss och minne: step3.md
+    - Steg 4 — Manuell stegning: step4.md
+    - Steg 5 — LCD-display: step5.md
+    - Steg 6 — Eget 6502-program: step6.md
+    - Steg 7 — VIA + LCD, styrd av 6502: step7.md
+    - Steg 8 — Assembler-bygge med ca65: step8.md
+    - Steg 9 — Riktigt RAM (62256 SRAM): step9.md
+    - Steg 10 — EEPROM som ROM: step10.md
+    - Steg 11 — Städad adressrymd: step11.md
+    - Steg 12 — Fristående klocka: step12.md
+  - Begrepp: begrepp.md

@@ -83,12 +83,46 @@ Här är tricket: kretsarnas egna chip-select-pinnar gör avkodningen. SRAM:s `/
 | 3 | EEPROM `/CE` (ut) | AT28C256 pin 20 | LÅG när A15=1 och A14=1 → $C000–$FFFF |
 | 14, 7 | VCC, GND | +5V, GND | Strömmatning |
 
-> [!NOTE] 🗺️ Minnestarta · se step11.html
+## Minnestarta
+
+Nu används hela 64 KB, varje enhet på sin egen tydliga region: **SRAM** nedtill, **VIA** i mitten, **EEPROM** upptill.
+
+<div class="memmap">
+
+        <div style="height:100px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #a855f7">
+          <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+            <span style="color:#6b7280">$FFFF</span>
+            <small>$C000</small>
+          </div>
+          <div style="flex:1 1 0%;background-color:#f3e8ff;border-left:1px solid #a78bfa;border-right:1px solid #a78bfa;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center">AT28C256 EEPROM — program + vektorer</div>
+          <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">16 KB</div>
+        </div>
+        <div style="height:100px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #eab308">
+          <div style="min-height:16px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+            <span style="color:#6b7280">$BFFF</span>
+            <small>$8000</small>
+          </div>
+          <div style="flex:1 1 0%;background-color:#fef9c3;border-left:1px solid #facc15;border-right:1px solid #facc15;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;font-weight:700">W65C22 VIA — I/O-fönster</div>
+          <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">16 KB</div>
+        </div>
+        <div style="height:200px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #22c55e">
+          <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+            <span style="color:#6b7280">$7FFF</span>
+            <small>$0000</small>
+          </div>
+          <div style="flex:1 1 0%;background-color:#dcfce7;border-left:1px solid #4ade80;border-right:1px solid #4ade80;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;font-weight:700">62256 SRAM — 32 KB (hela chippet)</div>
+          <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">32 KB</div>
+        </div>
+      
+</div>
 
 ## Arduino-kod
 
 Ändringarna i Arduinon är minimala — bara tre konstanter och en villkorsändring i `is_eeprom()`. Koden vet nu att SRAM täcker `$0000`–`$7FFF`, VIA bor på `$8000` och EEPROM på `$C000`. Allt annat är tri-state för fysiska kretsar.
-> [!NOTE] 📦 Arduino-kod — step11.inc · 121 rader · se step11.html
+???+ note "📦 Arduino-kod"
+    ```cpp
+    --8<-- "Mega_2560_6502/src/step1.inc"
+    ```
 
 ## Länkskript — program.cfg
 
@@ -100,7 +134,10 @@ I steg 8 skapade jag `program.cfg` — länkaren ld65:s karta över minnet. Den 
 1. Jag ersätter innehållet med koden nedan och sparar.
 1. Jag bygger projektet — `build_asm.py` skickar filen till ld65 automatiskt (`-C program.cfg`). Inget att köra manuellt.
 1. Assembler-filen behöver inga ändringar — segmenten nedan matchar den.
-> [!NOTE] 📦 Länkskript — program.cfg · 16 rader · se step11.html
+???+ note "📦 Länkskript"
+    ```cfg
+    --8<-- "Mega_2560_6502/asm/program.cfg"
+    ```
 
 Koden läggs i `$C000`–`$FFFF` (ROM, 16 KB). Reset-vektorn ligger som alltid på `$FFFA`–`$FFFF`.
 
@@ -108,8 +145,11 @@ Koden läggs i `$C000`–`$FFFF` (ROM, 16 KB). Reset-vektorn ligger som alltid p
 
 När jag laddat upp koden och startat datorn ser jag i seriemonitorn att enheterna svarar på sina nya adresser:
 
-Seriemonitor (115200 baud)
-```
+<div class="monlcd">
+<div>
+<p class="xlabel"><strong>Seriemonitor (115200 baud)</strong></p>
+
+```text
 Steg 11 — städad adressrymd
 SRAM 32 KB ($0000-$7FFF), VIA ($8000), EEPROM ($C000+)
 CPU startad.
@@ -125,6 +165,15 @@ W $8001  ← VIA: 05         (registerval)
 W $8000  ← VIA: 3D         (tecknet "=")
 ...
 ```
+
+</div>
+<div>
+<p class="xlabel"><strong>LCD-displayen (16×2)</strong></p>
+
+<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>=== 6502 VIA LCD ===</div><div>Hello from W65C02!</div></div></div>
+
+</div>
+</div>
 
 LCD-displayen (16×2)
 

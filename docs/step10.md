@@ -22,7 +22,7 @@ En **AT28C256** EEPROM på 32 KB blir datorns ROM, en extra Arduino Mega agerar 
 ## AT28C256 — pinout
 
 DIP-28-kapsel. 15 adresslinjer, 8 datalinjer, 3 kontrollsignaler. Nästan identisk med 62256 SRAM men med `/WE` som styr bränning och RDY/BUSY som signalerar när bränningen är klar (jag använder en enkel timeout istället).
-> [!NOTE] 🧩 AT28C256 · se step10.html
+![AT28C256 pinout](pinouts/at28c256.svg)
 
 ■ Adressbuss ■ Databuss ■ Kontroll ■ Ström. Notch/pin 1-markering: uppåt.
 
@@ -73,7 +73,43 @@ En extra 74HC00 vid sidan av den från steg 7/9. En enda grind används som inve
 | 14 | `VCC` | +5V | Strömmatning |
 | 7 | `GND` | GND | Systemjord |
 
-> [!NOTE] 🗺️ Minnestarta · se step10.html
+## Minnestarta
+
+**EEPROM**:et tar över `$8000–$FFFF` från **Arduino**. Programmet ligger nu i äkta **ROM**.
+
+<div class="memmap">
+
+      <div style="height:200px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #a855f7">
+        <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$FFFF</span>
+          <small>$8000</small>
+        </div>
+        <div style="flex:1 1 0%;background-color:#f3e8ff;border-left:1px solid #a78bfa;border-right:1px solid #a78bfa;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;font-weight:700">AT28C256 EEPROM — 32 KB ROM</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">32 KB</div>
+      </div>
+      <div style="height:100px;display:flex;align-items:stretch;border-bottom:1px solid #e5e7eb">
+        <div style="width:5rem;text-align:right;padding-right:.75rem;color:#9ca3af;align-self:flex-start;padding-top:.25rem">$7FFF</div>
+        <div style="flex:1 1 0%;background-color:#f3f4f6;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;color:#9ca3af">oanvänt</div>
+        <div style="width:3.5rem;text-align:right;color:#9ca3af;padding-right:.5rem;align-self:flex-start;padding-top:.25rem">~16 KB</div>
+      </div>
+      <div style="min-height:8px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #eab308">
+        <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$4010</span>
+          <small>$4000</small>
+        </div>
+        <div style="min-height:8px;flex:1 1 0%;background-color:#fef9c3;border-left:1px solid #facc15;border-right:1px solid #facc15;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;font-weight:700">W65C22 VIA — fysisk I/O</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">16 B</div>
+      </div>
+      <div style="height:100px;display:flex;align-items:stretch;border-bottom:2px solid #d1d5db;border-bottom:2px solid #22c55e">
+        <div style="min-height:8px;width:5rem;padding-right:.75rem;display:flex;flex-direction:column;justify-content:space-between;text-align:right">
+          <span style="color:#6b7280">$3FFF</span>
+          <small>$0000</small>
+        </div>
+        <div style="flex:1 1 0%;background-color:#dcfce7;border-left:1px solid #4ade80;border-right:1px solid #4ade80;padding-left:.5rem;padding-right:.5rem;display:flex;align-items:center;font-weight:700">62256 SRAM — 16 KB RAM</div>
+        <div style="width:3.5rem;text-align:right;color:#6b7280;padding-right:.5rem">16 KB</div>
+      </div>
+    
+</div>
 
 ## Arduino-kod — programmeraren
 
@@ -83,12 +119,18 @@ Det här programmet laddas upp på den andra Arduino Mega — den som tillfälli
 **AT28C256** har inbyggd själv-timing. För att bränna en byte sätter jag adress och data, drar `/WE` låg, väntar minst 10 millisekunder (jag använder 10 för marginal), och drar `/WE` hög igen. Kretsen sköter resten internt. För att läsa tillbaka drar jag `/OE` låg och läser `PINA` — precis som med SRAM.
 
 Verifieringen läser tillbaka varje byte och jämför med originaldatan. Om något inte stämmer rapporteras adressen och de två värdena. Annars: "OK — 32768 bytes verifierade".
-> [!NOTE] 📦 EEPROM-programmeraren — EEPROM_programmer.ino · 139 rader · se step10.html
+???+ note "📦 EEPROM-programmeraren"
+    ```cpp
+    --8<-- "Mega_2560_6502/EEPROM_programmer/EEPROM_programmer.ino"
+    ```
 
 ## Python-skript — skicka .bin-fil till programmeraren
 
 Ett enkelt Python 3-skript som läser `program.bin` och skickar det sida för sida över serieporten. Kräver `pyserial` (`pip install pyserial`).
-> [!NOTE] 📦 Python-skript — upload_eeprom.py · 59 rader · se step10.html
+???+ note "📦 Python-skript"
+    ```python
+    --8<-- "scripts/upload_eeprom.py"
+    ```
 
 ## Arduino-kod — datorn
 
@@ -124,8 +166,11 @@ Totalt brända bytes: 2054
 
 Koppla bort programmerings-Arduinon. Flytta **AT28C256**-chippet till datorns kopplingsdäck och anslut enligt kopplingstabellen ovan. Slå på strömmen.
 
-Seriemonitor — datorn startar
-```
+<div class="monlcd">
+<div>
+<p class="xlabel"><strong>Seriemonitor — datorn startar</strong></p>
+
+```text
 Steg 10 — EEPROM som ROM
 Programmet ligger i AT28C256 — inte i Arduino.
 CPU startad. EEPROM levererar programkoden.
@@ -141,6 +186,15 @@ W $4000  ← VIA: 30  (LCD-init)
 W $4000  ← VIA: 3D  (=)
 ...
 ```
+
+</div>
+<div>
+<p class="xlabel"><strong>LCD-displayen (16×2)</strong></p>
+
+<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>=== 6502 VIA LCD ===</div><div>Hello from W65C02!</div></div></div>
+
+</div>
+</div>
 
 LCD-displayen (16×2)
 

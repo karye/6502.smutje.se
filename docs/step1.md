@@ -26,14 +26,14 @@ Här är allt som krävs för att väcka CPU:n till liv: processorn själv, en A
 ## W65C02S — pinout
 
 DIP-40-kapsel. 16 adresslinjer, 8 datalinjer, 12 kontroll/ström.
-> [!NOTE] 🧩 W65C02S · se step1.html
+![W65C02S pinout](pinouts/w65c02s.svg)
 
 ■ Adressbuss ■ Databuss ■ Kontroll ■ Ström. Notch/pin 1-markering: uppåt.
 
 ## Arduino Mega 2560 — anslutningar
 
 Här ser jag alla pinnar på Arduino Mega 2560: `A0-A15` och `D0-D53`
-> [!NOTE] 🧩 Arduino Mega 2560 · se step1.html
+![Arduino Mega 2560 pinout](pinouts/arduino-mega.svg)
 
 ## Kopplingsschema
 
@@ -82,14 +82,16 @@ Koden är uppdelad i tre lager:
 ### Vad jag ser när koden kör
 
 När jag laddat upp koden och öppnar seriemonitor ser jag texten "Steg 1 — Klocka och ström". Lysdioden på klocklinjen blinkar en gång per sekund — den är tänd när `PHI2` är hög (CPU:n arbetar) och släckt när `PHI2` är låg. Jag har just gett processorn dess första hjärtslag.
-> [!NOTE] 📦 Arduino-kod — step1.inc · 44 rader · se step1.html
+???+ note "📦 Arduino-kod"
+    ```cpp
+    --8<-- "Mega_2560_6502/src/step1.inc"
+    ```
 
 ## Exempel på körning
 
 När jag öppnar seriemonitor i Arduino IDE eller PlatformIO ser jag:
 
-Seriemonitor (115200 baud)
-```
+``` title="Seriemonitor (115200 baud)"
 Steg 1 — Klocka och ström
 Lysdioden på PHI2 ska blinka 1 Hz
 ```

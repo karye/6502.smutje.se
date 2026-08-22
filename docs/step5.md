@@ -37,7 +37,7 @@ Schemat visar LCD-displayen ansluten i 4-bitarsläge: `RS` till `D5`, E till `D6
 ## LCD 16×2 — pinout
 
 16-pin SIL (single in-line). Pin 1 är närmast kanten på de flesta moduler. Justera kontrasten med potentiometern på `VO` (pin 3).
-> [!NOTE] 🧩 LCD 16×2 · se step5.html
+![LCD 16×2 pinout](pinouts/lcd16x2.svg)
 
 ■ Kontroll ■ Data ■ Ström ■ Kontrast. I 4-bitarsläge används endast `DB4–DB7` (pin 11–14).
 
@@ -99,29 +99,56 @@ Den stora kodändringen sitter i `pulse()`. Efter varje klockcykel uppdateras LC
 
 I koden: `#include <LiquidCrystal.h>`, LCD-objektet, och `lcd.print()`-anropen i `pulse()`. Det är allt — resten är samma beprövade minnesemulator som tidigare.
 
-> [!NOTE] 📦 Arduino-kod — step5.inc · 120 rader · se step5.html
+???+ note "📦 Arduino-kod"
+    ```cpp
+    --8<-- "Mega_2560_6502/src/step1.inc"
+    ```
 
 ## Exempel på körning
 
 Direkt efter uppladdning visar både seriemonitor och LCD-displayen att allt är redo:
 
-Seriemonitor
-```
+<div class="monlcd">
+<div>
+<p class="xlabel"><strong>Seriemonitor</strong></p>
+
+```text
 Steg 5 — LCD-display
 ```
+
+</div>
+<div>
+<p class="xlabel"><strong>LCD-displayen — direkt efter uppladdning</strong></p>
+
+<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>W65C02S Steg 5</div><div> </div></div></div>
+
+</div>
+</div>
 
 LCD-displayen
 
 När jag trycker på Knapp 1 (klocksteg) uppdateras båda vyerna samtidigt. Seriemonitor loggar varje minnesaccess, LCD:n visar adress och data i realtid:
 
-Seriemonitor — efter 4 tryck på Knapp 1
-```
+<div class="monlcd">
+<div>
+<p class="xlabel"><strong>Seriemonitor — efter 4 tryck på Knapp 1</strong></p>
+
+```text
 Steg 5 — LCD-display
 R $FFFC
 R $FFFD
 R $8000
 R $8001
 ```
+
+</div>
+<div>
+<p class="xlabel"><strong>LCD-displayen — efter 4 tryck</strong></p>
+
+<div class="lcd"><div class="lcd-badge">LCD 16×2</div><div class="lcd-screen"><div>A:$8001</div><div>D:$EA</div></div></div>
+
+</div>
+</div>
 
 LCD-displayen — efter 4 tryck
 

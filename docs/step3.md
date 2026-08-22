@@ -74,14 +74,16 @@ Tre stora nyheter:
 - `R/W`-signalen kopplas in på `D3`, databussen på `D22–D29` via 100Ω, och minnesarrayerna `ram[]` och `vectors[]` gör att Arduino kan svara med olika data på olika adresser. 
 - `pulse()` är nu en fullständig buss-emulator — det är den här funktionen som kommer att följa med oss genom resten av projektet.
 
-> [!NOTE] 📦 Arduino-kod — step3.inc · 114 rader · se step3.html
+???+ note "📦 Arduino-kod"
+    ```cpp
+    --8<-- "Mega_2560_6502/src/step1.inc"
+    ```
 
 ## Exempel på körning
 
 När jag öppnar seriemonitor (115200 baud) ser jag CPU:n läsa reset-vektorn och sedan loopa på `NOP`:
 
-Seriemonitor (115200 baud)
-```
+``` title="Seriemonitor (115200 baud)"
 Steg 3 — databuss och minnesemulering
 R $FFFC
 R $FFFD

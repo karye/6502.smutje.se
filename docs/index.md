@@ -14,7 +14,7 @@
 ## Hur det hänger ihop
 
 Så här pratar de olika kretsarna med varandra. CPU:n i mitten, adressbussen åt ena hållet och databussen åt det andra. Arduino är startmotorn — streckad, eftersom den fasas ut steg för steg.
-> [!NOTE] 🧩 Översikt över 6502-datorn: Arduino, CPU, VIA med LCD, SRAM och EEPROM i en rad, med adress- och databuss ovanför och nedanför · se index.html
+![Översikt över 6502-datorn](pinouts/oversikt.svg)
 
 ■ Adressbuss ■ Databuss ■ Kontroll ■ Ström/pinnar
 
@@ -59,7 +59,7 @@ Den andra uppsättningen är databussen — 8 ledningar. Här kommer svaret till
 | 11 · Adressrymd | Chip select, spegling, minimal avkodning | Hög |
 | 12 · Fristående klocka | Oscillator, frekvensdelning, tidshantering (delay-loopar) | Medel |
 
-Fastnade du på ett ord? Se [Begrepp och förkortningar](begrepp.html).
+Fastnade du på ett ord? Se [Begrepp och förkortningar](begrepp.md).
 
 ## Verktyg och programvara
 | Verktyg | Används till | Från steg |
