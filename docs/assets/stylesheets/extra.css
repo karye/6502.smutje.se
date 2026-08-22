@@ -51,6 +51,41 @@
   padding: .5rem;
 }
 
+/* Seriemonitor-rutor i "Exempel på körning": mörk terminal-stil */
+.monlcd .highlight {
+  background-color: #111827;
+  border-radius: .5rem;
+}
+.monlcd .highlight .filename {
+  display: none; /* xlabel ovanför visar redan "Seriemonitor" */
+}
+.monlcd .highlighttable {
+  width: 100%;
+}
+.monlcd .highlight .linenos {
+  background-color: #111827;
+}
+.monlcd .highlight .linenos pre {
+  color: #4b5563;
+  background-color: #111827;
+}
+.monlcd .highlight .code,
+.monlcd .highlight .code pre {
+  background-color: #111827;
+  color: #4ade80;
+}
+.monlcd .highlight .code a,
+.monlcd .highlight .code a:visited {
+  color: inherit;
+}
+.monlcd .highlight .copy {
+  color: #6b7280;
+  opacity: 1;
+}
+.monlcd .highlight .copy:hover {
+  color: #9ca3af;
+}
+
 /* Minnestarta — staplade regioner */
 .memmap {
   border: 1px solid #e5e7eb;
