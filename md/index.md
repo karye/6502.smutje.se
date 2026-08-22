@@ -1,10 +1,11 @@
+<!-- Handredigerad: jag-röst. Kör ej html2md på denna fil. -->
 # W65C02 8-bitarsdator
 
 ## En hembyggd dator från grunden
 
  Ända sedan jag först läste om hur enkla 8-bitarsprocessorer fungerar har jag drömt om att bygga en egen dator. Inte en snabb, inte en modern — utan en dator där *varje komponent går att förstå*. En dator där jag kan följa varje etta och nolla från processorns instruktionsregister hela vägen ut till en lysdiod eller en LCD-display. 
 
- Eftersom W65C02S är en statisk CMOS-krets kan klockan stoppas helt utan att processorn glömmer sitt tillstånd. Två fysiska knappar låter dig stega igenom programmet — en klockcykel eller en hel instruktion i taget. Du ser allt som händer, i din egen takt. 
+ Eftersom W65C02S är en statisk CMOS-krets kan klockan stoppas helt utan att processorn glömmer sitt tillstånd. Två fysiska knappar låter mig stega igenom programmet — en klockcykel eller en hel instruktion i taget. Jag ser allt som händer, i min egen takt. 
 
 ## En Arduino som startmotor
 
@@ -12,7 +13,7 @@
 
  Steg för steg ersätter jag Arduinons uppgifter med riktiga kretsar. SRAM-chippet tar över minnet, EEPROM:et tar över programkoden, VIA-kretsen tar över I/O till LCD-displayen. Till slut är Arduino reducerad till klocka och seriell diagnostik — och datorn fungerar helt på egen hand. 
 
- Det här är inte en emulator i mjukvara — processorn kör på riktigt, med riktiga elektriska signaler. Allt du lär dig om 6502:ans instruktionsuppsättning, timing och bussprotokoll gäller på riktigt. 
+ Det här är inte en emulator i mjukvara — processorn kör på riktigt, med riktiga elektriska signaler. Allt jag lär mig om 6502:ans instruktionsuppsättning, timing och bussprotokoll gäller på riktigt. 
 
 ## Hur det hänger ihop
 
@@ -40,19 +41,19 @@ Varje gång processorn startar en ny instruktion tänder den SYNC-pinnen. Det ä
 
 ### Arduino emulerar ram och rom
 
- En 6502-dator från 1970-talet hade ROM och RAM som fysiska chips. Varje gång man vill testa ett nytt program får man bränna ett nytt EPROM under UV-ljus — en process som tar 20 minuter per försök. Arduino vänder på det här: man laddar upp ett nytt program på två sekunder över USB. Arduino läser av processorns adressbuss, slår upp rätt byte i sin interna array, och lägger ut den på databussen — allt inom samma klockcykel. 
+ En 6502-dator från 1970-talet hade ROM och RAM som fysiska chips. Varje gång man vill testa ett nytt program får man bränna ett nytt EPROM under UV-ljus — en process som tar 20 minuter per försök. Arduino vänder på det här: jag laddar upp ett nytt program på två sekunder över USB. Arduino läser av processorns adressbuss, slår upp rätt byte i sin interna array, och lägger ut den på databussen — allt inom samma klockcykel. 
 
- Detta är inte en emulator i mjukvara — processorn kör på riktigt, med riktiga elektriska signaler. Arduinon är bara minnet. Det betyder att allt man lär sig om 6502:ans instruktionsuppsättning, timing och bussprotokoll gäller på riktigt. Man kan ta bort Arduino och ersätta den med ett EEPROM och ett SRAM-chip — och datorn fungerar precis likadant. 
+ Detta är inte en emulator i mjukvara — processorn kör på riktigt, med riktiga elektriska signaler. Arduinon är bara minnet. Det betyder att allt jag lär mig om 6502:ans instruktionsuppsättning, timing och bussprotokoll gäller på riktigt. Jag kan ta bort Arduino och ersätta den med ett EEPROM och ett SRAM-chip — och datorn fungerar precis likadant. 
 
 ### Arduino läser adressbussen
 
- Arduino Mega har 54 digitala I/O-pinnar — nästan tillräckligt för att täcka 16 adresslinjer + 8 datalinjer + kontrollsignaler. Men den har också något bättre: portregister. Istället för att läsa en pinne i taget med `digitalRead()` (långsamt!) läser vi hela 8-bitarsportar på en gång: 
+ Arduino Mega har 54 digitala I/O-pinnar — nästan tillräckligt för att täcka 16 adresslinjer + 8 datalinjer + kontrollsignaler. Men den har också något bättre: portregister. Istället för att läsa en pinne i taget med `digitalRead()` (långsamt!) läser jag hela 8-bitarsportar på en gång: 
 
 - PORTF — 8 bitar, läser CPU:ns A0–A7 i en enda maskininstruktion
 - PORTK — 8 bitar, läser CPU:ns A8–A15
 - PORTA — 8 bitar, driver databussen D0–D7 (eller går tri-state)
 
- Tre registerläsningar, en villkorssats, och vi vet exakt vad processorn vill göra — redo att svara inom samma klockcykel. 
+ Tre registerläsningar, en villkorssats, och jag vet exakt vad processorn vill göra — redo att svara inom samma klockcykel. 
 
 ## Vad du lär dig per steg
 | Steg | Du lär dig | Svårighet |
@@ -70,7 +71,7 @@ Varje gång processorn startar en ny instruktion tänder den SYNC-pinnen. Det ä
 | 11 · Adressrymd | Chip select, spegling, minimal avkodning | Hög |
 | 12 · Fristående klocka | Oscillator, frekvensdelning, tidshantering (delay-loopar) | Medel |
 
-Fastnar du på ett ord? Se [Begrepp och förkortningar](begrepp.html).
+Fastnade jag på ett ord? Se [Begrepp och förkortningar](begrepp.html).
 
 ## Verktyg och programvara
 | Verktyg | Används till | Från steg |
