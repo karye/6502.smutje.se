@@ -95,8 +95,6 @@ Tre stora nyheter:
 
 När jag öppnar seriemonitor (115200 baud) ser jag CPU:n läsa reset-vektorn och sedan loopa på `NOP`:
 
-<div class="xmon-wrap">
-
 ```text title="Seriemonitor (115200 baud)"
 Steg 3 — databuss och minnesemulering
 R $FFFC
@@ -108,8 +106,6 @@ R $8003
 R $8004
 ...
 ```
-
-</div>
 
 Alla rader börjar med `R` — CPU:n gör inget annat än att läsa, eftersom `NOP` varken skriver till minnet eller ändrar några register. Adresserna räknas uppåt: `$8000`, `$8001`, `$8002`… och eftersom minnet returnerar `$EA` (`NOP`) på alla adresser utanför programmet, kommer CPU:n att vandra genom hela adressrymden — upp till `$FFFF`, sedan börja om från `$0000` — i en oändlig loop.
 

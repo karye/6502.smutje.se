@@ -62,71 +62,57 @@
 }
 
 /* Seriemonitor-rutor i "Exempel på körning": mörk terminal-stil */
-.monlcd .highlight,
-.xmon-wrap .highlight {
+.monlcd .highlight {
   background-color: #111827;
   border-radius: .5rem;
 }
 
-.monlcd .highlight .filename,
-.xmon-wrap .highlight .filename {
+.monlcd .highlight .filename .filename {
   display: block;
   background-color: #1f2937;
   color: #9ca3af;
   border-bottom: 1px solid #374151;
 }
 
-.monlcd .highlighttable,
-.xmon-wrap .highlighttable {
+.monlcd .highlighttabletable {
   width: 100%;
 }
 
-.monlcd .highlight .linenos,
-.xmon-wrap .highlight .linenos {
+.monlcd .highlight .linenos .linenos {
   background-color: #111827;
 }
 
-.monlcd .highlight .linenos pre,
-.xmon-wrap .highlight .linenos pre {
+.monlcd .highlight .linenos pre .linenos pre {
   color: #4b5563;
   background-color: #111827;
 }
 
 .monlcd .highlight .code,
 .monlcd .highlight .code pre,
-.monlcd .highlight .code pre code,
-.xmon-wrap .highlight .code,
-.xmon-wrap .highlight .code pre,
-.xmon-wrap .highlight .code pre code {
+.monlcd .highlight .code pre code .code .code pre .code pre code {
   background-color: #111827;
   color: #4ade80;
 }
 
-.monlcd .highlight .md-code__nav,
-.xmon-wrap .highlight .md-code__nav {
+.monlcd .highlight .md-code__nav .md-code__nav {
   background-color: #1f2937;
 }
 
-.monlcd .highlight .md-code__button,
-.xmon-wrap .highlight .md-code__button {
+.monlcd .highlight .md-code__button .md-code__button {
   color: #9ca3af;
 }
 
-.monlcd .highlight .code a,
-.xmon-wrap .highlight .code a,
-.monlcd .highlight .code a:visited,
-.xmon-wrap .highlight .code a:visited {
+.monlcd .highlight .code a .code a,
+.monlcd .highlight .code a:visited .code a:visited {
   color: inherit;
 }
 
-.monlcd .highlight .copy,
-.xmon-wrap .highlight .copy {
+.monlcd .highlight .copy .copy {
   color: #6b7280;
   opacity: 1;
 }
 
-.monlcd .highlight .copy:hover,
-.xmon-wrap .highlight .copy:hover {
+.monlcd .highlight .copy:hover .copy:hover {
   color: #9ca3af;
 }
 

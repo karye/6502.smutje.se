@@ -95,14 +95,10 @@ När jag laddat upp koden och öppnar seriemonitor ser jag texten "Steg 1 — Kl
 
 När jag öppnar seriemonitor i **VS Code** eller **PlatformIO** ser jag:
 
-<div class="xmon-wrap">
-
 ```text title="Seriemonitor"
 Steg 1 — Klocka och ström
 Lysdioden på PHI2 ska blinka 1 Hz
 ```
-
-</div>
 
 Jag provar att ändra `CLOCK_HZ` från `1` till `10` och laddar upp igen. Dioden blinkar nu tio gånger per sekund — för snabbt för att urskilja enskilda pulser, men jag ser att den lyser svagare eftersom den är släckt halva tiden. Det här är samma princip som senare steg använder när klockan körs i 500 Hz — då syns inte blinkandet alls, men processorn jobbar för fullt.
 

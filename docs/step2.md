@@ -85,8 +85,6 @@ Klockan har höjts från 1 Hz till 500 Hz — för snabbt för att se med ögat,
 
 När jag öppnar seriemonitor efter uppladdning ser jag ungefär detta:
 
-<div class="xmon-wrap">
-
 ```text title="Seriemonitor"
 Steg 2 — adressbuss och reset
 R $FFFC
@@ -101,8 +99,6 @@ R $8005
 R $8006
 ...
 ```
-
-</div>
 
 Varje rad börjar med `R` (Read — CPU:n läser) följt av `$` och en hexadecimal adress. De två första raderna är alltid `$FFFC` och `$FFFD` — reset-vektorn. Processorn frågar "var ska jag börja?" och svaret (som just nu är skräp eftersom databussen inte är inkopplad) leder den till någon adress — ofta `$8000` eller `$0000` beroende på vad som ligger på de flytande datalinjerna.
 
