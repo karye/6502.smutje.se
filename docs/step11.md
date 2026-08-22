@@ -32,7 +32,7 @@ Schema kommer snart — se avkodningstabellerna nedan så länge.
 
 Allt handlar om vilken enhet som får prata på bussen. Tre enheter, tre chip select-signaler — och en enda NAND-grind räcker.
 
-??? Gamla kartan (steg 10) — problemen
+??? note "Gamla kartan (steg 10) — problemen"
 
     ✗ SRAM bara 16 KB: 62256 är ett 32 KB-chip, men `A14` var inte ansluten. Den övre halvan låg död.
 
@@ -40,7 +40,7 @@ Allt handlar om vilken enhet som får prata på bussen. Tre enheter, tre chip se
 
     ✗ EEPROM-avkodning enkel: bara NOT `A15` — fungerade, men kunde inte samexistera med VIA på samma sida.
 
-??? Nya kartan (steg 11)
+???+ note "Nya kartan (steg 11)"
 
     ✓ SRAM 32 KB (`$0000`–`$7FFF`): `A14` ansluts, `/CE` = `A15` direkt (aktivt låg) — hela chippet aktivt när `A15`=0.
 
