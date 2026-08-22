@@ -45,28 +45,48 @@ Den andra uppsättningen är databussen — 8 ledningar. Här kommer svaret till
 ## Byggstegen
 
 | Steg | Du lär dig | Svårighet |
+
 |---|---|---|
+
 | 1 · Ström och klocka | 5V, GND, klocka, lysdiod | Lätt |
+
 | 2 · Adressbuss | Hex, reset-vektorn, portregister | Lätt |
+
 | 3 · Databuss | R/W, tri-state, minnesemulering | Medel |
+
 | 4 · Knappar | SYNC, enstegning, debounce | Lätt |
+
 | 5 · LCD | Parallell kommunikation, kontrast | Lätt |
+
 | 6 · Eget program | Maskinkod, opcode/operand, little-endian | Medel |
+
 | 7 · VIA + LCD | I/O-krets, minnesmappad I/O, adressavkodning | Hög — seriens största kliv |
+
 | 8 · Assembler | ca65/ld65, labels, subrutiner | Hög |
+
 | 9 · SRAM | Riktigt minne, chip enable, zero page, carry-aritmetik | Medel |
+
 | 10 · EEPROM | ROM, programmering, bränning | Medel |
+
 | 11 · Adressrymd | Chip select, spegling, minimal avkodning | Hög |
+
 | 12 · Fristående klocka | Oscillator, frekvensdelning, tidshantering (delay-loopar) | Medel |
 
 Fastnade du på ett ord? Se [Begrepp och förkortningar](begrepp.md).
 
 ## Verktyg och programvara
 | Verktyg | Används till | Från steg |
+
 |---|---|---|
+
 | Multimeter | Mäta spänningar och kontrollera signaler — felsökningens viktigaste verktyg | 1 |
+
 | Kopplingsdäck + trådar | Bygga kretsen utan lödning | 1 |
+
 | PlatformIO + VS Code | Bygga och ladda upp Arduino-koden | 1 |
+
 | ca65 + ld65 | Assemblera 6502-program till binärer | 8 |
+
 | Python + pyserial | Skicka .bin-filer till EEPROM-programmeraren | 10 |
+
 | Arduino IDE | Ladda upp EEPROM-programmeraren (andra Arduinon) | 10 |

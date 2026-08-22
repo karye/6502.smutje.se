@@ -15,10 +15,15 @@ Samma väg som *Steve Wozniak* använde i Apple II och som *Ben Eater* visade i 
 Inga nya kretsar! Det här steget handlar om att *omkoppla det jag redan har*. Jag behöver bara en enda NAND-grind (¼ av en 74HC00) för hela den nya adressavkodningen. Dessutom en extra kopplingstråd för SRAM:ns `A14` och en för EEPROM:ets `A14`.
 
 | Antal | Komponent | Används till |
+
 |---|---|---|
+
 | 1 | 74HC00 (en grind, ¼ av chippet) | EEPROM /CE = NAND(A15, A14) |
+
 | 1 | Kopplingstråd | SRAM A14 (pin 1) → CPU A14 — öppnar den andra halvan av 62256 |
+
 | — | Kopplingstrådar (omkoppling) | Flytta VIA:ns /CS2 och EEPROM:ets /CE till nya avkodningssignaler |
+
 ## Kopplingsschema
 
 Schemat visar den städade bussen: SRAM tar nedre halvan, VIA mitten och EEPROM toppen — varje enhet på sin egen tydliga region.
@@ -48,39 +53,63 @@ Allt handlar om vilken enhet som får prata på bussen. Tre enheter, tre chip se
 Varje enhet har en egen region — inga fönster, inga speglingar mellan enheter. Adressavkodningen är bara fyra kablar och en NAND-grind.
 
 | Adressintervall | A15 | A14 | SRAM /CE | VIA CS1·/CS2 | EEPROM /CE | Vem svarar |
+
 |---|---|---|---|---|---|---|
+
 | $0000–$7FFF | 0 | – | LÅG ✓ | – | HÖG | SRAM |
+
 | $8000–$BFFF | 1 | 0 | HÖG | AKTIV ✓ | HÖG | VIA |
+
 | $C000–$FFFF | 1 | 1 | HÖG | – | LÅG ✓ | EEPROM |
+
 | VIA: CS1 = A15 (aktivt hög) och /CS2 = A14 (aktivt låg) — aktiveras när A15=1 och A14=0. A0–A3 går till RS0–RS3 och väljer register; de speglas var 16:e byte i fönstret. EEPROM: A14 kopplas också till chippets A14 så det läser övre halvan. |  |  |  |  |  |  |
+
 ## Kopplingar
 
 Här är vad som ändras jämfört med steg 10. Allt annat — ström, klocka, reset, adress-/databuss till SRAM och EEPROM — är oförändrat.
 ### SRAM — nu med `A14`
 | Pin | Signal | Kopplas till | Varför |
+
 |---|---|---|---|
+
 | 1 | `A14` | CPU A14 (NY!) | Öppnar den andra halvan av 62256 — SRAM blir 32 KB |
+
 | 20 | `/CE` | CPU `A15` direkt (aktivt låg) | LÅG när A15=0 — hela nedre halvan, ingen grind behövs |
+
 ### VIA — flyttad till `$8000`
 | Pin | Signal | Kopplas till | Varför |
+
 |---|---|---|---|
+
 | 23 | `/CS2` | CPU `A14` direkt (aktivt låg) | LÅG när A14=0 → VIA vid $8000–$BFFF |
+
 | 24 | `CS1` | CPU `A15` direkt (aktivt hög) | HÖG när A15=1 → övre halvan |
+
 | 38–35 | `RS0–RS3` | CPU A0–A3 (oförändrad) | Väljer register — de speglas var 16:e byte i fönstret |
+
 ### EEPROM — övre halvan (`$C000`–`$FFFF`)
 | Pin | Signal | Kopplas till | Varför |
+
 |---|---|---|---|
+
 | 20 | `/CE` | NAND-grindens utgång (74HC00 pin 3) | LÅG när A15=1 och A14=1 → $C000–$FFFF |
+
 | 1 | `A14` | CPU `A14` | EEPROM läser sin övre halva — $C000–$FFFF |
+
 ### Adressavkodning — en enda NAND-grind
 
 Här är tricket: kretsarnas egna chip-select-pinnar gör avkodningen. SRAM:s `/CE` är aktivt låg, och VIA:n har *två* chip-selects med motsatt polaritet — `CS1` (pin 24, aktivt hög) och `/CS2` (pin 23, aktivt låg). Då matchar adressbitarna kretsarna direkt, och bara EEPROM:s `/CE` behöver en NAND-grind. Aktiveringslogiken finns i sanningstabellen i Adressavkodning-sektionen ovan, och de fyra direktanslutningarna — SRAM `/CE`, VIA `CS1`/`/CS2` och EEPROM `A14` — står i kretstabellerna ovan. Här visas bara NAND-grinden. 
 
 | Pin | Signal | Kopplas till | Varför |
+
 |---|---|---|---|
+
 | 74HC00 — endast en NAND-grind |  |  |  |
+
 | 1, 2 | `A15`, `A14` (in) | CPU `A15`, CPU `A14` | NAND(`A15`, `A14`) — HÖG när någon är 0 |
+
 | 3 | EEPROM `/CE` (ut) | AT28C256 pin 20 | LÅG när A15=1 och A14=1 → $C000–$FFFF |
+
 | 14, 7 | VCC, GND | +5V, GND | Strömmatning |
 
 ## Minnestarta
@@ -119,7 +148,9 @@ Nu används hela 64 KB, varje enhet på sin egen tydliga region: **SRAM** nedtil
 ## Arduino-kod
 
 Ändringarna i Arduinon är minimala — bara tre konstanter och en villkorsändring i `is_eeprom()`. Koden vet nu att SRAM täcker `$0000`–`$7FFF`, VIA bor på `$8000` och EEPROM på `$C000`. Allt annat är tri-state för fysiska kretsar.
+
 ???+ note "📦 Arduino-kod"
+
     ```cpp
     --8<-- "Mega_2560_6502/src/step1.inc"
     ```
@@ -134,7 +165,9 @@ I steg 8 skapade jag `program.cfg` — länkaren ld65:s karta över minnet. Den 
 1. Jag ersätter innehållet med koden nedan och sparar.
 1. Jag bygger projektet — `build_asm.py` skickar filen till ld65 automatiskt (`-C program.cfg`). Inget att köra manuellt.
 1. Assembler-filen behöver inga ändringar — segmenten nedan matchar den.
+
 ???+ note "📦 Länkskript"
+
     ```cfg
     --8<-- "Mega_2560_6502/asm/program.cfg"
     ```

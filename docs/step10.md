@@ -13,12 +13,19 @@ Arduinon på kopplingsdäcket finns kvar som klocka och diagnostikverktyg.
 En **AT28C256** EEPROM på 32 KB blir datorns ROM, en extra Arduino Mega agerar programmerare som bränner programmet, en extra 74HC00 avkodar `$8000`–`$FFFF` för EEPROM:et, och en kondensator avkopplar strömmen.
 
 | Antal | Komponent | Används till |
+
 |---|---|---|
+
 | 1 | AT28C256 (32KB EEPROM, DIP-28) | Programminne — ersätter Arduino för $8000–$FFFF |
+
 | 1 | Arduino Mega 2560 (extra) | EEPROM-programmerare — används endast vid bränning |
+
 | 1 | 74HC00 (extra) | Adressavkodning för EEPROM — /CE vid $8000–$FFFF |
+
 | 1 | 100 nF keramisk kondensator | Avkoppling vid EEPROM:ets VCC/GND |
+
 | — | Kopplingstråd | Adress, data, kontroll |
+
 ## AT28C256 — pinout
 
 DIP-28-kapsel. 15 adresslinjer, 8 datalinjer, 3 kontrollsignaler. Nästan identisk med 62256 SRAM men med `/WE` som styr bränning och RDY/BUSY som signalerar när bränningen är klar (jag använder en enkel timeout istället).
@@ -43,23 +50,40 @@ EEPROM:et sitter nu på datorns adress- och databuss tillsammans med SRAM, VIA o
 Först programmeraren — en enkel 1:1-koppling. Sedan datorn — fyra enheter på samma buss.
 ### Programmeraren — Arduino till AT28C256
 | Signal       | Arduino         | AT28C256               | Varför                                         |
+
 | ------------ | --------------- | ---------------------- | ---------------------------------------------- |
+
 | `VDD`, `VSS` | 5V, GND         | `VDD` (28), `VSS` (14) | Strömmatning — glöm inte 100nF avkoppling      |
+
 | `A0–A7`      | A0–A7 (PORTF)   | `A0–A7`                | Låga adressbyte — vilken byte som ska brännas  |
+
 | `A8–A14`     | A8–A14 (PORTK)  | `A8–A14`               | Höga adressbyte — 15 bitar = 32 768 adresser   |
+
 | `D0–D7`      | D22–D29 (PORTA) | `D0–D7` via 100Ω       | Data — samma portregister som alltid           |
+
 | `/WE`        | D2              | `/WE` (27)             | Write Enable — pulsas LÅG för att bränna       |
+
 | `/OE`        | D3              | `/OE` (22)             | Output Enable — LÅG vid läsning/verifiering    |
+
 | `/CE`        | GND             | `/CE` (20)             | Chip Enable — alltid aktiv under programmering |
+
 ### Datorn — EEPROM på bussen
 | Pin | Signal | Ansluts till | Varför |
+
 |---|---|---|---|
+
 | 28, 14 | `VDD`, `VSS` | +5V, GND | Strömmatning |
+
 | 1–10, 21–26 | `A0–A14` | CPU `A0–A14` | Delad adressbuss med SRAM, VIA, Arduino |
+
 | 11–13, 15–19 | `D0–D7` | CPU `D0–D7` via 100Ω | Delad databuss |
+
 | 20 | `/CE` | 74HC00-utgång | Aktiveras vid $8000–$FFFF (A15=1) |
+
 | 22 | `/OE` | GND | Alltid läs ut — EEPROM är read-only i datorn |
+
 | 27 | `/WE` | +5V | Aldrig skriva — ROM-läge |
+
 ### 74HC00 — EEPROM-avkodning (ny grind)
 
 En extra 74HC00 vid sidan av den från steg 7/9. En enda grind används som inverterare för `A15`.
@@ -67,10 +91,15 @@ En extra 74HC00 vid sidan av den från steg 7/9. En enda grind används som inve
 `A15` NAND `A15` = NOT `A15`. EEPROM:ets `/CE` är aktiv LÅG. När `A15`=1 (adress `$8000` eller högre) blir grindens utgång LÅG → EEPROM aktiverat. När `A15`=0 (under `$8000`) är utgången HÖG → EEPROM är bortkopplat, SRAM eller VIA tar över.
 
 | Pin | Signal | Kopplas till | Varför |
+
 |---|---|---|---|
+
 | 1, 2 | `A15` (in) | CPU `A15` | Båda ingångarna till A15 → NAND = NOT A15 |
+
 | 3 | NOT `A15` (ut) | EEPROM `/CE` (pin 20) | LÅG när A15=1 → EEPROM aktivt vid $8000–$FFFF |
+
 | 14 | `VCC` | +5V | Strömmatning |
+
 | 7 | `GND` | GND | Systemjord |
 
 ## Minnestarta
@@ -119,7 +148,9 @@ Det här programmet laddas upp på den andra Arduino Mega — den som tillfälli
 **AT28C256** har inbyggd själv-timing. För att bränna en byte sätter jag adress och data, drar `/WE` låg, väntar minst 10 millisekunder (jag använder 10 för marginal), och drar `/WE` hög igen. Kretsen sköter resten internt. För att läsa tillbaka drar jag `/OE` låg och läser `PINA` — precis som med SRAM.
 
 Verifieringen läser tillbaka varje byte och jämför med originaldatan. Om något inte stämmer rapporteras adressen och de två värdena. Annars: "OK — 32768 bytes verifierade".
+
 ???+ note "📦 EEPROM-programmeraren"
+
     ```cpp
     --8<-- "Mega_2560_6502/EEPROM_programmer/EEPROM_programmer.ino"
     ```
@@ -127,9 +158,11 @@ Verifieringen läser tillbaka varje byte och jämför med originaldatan. Om någ
 ## Python-skript — skicka .bin-fil till programmeraren
 
 Ett enkelt Python 3-skript som läser `program.bin` och skickar det sida för sida över serieporten. Kräver `pyserial` (`pip install pyserial`).
+
 ???+ note "📦 Python-skript"
+
     ```python
-    --8<-- "scripts/upload_eeprom.py"
+    --8<-- "Mega_2560_6502/scripts/upload_eeprom.py"
     ```
 
 ## Arduino-kod — datorn
@@ -139,6 +172,7 @@ Koden på datorns Arduino förenklas dramatiskt. `program[2048]` och de hundrata
 Arduinon är nu reducerad till *klockgenerator, reset-kontroll och seriell diagnostik*. Alla minnesarrayer utom `vectors[6]` är borta. Vektorn på `$FFFA–$FFFF` ligger sist i EEPROM-bilden — `.segment "VECTORS"` i assembler-koden placerar dem där.
 
 Koden nedan är baserad på steg 9 men med `is_eeprom()` istället för `program[]`. `read_mem()` returnerar 0 för EEPROM-adresser — Arduino rör dem inte.
+
 > [!NOTE] 📦 Datorns Arduino — step10.inc · 124 rader · se step10.html
 
 ## Exempel på körning
@@ -146,6 +180,7 @@ Koden nedan är baserad på steg 9 men med `is_eeprom()` istället för `program
 ### Fas 1 — bränna EEPROM
 
 Bygga programmet med **ca65** som vanligt, köra Python-skriptet för att bränna:
+
 ```
 $ pio run -e step10 -t upload    # Ladda upp dator-Arduinon
 $ python3 scripts/upload_eeprom.py asm/program_hello.bin /dev/ttyACM1

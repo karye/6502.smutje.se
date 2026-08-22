@@ -13,8 +13,11 @@ Jag kopplar också in `/RESET` (pin 40) till Arduino `D4`. När jag håller `RES
 Det här steget kräver inga nya elektroniska komponenter — bara kopplingstrådar. Sexton för adresslinjerna `A0–A15` och en extra för reset-signalen, eftersom jag nu tar kontroll över CPU:ns uppstart via `/RESET`.
 
 | Antal | Komponent |
+
 |---|---|
+
 | 17 | Kopplingstrådar (16 adress + 1 RESB) |
+
 ## Kopplingsschema
 
 Schemat visar den nya kopplingen: 16 adresslinjer som löper från CPU:ns `A0–A15` till Arduinons analoga portar `A0–A15`, plus reset-signalen från `D4` till `/RESET`. Allt annat är oförändrat från steg 1.
@@ -26,18 +29,31 @@ Schemat visar den nya kopplingen: 16 adresslinjer som löper från CPU:ns `A0–
 Tabellen visar alla kopplingar från steg 1 plus de nya: adressbussens 16 linjer och reset-signalen. 
 
 | Pin | Signal | Kopplas till | Varför |
+
 |---|---|---|---|
+
 | 8 | `VDD` | +5V | Strömmatning — CPU:ns driftspänning |
+
 | 21 | `VSS` | GND | Systemjord — sluten krets |
+
 | 37 | `PHI2` | Arduino D2 | Klockingång — Arduino skickar fyrkantsvåg |
+
 | 2 | `RDY` | +5V via 10kΩ | Ready — HÖG = CPU får köra. Utan denna stannar CPU:n |
+
 | 4 | `/IRQ` | +5V via 10kΩ | Interrupt request — HÖG = inget avbrott |
+
 | 6 | `/NMI` | +5V via 10kΩ | Non-maskable interrupt — måste vara HÖG |
+
 | 36 | `BE` | +5V via 10kΩ | Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad! |
+
 | 38 | `/SO` | +5V via 10kΩ | Set Overflow — avaktiverad |
+
 | 40 | `/RESET` | Arduino D4 | Kontrollerad reset — Arduino håller CPU:n i reset tills jag är redo |
+
 | 9–16 | `A0–A7` | Arduino A0–A7 | Låga adressbyte — läses via PORTF |
+
 | 17–20, 22–25 | `A8–A15` | Arduino A8–A15 | Höga adressbyte — läses via PORTK |
+
 ## Arduino-kod
 
 I steg 1 gav jag processorn liv. Nu ska jag lyssna på vad den säger. Koden i detta steg gör något fundamentalt: den *läser av processorns adressbuss* — 16 ledningar som tillsammans talar om var i minnet CPU:n vill läsa — och skriver ut adressen i seriemonitor. Det är som att koppla in en logikanalysator, fast gratis.
@@ -50,6 +66,7 @@ I steg 1 gav jag processorn liv. Nu ska jag lyssna på vad den säger. Koden i d
 - `PINK` — läser CPU:ns `A8–A15` på samma sätt.
 
 För att få ihop en 16-bitars adress skiftar jag ihop de två byten:
+
 ```
 uint16_t addr = (PINF << 0) | (PINK << 8);
 ```
@@ -67,6 +84,7 @@ Koden gör tre saker i `setup()`:
 Klockan har höjts från 1 Hz till 500 Hz — för snabbt för att se med ögat, men lagom för att läsa adressbussen i seriemonitor. `pulse()` har förenklats (ingen lysdiod denna gång) och `loop()` gör nu det tunga jobbet: läsa portregister, skifta ihop adressen, skriva ut. `setup()` har fått en reset-sekvens — den viktigaste nyheten i detta steg.
 
 ???+ note "📦 Arduino-kod"
+
     ```cpp
     --8<-- "Mega_2560_6502/src/step1.inc"
     ```

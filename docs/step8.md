@@ -19,8 +19,11 @@ Arbetsflödet blir:
 Ingen ny hårdvara — bara mjukvara. Dessa två program installerar jag en gång, sedan bara rullar det på.
 
 | Verktyg | Installation |
+
 |---|---|
+
 | ca65 / ld65 | `sudo apt install cc65` (Linux) eller ladda ner från [cc65.github.io (Windows) |
+
 | Python 3 | Redan installerat med PlatformIO |
 
 ## Byggkedjan
@@ -30,30 +33,37 @@ Så här går min assembler-kod från en textfil till körbar kod i processorn. 
 ## PlatformIO-byggskript
 
 `scripts/build_asm.py` är en *pre-build hook* som PlatformIO kör före C++-kompileringen. Den anropar ca65, ld65 och bin2h.py i sekvens, konfigurerad i `platformio.ini`:
+
 ```
 extra_scripts = pre:scripts/build_asm.py
 ```
+
 ???+ note "📦 Byggskriptet — build_asm.py"
+
     ```python
-    --8<-- "scripts/build_asm.py"
+    --8<-- "Mega_2560_6502/scripts/build_asm.py"
     ```
 
 ### bin2h.py — binär till C-header
 
 Konverterar `program_hello.bin` till `PROGRAM[]` (en `PROGMEM`-array) som `main.cpp` inkluderar.
+
 ???+ note "📦 Byggskriptet — bin2h.py"
+
     ```python
-    --8<-- "scripts/bin2h.py"
+    --8<-- "Mega_2560_6502/scripts/bin2h.py"
     ```
 
 ## Så här använder jag det
 
 1. Redigera assembler-koden:
+
 ```
 nano asm/program_hello.asm
 ```
 
 2. Bygg och ladda upp (Windows-maskinen):
+
 ```
 pio run -e step8 -t upload -t monitor
 ```
@@ -71,7 +81,9 @@ Programmet är uppbyggt i lager. Överst definieras fyra konstanter — `VIA_ORB
 De två subrutinerna är programmets verkliga arbetshästar. `lcd_command` skickar ett kommando till LCD:n: den lägger kommandobyten på PORTB, sätter `RS`=0 och `E`=1, och drar sedan `E` till 0 — den fallande flanken får LCD:n att läsa. `lcd_data` gör exakt samma sak, men med `RS`=1 för att signalera att byten är ett tecken, inte ett kommando. Båda anropas med `JSR` (Jump to Subroutine) och återvänder med `RTS` — 6502:ans motsvarighet till funktionsanrop. Strängarna skrivs ut tecken för tecken i en loop: X-registret räknar genom strängen, `LDA line1,x` hämtar nästa tecken, och när en nolla dyker upp vet programmet att strängen är slut.
 
 Det fina med att ha programmet i en separat `.asm`-fil är att jag kan ändra och experimentera utan att röra Arduino-koden. Jag byter ut texten i `line1` mot mitt eget namn, kör `pio run -e step8 -t upload`, och inom sekunder visar LCD:n min nya text. Assemblerkoden är kommenterad på svenska så att varje instruktion förklarar sig själv — jag läser den som en receptbok, rad för rad, så förstår jag exakt vad processorn gör i varje ögonblick.
+
 ???+ note "📦 6502-programmet — program_hello.asm"
+
     ```asm
     --8<-- "Mega_2560_6502/asm/program_hello.asm"
     ```
@@ -101,7 +113,9 @@ Hela kedjan styrs av `scripts/build_asm.py`, en pre-build hook som PlatformIO an
 ### Vad som är nytt jämfört med steg 7
 
 Ingen ny hårdvara. I koden: `#include "program_hello.h"`, `PROGRAM[]`, `PROGRAM_SIZE`, och `pgm_read_byte()`. I byggkedjan: `ca65`, `ld65`, `bin2h.py`, `build_asm.py`. Det här är samma verktyg som användes för att bygga spel till NES och program till Apple II — professionella verktyg för en hobbyprocessor.
+
 ???+ note "📦 Arduino-kod"
+
     ```cpp
     --8<-- "Mega_2560_6502/src/step1.inc"
     ```
@@ -181,6 +195,7 @@ Ingen ny hårdvara. I koden: `#include "program_hello.h"`, `PROGRAM[]`, `PROGRAM
 ## Exempel på körning
 
 När jag bygger och laddar upp ser jag byggkedjan arbeta i terminalen:
+
 ```
 pio run -e step8 -t upload -t monitor
 ```
@@ -228,9 +243,12 @@ Här är några saker jag kontrollerar:
 ```
 sudo apt install cc65
 ```
+
 - ca65: command not found? Då installerar jag cc65:
+
 ```
 pio run -e step8
 ```
+
 - "No such file: program.h"? Då måste första bygget generera den. Jag kör två gånger om det krävs.
 - Gör CPU:n inget? Då kontrollerar jag att `write_mem()`-loopen faktiskt kopierar `PROGRAM[]` till `program[]`. Jag loggar med `Serial.print()`.
