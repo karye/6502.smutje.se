@@ -120,15 +120,10 @@ Det här steget har ingen Arduino-kod — Arduino finns inte med på kopplingsd�
 
 Slå på strömmen. Inget att ladda upp, inget att ansluta — datorn bara startar. Efter en kort stund (LCD-initieringen) visas:
 
-=== "LCD 16×2"
-
-    ```text
-    6502 FRISTAENDE
-    1 MHz KRISTALL
-    ```
-
-
-
+```text title="LCD 16×2"
+6502 FRISTAENDE
+1 MHz KRISTALL
+```
 
 - Texten skrivs om i en loop: visa en stund, rensa, börja om.
 - Stäng av strömmen och slå på igen — datorn startar direkt ur EEPROM:en.

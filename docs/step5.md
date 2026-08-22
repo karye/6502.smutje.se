@@ -10,7 +10,7 @@ LCD:n kopplas i *4-bitars parallellt läge* till Arduino. Det innebär att jag s
 
 Viktig detalj: datapinnarna är i omvänd ordning. Arduino `D10` går till LCD `DB4`, `D9` till `DB5`, `D8` till `DB6`, `D7` till `DB7`. Koden måste spegla detta:
 
-```
+```text title="Terminal"
 LiquidCrystal lcd(
   5,  // RS
   6,  // E
@@ -129,8 +129,6 @@ Direkt efter uppladdning visar både seriemonitor och LCD-displayen att allt är
     ```
 När jag trycker på Knapp 1 (klocksteg) uppdateras båda vyerna samtidigt. Seriemonitor loggar varje minnesaccess, LCD:n visar adress och data i realtid:
 
-<div class="xmon-wrap">
-<div>
 === "Terminal"
 
     ```text
@@ -147,6 +145,7 @@ När jag trycker på Knapp 1 (klocksteg) uppdateras båda vyerna samtidigt. Seri
     A:$8001
     D:$EA
     ```
+    
 Samma information på båda ställena — adress (`$8001`) och data (`$EA`, `NOP`). Skillnaden är att LCD:n visar *just nu* medan seriemonitor bygger en historik. Med Knapp 2 (instruktionssteg) ser jag flera rader i seriemonitor per tryck medan LCD:n uppdateras för varje klockcykel — ett snabbt flimmer av adresser tills `SYNC` går hög.
 
 Datorn har blivit fristående. Jag kan koppla bort USB-kabeln (om Arduino drivs via DC-adaptern) och fortfarande stega genom programmet och se allt på LCD:n. Seriemonitor är praktisk för att logga och felsöka, men displayen på kopplingsdäcket gör datorn till en egen, komplett enhet. 

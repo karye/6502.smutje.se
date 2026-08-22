@@ -25,14 +25,10 @@ Ett 62256 SRAM-chip på 32 KB — datorns första riktiga arbetsminne — plus e
 DIP-28-kapsel. 15 adresslinjer, 8 datalinjer, 3 kontrollsignaler. Här ser jag exakt hur kretsen ska vändas och vad varje pinne gör.
 ![62256 SRAM pinout](pinouts/62256.svg)
 
-■ Adressbuss ■ Databuss ■ Kontroll ■ Ström. Notch/pin 1-markering: uppåt. `/OE` = `GND` (alltid läs ut). `/CE` = U4D pin 11 (aktiv vid `$0000`–`$3FFF`).
-
 ## 74HC00 — pinout
 
 DIP-14-kapsel. Alla fyra grindar används nu: U4A+U4B för VIA (steg 7), U4C+U4D för SRAM (steg 9).
 ![74HC00 pinout](pinouts/74hc00-sram.svg)
-
-■ U4A (NOT `A15` → SRAM `/CE`) ■ U4B (`A15` NAND `A14` → VIA `/CS2`) ■ U4D (NAND) ■ U4C (NAND).
 
 ## Kopplingsschema
 
@@ -280,6 +276,7 @@ När jag laddat upp koden körs två faser efter varandra. Först VIA/LCD-progra
     === Steg 9 SRAM ===
     Tryck pa knapp...
     ```
+
 Jag trycker på valfri knapp för att gå vidare till Fibonacci:
 
 === "Terminal"
@@ -306,6 +303,7 @@ Jag trycker på valfri knapp för att gå vidare till Fibonacci:
     Fib:
     144
     ```
+    
 `144` är det tolfte Fibonacci-talet. Strax därefter kommer `233` — det sista som ryms i 8 bitar — sedan wrappar det.
 
 Varje nytt Fibonacci-tal dyker upp med en kort paus. När talet når 233 (det sista som ryms i en 8-bitars byte) wrappar det tillbaka till 0 och sekvensen börjar om. Under tiden använder 6502-programmet zero page-adresser (`$00`, `$01`, `$02`) för att lagra F(n-2), F(n-1) och F(n) — adresser som nu ligger i det fysiska SRAM-chippet, inte i Arduinons mjukvaruemulerade RAM. I seriemonitor syns dessa som `R $0000` och `W $0002` med `← SRAM`-markering.

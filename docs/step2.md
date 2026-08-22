@@ -58,7 +58,7 @@ I steg 1 gav jag processorn liv. Nu ska jag lyssna på vad den säger. Koden i d
 
 För att få ihop en 16-bitars adress skiftar jag ihop de två byten:
 
-```
+```asm
 uint16_t addr = (PINF << 0) | (PINK << 8);
 ```
 

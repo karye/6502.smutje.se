@@ -6,18 +6,16 @@
 
 ## En Arduino som startmotor
 
- En 6502-dator från 1970-talet behövde ROM och RAM som fysiska chips — och för att testa ett nytt program fick man bränna ett nytt EPROM under UV-ljus, en process som tog 20 minuter per försök. Här använder jag en **Arduino Mega 2560** som startmotor: den står för klocka, minne och diagnostik i början, så att jag kan fokusera på processorn och se varje signal på kopplingsdäcket. 
+En 6502-dator från 1970-talet behövde ROM och RAM som fysiska chips — och för att testa ett nytt program fick man bränna ett nytt EPROM under UV-ljus, en process som tog 20 minuter per försök. Här använder jag en **Arduino Mega 2560** som startmotor: den står för klocka, minne och diagnostik i början, så att jag kan fokusera på processorn och se varje signal på kopplingsdäcket. 
 
- Steg för steg ersätter jag Arduinons uppgifter med riktiga kretsar. **SRAM**-chippet tar över minnet, **EEPROM**:et tar över programkoden, **VIA**-kretsen tar över I/O till LCD-displayen. 
+Steg för steg ersätter jag Arduinons uppgifter med riktiga kretsar. **SRAM**-chippet tar över minnet, **EEPROM**:et tar över programkoden, **VIA**-kretsen tar över I/O till LCD-displayen. 
 
- Det här är inte en emulator i mjukvara — processorn kör på riktigt, med riktiga elektriska signaler. Allt jag lär mig om 6502:ans instruktionsuppsättning, timing och bussprotokoll gäller på riktigt. 
+Det här är inte en emulator i mjukvara — processorn kör på riktigt, med riktiga elektriska signaler. Allt jag lär mig om 6502:ans instruktionsuppsättning, timing och bussprotokoll gäller på riktigt. 
 
 ## Hur det hänger ihop
 
 Så här pratar de olika kretsarna med varandra. CPU:n i mitten, adressbussen åt ena hållet och databussen åt det andra. Arduino är startmotorn — streckad, eftersom den fasas ut steg för steg.
 ![Översikt över 6502-datorn](pinouts/oversikt.svg)
-
-■ Adressbuss ■ Databuss ■ Kontroll ■ Ström/pinnar
 
 ## Hur fungerar en 6502-processor?
 

@@ -223,6 +223,7 @@ Programmet ligger på `$8000`:
 1. clear display och loopa om och loopa om. För varje byte: lägg data på PORTB, pulsa E (`PA2`) på `PORTA`.
 
 ### VIAns register (adress `$4000`–`$4003`)
+
 | Adress | Register | Funktion |
 |---|---|---|
 | $4000 | ORB (PORTB) | LCD data (DB0–DB7) |
@@ -335,6 +336,7 @@ När jag laddat upp koden och öppnar seriemonitor ser jag programmet genomlöpa
     === 6502 VIA LCD ===
     Hello from W65C02!
     ```
+    
 CPU:n har skrivit två rader text till LCD:n via VIA:ns portar. Varje tecken skickades som en `W $4000` i seriemonitor.
 
 Varje `W $4000` eller `W $4001` är CPU:n som skriver till VIA:ns register — Arduino gör ingenting, den fysiska VIA-kretsen fångar upp skrivningen och styr LCD:n. Texten rullar fram på displayen, tecken för tecken, styrd helt av 6502-processorn.

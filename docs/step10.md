@@ -27,8 +27,6 @@ En **AT28C256** EEPROM på 32 KB blir datorns ROM, en extra Arduino Mega agerar 
 DIP-28-kapsel. 15 adresslinjer, 8 datalinjer, 3 kontrollsignaler. Nästan identisk med 62256 SRAM men med `/WE` som styr bränning och RDY/BUSY som signalerar när bränningen är klar (jag använder en enkel timeout istället).
 ![AT28C256 pinout](pinouts/at28c256.svg)
 
-■ Adressbuss ■ Databuss ■ Kontroll ■ Ström. Notch/pin 1-markering: uppåt.
-
 ## Kopplingsschema — programmeraren
 
 Den andra Arduino Mega kopplas 1:1 till AT28C256. Här finns inga andra kretsar — bara Arduino, EEPROM, och 100Ω skyddsmotstånd på databussen. När bränningen är klar kopplas allt isär.
@@ -188,7 +186,6 @@ KLAR
 Totalt brända bytes: 2054
 ```
 
-
 ### Fas 2 — flytta EEPROM till datorn
 
 Koppla bort programmerings-Arduinon. Flytta **AT28C256**-chippet till datorns kopplingsdäck och anslut enligt kopplingstabellen ovan. Slå på strömmen.
@@ -217,7 +214,7 @@ Koppla bort programmerings-Arduinon. Flytta **AT28C256**-chippet till datorns ko
     ```text
     === 6502 VIA LCD ===
     Hello from W65C02!
-    ``` (16×2)
+    ```
 
 Varje gång jag ser `← EEPROM` i loggen är det AT28C256 som svarar — inte Arduino. Reset-vektorn på `$FFFC`/`$FFFD` ligger i EEPROM:ets sista bytes, inskrivna av assembler-kedjan. CPU:n läser dem, hoppar till `$8000`, och kör programmet direkt från äkta ROM.
 

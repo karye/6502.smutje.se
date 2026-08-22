@@ -188,7 +188,7 @@ När jag laddat upp koden och startat datorn ser jag i seriemonitorn att enheter
     ```text
     === 6502 VIA LCD ===
     Hello from W65C02!
-    ``` (16×2)
+    ```
 
 Samma program som steg 8–10, men VIA:n adresseras nu på `$8000` istället för `$4000`.
 
