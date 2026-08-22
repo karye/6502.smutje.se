@@ -40,7 +40,7 @@ Allt handlar om vilken enhet som får prata på bussen. Tre enheter, tre chip se
 
     ✗ EEPROM-avkodning enkel: bara NOT `A15` — fungerade, men kunde inte samexistera med VIA på samma sida.
 
-???+ note "Nya kartan (steg 11)"
+??? note "Nya kartan (steg 11)"
 
     ✓ SRAM 32 KB (`$0000`–`$7FFF`): `A14` ansluts, `/CE` = `A15` direkt (aktivt låg) — hela chippet aktivt när `A15`=0.
 
@@ -133,7 +133,7 @@ Nu används hela 64 KB, varje enhet på sin egen tydliga region: **SRAM** nedtil
 
 Ändringarna i Arduinon är minimala — bara tre konstanter och en villkorsändring i `is_eeprom()`. Koden vet nu att SRAM täcker `$0000`–`$7FFF`, VIA bor på `$8000` och EEPROM på `$C000`. Allt annat är tri-state för fysiska kretsar.
 
-???+ note "📦 Arduino-kod"
+??? note "📦 Arduino-kod"
 
     ```cpp
     --8<-- "Mega_2560_6502/src/step1.inc"
@@ -150,7 +150,7 @@ I steg 8 skapade jag `program.cfg` — länkaren ld65:s karta över minnet. Den 
 1. Jag bygger projektet — `build_asm.py` skickar filen till ld65 automatiskt (`-C program.cfg`). Inget att köra manuellt.
 1. Assembler-filen behöver inga ändringar — segmenten nedan matchar den.
 
-???+ note "📦 Länkskript"
+??? note "📦 Länkskript"
 
     ```cfg
     --8<-- "Mega_2560_6502/asm/program.cfg"

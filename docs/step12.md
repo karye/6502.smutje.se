@@ -81,7 +81,7 @@ Programmet är samma LCD-hello som tidigare, men med en viktig skillnad: vid 1 M
 
 Lösningen är en `delay_ms`-subrutin med nästlade loopar. Varje varv i den inre loopen tar ~4 cykler ≈ 4 µs; 250 varv ≈ 1 ms. `lcd_cmd` väntar ~2 ms efter varje kommando, `lcd_data` ~1 ms efter varje tecken. Displayen får alltid den paus den behöver.
 
-???+ note "📦 Programmet"
+??? note "📦 Programmet"
 
     ```asm
     --8<-- "Mega_2560_6502/asm/standalone/program_standalone.asm"

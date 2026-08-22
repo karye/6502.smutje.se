@@ -159,7 +159,7 @@ En 6502-instruktion är 1–3 bytes lång. Första byten är alltid *opcode* —
 
 När programmet körs kan jag med Knapp 2 (instruktionssteg) följa programflödet: `$8000` (`LDX`) → `$8002` (`INX`) → `$8003` (`STX`) → `$8006` (`JMP`) → `$8002` (`INX` igen). Varje varv genom loopen ökar värdet på adress `$0200` — och jag kan se det på LCD:ns rad 1 som `D:$01`, `D:$02`, `D:$03`… hela vägen upp till `D:$FF` (255). Sedan wrappar X-registret till 0 och loopen börjar om.
 
-???+ note "📦 Arduino-kod"
+??? note "📦 Arduino-kod"
 
     ```cpp
     --8<-- "Mega_2560_6502/src/step1.inc"

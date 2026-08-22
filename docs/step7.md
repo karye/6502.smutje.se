@@ -280,7 +280,7 @@ Koden innehåller en `phase`-variabel och fasdetektion som känner igen var i pr
 
 Komplett Arduino-kod för steg 7:
 
-???+ note "📦 Arduino-kod"
+??? note "📦 Arduino-kod"
 
     ```cpp
     --8<-- "Mega_2560_6502/src/step1.inc"

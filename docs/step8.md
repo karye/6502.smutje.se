@@ -36,7 +36,7 @@ Så här går min assembler-kod från en textfil till körbar kod i processorn. 
 extra_scripts = pre:scripts/build_asm.py
 ```
 
-???+ note "📦 Byggskriptet — build_asm.py"
+??? note "📦 Byggskriptet — build_asm.py"
 
     ```python
     --8<-- "scripts/build_asm.py"
@@ -46,7 +46,7 @@ extra_scripts = pre:scripts/build_asm.py
 
 Konverterar `program_hello.bin` till `PROGRAM[]` (en `PROGMEM`-array) som `main.cpp` inkluderar.
 
-???+ note "📦 Byggskriptet — bin2h.py"
+??? note "📦 Byggskriptet — bin2h.py"
 
     ```python
     --8<-- "scripts/bin2h.py"
@@ -80,7 +80,7 @@ De två subrutinerna är programmets verkliga arbetshästar. `lcd_command` skick
 
 Det fina med att ha programmet i en separat `.asm`-fil är att jag kan ändra och experimentera utan att röra Arduino-koden. Jag byter ut texten i `line1` mot mitt eget namn, kör `pio run -e step8 -t upload`, och inom sekunder visar LCD:n min nya text. Assemblerkoden är kommenterad på svenska så att varje instruktion förklarar sig själv — jag läser den som en receptbok, rad för rad, så förstår jag exakt vad processorn gör i varje ögonblick.
 
-???+ note "📦 6502-programmet — program_hello.asm"
+??? note "📦 6502-programmet — program_hello.asm"
 
     ```asm
     --8<-- "Mega_2560_6502/asm/program_hello.asm"
@@ -117,7 +117,7 @@ Hela kedjan styrs av `scripts/build_asm.py`, en pre-build hook som PlatformIO an
 
 Ingen ny hårdvara. I koden: `#include "program_hello.h"`, `PROGRAM[]`, `PROGRAM_SIZE`, och `pgm_read_byte()`. I byggkedjan: `ca65`, `ld65`, `bin2h.py`, `build_asm.py`. Det här är samma verktyg som användes för att bygga spel till NES och program till Apple II — professionella verktyg för en hobbyprocessor.
 
-???+ note "📦 Arduino-kod"
+??? note "📦 Arduino-kod"
 
     ```cpp
     --8<-- "Mega_2560_6502/src/step1.inc"

@@ -76,7 +76,7 @@ När jag trycker på en mekanisk knapp studsar metallkontakterna mikroskopiskt �
 
 `SYNC`-pinnen kopplas in på `D13`. `loop()` ändras från en enkel `pulse()`-loop till knappläsning med debounce. Instruktionsstegningen (`do { pulse(); } while (!digitalRead(SYNC))`) är en av de smartaste kodraderna i hela projektet — den låter mig kliva genom mitt program instruktion för instruktion, precis som en debugger, fast i hårdvara.
 
-???+ note "📦 Arduino-kod"
+??? note "📦 Arduino-kod"
 
     ```cpp
     --8<-- "Mega_2560_6502/src/step1.inc"

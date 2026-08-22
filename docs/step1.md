@@ -83,7 +83,7 @@ Koden är uppdelad i tre lager:
 
 När jag laddat upp koden och öppnar seriemonitor ser jag texten "Steg 1 — Klocka och ström". Lysdioden på klocklinjen blinkar en gång per sekund — den är tänd när `PHI2` är hög (CPU:n arbetar) och släckt när `PHI2` är låg. Jag har just gett processorn dess första hjärtslag.
 
-???+ note "📦 Arduino-kod"
+??? note "📦 Arduino-kod"
 
     ```cpp
     --8<-- "Mega_2560_6502/src/step1.inc"

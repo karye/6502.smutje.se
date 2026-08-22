@@ -105,7 +105,7 @@ Den stora kodändringen sitter i `pulse()`. Efter varje klockcykel uppdateras LC
 
 I koden: `#include <LiquidCrystal.h>`, LCD-objektet, och `lcd.print()`-anropen i `pulse()`. Det är allt — resten är samma beprövade minnesemulator som tidigare.
 
-???+ note "📦 Arduino-kod"
+??? note "📦 Arduino-kod"
 
     ```cpp
     --8<-- "Mega_2560_6502/src/step1.inc"

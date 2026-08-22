@@ -196,7 +196,7 @@ Koden är uppdelad i två faser som demonstrerar att SRAM fungerar:
 
 SRAM-chip, utökad med 74HC00-avkodning (U4C+U4D för SRAM). I koden: `is_sram()`, utökade villkor i `pulse()`/`read_mem()`/`write_mem()`, tvåfasigt programflöde i `setup()`, och Fibonacci-programmet byggt med ca65. `ram[1024]` från tidigare steg är borta — den har ersatts av äkta kisel.
 
-???+ note "📦 Arduino-kod"
+??? note "📦 Arduino-kod"
 
     ```cpp
     --8<-- "Mega_2560_6502/src/step1.inc"
@@ -245,7 +245,7 @@ Från steg 8 känner jag redan `LDA`, `STA`, `JSR`, `RTS`, `LDX`, `INX`, `BEQ` o
 | BNE | loopar i show_num | Hoppar om resultatet inte är noll — avslutar räknar-looparna. |
 | LDA $00 / STA $02 | F-variablerna | Zero page-adressering — variabler i $00–$02 nås med bara en byte. |
 
-???+ note "📦 6502-programmet — program_fib.asm"
+??? note "📦 6502-programmet — program_fib.asm"
 
     ```asm
     --8<-- "Mega_2560_6502/asm/program_fib.asm"

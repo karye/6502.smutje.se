@@ -127,7 +127,7 @@ Det här programmet laddas upp på den andra Arduino Mega — den som tillfälli
 
 Verifieringen läser tillbaka varje byte och jämför med originaldatan. Om något inte stämmer rapporteras adressen och de två värdena. Annars: "OK — 32768 bytes verifierade".
 
-???+ note "📦 EEPROM-programmeraren"
+??? note "📦 EEPROM-programmeraren"
 
     ```cpp
     --8<-- "Mega_2560_6502/EEPROM_programmer/EEPROM_programmer.ino"
@@ -137,7 +137,7 @@ Verifieringen läser tillbaka varje byte och jämför med originaldatan. Om någ
 
 Ett enkelt Python 3-skript som läser `program.bin` och skickar det sida för sida över serieporten. Kräver `pyserial` (`pip install pyserial`).
 
-???+ note "📦 Python-skript"
+??? note "📦 Python-skript"
 
     ```python
     --8<-- "scripts/upload_eeprom.py"
@@ -151,7 +151,7 @@ Arduinon är nu reducerad till *klockgenerator, reset-kontroll och seriell diagn
 
 Koden nedan är baserad på steg 9 men med `is_eeprom()` istället för `program[]`. `read_mem()` returnerar 0 för EEPROM-adresser — Arduino rör dem inte.
 
-???+ note "📦 Datorns Arduino — step10.inc · 124 rader"
+??? note "📦 Datorns Arduino — step10.inc · 124 rader"
     ```cpp
     --8<-- "Mega_2560_6502/src/step10.inc"
     ```
