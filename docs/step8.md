@@ -19,11 +19,8 @@ Arbetsflödet blir:
 Ingen ny hårdvara — bara mjukvara. Dessa två program installerar jag en gång, sedan bara rullar det på.
 
 | Verktyg | Installation |
-
 |---|---|
-
 | ca65 / ld65 | `sudo apt install cc65` (Linux) eller ladda ner från [cc65.github.io (Windows) |
-
 | Python 3 | Redan installerat med PlatformIO |
 
 ## Byggkedjan
@@ -41,7 +38,7 @@ extra_scripts = pre:scripts/build_asm.py
 ???+ note "📦 Byggskriptet — build_asm.py"
 
     ```python
-    --8<-- "Mega_2560_6502/scripts/build_asm.py"
+    --8<-- "scripts/build_asm.py"
     ```
 
 ### bin2h.py — binär till C-header
@@ -51,7 +48,7 @@ Konverterar `program_hello.bin` till `PROGRAM[]` (en `PROGMEM`-array) som `main.
 ???+ note "📦 Byggskriptet — bin2h.py"
 
     ```python
-    --8<-- "Mega_2560_6502/scripts/bin2h.py"
+    --8<-- "scripts/bin2h.py"
     ```
 
 ## Så här använder jag det
@@ -120,7 +117,7 @@ Ingen ny hårdvara. I koden: `#include "program_hello.h"`, `PROGRAM[]`, `PROGRAM
     --8<-- "Mega_2560_6502/src/step1.inc"
     ```
 
-## Minnestarta
+## Minneskarta
 
 **6502**-processorn har 16 adresslinjer = 64 KB adressrymd. Arduinon svarar på adresser där den har data, och tri-statar vid **VIA**-adresser så den fysiska kretsen kan svara.
 

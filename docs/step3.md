@@ -16,11 +16,8 @@ Jag laddar ett minimalt 6502-program på `$8000`: en enda `NOP`-instruktion (`$E
 Databussen är den första känsliga kretskopplingen i projektet: åtta 100Ω-motstånd som skyddar mot busskollisioner mellan CPU och Arduino, plus en kopplingstråd för `R/W`-signalen som talar om vem som skickar data åt vilket håll.
 
 | Antal | Komponent |
-
 |---|---|
-
 | 8 | 100 Ω motstånd (databuss-skydd) |
-
 | 1 | Kopplingstråd (R/W) |
 
 ## Kopplingsschema
@@ -34,47 +31,26 @@ Nu är datorn komplett i grunden: adressbuss från steg 2, databuss `D0–D7` vi
 Alla kopplingar från steg 2 finns kvar; tabellen lägger till databussens åtta ledningar `D0–D7` och `R/W`-signalen.
 
 | Pin | Signal | Kopplas till | Varför |
-
 |---|---|---|---|
-
 | 8 | `VDD` | +5V | Strömmatning — CPU:ns driftspänning |
-
 | 21 | `VSS` | GND | Systemjord — sluten krets |
-
 | 37 | `PHI2` | Arduino D2 | Klockingång — Arduino skickar fyrkantsvåg |
-
 | 2 | `RDY` | +5V via 10kΩ | Ready — HÖG = CPU får köra. Utan denna stannar CPU:n |
-
 | 4 | `/IRQ` | +5V via 10kΩ | Interrupt request — HÖG = inget avbrott |
-
 | 6 | `/NMI` | +5V via 10kΩ | Non-maskable interrupt — måste vara HÖG |
-
 | 36 | `BE` | +5V via 10kΩ | Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad! |
-
 | 38 | `/SO` | +5V via 10kΩ | Set Overflow — avaktiverad |
-
 | 40 | `/RESET` | Arduino D4 | Kontrollerad reset — Arduino håller CPU:n i reset tills jag är redo |
-
 | 9–16 | `A0–A7` | Arduino A0–A7 | Låga adressbyte — läses via PORTF |
-
 | 17–20, 22–25 | `A8–A15` | Arduino A8–A15 | Höga adressbyte — läses via PORTK |
-
 | 34 | `R/W` | Arduino D3 | HÖG = CPU läser, LÅG = CPU skriver. Arduino måste veta detta |
-
 | 33 | `D0` | Arduino D22 via 100Ω | Databit 0 (LSB) |
-
 | 32 | `D1` | Arduino D23 via 100Ω | Databit 1 |
-
 | 31 | `D2` | Arduino D24 via 100Ω | Databit 2 |
-
 | 30 | `D3` | Arduino D25 via 100Ω | Databit 3 |
-
 | 29 | `D4` | Arduino D26 via 100Ω | Databit 4 |
-
 | 28 | `D5` | Arduino D27 via 100Ω | Databit 5 |
-
 | 27 | `D6` | Arduino D28 via 100Ω | Databit 6 |
-
 | 26 | `D7` | Arduino D29 via 100Ω | Databit 7 (MSB) |
 
 ## Arduino-kod

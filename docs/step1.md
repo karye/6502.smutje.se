@@ -15,19 +15,12 @@ En lysdiod och ett motstånd kopplas till klocklinjen. När dioden blinkar vet j
 Här är allt som krävs för att väcka CPU:n till liv: processorn själv, en Arduino som genererar klockan, en lysdiod för att se pulsen, samt pull-up-motstånd som håller kontrollsignalerna i tryggt HÖG-läge så att inte processorn startar med spök-avbrott.
 
 | Antal | Komponent | Namn |
-
 |---|---|---|
-
 | 1 | W65C02S (DIP-40) | Processorn |
-
 | 1 | Arduino Mega 2560 | Kontrollenhet |
-
 | 1 | Lysdiod (röd) | D1 |
-
 | 1 | 220 Ω motstånd (klock-LED) | R6 |
-
 | 5 | 10 kΩ motstånd (pull-up: RDY, IRQB, NMIB, SOB) | R1, R2, R3, R4, R5 |
-
 | 1 | 100 nF keramisk kondensator (avkoppling CPU) | C1 |
 
 ## W65C02S — pinout
@@ -53,27 +46,16 @@ Så här ser den kompletta kopplingen ut när allt ligger på kopplingsdäcket: 
 Här är varenda koppling i steg 1, pinne för pinne. Avkopplingskondensatorn är markerad separat längst ner.
 
 | Pin | Signal | Kopplas till | Varför |
-
 |---|---|---|---|
-
 | 8 | `VDD` | +5V | Strömmatning — CPU:ns driftspänning |
-
 | 21 | `VSS` | GND | Systemjord — sluten krets |
-
 | 37 | `PHI2` | Arduino D2 | Klockingång — Arduino skickar fyrkantsvåg |
-
 | 2 | `RDY` | +5V via 10kΩ | Ready — HÖG = CPU får köra. Utan denna stannar CPU:n |
-
 | 4 | `/IRQ` | +5V via 10kΩ | Interrupt request — HÖG = inget avbrott (jag använder ej avbrott än) |
-
 | 6 | `/NMI` | +5V via 10kΩ | Non-maskable interrupt — måste vara HÖG, annars kraschar CPU:n |
-
 | 36 | `BE` | +5V via 10kΩ | Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad! |
-
 | 38 | `/SO` | +5V via 10kΩ | Set Overflow — HÖG = avaktiverad |
-
 | 40 | `/RESET` | Arduino D4 | Hålls låg av Arduino — CPU:n ligger i reset |
-
 | — | 100nF | Mellan VDD (pin 8) och VSS (pin 21) | Avkopplingskondensator — filtrerar bort brus på strömmatningen. Sätt den så nära CPU:n som möjligt! |
 
 ## Arduino-kod

@@ -14,13 +14,9 @@ Den stora förändringen i koden: Arduino går *tri-state* (hög impedans) för 
 Ett 62256 SRAM-chip på 32 KB — datorns första riktiga arbetsminne — plus en avkopplingskondensator och kopplingstrådar. Zero page, stack och variabler lämnar nu Arduinons mjukvaruemulering och hamnar i äkta kisel.
 
 | Antal | Komponent |
-
 |---|---|
-
 | 1 | 62256 SRAM (32KB, DIP-28) |
-
 | 1 | 100 nF keramisk kondensator (avkoppling SRAM) |
-
 | – | Kopplingstråd (adress, data, kontroll) |
 
 ## 62256 SRAM — pinout
@@ -47,21 +43,13 @@ SRAM-chippet delar adress- och databuss med CPU, VIA och Arduino. Tre kontrollsi
 Tabellerna täcker nu fyra kretsar plus LCD:n, uppdelade efter funktion: ström och kontroll, adressbuss, databuss och övrigt. SRAM:ns avkodning presenteras för sig, eftersom U4C + U4D i **74HC00**:an är det enda nya i detta steg.
 ### 62256 SRAM
 | Pin | Signal | Kopplas till | Varför |
-
 |---|---|---|---|
-
 | 28 | `VDD` | +5V | Strömmatning — glöm inte 100nF avkoppling till GND |
-
 | 14 | `VSS` | GND | Systemjord |
-
 | 10–3, 25, 24, 21, 23, 2, 26, 1 | `A0–A14` | A0–A14 | 15 adresslinjer — SRAM behöver veta vilken byte CPU:n vill åt |
-
 | 11–13, 15–19 | `D0–D7` | D0–D7 (databuss) | 8 datalinjer — SRAM läser/skriver data här |
-
 | 20 | `/CE` | U4D pin 11 | Chip Enable — LÅG = SRAM aktivt. 74HC00 drar LÅG vid $0000–$3FFF |
-
 | 22 | `/OE` | GND | Output Enable — alltid LÅG (SRAM kör alltid ut data vid läsning) |
-
 | 27 | `/WE` | R/W (pin 34) | Write Enable — LÅG = skriv. CPU:ns R/W är LÅG vid skrivning |
 
 ### 74HC00 — adressavkodning för SRAM
@@ -71,35 +59,20 @@ U4A (NOT `A15`) och U4B (NAND för VIA) är oförändrade från steg 7. U4C blir
 U4A inverterar `A15`, U4C inverterar `A14`. U4D gör (NOT `A14`) NAND (NOT `A15`) → LÅG endast när `A14`=0 OCH `A15`=0. SRAM aktiveras alltså vid `$0000`–`$3FFF` och ingen annanstans. VIAn (U4B) aktiveras vid `$4000`–`$7FFF`. 
 
 | Pin | Signal | Kopplas till | Varför |
-
 |---|---|---|---|
-
 | VIA-avkodning (U4A + U4B — oförändrad från steg 7) |  |  |  |
-
 | 1, 2 | `A15` (in) | `A15` | Båda ingångarna till A15 → inverterare: ut = NOT A15 |
-
 | 3 | NOT `A15` (ut) | U4B pin 4 + U4D pin 13 | NOT A15 → till U4B och U4D |
-
 | 4 | NOT `A15` | U4A pin 3 (NOT A15) | NOT A15 |
-
 | 5 | `A14` (in) | `A14` | (NOT A15) NAND A14 → LÅG vid $4000–$7FFF |
-
 | 6 | VIA `/CS2` (ut) | VIA `/CS2` (pin 23) | VIA aktiveras vid $4000–$7FFF |
-
 | SRAM-avkodning (U4C + U4D — nytt i steg 9) |  |  |  |
-
 | 9, 10 | `A14` (in) | `A14` | Båda ingångarna till A14 → inverterare: ut = NOT A14 |
-
 | 8 | NOT `A14` (ut) | U4D pin 12 | NOT A14 → U4D ingång |
-
 | 12 | NOT `A14` | U4C pin 8 (NOT A14) | NOT A14 |
-
 | 13 | NOT `A15` | U4A pin 3 (NOT A15) | (NOT A14) NAND (NOT A15) → LÅG endast vid $0000–$3FFF |
-
 | 11 | SRAM `/CE` (ut) | SRAM `/CE` (pin 20) | SRAM aktiveras ENDAST vid $0000–$3FFF |
-
 | 14 | `VCC` | +5V | Strömmatning |
-
 | 7 | `GND` | GND | Systemjord |
 
 ### CPU, VIA och LCD
@@ -107,72 +80,40 @@ U4A inverterar `A15`, U4C inverterar `A14`. U4D gör (NOT `A14`) NAND (NOT `A15`
 CPU, VIA och LCD är oförändrade från steg 7. Här är den kompletta kopplingslistan.
 
 | Pin | Signal | Kopplas till | Varför |
-
 |---|---|---|---|
-
 | — ström och kontroll |  |  |  |
-
 | 8 | `VDD` | +5V | Strömmatning |
-
 | 21 | `VSS` | GND | Systemjord |
-
 | 37 | `PHI2` | Arduino D2 | Klocka — 500 Hz fyrkantsvåg |
-
 | 34 | `R/W` | Arduino D3, VIA pin 22, SRAM /WE | Read/Write — alla kretsar behöver veta |
-
 | 40 | `/RESET` | Arduino D4, VIA pin 34 | Reset |
-
 | 2 | `RDY` | +5V via 10kΩ | Ready — HÖG = kör |
-
 | 4 | `/IRQ` | +5V via 10kΩ | Interrupt — avaktiverad |
-
 | 6 | `/NMI` | +5V via 10kΩ | NMI — avaktiverad |
-
 | 36 | `BE` | +5V via 10kΩ | Bus Enable — HÖG = bussar aktiva |
-
 | 38 | `/SO` | +5V via 10kΩ | Set Overflow — avaktiverad |
-
 | — adressbuss (delas med SRAM, VIA, Arduino) |  |  |  |
-
 | 9–16 | `A0–A7` | Arduino A0–A7, SRAM A0–A7, VIA RS0–RS3 (A0–A3) | Låga adressbyte |
-
 | 17–20, 22–25 | `A8–A15` | Arduino A8–A15, SRAM A8–A14, 74HC00 | Höga adressbyte + avkodning |
-
 | — databuss (delas med SRAM, VIA, Arduino) |  |  |  |
-
 | 26–33 | `D0–D7` | Arduino D22–D29, SRAM D0–D7, VIA D0–D7 | 8-bit data — 100Ω seriemotstånd |
-
 | Övrigt |  |  |  |
-
 | 7 | `SYNC` | Arduino D13 | Opcode fetch |
-
 | — | BTN1 | Arduino D11 → GND | Klocksteg |
-
 | — | BTN2 | Arduino D12 → GND | Instruktionssteg |
-
 | VIA → LCD (oförändrat från steg 7) |  |  |  |
-
 | VIA 2 | `PA0` | 4 (RS) | Register Select |
-
 | VIA 4 | `PA2` | 6 (E) | Enable |
-
 | VIA 10–17 | `PB0–PB7` | 7–14 (DB0–DB7) | 8-bit data |
-
 | LCD — ström och kontrast |  |  |  |
-
 | 1 | `VSS` | GND | Jord |
-
 | 2 | `VDD` | +5V | Ström |
-
 | 3 | `VO` | Potentiometer mittben | Kontrast |
-
 | 5 | `R/W` | GND | Write-only |
-
 | 15 | `A` | +5V via 220Ω | Belysning + |
-
 | 16 | `K` | GND | Belysning − |
 
-## Minnestarta
+## Minneskarta
 
 Nu har vi tre enheter som svarar på olika adressområden. **SRAM** tar den lägre halvan, **VIA** har sina 16 bytes, och **Arduino** levererar program och vektorer.
 
@@ -286,27 +227,16 @@ Jag följer `show_num` när A-registret innehåller 144 — talet som visas efte
 Från steg 8 känner jag redan `LDA`, `STA`, `JSR`, `RTS`, `LDX`, `INX`, `BEQ` och `JMP`. Det här är vad som är nytt:
 
 | Instruktion | Exempel i programmet | Vad CPU:n gör |
-
 |---|---|---|
-
 | CLC / SEC | före ADC / SBC | Rensar/sätter carry-flaggan — förbereder addition respektive subtraktion. |
-
 | ADC $01 | F(n) = F(n-2) + F(n-1) | Adderar ett minnesvärde till A *inklusive* carry — grunden i Fibonacci-loopen. |
-
 | BCC no_wrap | efter ADC | Hoppar om carry = 0, dvs om summan rymdes i 8 bitar. Annars börjar serien om. |
-
 | SBC #100 | hundratal i show_num | Subtraherar 100 från A (med carry) — upprepas tills resten < 100. |
-
 | CMP #100 | "är A >= 100?" | Jämför A med ett värde utan att ändra A — flaggorna avgör sedan om jag hoppar. |
-
 | PHA / PLA | spara resten i show_num | Stacken: sparar A för att komma ihåg den och tar tillbaka den senare. |
-
 | TXA | räknaren → A | Kopierar X-registret till A så att räknaren kan skrivas ut. |
-
 | DEX / DEY | loopräknare | Minskar X/Y med 1 — i delay och i tiotal-uträkningen. |
-
 | BNE | loopar i show_num | Hoppar om resultatet inte är noll — avslutar räknar-looparna. |
-
 | LDA $00 / STA $02 | F-variablerna | Zero page-adressering — variabler i $00–$02 nås med bara en byte. |
 
 ???+ note "📦 6502-programmet — program_fib.asm"

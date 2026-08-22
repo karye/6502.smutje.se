@@ -13,11 +13,8 @@ Knapp 2 (instruktionssteg): kör klockan tills CPU:n signalerar att en ny instru
 Två tryckknappar och en kopplingstråd för `SYNC` — det är allt. 
 
 | Antal | Komponent |
-
 |---|---|
-
 | 2 | Tryckknappar |
-
 | 1 | Kopplingstråd (SYNC → D13) |
 
 ## Kopplingsschema
@@ -31,49 +28,27 @@ Schemat visar de två tryckknapparna: en mellan Arduino `D11` och `GND` för klo
 Tabellen kompletteras med tre nya signaler: `SYNC` från CPU pin 7 till `D13`, samt de två knapparna som kopplas mellan D11/D12 och `GND`. Lägg märke till att knapparna drar signalen LÅG vid tryck — Arduinons inbyggda pull-up gör resten.
 
 | Pin | Signal | Kopplas till | Varför |
-
 |---|---|---|---|
-
 | 8 | `VDD` | +5V | Strömmatning — CPU:ns driftspänning |
-
 | 21 | `VSS` | GND | Systemjord — sluten krets |
-
 | 37 | `PHI2` | Arduino D2 | Klockingång — Arduino skickar fyrkantsvåg |
-
 | 2 | `RDY` | +5V via 10kΩ | Ready — HÖG = CPU får köra. Utan denna stannar CPU:n |
-
 | 4 | `/IRQ` | +5V via 10kΩ | Interrupt request — HÖG = inget avbrott |
-
 | 6 | `/NMI` | +5V via 10kΩ | Non-maskable interrupt — måste vara HÖG |
-
 | 36 | `BE` | +5V via 10kΩ | Bus Enable — HÖG = bussarna aktiva. Utan denna är CPU:n bortkopplad! |
-
 | 38 | `/SO` | +5V via 10kΩ | Set Overflow — avaktiverad |
-
 | 40 | `/RESET` | Arduino D4 | Kontrollerad reset — Arduino håller CPU:n i reset tills jag är redo |
-
 | 9–16 | `A0–A7` | Arduino A0–A7 | Låga adressbyte — läses via PORTF |
-
 | 17–20, 22–25 | `A8–A15` | Arduino A8–A15 | Höga adressbyte — läses via PORTK |
-
 | 34 | `R/W` | Arduino D3 | HÖG = CPU läser, LÅG = CPU skriver. Arduino måste veta detta |
-
 | 33 | `D0` | Arduino D22 via 100Ω | Databit 0 (LSB) |
-
 | 32 | `D1` | Arduino D23 via 100Ω | Databit 1 |
-
 | 31 | `D2` | Arduino D24 via 100Ω | Databit 2 |
-
 | 30 | `D3` | Arduino D25 via 100Ω | Databit 3 |
-
 | 29 | `D4` | Arduino D26 via 100Ω | Databit 4 |
-
 | 28 | `D5` | Arduino D27 via 100Ω | Databit 5 |
-
 | 27 | `D6` | Arduino D28 via 100Ω | Databit 6 |
-
 | 26 | `D7` | Arduino D29 via 100Ω | Databit 7 (MSB) |
-
 | 7 | `SYNC` | Arduino D13 | HÖG = CPU:n hämtar första byten av ny instruktion |
 
 ## Arduino-kod
