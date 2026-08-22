@@ -1,14 +1,15 @@
+<!-- Handredigerad: jag-röst. Kör ej html2md på denna fil. -->
 # EEPROM som ROM
 
 Det här är steget där datorn slutar vara ett bygge och blir en maskin: slå av strömmen, slå på den — och den startar ändå. Programmet sitter i kisel nu.
 
 ## Mål
 
-Hittills har Arduino levererat 6502-programmet — varje gång CPU:n läser från `$8000` och uppåt är det Arduinons minnesarray som svarar. Det fungerar utmärkt, men en riktig dator har sitt program i ROM — icke-flyktigt minne som överlever strömavbrott. Nu tar vi det sista stora klivet: vi bränner in programmet på en AT28C256 EEPROM och låter den ersätta Arduino som ROM.
+Hittills har Arduino levererat 6502-programmet — varje gång CPU:n läser från `$8000` och uppåt är det Arduinons minnesarray som svarar. Det fungerar utmärkt, men en riktig dator har sitt program i ROM — icke-flyktigt minne som överlever strömavbrott. Nu tar jag det sista stora klivet: jag bränner in programmet på en AT28C256 EEPROM och låter den ersätta Arduino som ROM.
 
-En *andra Arduino Mega* används som EEPROM-programmerare. Via USB tar den emot en `.bin`-fil från datorn, bränner den på AT28C256, och verifierar att varje byte sitter rätt. Sedan flyttar du EEPROM-chippet till datorns kopplingsdäck — och datorn startar direkt från äkta ROM, precis som en Commodore 64 eller Apple II.
+En *andra Arduino Mega* används som EEPROM-programmerare. Via USB tar den emot en `.bin`-fil från datorn, bränner den på AT28C256, och verifierar att varje byte sitter rätt. Sedan flyttar jag EEPROM-chippet till datorns kopplingsdäck — och datorn startar direkt från äkta ROM, precis som en Commodore 64 eller Apple II.
 
-Arduinon på kopplingsdäcket finns kvar som klocka och diagnostikverktyg — men datorn överlever utan den. Slå på strömmen, och CPU:n läser ditt program direkt ur EEPROM:et. Det här är en fristående dator.
+Arduinon på kopplingsdäcket finns kvar som klocka och diagnostikverktyg — men datorn överlever utan den. Slå på strömmen, och CPU:n läser mitt program direkt ur EEPROM:et. Det här är en fristående dator.
 
 ## Nya komponenter
 
@@ -23,7 +24,7 @@ En AT28C256 EEPROM på 32 KB blir datorns ROM, en extra Arduino Mega agerar prog
 
 ## AT28C256 — pinout
 
-DIP-28-kapsel. 15 adresslinjer, 8 datalinjer, 3 kontrollsignaler. Nästan identisk med 62256 SRAM men med `/WE` som styr bränning och RDY/BUSY som signalerar när bränningen är klar (vi använder en enkel timeout istället).
+DIP-28-kapsel. 15 adresslinjer, 8 datalinjer, 3 kontrollsignaler. Nästan identisk med 62256 SRAM men med `/WE` som styr bränning och RDY/BUSY som signalerar när bränningen är klar (jag använder en enkel timeout istället).
 > [!NOTE] 🧩 AT28C256 · se step10.html
 
 ■ Adressbuss ■ Databuss ■ Kontroll ■ Ström. Notch/pin 1-markering: uppåt.
@@ -83,7 +84,7 @@ Det här programmet laddas upp på den andra Arduino Mega — den som tillfälli
 
 ### Hur bränning går till
 
-AT28C256 har inbyggd själv-timing. För att bränna en byte sätter du adress och data, drar `/WE` låg, väntar minst 10 millisekunder (vi använder 10 för marginal), och drar `/WE` hög igen. Kretsen sköter resten internt. För att läsa tillbaka drar du `/OE` låg och läser `PINA` — precis som med SRAM.
+AT28C256 har inbyggd själv-timing. För att bränna en byte sätter jag adress och data, drar `/WE` låg, väntar minst 10 millisekunder (jag använder 10 för marginal), och drar `/WE` hög igen. Kretsen sköter resten internt. För att läsa tillbaka drar jag `/OE` låg och läser `PINA` — precis som med SRAM.
 
 Verifieringen läser tillbaka varje byte och jämför med originaldatan. Om något inte stämmer rapporteras adressen och de två värdena. Annars: "OK — 32768 bytes verifierade".
 > [!NOTE] 📦 EEPROM-programmeraren — EEPROM_programmer.ino · 139 rader · se step10.html
@@ -95,7 +96,7 @@ Ett enkelt Python 3-skript som läser `program.bin` och skickar det sida för si
 
 ## Arduino-kod — datorn
 
-Koden på datorns Arduino förenklas dramatiskt. `program[2048]` och de hundratals `write_mem()`-anropen försvinner. Istället får vi en ny funktion `is_eeprom()` som returnerar `true` för adresser mellan `$8000` och `$FFFF`. När CPU:n läser från dessa adresser tri-statar Arduino bussen — EEPROM:et svarar själv.
+Koden på datorns Arduino förenklas dramatiskt. `program[2048]` och de hundratals `write_mem()`-anropen försvinner. Istället får jag en ny funktion `is_eeprom()` som returnerar `true` för adresser mellan `$8000` och `$FFFF`. När CPU:n läser från dessa adresser tri-statar Arduino bussen — EEPROM:et svarar själv.
 
 Arduinon är nu reducerad till *klockgenerator, reset-kontroll och seriell diagnostik*. Alla minnesarrayer utom `vectors[6]` är borta. Vektorn på `$FFFA–$FFFF` ligger sist i EEPROM-bilden — `.segment "VECTORS"` i assembler-koden placerar dem där.
 
@@ -147,24 +148,24 @@ W $4000  ← VIA: 3D  (=)
 
 LCD-displayen (16×2)
 
-Varje gång du ser `← EEPROM` i loggen är det AT28C256 som svarar — inte Arduino. Reset-vektorn på `$FFFC`/`$FFFD` ligger i EEPROM:ets sista bytes, inskrivna av assembler-kedjan. CPU:n läser dem, hoppar till `$8000`, och kör programmet direkt från äkta ROM.
+Varje gång jag ser `← EEPROM` i loggen är det AT28C256 som svarar — inte Arduino. Reset-vektorn på `$FFFC`/`$FFFD` ligger i EEPROM:ets sista bytes, inskrivna av assembler-kedjan. CPU:n läser dem, hoppar till `$8000`, och kör programmet direkt från äkta ROM.
 
-Koppla bort Arduinon helt (ersätt klockan med en 555-timer eller kristalloscillator) så har du en helt fristående 6502-dator. Programmet överlever strömavbrott — slå på strömmen imorgon och det finns kvar, inbränt i kisel.
+Kopplar jag bort Arduinon helt (ersätter klockan med en 555-timer eller kristalloscillator) så har jag en helt fristående 6502-dator. Programmet överlever strömavbrott — slå på strömmen imorgon och det finns kvar, inbränt i kisel. Jag stängde av, satte på, stängde av, satte på — bara för att se den starta varje gång.
 
-### Prova själv
+### Så här provar jag
 
-- Bränn `asm/program_fib.bin` i stället för hello-programmet och se datorn starta direkt i Fibonacci — utan att röra datorns Arduino.
+- Jag bränner `asm/program_fib.bin` i stället för hello-programmet och ser datorn starta direkt i Fibonacci — utan att röra datorns Arduino.
 
-## Om det inte fungerar
+## Så här felsöker jag
 
-Här är några saker att kontrollera:
+Här är några saker jag kontrollerar:
 
-- CPU:n läser `$FFFC`/`$FFFD` men hoppar till fel adress? EEPROM:ets `/CE` är förmodligen inte rätt avkodat. Kontrollera att 74HC00-grinden får `A15` på båda ingångarna och att utgången går till EEPROM pin 20.
-- Programmet körs inte alls? Kontrollera att `/OE` är kopplat till `GND` och `/WE` till +`5V`. Utan `/OE` låg kör EEPROM:et inte ut data.
-- Bränningen misslyckas? Mät spänningen vid EEPROM:ets `VDD` — den måste vara minst 4.8V. Använd 12V DC-adapter till programmerings-Arduinon.
-- Busskrockar? 100Ω motstånd på databussen är nu ännu viktigare — fyra enheter delar på samma 8 ledningar.
-- Glöm inte avkopplingskondensatorn vid EEPROM:ets VDD/GND.
+- Läser CPU:n `$FFFC`/`$FFFD` men hoppar till fel adress? Då är EEPROM:ets `/CE` förmodligen inte rätt avkodat. Jag kontrollerar att 74HC00-grinden får `A15` på båda ingångarna och att utgången går till EEPROM pin 20.
+- Körs programmet inte alls? Då kontrollerar jag att `/OE` är kopplat till `GND` och `/WE` till +`5V`. Utan `/OE` låg kör EEPROM:et inte ut data.
+- Misslyckas bränningen? Då mäter jag spänningen vid EEPROM:ets `VDD` — den måste vara minst 4.8V. Jag använder 12V DC-adapter till programmerings-Arduinon.
+- Busskrockar? Då är 100Ω motstånd på databussen nu ännu viktigare — fyra enheter delar på samma 8 ledningar.
+- Jag glömmer inte avkopplingskondensatorn vid EEPROM:ets VDD/GND.
 
 ## Vad händer härnäst?
 
-Din dator är nu fristående — nästan. I sista steget städar vi upp adressrymden, så att varje minnesbyte får ett tydligt jobb.
+Min dator är nu fristående — nästan. I sista steget städar jag upp adressrymden, så att varje minnesbyte får ett tydligt jobb.

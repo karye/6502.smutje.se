@@ -1,10 +1,11 @@
+<!-- Handredigerad: jag-röst. Kör ej html2md på denna fil. -->
 # VIA + LCD, styrd av 6502
 
 Det här är det stora steget: från att Arduino sköter allt till att processorn själv styr sina egna pinnar. Ta det lugnt och gå steg för steg — när LCD:n vaknar är det värt varenda tråd.
 
 ## Mål
 
-I steg 6 styrde Arduino LCD-displayen direkt. Nu tar vi nästa stora kliv: vi kopplar in en W65C22 VIA (Versatile Interface Adapter) — en I/O-krets som ger 6502-processorn 20 egna pinnar att styra. VIAn sitter på CPU:ns adress- och databuss, precis som ett RAM-minne, men istället för att lagra data styr den fysiska pinnar.
+I steg 6 styrde Arduino LCD-displayen direkt. Nu tar jag nästa stora kliv: jag kopplar in en W65C22 VIA (Versatile Interface Adapter) — en I/O-krets som ger 6502-processorn 20 egna pinnar att styra. VIAn sitter på CPU:ns adress- och databuss, precis som ett RAM-minne, men istället för att lagra data styr den fysiska pinnar.
 
 En 74HC00 (två NAND-grindar) avkodar adressbussen så att VIA:n hamnar på adress `$4000–$400F`. U4A inverterar `A15`, U4B NAND:ar med `A14` — resultat: VIA aktiveras när `A14`=1 och `A15`=0.
 
@@ -14,7 +15,7 @@ En 74HC00 (två NAND-grindar) avkodar adressbussen så att VIA:n hamnar på adre
 1. Initierar LCD:n i 8-bitarsläge (8-bitars databuss, 2 rader, 5×8 font, display on, entry mode)
 1. Skriver två rader text genom att lägga ASCII-värden på port B och pulsa enable-signalen på port A — sedan *clear display* och loopa om från början
 
-När allt fungerar har vi en dator där CPU:n själv styr I/O via minnesmappade adresser. Arduino är nu bara minnesemulator och klocka — all logik för LCD:n körs på 6502.
+När allt fungerar har jag en dator där CPU:n själv styr I/O via minnesmappade adresser. Arduino är nu bara minnesemulator och klocka — all logik för LCD:n körs på 6502.
 
 ## Nya komponenter
 
@@ -36,9 +37,9 @@ De här kretsarna är starten på en riktig datorarkitektur. En W65C22 VIA ger C
 
 ## Så här fungerar en VIA
 
-En VIA är som ett litet arkiv av brevlådor för elektriska signaler. Processorn skriver och läser på 16 registeradresser (`$4000`–`$400F`), och kretsen översätter varje värde till verkliga spänningar på sina pinnar. Tre saker räcker för att förstå allt vi gör här:
+En VIA är som ett litet arkiv av brevlådor för elektriska signaler. Processorn skriver och läser på 16 registeradresser (`$4000`–`$400F`), och kretsen översätter varje värde till verkliga spänningar på sina pinnar. Tre saker räcker för att förstå allt jag gör här:
 
-- Register = brevlådor. `$4000` (PORTB) och `$4001` (PORTA) är portarna — det värde processorn skriver dit läggs ut på pinnarna. `$4002`/`$4003` (DDRB/DDRA) bestämmer riktningen: 1 = utgång, 0 = ingång. Vi sätter `$FF` = alla 8 pinnar som utgångar.
+- Register = brevlådor. `$4000` (PORTB) och `$4001` (PORTA) är portarna — det värde processorn skriver dit läggs ut på pinnarna. `$4002`/`$4003` (DDRB/DDRA) bestämmer riktningen: 1 = utgång, 0 = ingång. Jag sätter `$FF` = alla 8 pinnar som utgångar.
 - Minnesmappad I/O. VIAn har inga egna adressbegrepp — den tittar bara på sina chip-select-pinnar (`CS1` = HÖG, `/CS2` = LÅG). När 74HC00:an gör `/CS2` låg vid `$4000`–`$7FFF` svarar VIAn på alla adresser i fönstret, som om den vore 16 bytes minne (registren speglas).
 - Skriv = styr, läs = avläs. När processorn skriver till PORTB läggs värdet ut på LCD:ns datapinnar. När den läser PORTB avläses pinnarnas spänningar.
 
@@ -119,7 +120,7 @@ Logik: `A15` inverteras av U4A. U4B gör (NOT `A15`) NAND `A14` → LÅG när `A
 | 2 | `VDD` | +5V | Strömmatning |
 | 3 | `VO` | Potentiometer (10kΩ) | Kontrast — mittbenet till VO, sidoben till +5V och GND |
 | 4 | `RS` | VIA PA0 (pin 2) | Register Select — 0 = instruktion, 1 = teckendata |
-| 5 | `R/W` | GND | Alltid skrivläge — vi läser aldrig från LCD:n |
+| 5 | `R/W` | GND | Alltid skrivläge — jag läser aldrig från LCD:n |
 | 6 | `E` | VIA PA2 (pin 4) | Enable — VIAn pulserar denna för att skicka data |
 | 7–14 | `DB0–DB7` | VIA PB0–PB7 | 8-bitars data — teckenkod eller kommando |
 | 15 | `A` | +5V via 220Ω | Bakgrundsbelysning anod (+) |
@@ -178,7 +179,7 @@ Tabellen nedan visar hur Arduino bygger 6502-programmet i minnet, byte för byte
 | 17 | LDA #$01 · STA $4000 LDA #$04 · STA $4001 LDA #$00 · STA $4001 | A9 01 8D 00 40 … | Clear display |
 | 18 | JMP hello_start | 4C xx xx | Hoppa tillbaka till rad 1 — oändlig loop |
 
-Det här är projektets mest komplexa kod — och den största milstolpen. Vi introducerar *två nya kretsar* (W65C22 VIA och 74HC00) och låter CPU:n själv styra LCD-displayen via minnesmappad I/O. Arduino reduceras till det den gör bäst: emulera ROM och generera klocka. Allt annat sköter 6502-processorn.
+Det här är projektets mest komplexa kod — och den största milstolpen. Jag introducerar *två nya kretsar* (W65C22 VIA och 74HC00) och låter CPU:n själv styra LCD-displayen via minnesmappad I/O. Arduino reduceras till det den gör bäst: emulera ROM och generera klocka. Allt annat sköter 6502-processorn. Det här var steget där jag för första gången kände att Arduinon bara var en gäst i datorn.
 
 ### `is_via()` — Arduinons sätt att kliva ur vägen
 
@@ -201,7 +202,7 @@ Programmet som CPU:n ska köra byggs byte för byte med `write_mem(next++, ...)`
 
 ### Debug-fasdetektion
 
-Koden innehåller en `phase`-variabel och fasdetektion som känner igen var i programmet CPU:n befinner sig — reset-sekvens, VIA-init, LCD-init, textutskrift, loop. Det är ovärderligt för felsökning: du ser direkt om CPU:n fastnar i fel fas eller hoppar till en oväntad adress.
+Koden innehåller en `phase`-variabel och fasdetektion som känner igen var i programmet CPU:n befinner sig — reset-sekvens, VIA-init, LCD-init, textutskrift, loop. Det är ovärderligt för felsökning: jag ser direkt om CPU:n fastnar i fel fas eller hoppar till en oväntad adress.
 
 ### Vad som är nytt jämfört med steg 6
 
@@ -212,7 +213,7 @@ Komplett Arduino-kod för steg 7:
 
 ## Exempel på körning
 
-När du laddat upp koden och öppnar seriemonitor ser du programmet genomlöpa alla faser. Samtidigt vaknar LCD-displayen till liv — styrd helt av 6502-processorn via VIA-kretsen:
+När jag laddat upp koden och öppnar seriemonitor ser jag programmet genomlöpa alla faser. Samtidigt vaknar LCD-displayen till liv — styrd helt av 6502-processorn via VIA-kretsen:
 
 Seriemonitor (115200 baud)
 ```
@@ -248,18 +249,18 @@ Varje `W $4000` eller `W $4001` är CPU:n som skriver till VIA:ns register — A
 
 När programmet når slutet hoppar det tillbaka till början och skriver om alltihop. Clear display, skriv text, clear display — i en oändlig loop. Datorn är nu självförsörjande: CPU:n styr I/O, Arduino levererar bara programkoden och klockan.
 
-### Prova själv
+### Så här provar jag
 
-- Ändra rad-strängarna i `step7.inc` till ditt eget namn och ladda om — LCD:n visar din text.
-- Mät `/CS2` (VIA pin 23) medan du stegar — den ska vara låg vid `$4000`–`$7FFF`.
+- Jag ändrar rad-strängarna i `step7.inc` till mitt eget namn och laddar om — LCD:n visar min text.
+- Jag mäter `/CS2` (VIA pin 23) medan jag stegar — den ska vara låg vid `$4000`–`$7FFF`.
 
-## Om det inte fungerar
+## Så här felsöker jag
 
-Här är några saker att kontrollera:
+Här är några saker jag kontrollerar:
 
-1. CPU:n startar inte? Ser du `W $0` eller `W $1`? Kontrollera `BE` (HÖG), `PHI2` (pulser), `RESB` (HÖG efter reset).
+1. Startar CPU:n inte? Ser jag `W $0` eller `W $1`? Då kontrollerar jag `BE` (HÖG), `PHI2` (pulser), `RESB` (HÖG efter reset).
 
-2. Ser inga $4xxx-adresser? Dubbelkolla 74HC00-kopplingen och att VIA:ns bussanslutningar sitter rätt.
+2. Ser jag inga $4xxx-adresser? Då dubbelkollar jag 74HC00-kopplingen och att VIA:ns bussanslutningar sitter rätt.
 
 3. Mät med multimeter:
 
@@ -269,7 +270,7 @@ Här är några saker att kontrollera:
 - VIA `VDD` (pin 20): >4.8V
 - 74HC00 VCC (pin 14): >4.8V
 
-4. Arduino som logikanalysator: koppla `D8` till en mätpunkt och lägg till i `pulse()`:
+4. Arduino som logikanalysator: jag kopplar `D8` till en mätpunkt och lägger till i `pulse()`:
 ```
 Serial.print(" D8="); Serial.print(digitalRead(8));
 ```
@@ -283,4 +284,4 @@ Serial.print(" D8="); Serial.print(digitalRead(8));
 
 ## Vad händer härnäst?
 
-Nu pratar processorn direkt med omvärlden. I nästa steg lär vi oss skriva programmen på ett riktigt språk — assembler.
+Nu pratar processorn direkt med omvärlden. I nästa steg lär jag mig skriva programmen på ett riktigt språk — assembler.

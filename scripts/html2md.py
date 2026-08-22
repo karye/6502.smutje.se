@@ -336,11 +336,20 @@ def convert(page):
     return text
 
 
+MARKER = '<!-- Handredigerad: jag-röst. Kör ej html2md på denna fil. -->'
+
+
 def main():
     os.makedirs('md', exist_ok=True)
     for page in PAGES:
+        path = os.path.join('md', page + '.md')
+        if os.path.exists(path):
+            with open(path, encoding='utf-8') as f:
+                if f.readline().rstrip('\n') == MARKER:
+                    print('md/%s.md  (hoppas över — handredigerad)' % page)
+                    continue
         md = convert(page)
-        with open(os.path.join('md', page + '.md'), 'w', encoding='utf-8') as f:
+        with open(path, 'w', encoding='utf-8') as f:
             f.write(md)
         print('md/%s.md  (%d tecken)' % (page, len(md)))
 

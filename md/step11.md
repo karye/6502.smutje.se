@@ -1,18 +1,19 @@
+<!-- Handredigerad: jag-röst. Kör ej html2md på denna fil. -->
 # Städad adressrymd
 
 En dator som fungerar men har en stökig adressrymd stör mig. Att se hela 64 KB falla på plats — RAM nedtill, I/O i mitten, ROM upptill — är det snyggaste avslut ett bygge kan få.
 
 ## Mål
 
-I steg 10 fick vi en fristående dator — men adressrymden var inte vacker. VIA:ns 16 bytes på `$4000` klippte av SRAM-minnet mitt i, och den övre halvan av 62256-chippet (`$4000`–`$7FFF`) låg helt oanvänd. Det kändes slarvigt.
+I steg 10 fick jag en fristående dator — men adressrymden var inte vacker. VIA:ns 16 bytes på `$4000` klippte av SRAM-minnet mitt i, och den övre halvan av 62256-chippet (`$4000`–`$7FFF`) låg helt oanvänd. Det kändes slarvigt.
 
-Nu städar vi upp. SRAM utökas till hela 32 KB (`$0000`–`$7FFF`) genom att ansluta `A14` — hela 62256-chippet används äntligen. VIA:n flyttas till `$8000`–`$BFFF`, ett 16 KB-stort I/O-fönster i mitten av adressrymden, precis som I/O-portar sitter på riktiga 6502-datorer (Apple II hade I/O på `$C000`, C64 på `$D000`).
+Nu städar jag upp. SRAM utökas till hela 32 KB (`$0000`–`$7FFF`) genom att ansluta `A14` — hela 62256-chippet används äntligen. VIA:n flyttas till `$8000`–`$BFFF`, ett 16 KB-stort I/O-fönster i mitten av adressrymden, precis som I/O-portar sitter på riktiga 6502-datorer (Apple II hade I/O på `$C000`, C64 på `$D000`).
 
-Resultatet är en adressrymd utan dött utrymme: RAM längst ner, ROM i mitten och I/O i ett fönster högst upp. Det här är den klassiska 6502-layouten — nu har vi byggt den själva.
+Resultatet är en adressrymd utan dött utrymme: RAM längst ner, ROM i mitten och I/O i ett fönster högst upp. Det här är den klassiska 6502-layouten — nu har jag byggt den själv. Fyra kablar och en NAND-grind — och hela 64 KB har fått ett jobb.
 
 ## Nya komponenter
 
-Inga nya kretsar! Det här steget handlar om att *omkoppla det vi redan har*. Du behöver bara en enda NAND-grind (¼ av en 74HC00) för hela den nya adressavkodningen. Dessutom en extra kopplingstråd för SRAM:ns `A14` och en för EEPROM:ets `A14`.
+Inga nya kretsar! Det här steget handlar om att *omkoppla det jag redan har*. Jag behöver bara en enda NAND-grind (¼ av en 74HC00) för hela den nya adressavkodningen. Dessutom en extra kopplingstråd för SRAM:ns `A14` och en för EEPROM:ets `A14`.
 | Antal | Komponent | Används till |
 |---|---|---|
 | 1 | 74HC00 (en grind, ¼ av chippet) | EEPROM /CE = NAND(A15, A14) |
@@ -97,13 +98,13 @@ Här är tricket: kretsarnas egna chip-select-pinnar gör avkodningen. SRAM:s `/
 
 ## Länkskript — program.cfg
 
-I steg 8 skapade vi `program.cfg` — länkaren ld65:s karta över minnet. Den talar om var i adressrymden koden hamnar. Nu uppdateras den: ROM:en ligger nu rent på `$C000`–`$FFFF` (16 KB) — inga fönster eller gap längre.
+I steg 8 skapade jag `program.cfg` — länkaren ld65:s karta över minnet. Den talar om var i adressrymden koden hamnar. Nu uppdateras den: ROM:en ligger nu rent på `$C000`–`$FFFF` (16 KB) — inga fönster eller gap längre.
 
-### Så här gör du
+### Så här gör jag
 
-1. Öppna `asm/program.cfg` i ditt PlatformIO-projekt — samma fil som skapades i steg 8.
-1. Ersätt innehållet med koden nedan och spara.
-1. Bygg projektet — `build_asm.py` skickar filen till ld65 automatiskt (`-C program.cfg`). Inget att köra manuellt.
+1. Jag öppnar `asm/program.cfg` i mitt PlatformIO-projekt — samma fil som skapades i steg 8.
+1. Jag ersätter innehållet med koden nedan och sparar.
+1. Jag bygger projektet — `build_asm.py` skickar filen till ld65 automatiskt (`-C program.cfg`). Inget att köra manuellt.
 1. Assembler-filen behöver inga ändringar — segmenten nedan matchar den.
 > [!NOTE] 📦 Länkskript — program.cfg · 16 rader · se step11.html
 
@@ -111,7 +112,7 @@ Koden läggs i `$C000`–`$FFFF` (ROM, 16 KB). Reset-vektorn ligger som alltid p
 
 ## Exempel på körning
 
-När du laddat upp koden och startat datorn ser du i seriemonitorn att enheterna svarar på sina nya adresser:
+När jag laddat upp koden och startat datorn ser jag i seriemonitorn att enheterna svarar på sina nya adresser:
 
 Seriemonitor (115200 baud)
 ```
@@ -137,21 +138,21 @@ Samma program som steg 8–10, men VIA:n adresseras nu på `$8000` istället fö
 
 Lägg märke till skillnaden mot steg 10: SRAM-skrivningar kan nu ske var som helst i `$0000`–`$7FFF`, VIA:n svarar på `$8000` och EEPROM på `$C000`. Bussloggen visar tydligt vilken enhet som pratar.
 
-### Prova själv
+### Så här provar jag
 
-- Mät `/CE` på SRAM (pin 20) och EEPROM (pin 20) samt `CS1`/`/CS2` på VIA:n medan du stegar — exakt en enhet ska vara aktiv varje klockcykel.
-- Prova att byta plats på `CS1` och `/CS2` (A15 och A14) och se hur avkodningen bryts.
+- Jag mäter `/CE` på SRAM (pin 20) och EEPROM (pin 20) samt `CS1`/`/CS2` på VIA:n medan jag stegar — exakt en enhet ska vara aktiv varje klockcykel.
+- Jag provar att byta plats på `CS1` och `/CS2` (A15 och A14) och ser hur avkodningen bryts.
 
-## Om det inte fungerar
+## Så här felsöker jag
 
-Här är några saker att kontrollera:
+Här är några saker jag kontrollerar:
 
-- CPU:n läser `$FFFC`/`$FFFD` men hoppar till fel adress? EEPROM:ets `/CE` är förmodligen inte rätt avkodat. Kontrollera NAND-grinden (74HC00 pin 3) — den måste ge LÅG när `A15`=1 och `A14`=1.
-- VIA:n svarar inte på `$8000`? Kontrollera `CS1` (pin 24) = `A15` (hög) och `/CS2` (pin 23) = `A14` (låg) — VIA:n kräver båda samtidigt. Dubbelkolla att `RS0–RS3` fortfarande går till `A0–A3`.
-- SRAM fortfarande bara 16 KB? `A14` (SRAM pin 1) är inte ansluten. Utan den kan processorn inte nå `$4000`–`$7FFF`.
-- Busskrockar? Två enheter kan svara samtidigt om avkodningen är fel. Mät `/CE` och `/CS2` medan CPU:n läser — exakt en ska vara LÅG.
-- Programmet kraschar vid `$8000`? Länkskriptet placerade kod i VIA-fönstret. Kontrollera `program.cfg` — ROM ska börja på `$C000`, inte tidigare.
+- Läser CPU:n `$FFFC`/`$FFFD` men hoppar till fel adress? Då är EEPROM:ets `/CE` förmodligen inte rätt avkodat. Jag kontrollerar NAND-grinden (74HC00 pin 3) — den måste ge LÅG när `A15`=1 och `A14`=1.
+- Svarar VIA:n inte på `$8000`? Då kontrollerar jag `CS1` (pin 24) = `A15` (hög) och `/CS2` (pin 23) = `A14` (låg) — VIA:n kräver båda samtidigt. Jag dubbelkollar att `RS0–RS3` fortfarande går till `A0–A3`.
+- Är SRAM fortfarande bara 16 KB? Då är `A14` (SRAM pin 1) inte ansluten. Utan den kan processorn inte nå `$4000`–`$7FFF`.
+- Busskrockar? Då kan två enheter svara samtidigt om avkodningen är fel. Jag mäter `/CE` och `/CS2` medan CPU:n läser — exakt en ska vara LÅG.
+- Kraschar programmet vid `$8000`? Då placerade länkskriptet kod i VIA-fönstret. Jag kontrollerar `program.cfg` — ROM ska börja på `$C000`, inte tidigare.
 
 ## Vad händer härnäst?
 
-Där står den: en dator du byggt och förstår från första pulsen till sista adressen. Men en tråd återstår att klippa — Arduino levererar fortfarande klockan. I steg 12 ersätter vi den med en riktig kristall och låter datorn stå helt på egna ben. Därefter finns bara nya vägar: avbrott, fler minneskretsar, ett eget operativsystem…
+Där står den: en dator jag byggt och förstår från första pulsen till sista adressen. Men en tråd återstår att klippa — Arduino levererar fortfarande klockan. I steg 12 ersätter jag den med en riktig kristall och låter datorn stå helt på egna ben. Därefter finns bara nya vägar: avbrott, fler minneskretsar, ett eget operativsystem…

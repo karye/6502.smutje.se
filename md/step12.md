@@ -1,14 +1,15 @@
+<!-- Handredigerad: jag-röst. Kör ej html2md på denna fil. -->
 # Fristående klocka
 
-Det sista som påminner om Arduino är klockan. Nu byter vi ut den mot en riktig kristall — när datorn sedan startar med strömmen behöver den ingen hjälp alls.
+Det sista som påminner om Arduino är klockan. Nu byter jag ut den mot en riktig kristall — när datorn sedan startar med strömmen behöver den ingen hjälp alls.
 
 ## Mål
 
-Sedan steg 10 levererar EEPROM:et programmet och SRAM:et minnet — men Arduino har fortfarande skött *klockan*. Nu kopplar vi in en riktig klockgenerator: en 16 MHz-oscillator vars frekvens vi delar ner med en 74HC393 till 1 MHz. En enkel RC-krets sköter reset.
+Sedan steg 10 levererar EEPROM:et programmet och SRAM:et minnet — men Arduino har fortfarande skött *klockan*. Nu kopplar jag in en riktig klockgenerator: en 16 MHz-oscillator vars frekvens jag delar ner med en 74HC393 till 1 MHz. En enkel RC-krets sköter reset.
 
-När det här steget är klart kan du koppla bort Arduinon helt. Slå på strömmen och datorn startar på egen hand — programmet ur EEPROM:en, minnet i SRAM:en, texten på LCD:n. En riktig, fristående 6502-dator.
+När det här steget är klart kan jag koppla bort Arduinon helt. Slå på strömmen och datorn startar på egen hand — programmet ur EEPROM:en, minnet i SRAM:en, texten på LCD:n. En riktig, fristående 6502-dator.
 
-Men hastigheten förändrar en sak: vid 1 MHz tar varje instruktion bara några mikrosekunder, och LCD:n hinner inte med om programmet inte själv väntar. Därför lär vi oss också *tidshantering* — delay-subrutiner som ger displayen de pauser den kräver.
+Men hastigheten förändrar en sak: vid 1 MHz tar varje instruktion bara några mikrosekunder, och LCD:n hinner inte med om programmet inte själv väntar. Därför lär jag mig också *tidshantering* — delay-subrutiner som ger displayen de pauser den kräver.
 
 ## Nya komponenter
 | Antal | Komponent | Används till |
@@ -28,7 +29,7 @@ Schema kommer snart — se klockkedjan och kopplingstabellerna nedan så länge.
 
 ## Klockkedjan — från 16 MHz till 1 MHz
 
-En oscillator är en komplett klockkrets i en kapsel: kristallen och förstärkaren sitter inbyggda, och utgången ger en ren fyrkantsvåg direkt — inget att bygga runt. 16 MHz är för snabbt för W65C02S (max 14 MHz), så vi delar ner frekvensen med en 74HC393.
+En oscillator är en komplett klockkrets i en kapsel: kristallen och förstärkaren sitter inbyggda, och utgången ger en ren fyrkantsvåg direkt — inget att bygga runt. 16 MHz är för snabbt för W65C02S (max 14 MHz), så jag delar ner frekvensen med en 74HC393.
 
 74HC393:an innehåller *två* oberoende 4-bitars räknare. Varje steg halverar frekvensen, och alla utgångar har 50% arbetscykel — perfekt för `PHI2`:
 | Utgång | Delning | Frekvens | Användning |
@@ -36,13 +37,13 @@ En oscillator är en komplett klockkrets i en kapsel: kristallen och förstärka
 | 1Q0 (pin 3) | ÷2 | 8 MHz | Snabbast som är säker — men LCD-timing kräver många delay-loopar |
 | 1Q1 (pin 4) | ÷4 | 4 MHz | Mellanfart |
 | 1Q2 (pin 5) | ÷8 | 2 MHz | Mellanfart |
-| 1Q3 (pin 6) | ÷16 | 1 MHz | Vi använder denna — klassisk 6502-fart, snäll mot LCD:n |
+| 1Q3 (pin 6) | ÷16 | 1 MHz | Jag använder denna — klassisk 6502-fart, snäll mot LCD:n |
 
 1 MHz är samma fart som original-Apple II:n — snabbt nog att kännas som en riktig dator, långsamt nog att följa med i vad som händer.
 
 ## 74HC393 — pinout
 
-DIP-14-kapsel. Två oberoende 4-bitars ripple-räknare (1 och 2). `1Q3` är den utgång vi använder — 16 MHz ÷16 = 1 MHz till `PHI2`.
+DIP-14-kapsel. Två oberoende 4-bitars ripple-räknare (1 och 2). `1Q3` är den utgång jag använder — 16 MHz ÷16 = 1 MHz till `PHI2`.
 > [!NOTE] 🧩 74HC393 · se step12.html
 
 ## Kopplingar
@@ -92,7 +93,7 @@ Binären är 16 KB och ligger på EEPROM-adress 0 (= CPU `$C000`) med vektorer p
 
 ## Ingen Arduino-kod
 
-Det här steget har ingen Arduino-kod — Arduino finns inte med på kopplingsdäcket längre. Allt som återstår av den gamla startmotorn är minnet av hur den hjälpte oss: klockan sköter kristallen nu, reset sköter RC-kretsen, och programmet ligger i EEPROM:en.
+Det här steget har ingen Arduino-kod — Arduino finns inte med på kopplingsdäcket längre. Allt som återstår av den gamla startmotorn är minnet av hur den hjälpte mig: klockan sköter kristallen nu, reset sköter RC-kretsen, och programmet ligger i EEPROM:en.
 
 ## Exempel på körning
 
@@ -105,25 +106,25 @@ LCD 16×2 — efter start
 - Tryck på reset-knappen — datorn startar om utan att strömmen bryts.
 - Koppla bort Arduino helt om den fortfarande sitter i — den behövs inte.
 
-Ingen seriemonitor längre: LCD:n är datorns enda ansikte utåt.
+Ingen seriemonitor längre: LCD:n är datorns enda ansikte utåt. Jag vred på strömmen och datorn bara vaknade — precis som jag tänkt mig.
 
-### Prova själv
+### Så här provar jag
 
-- Koppla en lysdiod (med 220 Ω) från `PHI2` (pin 37) till `GND` — den lyser svagt, eftersom den är på halva tiden (50% arbetscykel vid 1 MHz).
-- Mät `1Q0`–`1Q3` med multimetern — medelspänningen halveras för varje delningssteg (≈2,5 V, ≈1,25 V, ≈0,6 V, ≈0,3 V).
-- Flytta klockan från `1Q3` till `1Q0` (8 MHz) — se vad som händer med LCD:n: programmets delay-loopar är räknade för 1 MHz, så displayen hinner inte med.
-- Mät `/RESET` (pin 40) med multimetern strax efter start — den ska ligga nära 0 V direkt, sedan stiga mot 5 V.
+- Jag kopplar en lysdiod (med 220 Ω) från `PHI2` (pin 37) till `GND` — den lyser svagt, eftersom den är på halva tiden (50% arbetscykel vid 1 MHz).
+- Jag mäter `1Q0`–`1Q3` med multimetern — medelspänningen halveras för varje delningssteg (≈2,5 V, ≈1,25 V, ≈0,6 V, ≈0,3 V).
+- Jag flyttar klockan från `1Q3` till `1Q0` (8 MHz) — jag ser vad som händer med LCD:n: programmets delay-loopar är räknade för 1 MHz, så displayen hinner inte med.
+- Jag mäter `/RESET` (pin 40) med multimetern strax efter start — den ska ligga nära 0 V direkt, sedan stiga mot 5 V.
 
-## Om det inte fungerar
+## Så här felsöker jag
 
-Här är några saker att kontrollera:
+Här är några saker jag kontrollerar:
 
-- Ingen klocka? Mät oscillatorns ut (pin 8) — en multimeter visar ~2,5 V medel om 16 MHz-pulsen finns. Kontrollera VCC (pin 14) och GND (pin 7).
-- CPU:n startar inte? Mät `PHI2` (pin 37) — ska vara 1 MHz, och `/RESET` (pin 40) — ska vara HÖG efter start. Kontrollera reset-RC: 10 kΩ till +5V, 10 µF till GND.
-- LCD:n blank? Programmet i EEPROM:en måste vara rätt version — med delay-loopar. Bränn om med `program_standalone.bin` (inte hello-programmet från steg 10).
-- Texten skakig eller felaktig? Kontrollera avkopplingen (100 nF) vid 74HC393:ns VCC/GND och att `1MR` (pin 2) är GND.
-- Busskrockar? Samma som tidigare: exakt en enhet ska vara aktiv per klockcykel — mät chip-selects medan du stegar.
+- Ingen klocka? Då mäter jag oscillatorns ut (pin 8) — en multimeter visar ~2,5 V medel om 16 MHz-pulsen finns. Jag kontrollerar VCC (pin 14) och GND (pin 7).
+- Startar CPU:n inte? Då mäter jag `PHI2` (pin 37) — ska vara 1 MHz, och `/RESET` (pin 40) — ska vara HÖG efter start. Jag kontrollerar reset-RC: 10 kΩ till +5V, 10 µF till GND.
+- Är LCD:n blank? Då måste programmet i EEPROM:en vara rätt version — med delay-loopar. Jag bränner om med `program_standalone.bin` (inte hello-programmet från steg 10).
+- Skakig eller felaktig text? Då kontrollerar jag avkopplingen (100 nF) vid 74HC393:ns VCC/GND och att `1MR` (pin 2) är GND.
+- Busskrockar? Samma som tidigare: exakt en enhet ska vara aktiv per klockcykel — jag mäter chip-selects medan jag stegar.
 
 ## Vad händer härnäst?
 
-Datorn står nu helt på egna ben: egen klocka, eget minne, eget program, egen I/O. Härifrån finns bara nya vägar — avbrott (`IRQ`), fler minneskretsar, ett tangentbord, eller ett litet operativsystem som du skriver själv. Från en blinkande lysdiod till en fristående dator — hela resan, steg för steg.
+Datorn står nu helt på egna ben: egen klocka, eget minne, eget program, egen I/O. Härifrån finns bara nya vägar — avbrott (`IRQ`), fler minneskretsar, ett tangentbord, eller ett litet operativsystem som jag skriver själv. Från en blinkande lysdiod till en fristående dator — hela resan, steg för steg.
