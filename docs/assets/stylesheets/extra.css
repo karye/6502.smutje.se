@@ -70,9 +70,16 @@
   background-color: #111827;
 }
 .monlcd .highlight .code,
-.monlcd .highlight .code pre {
+.monlcd .highlight .code pre,
+.monlcd .highlight .code pre code {
   background-color: #111827;
   color: #4ade80;
+}
+.monlcd .highlight .md-code__nav {
+  background-color: #1f2937;
+}
+.monlcd .highlight .md-code__button {
+  color: #9ca3af;
 }
 .monlcd .highlight .code a,
 .monlcd .highlight .code a:visited {
