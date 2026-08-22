@@ -35,6 +35,8 @@
   border-radius: .5rem;
   font-family: ui-monospace, Menlo, Consolas, monospace;
   text-align: center;
+  min-width: 250px;
+  font-size: 0.6rem;
 }
 .lcd-badge {
   background: #14532d;
